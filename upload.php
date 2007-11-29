@@ -26,7 +26,7 @@ if (get_user_class() < UC_UPLOADER)
 
 tr("Torrent file", "<input type=file name=file size=80>\n", 1);
 tr("Torrent name", "<input type=\"text\" name=\"name\" size=\"80\" /><br />(Taken from filename if not specified. <b>Please use descriptive names.</b>)\n", 1);
-tr("NFO file", "<input type=file name=nfo size=80><br>(<b>Required.</b> Can only be viewed by power users.)\n", 1);
+tr("NFO file", "<input type=file name=nfo size=80><br>(<b>Optional.</b> Can only be viewed by power users.)\n", 1);
 tr("Description", "<textarea name=\"descr\" rows=\"10\" cols=\"80\"></textarea>" .
   "<br>(HTML/BB code is <b>not</b> allowed.)", 1);
 
