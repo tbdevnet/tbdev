@@ -2,6 +2,7 @@
 
 require_once("include/benc.php");
 require_once("include/bittorrent.php");
+require_once "include/user_functions.php";
 
 ini_set("upload_max_filesize",$max_torrent_size);
 
@@ -29,6 +30,9 @@ $fname = unesc($f["name"]);
 if (empty($fname))
 	bark("Empty filename!");
 	
+$nfo = '';
+/////////////////////// NFO FILE ////////////////////////	
+if(isset($_FILES['nfo']) && !empty($_FILES['nfo']['name'])) {
 $nfofile = $_FILES['nfo'];
 if ($nfofile['name'] == '')
   bark("No NFO!");
@@ -43,6 +47,10 @@ $nfofilename = $nfofile['tmp_name'];
 
 if (@!is_uploaded_file($nfofilename))
   bark("NFO upload failed");
+
+$nfo = sqlesc(str_replace("\x0d\x0d\x0a", "\x0d\x0a", @file_get_contents($nfofilename)));
+}
+/////////////////////// NFO FILE END /////////////////////
 
 $descr = unesc($_POST["descr"]);
 if (!$descr)
