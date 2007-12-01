@@ -1,3 +1,0 @@
-<?php
-$rconpassword = "mypass";
-?>
