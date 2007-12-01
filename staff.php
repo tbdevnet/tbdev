@@ -1,5 +1,8 @@
 <?php
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/html_functions.php";
+
+
 dbconn();
 stdhead("Staff");
 begin_main_frame();
