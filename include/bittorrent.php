@@ -399,32 +399,37 @@ $w = "width=100%";
 <!------------- MENU ------------------------------------------------------------------------>
 
 <? $fn = substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/") + 1); ?>
-<tr><td class=outer align=center>
-<table class=main width=700 cellspacing="0" cellpadding="5" border="0">
-<tr>
+<tr><td class=outer>
+<div id="submenu">
 
-<td align="center" class="navigation"><a href=index.php>Home</a></td>
-<td align="center" class="navigation"><a href=browse.php>Browse</a></td>
-<td align="center" class="navigation"><a href=search.php>Search</a></td>
-<td align="center" class="navigation"><a href=upload.php>Upload</a></td>
-<? if (!$CURUSER) { ?>
-<td align="center" class="navigation">
-<a href=login.php>Login</a> / <a href=signup.php>Signup</a>
-</td>
+<? if ($CURUSER) { ?>
+<div class="tb-top-left-link">
+<a href=index.php>Home</a>
+<a href=browse.php>Browse</a>
+<a href=search.php>Search</a>
+<a href=upload.php>Upload</a>
+<a href=chat.php>Chat</a>
+<a href=forums.php>Forums</a>
+<a href=misc/dox.php>DOX</a>
+<a href=topten.php>Top 10</a>
+<a href=log.php>Log</a>
+<a href=rules.php>Rules</a>
+<a href=faq.php>FAQ</a>
+<a href=links.php>Links</a>
+<a href=staff.php>Staff</a>
+</div>
+<div class="tb-top-right-link">
+<a href=my.php>Profile</a>
+<a href=logout.php>Logout</a>
+</div>
 <? } else { ?>
-<td align="center" class="navigation"><a href=my.php>Profile</a></td>
+<div class="tb-top-left-link">
+<a href=login.php>Login</a>
+<a href=signup.php>Signup</a>
+</div>
 <? } ?>
-<td align="center" class="navigation"><a href=chat.php>Chat</a></td>
-<td align="center" class="navigation"><a href=forums.php>Forums</a></td>
-<td align="center" class="navigation"><a href=misc/dox.php>DOX</a></td>
-<td align="center" class="navigation"><a href=topten.php>Top 10</a></td>
-<td align="center" class="navigation"><a href=log.php>Log</a></td>
-<td align="center" class="navigation"><a href=rules.php>Rules</a></td>
-<td align="center" class="navigation"><a href=faq.php>FAQ</a></td>
-<td align="center" class="navigation"><a href=links.php>Links</a></td>
-<td align="center" class="navigation"><a href=staff.php>Staff</a></td>
-</tr>
-</table>
+
+</div>
 </td>
 </tr>
 <tr><td align=center class=outer style="padding-top: 20px; padding-bottom: 20px">
