@@ -5,6 +5,9 @@ ob_start("ob_gzhandler");
 require_once("include/bittorrent.php");
 require_once "include/user_functions.php";
 require_once "include/bbcode_functions.php";
+require_once "include/pager_functions.php";
+require_once "include/torrenttable_functions.php";
+require_once "include/html_functions.php";
 
 
 function getagent($httpagent)

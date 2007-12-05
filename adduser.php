@@ -1,5 +1,7 @@
 <?php
 require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn();
 loggedinorreturn();
 if (get_user_class() < UC_ADMINISTRATOR)
@@ -12,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		stderr("Error", "Missing form data.");
 	if ($_POST["password"] != $_POST["password2"])
 		stderr("Error", "Passwords mismatch.");
-	if (!is_valid_email($_POST['email']))
+	if (!validemail($_POST['email']))
 		stderr("Error", "Not valid email");
 	
 	$username = sqlesc($_POST["username"]);
