@@ -7,6 +7,47 @@ background-color: #004E98;
   margin-bottom: 0px;
 }
 
+#submenu{ 
+	border: 1px solid #FFF;
+	border-top: 0;
+	color: #3A4F6C; 
+	margin: 0;
+	height: 22px;
+	text-align: right;
+}
+
+.tb-top-left-link,
+.tb-top-right-link
+{
+	float: right;
+	font-size: 10px;
+	font-weight: bold; 
+	letter-spacing: 0.5px;
+	margin-top: 4px;
+	width: auto;
+}
+
+.tb-top-left-link {
+	float: left;
+}
+
+#submenu a:link, 
+#submenu  a:visited,
+#submenu a:hover, 
+#submenu a:active { 
+	background: #003977;
+        border : 1px solid #FFF; 
+	color: #FFF; 
+        padding: 1px 3px 2px 4px;
+        margin: 0px 1px 0px 2px;
+        text-decoration:none;
+}
+
+#submenu a:hover, 
+#submenu a:active{
+	background: #EA5F00;
+}
+
 table {
   border-collapse: collapse;
   border: none;
