@@ -1,32 +1,11 @@
-<?php
-ob_start("ob_gzhandler");
-require "include/bittorrent.php";
+<?
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+require_once "include/pager_functions.php";
+
 
 // 0 - No debug; 1 - Show and run SQL query; 2 - Show SQL query only
 $DEBUG_MODE = 0;
-/*
-function get_user_icons($arr, $big = false)
-{
-	if ($big)
-	{
-		$donorpic = "starbig.gif";
-		$warnedpic = "warnedbig.gif";
-		$disabledpic = "disabledbig.gif";
-	}
-	else
-	{
-		$donorpic = "star.gif";
-		$warnedpic = "warned.gif";
-		$disabledpic = "disabled.gif";
-	}
-	$pics = $arr["donor"] == "yes" ? "<img src=\"{$pic_base_url}$donorpic\" alt='Donor' border=0 style=\"margin-left: 2pt\">" : "";
-	if ($arr["enabled"] == "yes")
-		$pics .= $arr["warned"] == "yes" ? "<img src=\"{$pic_base_url}$warnedpic\" alt=\"Warned\" border=0>" : "";
-	else
-		$pics .= "<img src=\"{$pic_base_url}$disabledpic\" alt=\"Disabled\" border=0 style=\"margin-left: 2pt\">\n";
-	return $pics;
-}
-*/
 
 dbconn();
 loggedinorreturn();
@@ -37,7 +16,7 @@ if (get_user_class() < UC_MODERATOR)
 stdhead("Administrative User Search");
 echo "<h1>Administrative User Search</h1>\n";
 
-if ($_GET['h'])
+if (isset($_GET['h']))
 {
 	echo "<table width=65% border=0 align=center><tr><td class=embedded bgcolor='#F5F4EA'><div align=left>\n
 	Fields left blank will be ignored;\n
@@ -66,7 +45,7 @@ else
 	echo "&nbsp;-&nbsp;(<a href='".$_SERVER["PHP_SELF"]."'>Reset</a>)</p>\n";
 }
 
-$highlight = " bgcolor=#BBAF9B";
+$highlight = " bgcolor=yellow";
 
 ?>
 
@@ -75,10 +54,10 @@ $highlight = " bgcolor=#BBAF9B";
 <tr>
 
   <td valign="middle" class=rowhead>Name:</td>
-  <td<?=$_GET['n']?$highlight:""?>><input name="n" type="text" value="<?=$_GET['n']?>" size=35></td>
+  <td<?=!empty($_GET['n'])?$highlight:""?>><input name="n" type="text" value="<?=$GET['n']?>" size=35></td>
 
   <td valign="middle" class=rowhead>Ratio:</td>
-  <td<?=$_GET['r']?$highlight:""?>><select name="rt">
+  <td<?=isset($_GET['r'])?$highlight:""?>><select name="rt">
     <?
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
@@ -86,11 +65,11 @@ $highlight = " bgcolor=#BBAF9B";
 	}
 	?>
     </select>
-    <input name="r" type="text" value="<?=$_GET['r']?>" size="5" maxlength="4">
-    <input name="r2" type="text" value="<?=$_GET['r2']?>" size="5" maxlength="4"></td>
+    <input name="r" type="text" value="<?=isset($_GET['r'])?>" size="5" maxlength="4">
+    <input name="r2" type="text" value="<?=isset($_GET['r2'])?>" size="5" maxlength="4"></td>
 
   <td valign="middle" class=rowhead>Member status:</td>
-  <td<?=$_GET['st']?$highlight:""?>><select name="st">
+  <td<?=isset($_GET['st'])?$highlight:""?>><select name="st">
     <?
 	$options = array("(any)","confirmed","pending");
 	for ($i = 0; $i < count($options); $i++){
@@ -99,12 +78,12 @@ $highlight = " bgcolor=#BBAF9B";
     ?>
     </select></td></tr>
 <tr><td valign="middle" class=rowhead>Email:</td>
-  <td<?=$_GET['em']?$highlight:""?>><input name="em" type="text" value="<?=$_GET['em']?>" size="35"></td>
+  <td<?=isset($_GET['em'])?$highlight:""?>><input name="em" type="text" value="<?=isset($_GET['em']) ? $_GET['em'] : ''?>" size="35"></td>
   <td valign="middle" class=rowhead>IP:</td>
-  <td<?=$_GET['ip']?$highlight:""?>><input name="ip" type="text" value="<?=$_GET['ip']?>" maxlength="17"></td>
+  <td<?=isset($_GET['ip'])?$highlight:""?>><input name="ip" type="text" value="<?=isset($_GET['ip']) ? $_GET['ip'] : ''?>" maxlength="17"></td>
 
   <td valign="middle" class=rowhead>Account status:</td>
-  <td<?=$_GET['as']?$highlight:""?>><select name="as">
+  <td<?=isset($_GET['as'])?$highlight:""?>><select name="as">
     <?
     $options = array("(any)","enabled","disabled");
     for ($i = 0; $i < count($options); $i++){
@@ -114,13 +93,13 @@ $highlight = " bgcolor=#BBAF9B";
     </select></td></tr>
 <tr>
   <td valign="middle" class=rowhead>Comment:</td>
-  <td<?=$_GET['co']?$highlight:""?>><input name="co" type="text" value="<?=$_GET['co']?>" size="35"></td>
+  <td<?=isset($_GET['co'])?$highlight:""?>><input name="co" type="text" value="<?=isset($_GET['co']) ? $_GET['co'] : ''?>" size="35"></td>
   <td valign="middle" class=rowhead>Mask:</td>
-  <td<?=$_GET['ma']?$highlight:""?>><input name="ma" type="text" value="<?=$_GET['ma']?>" maxlength="17"></td>
+  <td<?=isset($_GET['ma'])?$highlight:""?>><input name="ma" type="text" value="<?=isset($_GET['ma']) ? $_GET['ma'] : ''?>" maxlength="17"></td>
   <td valign="middle" class=rowhead>Class:</td>
-  <td<?=($_GET['c'] && $_GET['c'] != 1)?$highlight:""?>><select name="c"><option value='1'>(any)</option>
+  <td<?=(isset($_GET['c']) && isset($_GET['c']) != 1)?$highlight:""?>><select name="c"><option value='1'>(any)</option>
   <?
-  $class = $_GET['c'];
+  $class = isset($_GET['c']) ? $_GET['c'] : '';
   if (!is_valid_id($class))
   	$class = '';
   for ($i = 2;;++$i) {
@@ -135,7 +114,7 @@ $highlight = " bgcolor=#BBAF9B";
 
     <td valign="middle" class=rowhead>Joined:</td>
 
-  <td<?=$_GET['d']?$highlight:""?>><select name="dt">
+  <td<?=isset($_GET['d'])?$highlight:""?>><select name="dt">
     <?
 	$options = array("on","before","after","between");
 	for ($i = 0; $i < count($options); $i++){
@@ -144,9 +123,9 @@ $highlight = " bgcolor=#BBAF9B";
     ?>
     </select>
 
-    <input name="d" type="text" value="<?=$_GET['d']?>" size="12" maxlength="10">
+    <input name="d" type="text" value="<?=isset($_GET['d']) ? $_GET['d'] : ''?>" size="12" maxlength="10">
 
-    <input name="d2" type="text" value="<?=$_GET['d2']?>" size="12" maxlength="10"></td>
+    <input name="d2" type="text" value="<?=isset($_GET['d2']) ? $_GET['d2'] : ''?>" size="12" maxlength="10"></td>
 
 
   <td valign="middle" class=rowhead>Uploaded:</td>
@@ -811,10 +790,10 @@ if (count($_GET) > 0 && !$_GET['h'])
         "<td class=colhead align=left>Status</td>".
         "<td class=colhead align=left>Enabled</td>".
         "<td class=colhead>pR</td>".
-        "<td class=colhead>pUL</td>".
-        "<td class=colhead>pDL</td>".
+        "<td class=colhead>pUL (MB)</td>".
+        "<td class=colhead>pDL (MB)</td>".
         "<td class=colhead>History</td></tr>";
-    while ($user = mysql_fetch_assoc($res))
+    while ($user = mysql_fetch_array($res))
     {
     	if ($user['added'] == '0000-00-00 00:00:00')
       	$user['added'] = '---';
@@ -829,20 +808,31 @@ if (count($_GET) > 0 && !$_GET['h'])
     	  if ($array[0] == 0)
       		$ipstr = $user['ip'];
 	  	  else
-	      	$ipstr = "<a href='/testip.php?ip=" . $user['ip'] . "'><font color='#FF0000'><b>" . $user['ip'] . "</b></font></a>";
+	      	$ipstr = "<a href='/testip.php?ip=".$user['ip']."'><font color='#FF0000'><b>".$user['ip']."</b></font></a>";
 			}
 			else
       	$ipstr = "---";
 
-      $auxres = mysql_query("SELECT SUM(uploaded) AS pul, SUM(downloaded) AS pdl FROM peers WHERE userid = " . $user['id']) or sqlerr(__FILE__, __LINE__);
-      $array = mysql_fetch_assoc($auxres);
+      $auxres = mysql_query("SELECT SUM(uploaded) AS pul, SUM(downloaded) AS pdl FROM peers WHERE userid = ".$user['id']) or sqlerr(__FILE__, __LINE__);
+      $array = mysql_fetch_array($auxres);
 
       $pul = $array['pul'];
       $pdl = $array['pdl'];
+      if ($pdl > 0)
+      	$partial = ratios($pul,$pdl)." (".mksizemb($pul)."/".mksizemb($pdl).")";
+      else
+      	if ($pul > 0)
+      		$partial = "Inf. ".mksizemb($pul)."/".mksizemb($pdl).")";
+      	else
+      		$partial = "---";
 
-      $auxres = mysql_query("SELECT COUNT(DISTINCT p.id) FROM posts AS p LEFT JOIN topics as t ON p.topicid = t.id
-      	LEFT JOIN forums AS f ON t.forumid = f.id WHERE p.userid = " . $user['id'] . " AND f.minclassread <= " .
-      	$CURUSER['class']) or sqlerr(__FILE__, __LINE__);
+//    $auxres = mysql_query("SELECT COUNT(id) FROM posts WHERE userid = ".$user['id']) or sqlerr(__FILE__, __LINE__);
+
+      $auxres = mysql_query(
+      "SELECT COUNT(DISTINCT p.id)
+      FROM posts AS p LEFT JOIN topics as t ON p.topicid = t.id
+      LEFT JOIN forums AS f ON t.forumid = f.id
+      WHERE p.userid = " . $user['id'] . " AND f.minclassread <= " . $CURUSER['class']) or sqlerr(__FILE__, __LINE__);
 
       $n = mysql_fetch_row($auxres);
       $n_posts = $n[0];
@@ -854,18 +844,18 @@ if (count($_GET) > 0 && !$_GET['h'])
       $n_comments = $n[0];
 
     	echo "<tr><td><b><a href='userdetails.php?id=" . $user['id'] . "'>" .
-      		$user['username']."</a></b>" . get_user_icons($user) . "</td>" .
-//      		($user["donor"] == "yes" ? "<img src=\"{$pic_base_url}star.gif\" alt=\"Donor\">" : "") .
-//					($user["warned"] == "yes" ? "<img src=\"{$pic_base_url}warned.gif\" alt=\"Warned\">" : "") . "</td>
-          "<td>" . ratios($user['uploaded'], $user['downloaded']) . "</td>
+      		$user['username']."</a></b>" .
+      		($user["donor"] == "yes" ? "<img src=".USER_IMAGES."/star.gif alt=\"Donor\">" : "") .
+					($user["warned"] == "yes" ? "<img src=\"".USER_IMAGES."/warned.gif\" alt=\"Warned\">" : "") . "</td>
+          <td>" . ratios($user['uploaded'], $user['downloaded']) . "</td>
           <td>" . $ipstr . "</td><td>" . $user['email'] . "</td>
           <td><div align=center>" . $user['added'] . "</div></td>
           <td><div align=center>" . $user['last_access'] . "</div></td>
           <td><div align=center>" . $user['status'] . "</div></td>
           <td><div align=center>" . $user['enabled']."</div></td>
-          <td><div align=center>" . ratios($pul,$pdl) . "</div></td>" .
-          "<td><div align=right>" . mksize($pul) . "</div></td>
-          <td><div align=right>" . mksize($pdl) . "</div></td>
+          <td><div align=center>" . ratios($pul,$pdl) . "</div></td>
+          <td><div align=right>" . number_format($pul / 1048576) . "</div></td>
+          <td><div align=right>" . number_format($pdl / 1048576) . "</div></td>
           <td><div align=center>".($n_posts?"<a href=userhistory.php?action=viewposts&id=".$user['id'].">$n_posts</a>":$n_posts).
           "|".($n_comments?"<a href=userhistory.php?action=viewcomments&id=".$user['id'].">$n_comments</a>":$n_comments).
           "</div></td></tr>\n";
@@ -874,7 +864,7 @@ if (count($_GET) > 0 && !$_GET['h'])
     if ($count > $perpage)
     	echo "$pagerbottom";
 
-	/*
+	?>
     <br><br>
     <form method=post action=sendmessage.php>
       <table border="1" cellpadding="5" cellspacing="0">
@@ -888,7 +878,7 @@ if (count($_GET) > 0 && !$_GET['h'])
         </tr>
       </table>
     </form>
-    */
+    <?
 
   }
 }

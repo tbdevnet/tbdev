@@ -59,6 +59,17 @@ for ($i = 0; $i < $rows; ++$i)
 }
 $avatar = $_POST["avatar"];
 $avatars = ($_POST["avatars"] != "" ? "yes" : "no");
+$avatar = trim( urldecode( $avatar ) );
+if ( preg_match( "/^http:\/\/$/i", $avatar ) or
+preg_match( "/[?&;]/",
+$avatar ) or preg_match( "#javascript:#is", $avatar )
+or !preg_match(
+"#^https?://(?:[^<>*\"]+|[a-z0-9/\._\-
+!]+)$#iU", $avatar ) )
+{
+$avatar='';
+}
+
 // $ircnick = $_POST["ircnick"];
 // $ircpass = $_POST["ircpass"];
 $info = $_POST["info"];
