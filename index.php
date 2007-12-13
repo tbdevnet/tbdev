@@ -10,8 +10,8 @@ loggedinorreturn();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-  $choice = (int)$_POST["choice"];
-  if ($CURUSER && $choice != "" && $choice < 256 && $choice == floor($choice))
+  $choice = $_POST["choice"];
+  if ($CURUSER && ctype_digit($choice) && $choice < 256 && $choice == floor($choice))
   {
     $res = mysql_query("SELECT * FROM polls ORDER BY added DESC LIMIT 1") or sqlerr();
     $arr = mysql_fetch_assoc($res) or die("No poll");
