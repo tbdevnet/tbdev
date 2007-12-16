@@ -121,7 +121,7 @@ tr("Topics per page", "<input type=text size=10 name=topicsperpage value=$CURUSE
 tr("Posts per page", "<input type=text size=10 name=postsperpage value=$CURUSER[postsperpage]> (0=use default setting)",1);
 tr("View avatars", "<input type=checkbox name=avatars" . ($CURUSER["avatars"] == "yes" ? " checked" : "") . "> (Low bandwidth users might want to turn this off)",1);
 tr("Info", "<textarea name=info cols=50 rows=4>" . $CURUSER["info"] . "</textarea><br>Displayed on your public page. May contain <a href=tags.php target=_new>BB codes</a>.", 1);
-tr("Email address", "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars($CURUSER["email"]) . "\" />", 1);
+tr("Email address", "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars($CURUSER["email"]) . "\" /><br />Please enter your password if changing your email address!<input type=\"password\" name=\"chmailpass\" size=\"50\" />", 1);
 print("<tr><td colspan=\"2\" align=left><b>Note:</b> In order to change your email address, you will receive another<br>confirmation email to your new address.</td></tr>\n");
 tr("Change password", "<input type=\"password\" name=\"chpassword\" size=\"50\" />", 1);
 tr("Type password again", "<input type=\"password\" name=\"passagain\" size=\"50\" />", 1);

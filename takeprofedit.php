@@ -11,7 +11,7 @@ dbconn();
 
 loggedinorreturn();
 
-if (!mkglobal("email:chpassword:passagain"))
+if (!mkglobal("email:chpassword:passagain:chmailpass"))
 	bark("missing form data");
 
 // $set = array();
@@ -38,10 +38,11 @@ if ($email != $CURUSER["email"]) {
 	if (!validemail($email))
 		bark("That doesn't look like a valid email address.");
   $r = mysql_query("SELECT id FROM users WHERE email=" . sqlesc($email)) or sqlerr();
-	if (mysql_num_rows($r) > 0)
-		bark("The e-mail address $email is already in use.");
+	if ( mysql_num_rows($r) > 0 || ($CURUSER["passhash"] != md5($CURUSER["secret"] . $chmailpass . $CURUSER["secret"])) )
+		bark("Could not change email, address already taken or password mismatch.");
 	$changedemail = 1;
 }
+
 
 $acceptpms = $_POST["acceptpms"];
 $deletepms = ($_POST["deletepms"] != "" ? "yes" : "no");

@@ -189,7 +189,8 @@ $s=$row["name"];
 		tr("Info hash", preg_replace_callback('/./s', "hex_esc", hash_pad($row["info_hash"])));
 
 		if (!empty($row["descr"]))
-			tr("Description", str_replace(array("\n", "  "), array("<br>\n", "&nbsp; "), format_urls(htmlspecialchars($row["descr"]))), 1);
+			print("<tr><td style='vertical-align:top'>Description</td><td><div style='background-color:#d9e2ff;width:100%;height:150px;overflow: auto'>". str_replace(array("\n", "  "), array("<br>\n", "&nbsp; "), format_urls(htmlspecialchars($row["descr"])))."</div></td></tr>");
+			
 if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
   print("<tr><td class=rowhead>NFO</td><td align=left><a href=viewnfo.php?id=$row[id]><b>View NFO</b></a> (" .
      mksize($row["nfosz"]) . ")</td></tr>\n");
