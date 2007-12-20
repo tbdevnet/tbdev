@@ -53,6 +53,7 @@ $SITENAME = "TBDEV.NET";
 
 $autoclean_interval = 900;
 $pic_base_url = "./pic/";
+$stylesheet = "./1.css";
 
 // Set this to the line break character sequence of your system
 $linebreak = "\r\n";
@@ -326,7 +327,7 @@ function parsedescr($d, $html) {
 }
 
 function stdhead($title = "", $msgalert = true) {
-    global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $pic_base_url;
+    global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $pic_base_url, $stylesheet;
 
   if (!$SITE_ONLINE)
     die("Site is down for maintenance, please check back again later... thanks<br>");
@@ -337,17 +338,17 @@ function stdhead($title = "", $msgalert = true) {
         $title = $SITENAME .(isset($_GET['tbv'])?" (".TBVERSION.")":'');
     else
         $title = $SITENAME .(isset($_GET['tbv'])?" (".TBVERSION.")":''). " :: " . htmlspecialchars($title);
+        
   if ($CURUSER)
   {
-    $ss_a = @mysql_fetch_array(@mysql_query("select uri from stylesheets where id=" . $CURUSER["stylesheet"]));
+    /*
+    $ss_a = @mysql_fetch_array(@sql_query("select uri from stylesheets where id=" . $CURUSER["stylesheet"]));
+
     if ($ss_a) $ss_uri = $ss_a["uri"];
+    */
+	$stylesheet = "{$CURUSER['stylesheet']}.css";
   }
-  if (!$ss_uri)
-  {
-    ($r = mysql_query("SELECT uri FROM stylesheets WHERE id=1")) or die(mysql_error());
-    ($a = mysql_fetch_array($r)) or die(mysql_error());
-    $ss_uri = $a["uri"];
-  }
+  
   if ($msgalert && $CURUSER)
   {
     $res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " && unread='yes'") or die("OopppsY!");
@@ -357,36 +358,22 @@ function stdhead($title = "", $msgalert = true) {
 ?>
 <html><head>
 <title><?= $title ?></title>
-<link rel="stylesheet" href="./<?=$ss_uri?>" type="text/css">
+<link rel="stylesheet" href="<?=$stylesheet?>" type="text/css">
 </head>
 <body>
 
 <table width=100% cellspacing=0 cellpadding=0 style='background: transparent'>
 <tr>
-<td class=clear width=49%>
-<!--
-<table border=0 cellspacing=0 cellpadding=0 style='background: transparent'>
-<tr>
 
 <td class=clear>
-<img src="<?=$pic_base_url?>star20.gif" style='margin-right: 10px'>
-</td>
-<td class=clear>
-<font color=white><b>Current funds: <?=$FUNDS?></b></font>
-</td>
-</tr>
-</table>
--->
-
-</td>
-<td class=clear>
-<div align=center>
-<img src="<?=$pic_base_url?>logo.jpg" align=center>
+<div>
+<img src="<?=$pic_base_url?>logo.jpg" />
+</div>
+<div>
+<a href=donate.php><img src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
 </div>
 </td>
-<td class=clear width=49% align=right>
-<a href=donate.php><img src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
-</td>
+
 </tr></table>
 <?php
 
