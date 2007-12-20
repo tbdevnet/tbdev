@@ -368,8 +368,7 @@ function stdhead($title = "", $msgalert = true) {
 <td class=clear>
 <div>
 <img src="<?=$pic_base_url?>logo.jpg" />
-</div>
-<div>
+
 <a href=donate.php><img src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
 </div>
 </td>
