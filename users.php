@@ -6,8 +6,10 @@ dbconn();
 
 loggedinorreturn();
 
-$search = trim($_GET['search']);
-$class = $_GET['class'];
+$search = isset($_GET['search']) ? strip_tags(trim($_GET['search'])) : '';
+$class = isset($_GET['class']) ? $_GET['class'] : '-';
+$letter = '';
+$q = '';
 if ($class == '-' || !is_valid_id($class))
   $class = '';
 
@@ -19,11 +21,11 @@ if ($search != '' || $class)
 }
 else
 {
-	$letter = trim($_GET["letter"]);
+	$letter = isset($_GET['letter']) ? trim((string)$_GET["letter"]) : '0';
   if (strlen($letter) > 1)
     die;
 
-  if ($letter == "" || strpos("abcdefghijklmnopqrstuvwxyz", $letter) === false)
+  if ($letter == "" || strpos("abcdefghijklmnopqrstuvwxyz0123456789", $letter) === false)
     $letter = "a";
   $query = "username LIKE '$letter%' AND status='confirmed'";
   $q = "letter=$letter";
@@ -54,8 +56,8 @@ print("</select>\n");
 print("<input type=submit value='Okay'>\n");
 print("</form>\n");
 
-print("<p>\n");
-
+print("<br />\n");
+/*
 for ($i = 97; $i < 123; ++$i)
 {
 	$l = chr($i);
@@ -65,11 +67,32 @@ for ($i = 97; $i < 123; ++$i)
 	else
     print("<a href=?letter=$l><b>$L</b></a>\n");
 }
+*/
 
-print("</p>\n");
+	$aa = range('0','9');
+	$bb = range('a','z');
+	$cc = array_merge($aa,$bb);
+	unset($aa,$bb);
+	
+	print "<div align='center'>";
+	$count = 0;
+	foreach($cc as $L) {
+		($count == 10) ? print "<br /><br />" : '';
+		if(!strcmp($L,$letter))
+			print "<span class='pagecurrent'>".strtoupper($L)."</span>\n";
+		else
+			print "<a href='users.php?letter=$L'><span class='pagelink'>".strtoupper($L)."</span></a>\n";
+			$count++;
+	}
+	print "</div>";
+
+print("<br />\n");
   
-$page = $_GET['page'];
+$page = isset($_GET['page']) ? (int)$input['page'] : 0;
 $perpage = 100;
+$browsemenu = '';
+$pagemenu = '';
+$out = '';
 
 $res = mysql_query("SELECT COUNT(*) FROM users WHERE $query") or sqlerr();
 $arr = mysql_fetch_row($res);
@@ -88,6 +111,7 @@ for ($i = 1; $i <= $pages; ++$i)
     $pagemenu .= "<b>$i</b>\n";
   else
     $pagemenu .= "<a href=?$q&page=$i><b>$i</b></a>\n";
+
 
 if ($page == 1)
   $browsemenu .= "<b>&lt;&lt; Prev</b>";
@@ -119,7 +143,7 @@ for ($i = 0; $i < $num; ++$i)
     if (mysql_num_rows($cres) == 1)
     {
       $carr = mysql_fetch_assoc($cres);
-      $country = "<td style='padding: 0px' align=center><img src=\"{$pic_base_url}flag/{$carr[flagpic]}\" alt=\"". htmlspecialchars($carr[name]) ."\"></td>";
+      $country = "<td style='padding: 0px' align=center><img src=\"{$pic_base_url}flag/{$carr['flagpic']}\" alt=\"". htmlspecialchars($carr['name']) ."\"></td>";
     }
   }
   else
@@ -128,13 +152,14 @@ for ($i = 0; $i < $num; ++$i)
     $arr['added'] = '-';
   if ($arr['last_access'] == '0000-00-00 00:00:00')
     $arr['last_access'] = '-';
-  print("<tr><td align=left><a href=userdetails.php?id=$arr[id]><b>$arr[username]</b></a>" .($arr["donated"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border=0 alt='Donor'>" : "")."</td>" .
-  "<td>$arr[added]</td><td>$arr[last_access]</td>".
-    "<td align=left>" . get_user_class_name($arr["class"]) . "</td>$country</tr>\n");
+  $out = "<tr><td align=left><a href=userdetails.php?id={$arr['id']}><b>{$arr['username']}</b></a>" .
+  ($arr["donor"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border=0 alt='Donor'>" : "")."</td>" .
+  "<td>{$arr['added']}</td><td>{$arr['last_access']}</td>".
+    "<td align=left>" . get_user_class_name($arr["class"]) . "</td>$country</tr>\n";
 }
-print("</table>\n");
+print $out. "</table>\n";
 
-print("<p>$pagemenu<br>$browsemenu</p>");
+print "<p>$pagemenu<br>$browsemenu</p>";
 
 stdfoot();
 die;

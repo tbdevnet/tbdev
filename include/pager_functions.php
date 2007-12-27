@@ -3,7 +3,7 @@
 function pager($rpp, $count, $href, $opts = array()) {
     $pages = ceil($count / $rpp);
 
-    if (!$opts["lastpagedefault"])
+    if (!isset($opts["lastpagedefault"]))
         $pagedefault = 0;
     else {
         $pagedefault = floor(($count - 1) / $rpp);

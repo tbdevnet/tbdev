@@ -46,9 +46,9 @@ if ($email != $CURUSER["email"]) {
 
 $acceptpms = $_POST["acceptpms"];
 $deletepms = ($_POST["deletepms"] != "" ? "yes" : "no");
-$savepms = ($_POST["savepms"] != "" ? "yes" : "no");
-$pmnotif = $_POST["pmnotif"];
-$emailnotif = $_POST["emailnotif"];
+$savepms = (isset($_POST['savepms']) && $_POST["savepms"] != "" ? "yes" : "no");
+$pmnotif = isset($_POST["pmnotif"]) ? $_POST["pmnotif"] : '';
+$emailnotif = isset($_POST["emailnotif"]) ? $_POST["emailnotif"] : '';
 $notifs = ($pmnotif == 'yes' ? "[pm]" : "");
 $notifs .= ($emailnotif == 'yes' ? "[email]" : "");
 $r = mysql_query("SELECT id FROM categories") or sqlerr();
@@ -56,8 +56,8 @@ $rows = mysql_num_rows($r);
 for ($i = 0; $i < $rows; ++$i)
 {
 	$a = mysql_fetch_assoc($r);
-	if ($_POST["cat$a[id]"] == 'yes')
-	  $notifs .= "[cat$a[id]]";
+	if (isset($_POST["cat{$a['id']}"]) && $_POST["cat{$a['id']}"] == 'yes')
+	  $notifs .= "[cat{$a['id']}]";
 }
 $avatar = $_POST["avatar"];
 $avatars = ($_POST["avatars"] != "" ? "yes" : "no");

@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL);
 function local_user()
 {
   return $_SERVER["SERVER_ADDR"] == $_SERVER["REMOTE_ADDR"];
@@ -29,7 +29,7 @@ $torrent_dir = "F:/web/xampp/htdocs/tb/torrents";    # FOR WINDOWS ONLY - must b
 # the first one will be displayed on the pages
 $announce_urls = array();
 $announce_urls[] = "http://localhost/TBDEV/announce.php";
-$announce_urls[] = "http://domain.com:82/announce.php";
+$announce_urls[] = "http://tracker.zerotracker.com:2710/announce";
 $announce_urls[] = "http://domain.com:83/announce.php";
 
 if ($_SERVER["HTTP_HOST"] == "")
@@ -366,7 +366,7 @@ function stdhead($title = "", $msgalert = true) {
 <tr>
 
 <td class=clear>
-<div>
+<div id="logostrip">
 <img src="<?=$pic_base_url?>logo.jpg" />
 
 <a href=donate.php><img src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
@@ -421,7 +421,7 @@ $w = "width=100%";
 <tr><td align=center class=outer style="padding-top: 20px; padding-bottom: 20px">
 <?
 
-if ($unread)
+if (isset($unread) && !empty($unread))
 {
   print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=red><tr><td style='padding: 10px; background: red'>\n");
   print("<b><a href=inbox.php><font color=white>You have $unread new message" . ($unread > 1 ? "s" : "") . "!</font></a></b>");

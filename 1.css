@@ -7,6 +7,14 @@ background-color: #004E98;
   margin-bottom: 0px;
 }
 
+#logostrip{ 
+	background: #00326A url(pic/tile_back.gif);
+	border: 1px solid #FFF;
+	height: 130px;
+	margin: 0;
+	padding: 0;
+}
+
 #submenu{ 
 	border: 1px solid #FFF;
 	border-top: 0;

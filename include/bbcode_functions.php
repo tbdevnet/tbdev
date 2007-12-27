@@ -255,6 +255,7 @@ function format_local_urls($s)
 
 function format_quotes($s)
 {
+  $old_s = '';
   while ($old_s != $s)
   {
   	$old_s = $s;

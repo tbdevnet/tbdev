@@ -14,10 +14,12 @@ loggedinorreturn();
 
 $cats = genrelist();
 
+if(isset($_GET["search"])) {
 $searchstr = unesc($_GET["search"]);
 $cleansearchstr = searchfield($searchstr);
 if (empty($cleansearchstr))
 	unset($cleansearchstr);
+}
 
 $orderby = "ORDER BY torrents.id DESC";
 
@@ -25,13 +27,14 @@ $addparam = "";
 $wherea = array();
 $wherecatina = array();
 
-if ($_GET["incldead"] == 1)
+if (isset($_GET["incldead"]) &&  $_GET["incldead"] == 1)
 {
 	$addparam .= "incldead=1&amp;";
 	if (!isset($CURUSER) || get_user_class() < UC_ADMINISTRATOR)
 		$wherea[] = "banned != 'yes'";
 }
-elseif ($_GET["incldead"] == 2)
+else
+	if (isset($_GET["incldead"]) && $_GET["incldead"] == 2)
 {
 	$addparam .= "incldead=2&amp;";
 		$wherea[] = "visible = 'no'";
@@ -39,9 +42,9 @@ elseif ($_GET["incldead"] == 2)
 	else
 		$wherea[] = "visible = 'yes'";
 
-$category = (int)$_GET["cat"];
+$category = (isset($_GET["cat"])) ? (int)$_GET["cat"] : false;
 
-$all = $_GET["all"];
+$all = isset($_GET["all"]) ? $_GET["all"] : false;
 
 if (!$all)
 	if (!$_GET && $CURUSER["notifs"])
@@ -49,11 +52,11 @@ if (!$all)
 	  $all = True;
 	  foreach ($cats as $cat)
 	  {
-	    $all &= $cat[id];
-	    if (strpos($CURUSER["notifs"], "[cat" . $cat[id] . "]") !== False)
+	    $all &= $cat['id'];
+	    if (strpos($CURUSER["notifs"], "[cat" . $cat['id'] . "]") !== False)
 	    {
-	      $wherecatina[] = $cat[id];
-	      $addparam .= "c$cat[id]=1&amp;";
+	      $wherecatina[] = $cat['id'];
+	      $addparam .= "c{$cat['id']}=1&amp;";
 	    }
 	  }
 	}
@@ -69,11 +72,11 @@ if (!$all)
 	  $all = True;
 	  foreach ($cats as $cat)
 	  {
-	    $all &= $_GET["c$cat[id]"];
-	    if ($_GET["c$cat[id]"])
+	    $all &= isset($_GET["c{$cat['id']}"]);
+	    if (isset($_GET["c{$cat['id']}"]))
 	    {
-	      $wherecatina[] = $cat[id];
-	      $addparam .= "c$cat[id]=1&amp;";
+	      $wherecatina[] = $cat['id'];
+	      $addparam .= "c{$cat['id']}=1&amp;";
 	    }
 	  }
 	}
@@ -100,7 +103,7 @@ if (isset($cleansearchstr))
 }
 
 $where = implode(" AND ", $wherea);
-if ($wherecatin)
+if (isset($wherecatin))
 	$where .= ($where ? " AND " : "") . "category IN(" . $wherecatin . ")";
 
 if ($where != "")
@@ -143,7 +146,7 @@ if (!$torrentsperpage)
 if ($count)
 {
 	list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
-	$query = "SELECT torrents.id, torrents.category, torrents.leechers, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.comments,torrents.numfiles,torrents.filename,torrents.owner,IF(torrents.nfo <> '', 1, 0) as nfoav," .
+	$query = "SELECT torrents.id, torrents.category, torrents.leechers, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.type,  torrents.comments,torrents.numfiles,torrents.filename,torrents.owner,IF(torrents.nfo <> '', 1, 0) as nfoav," .
 //	"IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby $limit";
 	"categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby $limit";
 	$res = mysql_query($query) or die(mysql_error());
@@ -182,7 +185,7 @@ foreach ($cats as $cat)
 {
 	$catsperrow = 7;
 	print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
-	print("<td class=bottom style=\"padding-bottom: 2px;padding-left: 7px\"><input name=c$cat[id] type=\"checkbox\" " . (in_array($cat[id],$wherecatina) ? "checked " : "") . "value=1><a class=catlink href=browse.php?cat=$cat[id]>" . htmlspecialchars($cat[name]) . "</a></td>\n");
+	print("<td class=bottom style=\"padding-bottom: 2px;padding-left: 7px\"><input name=c".$cat['id']." type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked " : "") . "value=1><a class=catlink href=browse.php?cat=$cat[id]>" . htmlspecialchars($cat['name']) . "</a></td>\n");
 	$i++;
 }
 
@@ -200,6 +203,8 @@ if ($lastrowcols != 0)
 		}
 	print("<td class=bottom style=\"padding-left: 5px\">$alllink</td>\n");
 }
+
+$selected = (isset($_GET["incldead"])) ? (int)$_GET["incldead"] : "";
 ?>
 	</tr>
 	</table>
@@ -211,8 +216,8 @@ if ($lastrowcols != 0)
 		<td class=bottom style="padding: 1px;padding-left: 10px">
 			<select name=incldead>
 <option value="0">active</option>
-<option value="1"<? print($_GET["incldead"] == 1 ? " selected" : ""); ?>>including dead</option>
-<option value="2"<? print($_GET["incldead"] == 2 ? " selected" : ""); ?>>only dead</option>
+<option value="1"<? print($selected == 1 ? " selected" : ""); ?>>including dead</option>
+<option value="2"<? print($selected == 2 ? " selected" : ""); ?>>only dead</option>
 			</select>
   	</td>
 <?

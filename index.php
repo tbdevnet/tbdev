@@ -10,7 +10,7 @@ loggedinorreturn();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-  $choice = $_POST["choice"];
+  $choice = isset($_POST["choice"]) ? $_POST["choice"] : 257;
   if ($CURUSER && ctype_digit($choice) && $choice < 256 && $choice == floor($choice))
   {
     $res = mysql_query("SELECT * FROM polls ORDER BY added DESC LIMIT 1") or sqlerr();
@@ -163,8 +163,8 @@ if (mysql_num_rows($res) > 0)
   	if ($voted)
   	{
     	// display results
-    	if ($arr["selection"])
-      	$uservote = $arr["selection"];
+    	if ($arr2["selection"])
+      	$uservote = $arr2["selection"];
     	else
       	$uservote = -1;
 			// we reserve 255 for blank vote.
@@ -279,7 +279,7 @@ print("<img height=15 width=$width src=\"{$pic_base_url}{$pic}\" alt='$percent%'
 */ ?>
 
 <p><font class=small>Disclaimer: None of the files shown here are actually hosted on this server. The links are provided solely by this site's users.
-The administrator of this site (www.torrentbits.org) cannot be held responsible for what its users post, or any other actions of its users.
+The administrator of this site (www.tbdev.net) cannot be held responsible for what its users post, or any other actions of its users.
 You may not use this site to distribute or download any material when you do not have the legal rights to do so.
 It is your own responsibility to adhere to these terms.</font></p>
 

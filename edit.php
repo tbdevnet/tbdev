@@ -1,6 +1,7 @@
 <?php
 
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php" ;
+require_once "include/user_functions.php" ;
 
 if (!mkglobal("id"))
 	die();
@@ -53,7 +54,7 @@ else
 	tr("Type", $s, 1);
 	tr("Visible", "<input type=\"checkbox\" name=\"visible\"" . (($row["visible"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Visible on main page<br /><table border=0 cellspacing=0 cellpadding=0 width=420><tr><td class=embedded>Note that the torrent will automatically become visible when there's a seeder, and will become automatically invisible (dead) when there has been no seeder for a while. Use this switch to speed the process up manually. Also note that invisible (dead) torrents can still be viewed or searched for, it's just not the default.</td></tr></table>", 1);
 
-	if ($CURUSER["admin"] == "yes")
+	if (get_user_class() >= UC_MODERATOR) //($CURUSER["admin"] == "yes")
 		tr("Banned", "<input type=\"checkbox\" name=\"banned\"" . (($row["banned"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Banned", 1);
 
 	print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value='Edit it!' style='height: 25px; width: 100px'> <input type=reset value='Revert changes' style='height: 25px; width: 100px'></td></tr>\n");

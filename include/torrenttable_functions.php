@@ -3,6 +3,7 @@
 function torrenttable($res, $variant = "index") {
 	global $pic_base_url, $CURUSER;
 
+$wait = 0;
 	if ($CURUSER["class"] < UC_VIP)
   {
 	  $gigs = $CURUSER["uploaded"] / (1024*1024*1024);
@@ -187,7 +188,7 @@ print("</td>\n");
 
     print("</table>\n");
 
-    return $rows;
+    //return $rows;
 }
 
 function commenttable($rows)

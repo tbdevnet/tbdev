@@ -1,5 +1,5 @@
 <?php
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
 
 dbconn();
 loggedinorreturn();
@@ -7,11 +7,11 @@ loggedinorreturn();
 stdhead("Search");
 ?>
 <table width=750 class=main border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
-<p>(this page is under construction)</p>
+
 <form method="get" action=browse.php>
 <p align="center">
 Search:
-<input type="text" name="search" size="40" value="<?= htmlspecialchars($searchstr) ?>" />
+<input type="text" name="search" size="40" value="" />
 in
 <select name="cat">
 <option value="0">(all types)</option>

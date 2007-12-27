@@ -10,7 +10,7 @@
 
   loggedinorreturn();
 
-  $action = $_GET["action"];
+  $action = isset($_GET["action"]) ? $_GET["action"] : '';
 
   function catch_up()
   {
@@ -1047,7 +1047,7 @@
     if (!is_valid_id($forumid))
       die;
 
-    $page = 0+$_GET["page"];
+    $page = isset($_GET["page"]) ? (int)$_GET["page"] : 0;
 
     $userid = $CURUSER["id"];
 

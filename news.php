@@ -1,6 +1,9 @@
 <?php
 
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+require_once "include/bbcode_functions.php";
+require_once "include/html_functions.php";
 
 dbconn();
 loggedinorreturn();
@@ -8,8 +11,8 @@ loggedinorreturn();
 if (get_user_class() < UC_ADMINISTRATOR)
 	stderr("Error", "Permission denied.");
 
-$action = $_GET["action"];
-
+$action = isset($_GET["action"]) ? $_GET['action'] : '';
+$warning = '';
 //   Delete News Item    //////////////////////////////////////////////////////
 
 if ($action == 'delete')
@@ -20,7 +23,7 @@ if ($action == 'delete')
 
   $returnto = htmlentities($_GET["returnto"]);
 
-  $sure = $_GET["sure"];
+  $sure = isset($_GET["sure"]) ? $_GET['sure'] : 0;
   if (!$sure)
     stderr("Delete news item","Do you really want to delete a news item? Click\n" .
     	"<a href=?action=delete&newsid=$newsid&returnto=$returnto&sure=1>here</a> if you are sure.");
@@ -42,7 +45,7 @@ if ($action == 'add')
 	if (!$body)
 		stderr("Error","The news item cannot be empty!");
 
-	$added = $_POST["added"];
+	$added = isset($_POST["added"]) ? $_POST['added'] : 0;
 	if (!$added)
 		$added = sqlesc(get_date_time());
 
@@ -93,7 +96,7 @@ if ($action == 'edit')
   }
   else
   {
- 	 	$returnto = htmlentities($_GET['returnto']);
+ 	 	$returnto = isset($_GET['returnto']) ? htmlentities($_GET['returnto']) : $BASEURL.'/news.php';
 	  stdhead();
 	  print("<h1>Edit News Item</h1>\n");
 	  print("<form method=post action=?action=edit&newsid=$newsid>\n");
@@ -112,7 +115,7 @@ if ($action == 'edit')
 
 stdhead("Site news");
 print("<h1>Submit News Item</h1>\n");
-if ($warning)
+if (!empty($warning))
 	print("<p><font size=-3>($warning)</font></p>");
 print("<form method=post action=?action=add>\n");
 print("<table border=1 cellspacing=0 cellpadding=5>\n");

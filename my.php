@@ -18,12 +18,12 @@ $outmessages = $arr[0];
 
 stdhead($CURUSER["username"] . "'s private page", false);
 
-if ($_GET["edited"]) {
+if (isset($_GET["edited"])) {
 	print("<h1>Profile updated!</h1>\n");
-	if ($_GET["mailsent"])
+	if (isset($_GET["mailsent"]))
 		print("<h2>Confirmation email has been sent!</h2>\n");
 }
-elseif ($_GET["emailch"])
+elseif (isset($_GET["emailch"]))
 	print("<h1>Email address changed!</h1>\n");
 else
 	print("<h1>Welcome, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");
@@ -52,7 +52,7 @@ $row = mysql_fetch_array($res,MYSQL_NUM);
 tr("Written comments", $row[0]);
 
 ****************/
-
+$stylesheets ='';
 $ss_r = mysql_query("SELECT * from stylesheets") or die;
 $ss_sa = array();
 while ($ss_a = mysql_fetch_assoc($ss_r))
@@ -92,7 +92,7 @@ tr("Accept PMs",
 
 tr("Delete PMs", "<input type=checkbox name=deletepms" . ($CURUSER["deletepms"] == "yes" ? " checked" : "") . "> (Default value for \"Delete PM on reply\")",1);
 tr("Save PMs", "<input type=checkbox name=savepms" . ($CURUSER["savepms"] == "yes" ? " checked" : "") . "> (Default value for \"Save PM to Sentbox\")",1);
-
+$categories = '';
 $r = mysql_query("SELECT id,name FROM categories ORDER BY name") or sqlerr();
 //$categories = "Default browsing categories:<br>\n";
 if (mysql_num_rows($r) > 0)

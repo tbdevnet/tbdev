@@ -59,10 +59,10 @@ function maketable($res)
 $id = 0 + $_GET["id"];
 
 if (!is_valid_id($id))
-  bark("Bad ID $id.");
+  bark("Bad ID.");
 
 $r = @mysql_query("SELECT * FROM users WHERE id=$id") or sqlerr();
-$user = mysql_fetch_assoc($r) or bark("No user with ID $id.");
+$user = mysql_fetch_assoc($r) or bark("No user with ID.");
 if ($user["status"] == "pending") die;
 $r = mysql_query("SELECT id, name, seeders, leechers, category FROM torrents WHERE owner=$id ORDER BY name") or sqlerr();
 if (mysql_num_rows($r) > 0)
@@ -89,19 +89,19 @@ if ($user["ip"] && (get_user_class() >= UC_MODERATOR || $user["id"] == $CURUSER[
   else
   {
     $dom = strtoupper($dom);
-    $domparts = explode(".", $dom);
-    $domain = $domparts[count($domparts) - 2];
-    if ($domain == "COM" || $domain == "CO" || $domain == "NET" || $domain == "NE" || $domain == "ORG" || $domain == "OR" )
-      $l = 2;
-    else
-      $l = 1;
+    //$domparts = explode(".", $dom);
+    //$domain = $domparts[count($domparts) - 2];
+    //if ($domain == "COM" || $domain == "CO" || $domain == "NET" || $domain == "NE" || $domain == "ORG" || $domain == "OR" )
+     // $l = 2;
+   // else
+     // $l = 1;
     $addr = "$ip ($dom)";
   }
 }
-if ($user[added] == "0000-00-00 00:00:00")
+if ($user['added'] == "0000-00-00 00:00:00")
   $joindate = 'N/A';
 else
-  $joindate = "$user[added] (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($user["added"])) . " ago)";
+  $joindate = "{$user['added']} (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($user["added"])) . " ago)";
 $lastseen = $user["last_access"];
 if ($lastseen == "0000-00-00 00:00:00")
   $lastseen = "never";
@@ -109,21 +109,21 @@ else
 {
   $lastseen .= " (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastseen)) . " ago)";
 }
-  $res = mysql_query("SELECT COUNT(*) FROM comments WHERE user=" . $user[id]) or sqlerr();
+  $res = mysql_query("SELECT COUNT(*) FROM comments WHERE user=" . $user['id']) or sqlerr();
   $arr3 = mysql_fetch_row($res);
   $torrentcomments = $arr3[0];
-  $res = mysql_query("SELECT COUNT(*) FROM posts WHERE userid=" . $user[id]) or sqlerr();
+  $res = mysql_query("SELECT COUNT(*) FROM posts WHERE userid=" . $user['id']) or sqlerr();
   $arr3 = mysql_fetch_row($res);
   $forumposts = $arr3[0];
 
 //if ($user['donated'] > 0)
 //  $don = "<img src={$pic_base_url}starbig.gif>";
-
-$res = mysql_query("SELECT name,flagpic FROM countries WHERE id=$user[country] LIMIT 1") or sqlerr();
+$country = '';
+$res = mysql_query("SELECT name,flagpic FROM countries WHERE id=".$user['country']." LIMIT 1") or sqlerr();
 if (mysql_num_rows($res) == 1)
 {
   $arr = mysql_fetch_assoc($res);
-	$country = "<td class=embedded><img src=\"{$pic_base_url}flag/{$arr[flagpic]}\" alt=\"". htmlspecialchars($arr[name]) ."\" style='margin-left: 8pt'></td>";
+	$country = "<td class=embedded><img src=\"{$pic_base_url}flag/{$arr['flagpic']}\" alt=\"". htmlspecialchars($arr['name']) ."\" style='margin-left: 8pt'></td>";
 }
 
 //if ($user["donor"] == "yes") $donor = "<td class=embedded><img src={$pic_base_url}starbig.gif alt='Donor' style='margin-left: 4pt'></td>";
@@ -138,8 +138,8 @@ if (mysql_num_rows($res) > 0)
 
 stdhead("Details for " . $user["username"]);
 $enabled = $user["enabled"] == 'yes';
-print("<p><table class=main border=0 cellspacing=0 cellpadding=0>".
-"<tr><td class=embedded><h1 style='margin:0px'>$user[username]" . get_user_icons($user, true) . "</h1></td>$country</tr></table></p>\n");
+print "<p><table class=main border=0 cellspacing=0 cellpadding=0>".
+"<tr><td class=embedded><h1 style='margin:0px'>{$user['username']}" . get_user_icons($user, true) . "</h1></td>$country</tr></table></p>\n";
 
 if (!$enabled)
   print("<p><b>This account has been disabled</b></p>\n");
@@ -168,8 +168,8 @@ begin_main_frame();
 <tr><td class=rowhead>Last&nbsp;seen</td><td align=left><?=$lastseen?></td></tr>
 <?
 if (get_user_class() >= UC_MODERATOR)
-  print("<tr><td class=rowhead>Email</td><td align=left><a href=mailto:$user[email]>$user[email]</a></td></tr>\n");
-if ($addr)
+  print "<tr><td class=rowhead>Email</td><td align=left><a href=mailto:{$user['email']}>{$user['email']}</a></td></tr>\n";
+if (isset($addr))
   print("<tr><td class=rowhead>Address</td><td align=left>$addr</td></tr>\n");
 
 //  if ($user["id"] == $CURUSER["id"] || get_user_class() >= UC_MODERATOR)
@@ -215,11 +215,11 @@ if ($forumposts && (($user["class"] >= UC_POWER_USER && $user["id"] == $CURUSER[
 else
 	print("<td align=left>$forumposts</td></tr>\n");
 
-if ($torrents)
+if (isset($torrents))
   print("<tr valign=top><td class=rowhead>Uploaded&nbsp;torrents</td><td align=left>$torrents</td></tr>\n");
-if ($seeding)
+if (isset($seeding))
   print("<tr valign=top><td class=rowhead>Currently&nbsp;seeding</td><td align=left>$seeding</td></tr>\n");
-if ($leeching)
+if (isset($leeching))
   print("<tr valign=top><td class=rowhead>Currently&nbsp;leeching</td><td align=left>$leeching</td></tr>\n");
 if ($user["info"])
  print("<tr valign=top><td align=left colspan=2 class=text bgcolor=#F4F4F0>" . format_comment($user["info"]) . "</td></tr>\n");
@@ -237,7 +237,7 @@ if ($CURUSER["id"] != $user["id"])
 		$r = mysql_query("SELECT id FROM friends WHERE userid=$user[id] AND friendid=$CURUSER[id]") or sqlerr(__FILE__,__LINE__);
 		$showpmbutton = (mysql_num_rows($r) == 1 ? 1 : 0);
 	}
-if ($showpmbutton)
+if (isset($showpmbutton))
 	print("<tr><td colspan=2 align=center><form method=get action=sendmessage.php><input type=hidden name=receiver value=" .
 		$user["id"] . "><input type=submit value=\"Send message\" style='height: 23px'></form></td></tr>");
 
@@ -251,7 +251,7 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
   print("<input type=hidden name='userid' value='$id'>\n");
   print("<input type=hidden name='returnto' value='userdetails.php?id=$id'>\n");
   print("<table class=main border=1 cellspacing=0 cellpadding=5>\n");
-  print("<tr><td class=rowhead>Title</td><td colspan=2 align=left><input type=text size=60 name=title value=\"" . htmlspecialchars($user[title]) . "\"></tr>\n");
+  print("<tr><td class=rowhead>Title</td><td colspan=2 align=left><input type=text size=60 name=title value=\"" . htmlspecialchars($user['title']) . "\"></tr>\n");
 	$avatar = htmlspecialchars($user["avatar"]);
   print("<tr><td class=rowhead>Avatar&nbsp;URL</td><td colspan=2 align=left><input type=text size=60 name=avatar value=\"$avatar\"></tr>\n");
 	// we do not want mods to be able to change user classes or amount donated...
@@ -263,7 +263,7 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
 	}
 
 	if (get_user_class() == UC_MODERATOR && $user["class"] > UC_VIP)
-	  printf("<input type=hidden name=class value=$user[class]\n");
+	  printf("<input type=hidden name=class value={$user['class']}\n");
 	else
 	{
 	  print("<tr><td class=rowhead>Class</td><td colspan=2 align=left><select name=class>\n");
@@ -272,7 +272,7 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
 	  else
 	    $maxclass = get_user_class() - 1;
 	  for ($i = 0; $i <= $maxclass; ++$i)
-	    print("<option value=$i" . ($user["class"] == $i ? " selected" : "") . ">$prefix" . get_user_class_name($i) . "\n");
+	    print("<option value=$i" . ($user["class"] == $i ? " selected" : "") . ">" . get_user_class_name($i) . "\n");
 	  print("</select></td></tr>\n");
 	}
 

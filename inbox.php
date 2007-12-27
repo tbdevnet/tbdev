@@ -1,8 +1,11 @@
 <?php
-  require "include/bittorrent.php";
-  dbconn(false);
-  loggedinorreturn();
-	$out = $_GET['out'];
+require "include/bittorrent.php";
+
+dbconn(false);
+loggedinorreturn();
+
+	$out = isset($_GET['out']) ? $_GET['out'] : false;
+	
   if ($out)		// Sentbox
   {
 	  stdhead("Sentbox", false);
