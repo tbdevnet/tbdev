@@ -1,6 +1,7 @@
 <?php
 
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
 
 dbconn(false);
 
@@ -9,11 +10,11 @@ loggedinorreturn();
 if (get_user_class() < UC_MODERATOR)
   die;
 
-$remove = 0+$_GET['remove'];
+$remove = isset($_GET['remove']) ? (int)$_GET['remove'] : 0;
 if (is_valid_id($remove))
 {
   mysql_query("DELETE FROM bans WHERE id=$remove") or sqlerr();
-  write_log("Ban $remove was removed by $CURUSER[id] ($CURUSER[username])");
+  write_log("Ban $remove was removed by ".$CURUSER['id']." (".$CURUSER['username'].")");
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR)
@@ -30,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR
 	$comment = sqlesc($comment);
 	$added = sqlesc(get_date_time());
 	mysql_query("INSERT INTO bans (added, addedby, first, last, comment) VALUES($added, $CURUSER[id], $first, $last, $comment)") or sqlerr(__FILE__, __LINE__);
-	header("Location: $BASEURL$_SERVER[REQUEST_URI]");
+	header("Location: $BASEURL/bans.php");
 	die;
 }
 

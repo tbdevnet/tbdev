@@ -374,17 +374,15 @@ function stdhead($title = "", $msgalert = true) {
 </td>
 
 </tr></table>
+
+<table class=mainouter width="100%" border="1" cellspacing="0" cellpadding="10">
+<!-- STATUSBAR -->
 <?php
-
-$w = "width=100%";
-//if ($_SERVER["REMOTE_ADDR"] == $_SERVER["SERVER_ADDR"]) $w = "width=984";
-
+print StatusBar();
 ?>
-<table class=mainouter <?=$w; ?> border="1" cellspacing="0" cellpadding="10">
-
 <!------------- MENU ------------------------------------------------------------------------>
 
-<? $fn = substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], "/") + 1); ?>
+
 <tr><td class=outer>
 <div id="submenu">
 
@@ -687,7 +685,88 @@ function hash_where($name, $hash) {
     return "($name = " . sqlesc($hash) . " OR $name = " . sqlesc($shhash) . ")";
 }
 
+function StatusBar() {
 
+	global $CURUSER;
+	
+	if (!$CURUSER)
+		return "<tr><td colspan='2'>Yeah Yeah!</td></tr>";
+
+
+	$upped = mksize($CURUSER['uploaded']);
+	
+	$downed = mksize($CURUSER['downloaded']);
+	
+	$ratio = $CURUSER['downloaded'] > 0 ? $CURUSER['uploaded']/$CURUSER['downloaded'] : 0;
+	
+	$ratio = number_format($ratio, 2);
+
+	$IsDonor = '';
+	if ($CURUSER['donor'] == "yes")
+	
+	$IsDonor = "<img src=pic/star.gif alt=donor title=donor>";
+
+
+	$warn = '';
+	if ($CURUSER['warned'] == "yes")
+	
+	$warn = "<img src=pic/warned.gif alt=warned title=warned>";
+	
+	$res1 = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location IN ('in', 'both') AND unread='yes'") or print(mysql_error());
+	
+	$arr1 = mysql_fetch_row($res1);
+	
+	$unread = $arr1[0];
+	
+	$inbox = ($unread == 1 ? "$unread&nbsp;New Message" : "$unread&nbsp;New Messages");
+
+	
+	$res2 = mysql_query("SELECT seeder, COUNT(*) AS pCount FROM peers WHERE userid=".$CURUSER['id']." GROUP BY seeder") or print(mysql_error());
+	
+	$seedleech = array('yes' => '0', 'no' => '0');
+	
+	while( $row = mysql_fetch_assoc($res2) ) {
+		if($row['seeder'] == 'yes')
+			$seedleech['yes'] = $row['pCount'];
+		else
+			$seedleech['no'] = $row['pCount'];
+		
+	}
+	
+	
+	$StatusBar = '';
+		$StatusBar = "<tr>".
+
+		"<td colspan='2' style='padding: 2px;'>".
+
+		"<div id='statusbar'>".
+		"<p class='home' style='color:black;'>Welcome back, <a href='userdetails.php?id=".$CURUSER['id']."'>".$CURUSER['username']."</a>".
+		  
+		"$IsDonor$warn&nbsp; [<a href='logout.php'>logout</a>]</p>".
+    
+		"<p>".date(DATE_RFC822)."</p>";
+
+
+
+		$StatusBar .= "".
+		"<p class='home' style='color:black;'>Ratio:$ratio".
+		"&nbsp;&nbsp;Uploaded:$upped".
+		"&nbsp;&nbsp;Downloaded:$downed".
+		
+		"&nbsp;&nbsp;Active Torrents:&nbsp;<img alt='Torrents seeding' title='Torrents seeding' src='pic/arrowup.gif'>&nbsp;{$seedleech['yes']}".
+		
+		"&nbsp;&nbsp;<img alt='Torrents leeching' title='Torrents leeching' src='pic/arrowdown.gif'>&nbsp;{$seedleech['no']}</p>";
+		
+
+	$StatusBar .= "<p>".
+
+
+	"<a href=inbox.php>$inbox</a>".
+	"</p></div></td></tr>";
+	
+	return $StatusBar;
+
+}
 
 
 ?>

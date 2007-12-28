@@ -56,6 +56,39 @@ background-color: #004E98;
 	background: #EA5F00;
 }
 
+/*
+status bar style
+*/
+#statusbar{ 
+	background: #E9D58F;
+	border: 1px solid #CEAA49;
+	margin: 5px 0 5px 0;
+	padding: 0 5px 0 5px;
+}
+
+#statusbar p{
+	background: transparent !important;
+	border: 0 !important;
+	font-size: 10px;
+	font-weight: bold; 
+	letter-spacing: 1px;
+	margin: 0 !important;
+	padding: 3px 0 3px 0; 
+	text-align: right;
+}
+
+#statusbar p{
+	font-weight: normal;
+	letter-spacing: 0;
+}
+
+#statusbar p.home{
+	float: left;
+}
+/*
+status bar
+*/
+
 table {
   border-collapse: collapse;
   border: none;
