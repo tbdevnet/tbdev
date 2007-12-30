@@ -168,7 +168,7 @@ begin_main_frame();
 <tr><td class=rowhead>Last&nbsp;seen</td><td align=left><?=$lastseen?></td></tr>
 <?
 if (get_user_class() >= UC_MODERATOR)
-  print "<tr><td class=rowhead>Email</td><td align=left><a href=mailto:{$user['email']}>{$user['email']}</a></td></tr>\n";
+  print "<tr><td class=rowhead>Email</td><td align=left><a href={$BASEURL}/email-gateway.php?id={$user['id']}>{$user['email']}</a></td></tr>\n";
 if (isset($addr))
   print("<tr><td class=rowhead>Address</td><td align=left>$addr</td></tr>\n");
 

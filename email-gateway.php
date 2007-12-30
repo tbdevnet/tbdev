@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		$message . "\n\n" .
 		"---------------------------------------------------------------------\n$SITENAME E-Mail Gateway\n";
 
-	$success = mail($to, $subject, $message, "From: $from", "-f$SITEEMAIL");
+	$success = mail($to, $subject, $message, "From: $SITEEMAIL", "-f$SITEEMAIL");
 
 	if ($success)
 		stderr("Success", "E-mail successfully queued for delivery.");

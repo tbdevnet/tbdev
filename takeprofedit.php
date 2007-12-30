@@ -127,7 +127,7 @@ email address had the IP address {$_SERVER["REMOTE_ADDR"]}. Please do not reply.
 
 To complete the update of your user profile, please follow this link:
 
-http://$thishost/confirmemail.php/{$CURUSER["id"]}/$hash/$obemail
+$BASEURL/confirmemail.php/{$CURUSER["id"]}/$hash/$obemail
 
 Your new email address will appear in your profile after you do this. Otherwise
 your profile will remain unchanged.

@@ -1,6 +1,7 @@
 <?php
 
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
 
 
 $id = (int)$_GET["id"];
@@ -34,6 +35,6 @@ if (!mysql_affected_rows())
 
 logincookie($id, $row["passhash"]);
 
-header("Refresh: 0; url=$BASEURL/ok.php?type=confirmed");
+header("Refresh: 0; url=$BASEURL/ok.php?type=confirm");
 
 ?>

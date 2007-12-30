@@ -1,6 +1,6 @@
 <?php
 
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php";
 
 if (!preg_match(':^/(\d{1,10})/([\w]{32})/(.+)$:', $_SERVER["PATH_INFO"], $matches))
 	httperr();
@@ -32,7 +32,7 @@ mysql_query("UPDATE users SET editsecret='', email=" . sqlesc($email) . " WHERE 
 if (!mysql_affected_rows())
 	httperr();
 
-header("Refresh: 0; url=../../../my.php?emailch=1");
+header("Refresh: 0; url=$BASEURL/my.php?emailch=1");
 
 
 ?>
