@@ -2,6 +2,11 @@
 
 require_once("bittorrent.php");
 
+function deadtime() {
+    global $announce_interval;
+    return time() - floor($announce_interval * 1.3);
+}
+
 function docleanup() {
 	global $torrent_dir, $signup_timeout, $max_dead_torrent_time, $autoclean_interval;
 

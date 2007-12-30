@@ -11,6 +11,14 @@
   loggedinorreturn();
 
   $action = isset($_GET["action"]) ? $_GET["action"] : '';
+  
+function encodehtml($s, $linebreaks = true)
+{
+  $s = str_replace("<", "&lt;", str_replace("&", "&amp;", $s));
+  if ($linebreaks)
+    $s = nl2br($s);
+  return $s;
+}
 
   function catch_up()
   {

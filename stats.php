@@ -1,5 +1,8 @@
 <?php
 require "include/bittorrent.php";
+require "include/user_functions.php";
+require "include/html_functions.php";
+
 dbconn(false);
 loggedinorreturn();
 
@@ -34,8 +37,8 @@ $res = mysql_query("SELECT COUNT(*) FROM peers") or sqlerr(__FILE__, __LINE__);
 $n = mysql_fetch_row($res);
 $n_peers = $n[0];
 
-$uporder = $_GET['uporder'];
-$catorder = $_GET["catorder"];
+$uporder = isset($_GET['uporder']) ? $_GET['uporder'] : '';
+$catorder = isset($_GET["catorder"]) ? $_GET["catorder"] : '';
 
 if ($uporder == "lastul")
 	$orderby = "last DESC, name";

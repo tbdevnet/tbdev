@@ -211,6 +211,21 @@ $privatesmilies = array(
   ":hslocked:" => "hslocked.gif",
 );
 
+  
+//Finds last occurrence of needle in haystack
+//in PHP5 use strripos() instead of this
+function _strlastpos ($haystack, $needle, $offset = 0)
+{
+	$addLen = strlen ($needle);
+	$endPos = $offset - $addLen;
+	while (true)
+	{
+		if (($newPos = strpos ($haystack, $needle, $endPos + $addLen)) === false) break;
+		$endPos = $newPos;
+	}
+	return ($endPos >= 0) ? $endPos : false;
+}
+
   //-------- Inserts a smilies frame
   //         (move to globals)
 

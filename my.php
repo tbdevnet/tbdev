@@ -1,6 +1,7 @@
 <?php
 
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php";
+require_once "include/html_functions.php";
 
 dbconn(false);
 

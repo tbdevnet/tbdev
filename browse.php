@@ -100,6 +100,18 @@ if (isset($cleansearchstr))
 	//$wherea[] = "0";
 	$addparam .= "search=" . urlencode($searchstr) . "&amp;";
 	$orderby = "";
+	
+	/////////////// SEARCH CLOUD MALARKY //////////////////////
+
+    $searchcloud = sqlesc($cleansearchstr);
+    $r = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM searchcloud WHERE searchedfor = $searchcloud"), MYSQL_NUM);
+    $a = $r[0];
+    if ($a)
+        mysql_query("UPDATE searchcloud SET howmuch = howmuch + 1 WHERE searchedfor = $searchcloud");
+    else
+        mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)");
+	
+	/////////////// SEARCH CLOUD MALARKY END ///////////////////
 }
 
 $where = implode(" AND ", $wherea);
@@ -159,19 +171,22 @@ else
 	stdhead();
 
 ?>
-
-<STYLE TYPE="text/css" MEDIA=screen>
-
-  a.catlink:link, a.catlink:visited{
-		text-decoration: none;
-	}
-
-	a.catlink:hover {
-		color: #A83838;
-	}
-
-</STYLE>
-
+<style type="text/css">
+.tag_cloud
+    {padding: 3px; text-decoration: none;
+    font-family: verdana;     }
+.tag_cloud:link  { color: #0099FF; text-decoration:none;}
+.tag_cloud:visited { color: #00CCFF; }
+.tag_cloud:hover { color: #0000FF; background: #00CCFF; }
+.tag_cloud:active { color: #0000FF; background: #FFFFFF; }
+</style>
+<div id="wrapper" style="width:90%;border:1px solid black;background-color:pink;">
+<?php
+//print out the tag cloud
+require_once "include/searchcloud_functions.php";
+print cloud();
+?>
+</div><br /><br />
 <form method="get" action="browse.php">
 <table class=bottom>
 <tr>
@@ -242,7 +257,7 @@ if ($ncats % $catsperrow == 0)
 <?
 
 if (isset($cleansearchstr))
-print("<h2>Search results for \"" . htmlspecialchars($searchstr) . "\"</h2>\n");
+print("<h2>Search results for \"" . htmlentities($searchstr, ENT_QUOTES) . "\"</h2>\n");
 
 if ($count) {
 	print($pagertop);

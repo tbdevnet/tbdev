@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("include/bittorrent.php");
 
@@ -14,12 +14,20 @@ if (!mkglobal("id"))
 	bark("missing form data");
 
 $id = 0 + $id;
-if (!$id)
+if (!is_valid_id($id))
 	die();
 
 dbconn();
 
 loggedinorreturn();
+
+function deletetorrent($id) {
+    global $torrent_dir;
+    mysql_query("DELETE FROM torrents WHERE id = $id");
+    foreach(explode(".","peers.files.comments.ratings") as $x)
+        mysql_query("DELETE FROM $x WHERE torrent = $id");
+    unlink("$torrent_dir/$id.torrent");
+}
 
 $res = mysql_query("SELECT name,owner,seeders FROM torrents WHERE id = $id");
 $row = mysql_fetch_assoc($res);

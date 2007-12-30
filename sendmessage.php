@@ -1,5 +1,7 @@
 <?php
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn(false);
 loggedinorreturn();
 
@@ -91,12 +93,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	if (!is_valid_id($receiver))
 	  die;
 
-	$replyto = 0+$_GET["replyto"];
+	$replyto = isset($_GET["replyto"]) ? (int)$_GET["replyto"] : 0;
 	if ($replyto && !is_valid_id($replyto))
 	  die;
 
-	$auto = $_GET["auto"];
-	$std = $_GET["std"];
+	$auto = isset($_GET["auto"]) ? $_GET["auto"] : false;
+	$std = isset($_GET["std"]) ? $_GET["std"] : false;
 
 	if (($auto || $std ) && get_user_class() < UC_MODERATOR)
 	  die("Permission denied.");
@@ -127,11 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	<div align=center>
 	<h1>Message to <a href=userdetails.php?id=<?=$receiver?>><?=$user["username"]?></a></h1>
 	<form method=post action=takemessage.php>
-	<? if ($_GET["returnto"] || $_SERVER["HTTP_REFERER"]) { ?>
-	<input type=hidden name=returnto value=<?=$_GET["returnto"] ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>>
+	<? if (isset($_GET["returnto"]) || $_SERVER["HTTP_REFERER"]) { ?>
+	<input type=hidden name=returnto value=<?=isset($_GET["returnto"]) ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>>
 	<? } ?>
 	<table border=1 cellspacing=0 cellpadding=5>
-	<tr><td<?=$replyto?" colspan=2":""?>><textarea name=msg cols=80 rows=15><?=htmlspecialchars($body)?></textarea></td></tr>
+	<tr><td<?=$replyto?" colspan=2":""?>><textarea name=msg cols=80 rows=15><?=isset($body) ? htmlspecialchars($body) : ''?></textarea></td></tr>
 	<tr>
 	<? if ($replyto) { ?>
 	<td align=center><input type=checkbox name='delete' value='yes' <?=$CURUSER['deletepms'] == 'yes'?"checked":""?>>Delete message you are replying to

@@ -1,13 +1,15 @@
 <?php
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn();
 loggedinorreturn();
 if (get_user_class() < UC_MODERATOR) stderr("Error", "Permission denied");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
-	$ip = $_POST["ip"];
+	$ip = isset($_POST["ip"]) ? $_POST["ip"] : false;
 else
-	$ip = $_GET["ip"];
+	$ip = isset($_GET["ip"]) ? $_GET["ip"] : false;
 if ($ip)
 {
 	$nip = ip2long($ip);
@@ -15,7 +17,7 @@ if ($ip)
 	  stderr("Error", "Bad IP.");
 	$res = mysql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
 	if (mysql_num_rows($res) == 0)
-	  stderr("Result", "The IP address <b>$ip</b> is not banned.");
+	  stderr("Result", "The IP address <b>".htmlentities($ip, ENT_QUOTES)."</b> is not banned.");
 	else
 	{
 	  $banstable = "<table class=main border=0 cellspacing=0 cellpadding=5>\n" .

@@ -10,6 +10,14 @@ require_once "include/torrenttable_functions.php";
 require_once "include/html_functions.php";
 
 
+function ratingpic($num) {
+    global $pic_base_url;
+    $r = round($num * 2) / 2;
+    if ($r < 1 || $r > 5)
+        return;
+    return "<img src=\"{$pic_base_url}{$r}.gif\" border=\"0\" alt=\"rating: $num / 5\" />";
+}
+
 function getagent($httpagent)
 {
 	if (preg_match("/^Azureus ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)/", $httpagent, $matches))
@@ -123,7 +131,7 @@ $owned = $moderator = 0;
 if (!$row || ($row["banned"] == "yes" && !$moderator))
 	stderr("Error", "No torrent with ID.");
 else {
-	if ($_GET["hit"]) {
+	if (isset($_GET["hit"])) {
 		mysql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
 		if ($_GET["tocomm"])
 			header("Location: $BASEURL/details.php?id=$id&page=0#startcomments");
@@ -148,11 +156,11 @@ else {
 
 		$spacer = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
-		if ($_GET["uploaded"]) {
+		if (isset($_GET["uploaded"])) {
 			print("<h2>Successfully uploaded!</h2>\n");
 			print("<p>You can start seeding now. <b>Note</b> that the torrent won't be visible until you do that!</p>\n");
 		}
-		elseif ($_GET["edited"]) {
+		elseif (isset($_GET["edited"])) {
 			print("<h2>Successfully edited!</h2>\n");
 			if (isset($_GET["returnto"]))
 				print("<p><b>Go back to <a href=\"" . htmlspecialchars($_GET["returnto"]) . "\">whence you came</a>.</b></p>\n");
@@ -160,7 +168,7 @@ else {
 		elseif (isset($_GET["searched"])) {
 			print("<h2>Your search for \"" . htmlspecialchars($_GET["searched"]) . "\" gave a single result:</h2>\n");
 		}
-		elseif ($_GET["rated"])
+		elseif (isset($_GET["rated"]))
 			print("<h2>Rating added!</h2>\n");
 
 $s=$row["name"];
@@ -275,7 +283,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		tr("Upped by", $uprow, 1);
 
 		if ($row["type"] == "multi") {
-			if (!$_GET["filelist"])
+			if (!isset($_GET["filelist"]))
 				tr("Num files<br /><a href=\"details.php?id=$id&amp;filelist=1$keepget#filelist\" class=\"sublink\">[See full list]</a>", $row["numfiles"] . " files", 1);
 			else {
 				tr("Num files", $row["numfiles"] . " files", 1);
@@ -294,7 +302,7 @@ $s.="<tr><td class=colhead>Path</td><td class=colhead align=right>Size</td></tr>
 			}
 		}
 
-		if (!$_GET["dllist"]) {
+		if (!isset($_GET["dllist"])) {
 			/*
 			$subres = mysql_query("SELECT seeder, COUNT(*) FROM peers WHERE torrent = $id GROUP BY seeder");
 			$resarr = array(yes => 0, no => 0);

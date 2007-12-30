@@ -1,5 +1,6 @@
 <?php
-  require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
 
   if ($_SERVER["REQUEST_METHOD"] != "POST")
     stderr("Error", "Method");
@@ -7,7 +8,7 @@
   dbconn();
 
   loggedinorreturn();
-  $n_pms = $_POST["n_pms"];
+  $n_pms = isset($_POST["n_pms"]) ? $_POST["n_pms"] : false;
   if ($n_pms)
   {  			                                                      //////  MM  ///
     if (get_user_class() < UC_MODERATOR)
@@ -64,10 +65,10 @@
   }
   else
   {               																							//////  PM  ///
-  	$receiver = $_POST["receiver"];
-	  $origmsg = $_POST["origmsg"];
-	  $save = $_POST["save"];
- 	  $returnto = $_POST["returnto"];
+		$receiver = isset($_POST["receiver"]) ? $_POST["receiver"] : false;
+		$origmsg = isset($_POST["origmsg"]) ? $_POST["origmsg"] : false;
+		$save = isset($_POST["save"]) ? $_POST["save"] : false;
+		$returnto = isset($_POST["returnto"]) ? $_POST["returnto"] : '';
 
 	  if (!is_valid_id($receiver) || ($origmsg && !is_valid_id($origmsg)))
 	  	stderr("Error","Invalid ID");
@@ -125,7 +126,7 @@ EOD;
 	    	$body, "From: $SITEEMAIL", "-f$SITEEMAIL");
 	    }
 	  }
-	  $delete = $_POST["delete"];
+	  $delete = isset($_POST["delete"]) ? $_POST["delete"] : '';
 
 	  if ($origmsg)
 	  {

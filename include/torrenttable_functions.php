@@ -1,5 +1,13 @@
 <?php
 
+function linkcolor($num) {
+    if (!$num)
+        return "red";
+//    if ($num == 1)
+//        return "yellow";
+    return "green";
+}
+
 function torrenttable($res, $variant = "index") {
 	global $pic_base_url, $CURUSER;
 

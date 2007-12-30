@@ -52,5 +52,15 @@
   {
     print("</td></tr></table>\n");
   }
+  
+	function tr($x,$y,$noesc=0) {
+		if ($noesc)
+			$a = $y;
+		else {
+			$a = htmlspecialchars($y);
+			$a = str_replace("\n", "<br />\n", $a);
+		}
+		print("<tr><td class=\"heading\" valign=\"top\" align=\"right\">$x</td><td valign=\"top\" align=left>$a</td></tr>\n");
+	}
 
 ?>

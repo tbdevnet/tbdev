@@ -225,7 +225,7 @@ function mksize($bytes)
 	else
 		return number_format($bytes / 1099511627776, 2) . " TB";
 }
-
+/*
 function mksizeint($bytes)
 {
 	$bytes = max(0, $bytes);
@@ -240,11 +240,7 @@ function mksizeint($bytes)
 	else
 		return floor($bytes / 1099511627776) . " TB";
 }
-
-function deadtime() {
-    global $announce_interval;
-    return time() - floor($announce_interval * 1.3);
-}
+*/
 
 function mkprettytime($s) {
     if ($s < 0)
@@ -284,15 +280,6 @@ function mkglobal($vars) {
     return 1;
 }
 
-function tr($x,$y,$noesc=0) {
-    if ($noesc)
-        $a = $y;
-    else {
-        $a = htmlspecialchars($y);
-        $a = str_replace("\n", "<br />\n", $a);
-    }
-    print("<tr><td class=\"heading\" valign=\"top\" align=\"right\">$x</td><td valign=\"top\" align=left>$a</td></tr>\n");
-}
 
 function validfilename($name) {
     return preg_match('/^[^\0-\x1f:\\\\\/?*\xff#<>|]+$/si', $name);
@@ -309,7 +296,7 @@ function sqlesc($x) {
 function sqlwildcardesc($x) {
     return str_replace(array("%","_"), array("\\%","\\_"), mysql_real_escape_string($x));
 }
-
+/*
 function urlparse($m) {
     $t = $m[0];
     if (preg_match(',^\w+://,', $t))
@@ -325,7 +312,7 @@ function parsedescr($d, $html) {
     }
     return $d;
 }
-
+*/
 function stdhead($title = "", $msgalert = true) {
     global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $pic_base_url, $stylesheet;
 
@@ -495,16 +482,8 @@ function loggedinorreturn() {
     }
 }
 
-function deletetorrent($id) {
-    global $torrent_dir;
-    mysql_query("DELETE FROM torrents WHERE id = $id");
-    foreach(explode(".","peers.files.comments.ratings") as $x)
-        mysql_query("DELETE FROM $x WHERE torrent = $id");
-    unlink("$torrent_dir/$id.torrent");
-}
 
-
-
+/*
 function downloaderdata($res) {
     $rows = array();
     $ids = array();
@@ -534,7 +513,7 @@ function downloaderdata($res) {
 
     return array($rows, $peerdata);
 }
-
+*/
 
 
 function searchfield($s) {
@@ -549,21 +528,6 @@ function genrelist() {
     return $ret;
 }
 
-function linkcolor($num) {
-    if (!$num)
-        return "red";
-//    if ($num == 1)
-//        return "yellow";
-    return "green";
-}
-
-function ratingpic($num) {
-    global $pic_base_url;
-    $r = round($num * 2) / 2;
-    if ($r < 1 || $r > 5)
-        return;
-    return "<img src=\"{$pic_base_url}{$r}.gif\" border=\"0\" alt=\"rating: $num / 5\" />";
-}
 
 function get_row_count($table, $suffix = "")
 {
@@ -609,35 +573,11 @@ function get_date_time($timestamp = 0)
     return gmdate("Y-m-d H:i:s");
 }
 
-function encodehtml($s, $linebreaks = true)
-{
-  $s = str_replace("<", "&lt;", str_replace("&", "&amp;", $s));
-  if ($linebreaks)
-    $s = nl2br($s);
-  return $s;
-}
 
 function get_dt_num()
 {
   return gmdate("YmdHis");
 }
-
-
-//Finds last occurrence of needle in haystack
-//in PHP5 use strripos() instead of this
-function _strlastpos ($haystack, $needle, $offset = 0)
-{
-	$addLen = strlen ($needle);
-	$endPos = $offset - $addLen;
-	while (true)
-	{
-		if (($newPos = strpos ($haystack, $needle, $endPos + $addLen)) === false) break;
-		$endPos = $newPos;
-	}
-	return ($endPos >= 0) ? $endPos : false;
-}
-
-
 
 
 
