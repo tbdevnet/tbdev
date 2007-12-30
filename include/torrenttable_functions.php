@@ -70,7 +70,7 @@ $wait = 0;
         if (isset($row["cat_name"])) {
             print("<a href=\"browse.php?cat=" . $row["category"] . "\">");
             if (isset($row["cat_pic"]) && $row["cat_pic"] != "")
-                print("<img border=\"0\" src=\"{$pic_base_url}{$row['cat_pic']}\" alt=\"{$row['cat_name']}\" />");
+                print("<img border=\"0\" src=\"{$pic_base_url}caticons/{$row['cat_pic']}\" alt=\"{$row['cat_name']}\" />");
             else
                 print($row["cat_name"]);
             print("</a>");
