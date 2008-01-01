@@ -11,7 +11,7 @@
   loggedinorreturn();
 
   $action = isset($_GET["action"]) ? $_GET["action"] : '';
-  
+  $forum_pic_url = $pic_base_url . 'forumicons/';
 function encodehtml($s, $linebreaks = true)
 {
   $s = str_replace("<", "&lt;", str_replace("&", "&amp;", $s));
@@ -22,12 +22,20 @@ function encodehtml($s, $linebreaks = true)
 
   function catch_up()
   {
-	die("This feature is currently unavailable.");
-    global $CURUSER;
+	//die("This feature is currently unavailable.");
+    global $CURUSER, $READPOST_EXPIRY;
 
     $userid = $CURUSER["id"];
 
-    $res = mysql_query("SELECT id, lastpost FROM topics") or sqlerr(__FILE__, __LINE__);
+    //..rp..
+$dt = sqlesc((get_date_time(gmtime() - $READPOST_EXPIRY)));
+
+$res = mysql_query(
+"SELECT t.id, t.lastpost FROM topics AS t ".
+"LEFT JOIN posts AS p ON p.id = t.lastpost ".
+"WHERE p.added > $dt"
+) or sqlerr(__FILE__, __LINE__);
+//..rp..
 
     while ($arr = mysql_fetch_assoc($res))
     {
@@ -137,7 +145,7 @@ function encodehtml($s, $linebreaks = true)
 
   function insert_compose_frame($id, $newtopic = true, $quote = false)
   {
-    global $maxsubjectlength, $CURUSER, $pic_base_url;
+    global $maxsubjectlength, $CURUSER, $forum_pic_url;
 
 
     if ($newtopic)
@@ -227,7 +235,7 @@ function encodehtml($s, $linebreaks = true)
 //	    $avatar = $user["avatar"];
 
         if (!$avatar)
-          $avatar = "{$pic_base_url}default_avatar.gif";
+          $avatar = "{$forum_pic_url}default_avatar.gif";
 
         print("<p class=sub>#" . $post["id"] . " by " . $user["username"] . " at " . $post["added"] . " GMT</p>");
 
@@ -377,9 +385,9 @@ function encodehtml($s, $linebreaks = true)
 
   if ($action == "viewtopic")
   {
-    $topicid = 0+$_GET["topicid"];
+    $topicid = (int)$_GET["topicid"];
 
-    $page = 0+$_GET["page"];
+    $page = isset($_GET["page"]) ? (int)$_GET["page"] : false;
 
     if (!is_valid_id($topicid))
       die;
@@ -508,8 +516,11 @@ function encodehtml($s, $linebreaks = true)
 
     $lpr = $a[0];
 
-    if (!$lpr)
-      mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)") or sqlerr(__FILE__, __LINE__);
+    //..rp..
+/* if (!$lpr)
+mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)") or sqlerr(__FILE__, __LINE__);
+*/
+//..rp..
 
     while ($arr = mysql_fetch_assoc($res))
     {
@@ -553,15 +564,18 @@ function encodehtml($s, $linebreaks = true)
       }
 
       if (!$avatar)
-        $avatar = "{$pic_base_url}default_avatar.gif";
+        $avatar = "{$forum_pic_url}default_avatar.gif";
 
       print("<a name=$postid>\n");
 
       if ($pn == $pc)
       {
         print("<a name=last>\n");
-        if ($postid > $lpr)
-          mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND topicid=$topicid") or sqlerr(__FILE__, __LINE__);
+        //..rp..
+/* if ($postid > $lpr)
+mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND topicid=$topicid") or sqlerr(__FILE__, __LINE__);
+*/
+//..rp..
       }
 
       print("<p class=sub><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded width=99%>#$postid by $by at $added");
@@ -575,7 +589,7 @@ function encodehtml($s, $linebreaks = true)
       if (get_user_class() >= UC_MODERATOR)
         print(" - [<a href=?action=deletepost&postid=$postid><b>Delete</b></a>]");
 
-      print("</td><td class=embedded width=1%><a href=#top><img src=\"{$pic_base_url}top.gif\" border=0 alt='Top'></a></td></tr>");
+      print("</td><td class=embedded width=1%><a href=#top><img src=\"{$forum_pic_url}top.gif\" border=0 alt='Top'></a></td></tr>");
 
       print("</table></p>\n");
 
@@ -598,8 +612,22 @@ function encodehtml($s, $linebreaks = true)
         ($avatar ? "<img width=150 src=\"$avatar\">" : ""). "</td><td class=comment>$body</td></tr>\n");
 
       end_table();
-    }
-
+    
+    $postadd = $arr['added'];
+	//..rp..
+	if (($postid > $lpr) AND ($postadd > (get_date_time(gmtime() - $READPOST_EXPIRY)))) {
+	
+	if ($lpr)
+	mysql_query("UPDATE readposts SET lastpostread=$postid ".
+	"WHERE userid=$userid AND topicid=$topicid") or sqlerr(__FILE__, __LINE__);
+	else
+	mysql_query("INSERT INTO readposts (userid, topicid, lastpostread) ".
+	"VALUES($userid, $topicid, $postid)") or sqlerr(__FILE__, __LINE__);
+	
+	}}
+	//..rp..
+	
+	
     //------ Mod options
 
 	  if (get_user_class() >= UC_MODERATOR)
@@ -609,30 +637,30 @@ function encodehtml($s, $linebreaks = true)
 	    $res = mysql_query("SELECT id,name,minclasswrite FROM forums ORDER BY name") or sqlerr(__FILE__, __LINE__);
 	    print("<table border=0 cellspacing=0 cellpadding=0>\n");
 
-	    print("<form method=post action=?action=setsticky>\n");
+	    print("<form method=post action=forums.php?action=setsticky>\n");
 	    print("<input type=hidden name=topicid value=$topicid>\n");
-	    print("<input type=hidden name=returnto value=$BASEURL$_SERVER[REQUEST_URI]>\n");
+	    print("<input type=hidden name=returnto value=$_SERVER[REQUEST_URI]>\n");
 	    print("<tr><td class=embedded align=right>Sticky:</td>\n");
 	    print("<td class=embedded><input type=radio name=sticky value='yes' " . ($sticky ? " checked" : "") . "> Yes <input type=radio name=sticky value='no' " . (!$sticky ? " checked" : "") . "> No\n");
 	    print("<input type=submit value='Set'></td></tr>");
 	    print("</form>\n");
 
-	    print("<form method=post action=?action=setlocked>\n");
+	    print("<form method=post action=forums.php?action=setlocked>\n");
 	    print("<input type=hidden name=topicid value=$topicid>\n");
-	    print("<input type=hidden name=returnto value=$BASEURL$_SERVER[REQUEST_URI]>\n");
+	    print("<input type=hidden name=returnto value=$_SERVER[REQUEST_URI]>\n");
 	    print("<tr><td class=embedded align=right>Locked:</td>\n");
 	    print("<td class=embedded><input type=radio name=locked value='yes' " . ($locked ? " checked" : "") . "> Yes <input type=radio name=locked value='no' " . (!$locked ? " checked" : "") . "> No\n");
 	    print("<input type=submit value='Set'></td></tr>");
 	    print("</form>\n");
 
-	    print("<form method=post action=?action=renametopic>\n");
+	    print("<form method=post action=forums.php?action=renametopic>\n");
 	    print("<input type=hidden name=topicid value=$topicid>\n");
-	    print("<input type=hidden name=returnto value=$BASEURL$_SERVER[REQUEST_URI]>\n");
+	    print("<input type=hidden name=returnto value=$_SERVER[REQUEST_URI]>\n");
 	    print("<tr><td class=embedded align=right>Rename topic:</td><td class=embedded><input type=text name=subject size=60 maxlength=$maxsubjectlength value=\"" . htmlspecialchars($subject) . "\">\n");
 	    print("<input type=submit value='Okay'></td></tr>");
 	    print("</form>\n");
 
-	    print("<form method=post action=?action=movetopic&topicid=$topicid>\n");
+	    print("<form method=post action=forums.php?action=movetopic&topicid=$topicid>\n");
 	    print("<tr><td class=embedded>Move this thread to:&nbsp;</td><td class=embedded><select name=forumid>");
 
 	    while ($arr = mysql_fetch_assoc($res))
@@ -641,7 +669,7 @@ function encodehtml($s, $linebreaks = true)
 
 	    print("</select> <input type=submit value='Okay'></form></td></tr>\n");
 	    print("<tr><td class=embedded>Delete topic</td><td class=embedded>\n");
-	    print("<form method=get action=forums>\n");
+	    print("<form method=get action=forums.php>\n");
 	    print("<input type=hidden name=action value=deletetopic>\n");
 	    print("<input type=hidden name=topicid value=$topicid>\n");
 	    print("<input type=hidden name=forumid value=$forumid>\n");
@@ -1202,7 +1230,7 @@ function encodehtml($s, $linebreaks = true)
 
         if ($tpages > 1)
         {
-          $topicpages = " (<img src=\"{$pic_base_url}multipage.gif\">";
+          $topicpages = " (<img src=\"{$forum_pic_url}multipage.gif\">";
 
           for ($i = 1; $i <= $tpages; ++$i)
             $topicpages .= " <a href=?action=viewtopic&topicid=$topicid&page=$i>$i</a>";
@@ -1219,7 +1247,11 @@ function encodehtml($s, $linebreaks = true)
         $arr = mysql_fetch_assoc($res);
 
         $lppostid = 0 + $arr["id"];
-
+		
+		//..rp..
+		$lppostadd = $arr["added"];
+		// ..rp..
+		
         $lpuserid = 0 + $arr["userid"];
 
         $lpadded = "<nobr>" . $arr["added"] . "</nobr>";
@@ -1258,13 +1290,17 @@ function encodehtml($s, $linebreaks = true)
 
         $new = !$a || $lppostid > $a[0];
 
+		// ..rp..
+		$new = ($lppostadd > (get_date_time(gmtime() - $READPOST_EXPIRY))) ? (!$a || $lppostid > $a[0]) : 0;
+		//..rp..
+
         $topicpic = ($locked ? ($new ? "lockednew" : "locked") : ($new ? "unlockednew" : "unlocked"));
 
         $subject = ($sticky ? "Sticky: " : "") . "<a href=?action=viewtopic&topicid=$topicid><b>" .
         encodehtml($topicarr["subject"]) . "</b></a>$topicpages";
 
         print("<tr><td align=left><table border=0 cellspacing=0 cellpadding=0><tr>" .
-        "<td class=embedded style='padding-right: 5px'><img src=\"{$pic_base_url}{$topicpic}.gif\">" .
+        "<td class=embedded style='padding-right: 5px'><img src=\"{$forum_pic_url}{$topicpic}.gif\">" .
         "</td><td class=embedded align=left>\n" .
         "$subject</td></tr></table></td><td align=right>$replies</td>\n" .
         "<td align=right>$views</td><td align=left>$lpauthor</td>\n" .
@@ -1283,9 +1319,9 @@ function encodehtml($s, $linebreaks = true)
 
     print("<p><table class=main border=0 cellspacing=0 cellpadding=0><tr valing=center>\n");
 
-    print("<td class=embedded><img src=\"{$pic_base_url}unlockednew.gif\" style='margin-right: 5px'></td><td class=embedded>New posts</td>\n");
+    print("<td class=embedded><img src=\"{$forum_pic_url}unlockednew.gif\" style='margin-right: 5px'></td><td class=embedded>New posts</td>\n");
 
-    print("<td class=embedded><img src=\"{$pic_base_url}locked.gif\" style='margin-left: 10px; margin-right: 5px'>" .
+    print("<td class=embedded><img src=\"{$forum_pic_url}locked.gif\" style='margin-left: 10px; margin-right: 5px'>" .
     "</td><td class=embedded>Locked topic</td>\n");
 
     print("</tr></table></p>\n");
@@ -1325,7 +1361,15 @@ function encodehtml($s, $linebreaks = true)
 
     $maxresults = 25;
 
-    $res = mysql_query("SELECT id, forumid, subject, lastpost FROM topics ORDER BY lastpost") or sqlerr(__FILE__, __LINE__);
+    // ..rp..
+	$dt = sqlesc(get_date_time(gmtime() - $READPOST_EXPIRY));
+	
+	$res = mysql_query("SELECT st.id, st.forumid, st.subject, st.lastpost ".
+	"FROM topics AS st ".
+	"LEFT JOIN posts AS sp ON st.lastpost = sp.id ".
+	"WHERE sp.added > $dt ".
+	"ORDER BY forumid") or sqlerr(__FILE__, __LINE__);
+	//..rp..
 
     stdhead();
 
@@ -1372,7 +1416,7 @@ function encodehtml($s, $linebreaks = true)
       }
 
       print("<tr><td align=left><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>" .
-      "<img src=\"{$pic_base_url}unlockednew.gif\" style='margin-right: 5px'></td><td class=embedded>" .
+      "<img src=\"{$forum_pic_url}unlockednew.gif\" style='margin-right: 5px'></td><td class=embedded>" .
       "<a href=?action=viewtopic&topicid=$topicid&page=last#last><b>" . htmlspecialchars($arr["subject"]) .
       "</b></a></td></tr></table></td><td align=left><a href=?action=viewforum&amp;forumid=$forumid><b>$forumname</b></a></td></tr>\n");
     }
@@ -1397,11 +1441,11 @@ if ($action == "search")
 {
 	stdhead("Forum Search");
 	print("<h1>Forum Search (<font color=red>BETA</font>)</h1>\n");
-	$keywords = trim($_GET["keywords"]);
+	$keywords = isset($_GET["keywords"]) ? trim($_GET["keywords"]) : '';
 	if ($keywords != "")
 	{
 		$perpage = 50;
-		$page = max(1, 0 + $_GET["page"]);
+		$page = max(1, 0 + isset($_GET["page"]) ? $_GET["page"] : 0);
 		$ekeywords = sqlesc($keywords);
 		print("<p><b>Searched for \"" . htmlspecialchars($keywords) . "\"</b></p>\n");
 		$res = mysql_query("SELECT COUNT(*) FROM posts WHERE MATCH (body) AGAINST ($ekeywords)") or sqlerr(__FILE__, __LINE__);
@@ -1460,7 +1504,7 @@ if ($action == "search")
 			print("<p><b>Search again</b></p>\n");
 		}
 	}
-	print("<form method=get action=forums?>\n");
+	print("<form method=get action=forums.php?>\n");
 	print("<input type=hidden name=action value=search>\n");
 	print("<table border=1 cellspacing=0 cellpadding=5>\n");
 	print("<tr><td class=rowhead>Key words</td><td align=left><input type=text size=55 name=keywords value=\"" . htmlspecialchars($keywords) .
@@ -1562,10 +1606,21 @@ if ($action == "search")
 
       $a = mysql_fetch_row($r);
 
-      if ($a && $a[0] >= $lastpostid)
-        $img = "unlocked";
-      else
-        $img = "unlockednew";
+	//..rp..
+	$npostcheck = ($post_arr['added'] > (get_date_time(gmtime() - $READPOST_EXPIRY))) ? (!$a OR $lastpostid > $a[0]) : 0;
+	
+	/* if ($a && $a[0] >= $lastpostid)
+	$img = "unlocked";
+	else
+	$img = "unlockednew";
+	*/
+	
+	if ($npostcheck)
+	$img = "unlockednew";
+	else
+	$img = "unlocked";
+	
+	// ..rp..
     }
     else
     {
@@ -1573,7 +1628,7 @@ if ($action == "search")
       $img = "unlocked";
     }
     print("<tr><td align=left><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded style='padding-right: 5px'><img src=".
-    "\"{$pic_base_url}$img.gif\"></td><td class=embedded><a href=?action=viewforum&forumid=$forumid><b>$forumname</b></a><br>\n" .
+    "\"{$forum_pic_url}$img.gif\"></td><td class=embedded><a href=?action=viewforum&forumid=$forumid><b>$forumname</b></a><br>\n" .
     "$forumdescription</td></tr></table></td><td align=right>$topiccount</td></td><td align=right>$postcount</td>" .
     "<td align=left>$lastpost</td></tr>\n");
   }
