@@ -8,7 +8,7 @@ function deadtime() {
 }
 
 function docleanup() {
-	global $torrent_dir, $signup_timeout, $max_dead_torrent_time, $autoclean_interval;
+	global $torrent_dir, $signup_timeout, $max_dead_torrent_time, $autoclean_interval, $READPOST_EXPIRY;
 
 	set_time_limit(0);
 	ignore_user_abort(1);
@@ -210,6 +210,13 @@ function docleanup() {
 		mysql_query("DELETE FROM files WHERE torrent=$arr[id]");
 		write_log("Torrent $arr[id] ($arr[name]) was deleted by system (older than $days days)");
 	}
+
+    // Remove expired readposts...
+    $dt = sqlesc(time() - $READPOST_EXPIRY);
+
+    mysql_query("DELETE readposts FROM readposts ".
+        "LEFT JOIN posts ON readposts.lastpostread = posts.id ".
+        "WHERE posts.added < $dt");
 
 }
 
