@@ -99,9 +99,14 @@ if ($action == "viewposts")
 
 	    $forumname = $arr["name"];
 
-	    $newposts = ($arr["lastpostread"] < $arr["lastpost"]) && $CURUSER["id"] == $userid;
+		$dt = (get_date_time(gmtime() - $READPOST_EXPIRY));
 
-	    $added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
+		$newposts = 0;
+
+		if ($arr['added'] > $dt)
+			$newposts = ($arr["lastpostread"] < $arr["lastpost"]) && $CURUSER["id"] == $userid;
+
+		$added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
 
 	    print("<p class=sub><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
 	    $added&nbsp;--&nbsp;<b>Forum:&nbsp;</b>

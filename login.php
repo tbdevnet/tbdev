@@ -9,7 +9,7 @@ stdhead("Login");
 unset($returnto);
 if (!empty($_GET["returnto"])) {
 	$returnto = $_GET["returnto"];
-	if (!$_GET["nowarn"]) {
+	if (!isset($_GET["nowarn"])) {
 		print("<h1>Not logged in!</h1>\n");
 		print("<p><b>Error:</b> The page you tried to view can only be used when you're logged in.</p>\n");
 	}

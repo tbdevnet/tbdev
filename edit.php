@@ -2,6 +2,7 @@
 
 require_once "include/bittorrent.php" ;
 require_once "include/user_functions.php" ;
+require_once "include/html_functions.php" ;
 
 if (!mkglobal("id"))
 	die();
@@ -57,7 +58,7 @@ else
 	if (get_user_class() >= UC_MODERATOR) //($CURUSER["admin"] == "yes")
 		tr("Banned", "<input type=\"checkbox\" name=\"banned\"" . (($row["banned"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Banned", 1);
 
-	print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value='Edit it!' style='height: 25px; width: 100px'> <input type=reset value='Revert changes' style='height: 25px; width: 100px'></td></tr>\n");
+	print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value='Edit it!' class='btn'> <input type=reset value='Revert changes' class='btn'></td></tr>\n");
 	print("</table>\n");
 	print("</form>\n");
 	print("<p>\n");

@@ -1,6 +1,13 @@
 <?php
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn();
+loggedinorreturn();
+
+if( get_user_class() < UC_MODERATOR )
+	stderr('Error', 'Move along, nothing to see here');
+	
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
   $username = trim($_POST["username"]);
