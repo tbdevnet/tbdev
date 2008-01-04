@@ -1,6 +1,12 @@
 <?php
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+require_once "include/html_functions.php";
+require_once "include/bbcode_functions.php";
+
 dbconn();
+loggedinorreturn();
+
 
 function insert_tag($name, $description, $syntax, $example, $remarks)
 {
@@ -19,9 +25,9 @@ function insert_tag($name, $description, $syntax, $example, $remarks)
 stdhead("Tags");
 begin_main_frame();
 begin_frame("Tags");
-$test = $_POST["test"];
+$test = isset($_POST["test"]) ? $_POST["test"] : '';
 ?>
-<p>The TorrentBits forums supports a number of <i>BB tags</i> which you can embed to modify how your posts are displayed.</p>
+<p>The <?=$SITENAME?> forums supports a number of <i>BB tags</i> which you can embed to modify how your posts are displayed.</p>
 
 <form method=post action=?>
 <textarea name=test cols=60 rows=3><? print($test ? htmlspecialchars($test) : "")?></textarea>

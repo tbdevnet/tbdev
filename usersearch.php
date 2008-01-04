@@ -14,6 +14,8 @@ if (get_user_class() < UC_MODERATOR)
 	stderr("Error", "Permission denied.");
 
 stdhead("Administrative User Search");
+
+
 echo "<h1>Administrative User Search</h1>\n";
 $where_is = '';
 $join_is = '';
@@ -128,9 +130,9 @@ $highlight = " bgcolor=lightgrey";
     ?>
     </select>
 
-    <input name="d" type="text" value="<?=isset($_GET['d'])?$_GET['d']:''?>" size="12" maxlength="10">
+    <input name="d" type="text" value="<?=isset($_GET['d'])?$_GET['d']:''?>" size="12" maxlength="10" />
 
-    <input name="d2" type="text" value="<?=isset($_GET['d2'])?$_GET['d2']:''?>" size="12" maxlength="10"></td>
+    <input name="d2" type="text" value="<?=isset($_GET['d2'])?$_GET['d2']:''?>" size="12" maxlength="10" /></td>
 
 
   <td valign="middle" class=rowhead>Uploaded:</td>

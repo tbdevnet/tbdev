@@ -239,7 +239,7 @@ if ($CURUSER["id"] != $user["id"])
 	}
 if (isset($showpmbutton))
 	print("<tr><td colspan=2 align=center><form method=get action=sendmessage.php><input type=hidden name=receiver value=" .
-		$user["id"] . "><input type=submit value=\"Send message\" style='height: 23px'></form></td></tr>");
+		$user["id"] . "><input type=submit value=\"Send message\" class='btn'></form></td></tr>");
 
 print("</table>\n");
 

@@ -97,37 +97,29 @@ Games, movies, apps both unix and win, tracker support, music, xxx.</li>
   BitTorrent link site.</li>
 </ul></td></tr></table>
 
-<h2>Game servers hosted by TB users</h2>
-<table width=100% border=1 cellspacing=0 cellpadding=10><tr><td class=text><ul>
-<li><b>Call of Duty</b> - DTC Clan server (for most recent password, PM <a class=altlink class=altlink href=userdetails.php?id=81576>Bandido</a>), IP: 62.216.12.107:28960.</li>
-<li><b>Call of Duty</b> - Nordic Vikings Server (for most recent password, PM <a class=altlink class=altlink href=userdetails.php?id=106392>yo0812</a>), IP: 62.97.229.152:28960.</li>
-<li><b>Counter-Strike</b> - 14/7h Dedicated CS Server (managed by TB user <a class=altlink class=altlink href=userdetails.php?id=195804>Lars447</a>), IP: 24.103.136.30:27015
-</ul></td></tr></table>
 
-<h2>Link to torrentbits.org</h2>
+<h2>Link to TBDev.net</h2>
 <table width=100% border=1 cellspacing=0 cellpadding=10><tr><td class=text>
 Do you want a link to torrentbits on your homepage?<br>
 Copy the following and paste it into your homepage code.<br>
 <br>
 <font color=#004E98>
-&lt;!-- TorrentBits Link --&gt;<br>
+&lt;!-- TBDev Link --&gt;<br>
 <br>
-&lt;a href="http://www.torrentbits.org/"&gt;<br>
-&lt;img src="http://www.torrentbits.org/pic/tbani22.gif" border="0" alt="TorrentBits - We supply the latest stuff!"&gt;&lt;/a&gt;<br>
+&lt;a href="http://www.tbdev.net"&gt;<br>
+&lt;img src="http://www.tbdev.net/pic/tbani22.gif" border="0" alt="TBDev - The best!"&gt;&lt;/a&gt;<br>
 <br>
-&lt;!-- End of TorrentBits Link --&gt;</font><br>
+&lt;!-- End of TBDev Link --&gt;</font><br>
 <br>
 <br>
 It will look like this:<br>
 <br>
-<a href="http://www.torrentbits.org/">
-<img src="http://www.torrentbits.org/pic/tbani22.gif" border="0" alt="TorrentBits - We supply the latest stuff!"></a>
+<a href="http://www.tbdev.net/">
+<img src="./pic/tbdev_btn_red.png" border="0" alt="TBDev - The best!"></a>
 <br>
 </td></tr></table>
-<p align=right><font size=1 color=#004E98><b>Links edited 2004-05-27 (08:38 GMT)</b></font></p>
+
 </td></tr></table>
-<? if ($CURUSER) { ?>
-<? } ?>
 
 <?php
 

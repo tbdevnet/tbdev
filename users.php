@@ -53,7 +53,7 @@ for ($i = 0;;++$i)
 	  break;
 }
 print("</select>\n");
-print("<input type=submit value='Okay'>\n");
+print("<input type='submit' value='Okay' class='btn' />\n");
 print("</form>\n");
 
 print("<br />\n");
@@ -79,9 +79,9 @@ for ($i = 97; $i < 123; ++$i)
 	foreach($cc as $L) {
 		($count == 10) ? print "<br /><br />" : '';
 		if(!strcmp($L,$letter))
-			print "<span class='pagecurrent'>".strtoupper($L)."</span>\n";
+			print "<span class='btn' style='background:orange;'>".strtoupper($L)."</span>\n";
 		else
-			print "<a href='users.php?letter=$L'><span class='pagelink'>".strtoupper($L)."</span></a>\n";
+			print "<a href='users.php?letter=$L'><span class='btn'>".strtoupper($L)."</span></a>\n";
 			$count++;
 	}
 	print "</div>";

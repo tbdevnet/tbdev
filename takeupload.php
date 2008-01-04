@@ -193,7 +193,7 @@ if (($fd1 = @fopen("rss.xml", "w")) && ($fd2 = fopen("rssdd.xml", "w")))
 	while ($arr = mysql_fetch_assoc($res))
 		$cats[$arr["id"]] = $arr["name"];
 	$s = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n<rss version=\"0.91\">\n<channel>\n" .
-		"<title>TorrentBits</title>\n<description>0-week torrents</description>\n<link>$DEFAULTBASEURL/</link>\n";
+		"<title>$SITENAME</title>\n<description>TBDev is the best!</description>\n<link>$BASEURL/</link>\n";
 	@fwrite($fd1, $s);
 	@fwrite($fd2, $s);
 	$r = mysql_query("SELECT id,name,descr,filename,category FROM torrents ORDER BY added DESC LIMIT 15") or sqlerr(__FILE__, __LINE__);
@@ -204,9 +204,9 @@ if (($fd1 = @fopen("rss.xml", "w")) && ($fd2 = fopen("rssdd.xml", "w")))
 			"<description>" . htmlspecialchars($a["descr"]) . "</description>\n";
 		@fwrite($fd1, $s);
 		@fwrite($fd2, $s);
-		@fwrite($fd1, "<link>$DEFAULTBASEURL/details.php?id=$a[id]&amp;hit=1</link>\n</item>\n");
+		@fwrite($fd1, "<link>$BASEURL/details.php?id=$a[id]&amp;hit=1</link>\n</item>\n");
 		$filename = htmlspecialchars($a["filename"]);
-		@fwrite($fd2, "<link>$DEFAULTBASEURL/download.php/$a[id]/$filename</link>\n</item>\n");
+		@fwrite($fd2, "<link>$BASEURL/download.php/$a[id]/$filename</link>\n</item>\n");
 	}
 	$s = "</channel>\n</rss>\n";
 	@fwrite($fd1, $s);

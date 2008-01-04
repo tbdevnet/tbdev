@@ -18,95 +18,6 @@ function ratingpic($num) {
     return "<img src=\"{$pic_base_url}{$r}.gif\" border=\"0\" alt=\"rating: $num / 5\" />";
 }
 
-function getagent($httpagent)
-{
-	if (preg_match("/^Azureus ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)/", $httpagent, $matches))
-		return "Azureus/$matches[1]";
-	elseif (preg_match("/BitTorrent\\/S-([0-9]+\\.[0-9]+(\\.[0-9]+)*)/", $httpagent, $matches))
-		return "Shadow's/$matches[1]";
-	elseif (preg_match("/BitTorrent\\/U-([0-9]+\\.[0-9]+\\.[0-9]+)/", $httpagent, $matches))
-		return "UPnP/$matches[1]";
-	elseif (preg_match("/^BitTorrent\\/T-(.+)$/", $httpagent, $matches))
-		return "BitTornado/$matches[1]";
-	elseif (preg_match("/^BitTorrent\\/([0-9]+\\.[0-9]+(\\.[0-9]+)*)/", $httpagent, $matches))
-		return "BitTorrent/$matches[1]";
-	elseif (preg_match("/^Python-urllib\\/.+?, BitTorrent\\/([0-9]+\\.[0-9]+(\\.[0-9]+)*)/", $httpagent, $matches))
-		return "BitTorrent/$matches[1]";
-	elseif (ereg("^BitTorrent\\/BitSpirit$", $httpagent))
-		return "BitSpirit";
-	elseif (preg_match("/^BitTorrent\\/brst(.+)/", $httpagent, $matches))
-		return "Burst/$matches[1]";
-	elseif (preg_match("/^RAZA (.+)$/", $httpagent, $matches))
-		return "Shareaza/$matches[1]";
-	else
-		return "---";
-}
-
-function dltable($name, $arr, $torrent)
-{
-
-	global $CURUSER;
-	$s = "<b>" . count($arr) . " $name</b>\n";
-	if (!count($arr))
-		return $s;
-	$s .= "\n";
-	$s .= "<table width=100% class=main border=1 cellspacing=0 cellpadding=5>\n";
-	$s .= "<tr><td class=colhead>User/IP</td>" .
-          "<td class=colhead align=center>Connectable</td>".
-          "<td class=colhead align=right>Uploaded</td>".
-          "<td class=colhead align=right>Rate</td>".
-          "<td class=colhead align=right>Downloaded</td>" .
-          "<td class=colhead align=right>Rate</td>" .
-          "<td class=colhead align=right>Ratio</td>" .
-          "<td class=colhead align=right>Complete</td>" .
-          "<td class=colhead align=right>Connected</td>" .
-          "<td class=colhead align=right>Idle</td>" .
-          "<td class=colhead align=left>Client</td></tr>\n";
-	$now = time();
-	$moderator = (isset($CURUSER) && get_user_class() >= UC_MODERATOR);
-$mod = get_user_class() >= UC_MODERATOR;
-	foreach ($arr as $e) {
-
-
-                // user/ip/port
-                // check if anyone has this ip
-                ($unr = mysql_query("SELECT username, privacy FROM users WHERE id=$e[userid] ORDER BY last_access DESC LIMIT 1")) or die;
-                $una = mysql_fetch_assoc($unr);
-				if ($una["privacy"] == "strong") continue;
-		$s .= "<tr>\n";
-                if ($una["username"])
-                  $s .= "<td><a href=userdetails.php?id=$e[userid]><b>$una[username]</b></a></td>\n";
-                else
-                  $s .= "<td>" . ($mod ? $e["ip"] : preg_replace('/\.\d+$/', ".xxx", $e["ip"])) . "</td>\n";
-		$secs = max(1, ($now - $e["st"]) - ($now - $e["la"]));
-		$revived = $e["revived"] == "yes";
-        $s .= "<td align=center>" . ($e[connectable] == "yes" ? "Yes" : "<font color=red>No</font>") . "</td>\n";
-		$s .= "<td align=right>" . mksize($e["uploaded"]) . "</td>\n";
-		$s .= "<td align=right><nobr>" . mksize(($e["uploaded"] - $e["uploadoffset"]) / $secs) . "/s</nobr></td>\n";
-		$s .= "<td align=right>" . mksize($e["downloaded"]) . "</td>\n";
-		if ($e["seeder"] == "no")
-			$s .= "<td align=right><nobr>" . mksize(($e["downloaded"] - $e["downloadoffset"]) / $secs) . "/s</nobr></td>\n";
-		else
-			$s .= "<td align=right><nobr>" . mksize(($e["downloaded"] - $e["downloadoffset"]) / max(1, $e["finishedat"] - $e[st])) .	"/s</nobr></td>\n";
-                if ($e["downloaded"])
-				{
-                  $ratio = floor(($e["uploaded"] / $e["downloaded"]) * 1000) / 1000;
-                    $s .= "<td align=\"right\"><font color=" . get_ratio_color($ratio) . ">" . number_format($ratio, 3) . "</font></td>\n";
-				}
-	               else
-                  if ($e["uploaded"])
-                    $s .= "<td align=right>Inf.</td>\n";
-                  else
-                    $s .= "<td align=right>---</td>\n";
-		$s .= "<td align=right>" . sprintf("%.2f%%", 100 * (1 - ($e["to_go"] / $torrent["size"]))) . "</td>\n";
-		$s .= "<td align=right>" . mkprettytime($now - $e["st"]) . "</td>\n";
-		$s .= "<td align=right>" . mkprettytime($now - $e["la"]) . "</td>\n";
-		$s .= "<td align=left>" . htmlspecialchars(getagent($e["agent"])) . "</td>\n";
-		$s .= "</tr>\n";
-	}
-	$s .= "</table>\n";
-	return $s;
-}
 
 dbconn(false);
 
@@ -116,7 +27,23 @@ $id = 0 + $_GET["id"];
 
 if (!isset($id) || !$id)
 	die();
-
+	
+	
+	if (isset($_GET["hit"])) {
+		mysql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
+		if ($_GET["tocomm"])
+			header("Location: $BASEURL/details.php?id=$id&page=0#startcomments");
+		elseif ($_GET["filelist"])
+			header("Location: $BASEURL/details.php?id=$id&filelist=1#filelist");
+		elseif ($_GET["toseeders"])
+			header("Location: $BASEURL/peerlist.php?id=$id#seeders");
+		elseif ($_GET["todlers"])
+			header("Location: $BASEURL/peerlist.php?id=$id#leechers");
+		else
+			header("Location: $BASEURL/details.php?id=$id");
+		exit();
+	}
+	
 $res = mysql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, LENGTH(torrents.nfo) AS nfosz, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(torrents.last_action) AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
 	or sqlerr();
 $row = mysql_fetch_assoc($res);
@@ -130,21 +57,8 @@ $owned = $moderator = 0;
 
 if (!$row || ($row["banned"] == "yes" && !$moderator))
 	stderr("Error", "No torrent with ID.");
-else {
-	if (isset($_GET["hit"])) {
-		mysql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
-		if ($_GET["tocomm"])
-			header("Location: $BASEURL/details.php?id=$id&page=0#startcomments");
-		elseif ($_GET["filelist"])
-			header("Location: $BASEURL/details.php?id=$id&filelist=1#filelist");
-		elseif ($_GET["toseeders"])
-			header("Location: $BASEURL/details.php?id=$id&dllist=1#seeders");
-		elseif ($_GET["todlers"])
-			header("Location: $BASEURL/details.php?id=$id&dllist=1#leechers");
-		else
-			header("Location: $BASEURL/details.php?id=$id");
-		exit();
-	}
+
+
 
 	if (!isset($_GET["page"])) {
 		stdhead("Details for torrent \"" . $row["name"] . "\"");
@@ -284,82 +198,20 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 
 		if ($row["type"] == "multi") {
 			if (!isset($_GET["filelist"]))
-				tr("Num files<br /><a href=\"details.php?id=$id&amp;filelist=1$keepget#filelist\" class=\"sublink\">[See full list]</a>", $row["numfiles"] . " files", 1);
+				tr("Num files<br /><a href=\"filelist.php?id=$id\" class=\"sublink\">[See full list]</a>", $row["numfiles"] . " files", 1);
 			else {
 				tr("Num files", $row["numfiles"] . " files", 1);
 
-				$s = "<table class=main border=\"1\" cellspacing=0 cellpadding=\"5\">\n";
-
-				$subres = mysql_query("SELECT * FROM files WHERE torrent = $id ORDER BY id");
-$s.="<tr><td class=colhead>Path</td><td class=colhead align=right>Size</td></tr>\n";
-				while ($subrow = mysql_fetch_assoc($subres)) {
-					$s .= "<tr><td>" . $subrow["filename"] .
-                            "</td><td align=\"right\">" . mksize($subrow["size"]) . "</td></tr>\n";
-				}
-
-				$s .= "</table>\n";
-				tr("<a name=\"filelist\">File list</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[Hide list]</a>", $s, 1);
+				
 			}
 		}
 
-		if (!isset($_GET["dllist"])) {
-			/*
-			$subres = mysql_query("SELECT seeder, COUNT(*) FROM peers WHERE torrent = $id GROUP BY seeder");
-			$resarr = array(yes => 0, no => 0);
-			$sum = 0;
-			while ($subrow = mysql_fetch_array($subres,MYSQL_NUM)) {
-				$resarr[$subrow[0]] = $subrow[1];
-				$sum += $subrow[1];
-			}
-			tr("Peers<br /><a href=\"details.php?id=$id&amp;dllist=1$keepget#seeders\" class=\"sublink\">[See full list]</a>", $resarr["yes"] . " seeder(s), " . $resarr["no"] . " leecher(s) = $sum peer(s) total", 1);
-			*/
-			tr("Peers<br /><a href=\"details.php?id=$id&amp;dllist=1$keepget#seeders\" class=\"sublink\">[See full list]</a>", $row["seeders"] . " seeder(s), " . $row["leechers"] . " leecher(s) = " . ($row["seeders"] + $row["leechers"]) . " peer(s) total", 1);
-		}
-		else {
-			$downloaders = array();
-			$seeders = array();
-			$subres = mysql_query("SELECT seeder, finishedat, downloadoffset, uploadoffset, ip, port, uploaded, downloaded, to_go, UNIX_TIMESTAMP(started) AS st, connectable, agent, UNIX_TIMESTAMP(last_action) AS la, userid FROM peers WHERE torrent = $id") or sqlerr();
-			while ($subrow = mysql_fetch_assoc($subres)) {
-				if ($subrow["seeder"] == "yes")
-					$seeders[] = $subrow;
-				else
-					$downloaders[] = $subrow;
-			}
+		tr("Peers<br /><a href=\"peerlist.php?id=$id#seeders\" class=\"sublink\">[See full list]</a>", $row["seeders"] . " seeder(s), " . $row["leechers"] . " leecher(s) = " . ($row["seeders"] + $row["leechers"]) . " peer(s) total", 1);
+		print "</table>";
 
-			function leech_sort($a,$b) {
-                                if ( isset( $_GET["usort"] ) ) return seed_sort($a,$b);				
-                                $x = $a["to_go"];
-				$y = $b["to_go"];
-				if ($x == $y)
-					return 0;
-				if ($x < $y)
-					return -1;
-				return 1;
-			}
-			function seed_sort($a,$b) {
-				$x = $a["uploaded"];
-				$y = $b["uploaded"];
-				if ($x == $y)
-					return 0;
-				if ($x < $y)
-					return 1;
-				return -1;
-			}
-
-			usort($seeders, "seed_sort");
-			usort($downloaders, "leech_sort");
-
-			tr("<a name=\"seeders\">Seeders</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[Hide list]</a>", dltable("Seeder(s)", $seeders, $row), 1);
-			tr("<a name=\"leechers\">Leechers</a><br /><a href=\"details.php?id=$id$keepget\" class=\"sublink\">[Hide list]</a>", dltable("Leecher(s)", $downloaders, $row), 1);
-		}
-
-		print("</table></p>\n");
-	}
-	else {
-		stdhead("Comments for torrent \"" . $row["name"] . "\"");
+		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
 		print("<h1>Comments for <a href=details.php?id=$id>" . $row["name"] . "</a></h1>\n");
-//		print("<p><a href=\"details.php?id=$id\">Back to full details</a></p>\n");
-	}
+
 
 	print("<p><a name=\"startcomments\"></a></p>\n");
 
@@ -373,7 +225,7 @@ $s.="<tr><td class=colhead>Path</td><td class=colhead align=right>Size</td></tr>
 		print("<h2>No comments yet</h2>\n");
 	}
 	else {
-		list($pagertop, $pagerbottom, $limit) = pager(20, $count, "details.php?id=$id&", array(lastpagedefault => 1));
+		list($pagertop, $pagerbottom, $limit) = pager(20, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
 
 		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, warned, ".
                   "username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = " .

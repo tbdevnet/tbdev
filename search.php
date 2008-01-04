@@ -36,7 +36,7 @@ $deadchkbox .= " /> including dead torrents\n";
 <?= $catdropdown ?>
 </select>
 <?= $deadchkbox ?>
-<input type="submit" value="Search!" />
+<input type="submit" value="Search!" class="btn" />
 </p>
 </form>
 </td></tr></table>

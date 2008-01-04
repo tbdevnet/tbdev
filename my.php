@@ -137,7 +137,7 @@ function priv($name, $descr) {
 /* tr("Privacy level",  priv("normal", "Normal") . " " . priv("low", "Low (email address will be shown)") . " " . priv("strong", "Strong (no info will be made available)"), 1); */
 
 ?>
-<tr><td colspan="2" align="center"><input type="submit" value="Submit changes!" style='height: 25px'> <input type="reset" value="Revert changes!" style='height: 25px'></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" value="Submit changes!" class="btn"> <input type="reset" value="Revert changes!" class="btn"></td></tr>
 </table>
 </form>
 </td>
