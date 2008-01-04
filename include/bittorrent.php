@@ -28,7 +28,7 @@ $torrent_dir = "F:/web/xampp/htdocs/tb/torrents";    # FOR WINDOWS ONLY - must b
 
 # the first one will be displayed on the pages
 $announce_urls = array();
-$announce_urls[] = "http://localhost/TBDEV/announce.php";
+$announce_urls[] = "http://localhost/TB/announce.php";
 $announce_urls[] = "http://tracker.zerotracker.com:2710/announce";
 $announce_urls[] = "http://domain.com:83/announce.php";
 
@@ -47,14 +47,14 @@ $MEMBERSONLY = true;
 $PEERLIMIT = 50000;
 
 // Email for sender/return path.
-$SITEEMAIL = "noreply@domain.com";
+$SITEEMAIL = "coldfusion@coldfusion.homelinux.net";
 
 $SITENAME = "TBDEV.NET";
 
 $autoclean_interval = 900;
 $pic_base_url = "./pic/";
 $stylesheet = "./1.css";
-
+$READPOST_EXPIRY = 14*86400; // 14 days
 // Set this to the line break character sequence of your system
 $linebreak = "\r\n";
 
@@ -319,7 +319,7 @@ function stdhead($title = "", $msgalert = true) {
   if (!$SITE_ONLINE)
     die("Site is down for maintenance, please check back again later... thanks<br>");
 
-    header("Content-Type: text/html; charset=iso-8859-1");
+    //header("Content-Type: text/html; charset=iso-8859-1");
     //header("Pragma: No-cache");
     if ($title == "")
         $title = $SITENAME .(isset($_GET['tbv'])?" (".TBVERSION.")":'');
@@ -343,10 +343,19 @@ function stdhead($title = "", $msgalert = true) {
     $unread = $arr[0];
   }
 ?>
-<html><head>
-<title><?= $title ?></title>
-<link rel="stylesheet" href="<?=$stylesheet?>" type="text/css">
-</head>
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		
+		<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<meta name="generator" content="TBDev.net" />
+			<meta http-equiv="Content-Language" content="en-us" />
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<meta name="MSSmartTagsPreventParsing" content="TRUE" />
+			
+			<title><?= $title ?></title>
+			<link rel="stylesheet" href="<?=$stylesheet?>" type="text/css">
+		</head>
 <body>
 
 <table width=100% cellspacing=0 cellpadding=0 style='background: transparent'>
@@ -356,7 +365,7 @@ function stdhead($title = "", $msgalert = true) {
 <div id="logostrip">
 <img src="<?=$pic_base_url?>logo.jpg" />
 
-<a href=donate.php><img src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
+<a href=donate.php><img src="./pic/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
 </div>
 </td>
 
@@ -397,6 +406,7 @@ print StatusBar();
 <div class="tb-top-left-link">
 <a href=login.php>Login</a>
 <a href=signup.php>Signup</a>
+<a href=recover.php>Recover Account</a>
 </div>
 <? } ?>
 

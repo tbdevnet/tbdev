@@ -240,7 +240,7 @@ function _strlastpos ($haystack, $needle, $offset = 0)
     print("<tr><td class=colhead>Type...</td><td class=colhead>To make a...</td></tr>\n");
 
     while (list($code, $url) = each($smilies))
-      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}></td>\n");
+      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\"></td>\n");
 
     end_table();
 

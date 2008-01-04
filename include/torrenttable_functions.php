@@ -166,7 +166,7 @@ print("</td>\n");
             if ($variant == "index")
             {
                if ($row["leechers"]) $ratio = $row["seeders"] / $row["leechers"]; else $ratio = 1;
-                print("<td align=right><b><a href=details.php?id=$id&amp;hit=1&amp;toseeders=1><font color=" .
+                print("<td align=right><b><a href=peerlist.php?id=$id#seeders><font color=" .
                   get_slr_color($ratio) . ">" . $row["seeders"] . "</font></a></b></td>\n");
             }
             else
@@ -178,7 +178,7 @@ print("</td>\n");
 
         if ($row["leechers"]) {
             if ($variant == "index")
-                print("<td align=right><b><a href=details.php?id=$id&amp;hit=1&amp;todlers=1>" .
+                print("<td align=right><b><a href=peerlist.php?id=$id#leechers>" .
                    number_format($row["leechers"]) . ($peerlink ? "</a>" : "") .
                    "</b></td>\n");
             else

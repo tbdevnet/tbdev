@@ -100,11 +100,13 @@ function docleanup() {
 	while ($row = mysql_fetch_assoc($res)) {
 		$torrents[$row["torrent"]]["comments"] = $row["c"];
 	}
-
+	
+	
 	$fields = explode(":", "comments:leechers:seeders");
 	$res = mysql_query("SELECT id, seeders, leechers, comments FROM torrents");
 	while ($row = mysql_fetch_assoc($res)) {
 		$id = $row["id"];
+		if(isset($torrents[$id]))
 		$torr = $torrents[$id];
 		foreach ($fields as $field) {
 			if (!isset($torr[$field]))
