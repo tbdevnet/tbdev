@@ -9,13 +9,13 @@ require_once("include/benc.php");
 
 function err($msg)
 {
-	benc_resp(array("failure reason" => array(type => "string", value => $msg)));
+	benc_resp(array("failure reason" => array('type' => "string", 'value' => $msg)));
 	exit();
 }
 
 function benc_resp($d)
 {
-	benc_resp_raw(benc(array(type => "dictionary", value => $d)));
+	benc_resp_raw(benc(array('type' => "dictionary", 'value' => $d)));
 }
 
 function benc_resp_raw($x)
