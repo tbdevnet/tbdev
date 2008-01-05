@@ -122,9 +122,9 @@ print("</td>\n");
             print("<td align=\"right\">" . $row["numfiles"] . "</td>\n");
         else {
             if ($variant == "index")
-                print("<td align=\"right\"><b><a href=\"details.php?id=$id&amp;hit=1&amp;filelist=1\">" . $row["numfiles"] . "</a></b></td>\n");
+                print("<td align=\"right\"><b><a href=\"filelist.php?id=$id\">" . $row["numfiles"] . "</a></b></td>\n");
             else
-                print("<td align=\"right\"><b><a href=\"details.php?id=$id&amp;filelist=1#filelist\">" . $row["numfiles"] . "</a></b></td>\n");
+                print("<td align=\"right\"><b><a href=\"filelist.php?id=$id\">" . $row["numfiles"] . "</a></b></td>\n");
         }
 
         if (!$row["comments"])
@@ -170,7 +170,7 @@ print("</td>\n");
                   get_slr_color($ratio) . ">" . $row["seeders"] . "</font></a></b></td>\n");
             }
             else
-                print("<td align=\"right\"><b><a class=\"" . linkcolor($row["seeders"]) . "\" href=\"details.php?id=$id&amp;dllist=1#seeders\">" .
+                print("<td align=\"right\"><b><a class=\"" . linkcolor($row["seeders"]) . "\" href=\"peerlist.php?id=$id#seeders\">" .
                   $row["seeders"] . "</a></b></td>\n");
         }
         else
@@ -182,7 +182,7 @@ print("</td>\n");
                    number_format($row["leechers"]) . ($peerlink ? "</a>" : "") .
                    "</b></td>\n");
             else
-                print("<td align=\"right\"><b><a class=\"" . linkcolor($row["leechers"]) . "\" href=\"details.php?id=$id&amp;dllist=1#leechers\">" .
+                print("<td align=\"right\"><b><a class=\"" . linkcolor($row["leechers"]) . "\" href=\"peerlist.php?id=$id#leechers\">" .
                   $row["leechers"] . "</a></b></td>\n");
         }
         else

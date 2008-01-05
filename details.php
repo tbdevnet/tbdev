@@ -60,7 +60,7 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 
 
 
-	if (!isset($_GET["page"])) {
+
 		stdhead("Details for torrent \"" . $row["name"] . "\"");
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
@@ -243,7 +243,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 	}
 
 	print($commentbar);
-}
+
 
 stdfoot();
 

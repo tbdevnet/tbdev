@@ -127,13 +127,13 @@ elseif ($action == "delete")
   if (!is_valid_id($commentid))
 		stderr("Error", "Invalid ID.");
 
-  $sure = $_GET["sure"];
+  $sure = isset($_GET["sure"]) ? (int)$_GET["sure"] : false;
 
   if (!$sure)
   {
  		$referer = $_SERVER["HTTP_REFERER"];
 		stderr("Delete comment", "You are about to delete a comment. Click\n" .
-			"<a href=?action=delete&cid=$commentid&sure=1" .
+			"<a href=comment.php?action=delete&cid=$commentid&sure=1" .
 			($referer ? "&returnto=" . urlencode($referer) : "") .
 			">here</a> if you are sure.");
   }
