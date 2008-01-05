@@ -311,10 +311,10 @@ CREATE TABLE `readposts` (
 
 CREATE TABLE `searchcloud` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `searchedfor` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `searchedfor` varchar(50) collate latin1_general_ci NOT NULL,
   `howmuch` int(10) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
