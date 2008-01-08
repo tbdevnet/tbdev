@@ -149,7 +149,7 @@ isset($mods) ? DoStaff($mods, "Moderators") : DoStaff($mods=false, "Moderators")
 			<!-- row 4 -->
 			<tr><td>
 			
-			<span class="btn"><a href="admin_email_search.php">Email Search</a></span>
+			<span class="btn"><a href="forummanage.php">Manage Forum</a></span>
 			
 
 			<span class="btn"><a href="categories.php">Categories</a></span>

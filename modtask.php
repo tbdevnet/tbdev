@@ -98,12 +98,15 @@ if ($action == "edituser")
   		$modcomment = gmdate("Y-m-d") . " - Disabled by " . $CURUSER['username'] . ".\n" . $modcomment;
   }
 
-  $updateset[] = "enabled = " . sqlesc($enabled);
-  $updateset[] = "donor = " . sqlesc($donor);
-  $updateset[] = "avatar = " . sqlesc($avatar);
-  $updateset[] = "title = " . sqlesc($title);
-  $updateset[] = "modcomment = " . sqlesc($modcomment);
+	if (isset($_POST['resetpasskey'])) $updateset[] = "passkey=''";
+	$updateset[] = "enabled = " . sqlesc($enabled);
+	$updateset[] = "donor = " . sqlesc($donor);
+	$updateset[] = "avatar = " . sqlesc($avatar);
+	$updateset[] = "title = " . sqlesc($title);
+	$updateset[] = "modcomment = " . sqlesc($modcomment);
+  
   mysql_query("UPDATE users SET  " . implode(", ", $updateset) . " WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
+  
   $returnto = htmlentities($_POST["returnto"]);
 
   header("Location: $BASEURL/$returnto");

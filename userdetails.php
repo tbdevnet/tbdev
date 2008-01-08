@@ -310,7 +310,7 @@ if (get_user_class() >= UC_MODERATOR && $user["class"] < get_user_class())
     print("<tr><td colspan=2 align=left><input type=text size=60 name=warnpm></td></tr>");
   }
   print("<tr><td class=rowhead>Enabled</td><td colspan=2 align=left><input name=enabled value='yes' type=radio" . ($enabled ? " checked" : "") . ">Yes <input name=enabled value='no' type=radio" . (!$enabled ? " checked" : "") . ">No</td></tr>\n");
-
+	print("<tr><td class=rowhead>Reset passkey</td><td colspan=2><input type=checkbox name=resetpasskey value=1 /><font class=small>Any active torrents must be downloaded again to continue leeching/seeding.</font></td></tr>");
   print("</td></tr>");
   print("<tr><td colspan=3 align=center><input type=submit class=btn value='Okay'></td></tr>\n");
   print("</table>\n");

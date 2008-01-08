@@ -40,6 +40,16 @@ $deadchkbox .= " /> including dead torrents\n";
 </p>
 </form>
 </td></tr></table>
+
+<table width=750 class=main border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
+<form method='post' action='takefilesearch.php'>
+<p align="center">
+Search:
+<input type="text" name="search" size="40" value="" />
+<input type="submit" value="Search!" class="btn" />
+</p>
+</form>
+</td></tr></table>
 <?
 
 stdfoot();

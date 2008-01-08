@@ -323,7 +323,7 @@ function format_comment($text, $strip_html = true)
 
 	// [*]
 	$s = preg_replace("/\[\*\]/", "<li>", $s);
-
+	
 	// [b]Bold[/b]
 	$s = preg_replace("/\[b\]((\s|.)+?)\[\/b\]/", "<b>\\1</b>", $s);
 

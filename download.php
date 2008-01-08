@@ -33,7 +33,7 @@ require_once "include/benc.php";
 
 
 
-if (strlen($CURUSER['passkey']) != 32) {
+if (!isset($CURUSER['passkey']) || strlen($CURUSER['passkey']) != 32) {
 
 $CURUSER['passkey'] = md5($CURUSER['username'].get_date_time().$CURUSER['passhash']);
 
@@ -54,7 +54,7 @@ $dict['value']['announce']['strlen'] = strlen($dict['value']['announce']['string
 
 
 
-header('Content-Disposition: attachment; filename="'.$row['filename'].'"');
+header('Content-Disposition: attachment; filename="[TBDev]'.$row['filename'].'"');
 
 header("Content-Type: application/x-bittorrent");
 
