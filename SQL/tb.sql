@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Jan 05, 2008 at 12:55 PM
+-- Generation Time: Jan 08, 2008 at 09:46 PM
 -- Server version: 5.0.33
 -- PHP Version: 5.2.1
 -- 
@@ -39,7 +39,7 @@ CREATE TABLE `bans` (
   `last` int(11) default NULL,
   PRIMARY KEY  (`id`),
   KEY `first_last` (`first`,`last`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -193,6 +193,7 @@ CREATE TABLE `news` (
 CREATE TABLE `peers` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `torrent` int(10) unsigned NOT NULL default '0',
+  `passkey` varchar(32) collate latin1_general_ci NOT NULL,
   `peer_id` varchar(20) character set latin1 collate latin1_bin NOT NULL default '',
   `ip` varchar(64) collate latin1_general_ci NOT NULL default '',
   `port` smallint(5) unsigned NOT NULL default '0',
@@ -214,7 +215,8 @@ CREATE TABLE `peers` (
   KEY `torrent_seeder` (`torrent`,`seeder`),
   KEY `last_action` (`last_action`),
   KEY `connectable` (`connectable`),
-  KEY `userid` (`userid`)
+  KEY `userid` (`userid`),
+  KEY `passkey` (`passkey`)
 ) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
@@ -311,10 +313,10 @@ CREATE TABLE `readposts` (
 
 CREATE TABLE `searchcloud` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `searchedfor` varchar(50) collate latin1_general_ci NOT NULL,
+  `searchedfor` varchar(50) collate utf8_unicode_ci NOT NULL,
   `howmuch` int(10) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -416,6 +418,7 @@ CREATE TABLE `users` (
   `username` varchar(40) collate latin1_general_ci NOT NULL default '',
   `passhash` varchar(32) collate latin1_general_ci NOT NULL default '',
   `secret` varchar(20) character set latin1 collate latin1_bin NOT NULL default '',
+  `passkey` varchar(32) collate latin1_general_ci NOT NULL,
   `email` varchar(80) collate latin1_general_ci NOT NULL default '',
   `status` enum('pending','confirmed') collate latin1_general_ci NOT NULL default 'pending',
   `added` datetime NOT NULL default '0000-00-00 00:00:00',
