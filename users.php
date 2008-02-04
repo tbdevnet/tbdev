@@ -10,7 +10,7 @@ $search = isset($_GET['search']) ? strip_tags(trim($_GET['search'])) : '';
 $class = isset($_GET['class']) ? $_GET['class'] : '-';
 $letter = '';
 $q = '';
-if ($class == '-' || !is_valid_id($class))
+if ($class == '-' || !ctype_digit($class))
   $class = '';
 
 if ($search != '' || $class)
@@ -21,17 +21,17 @@ if ($search != '' || $class)
 }
 else
 {
-	$letter = isset($_GET['letter']) ? trim((string)$_GET["letter"]) : '0';
+	$letter = isset($_GET['letter']) ? trim((string)$_GET["letter"]) : '';
   if (strlen($letter) > 1)
     die;
 
   if ($letter == "" || strpos("abcdefghijklmnopqrstuvwxyz0123456789", $letter) === false)
-    $letter = "a";
+    $letter = "";
   $query = "username LIKE '$letter%' AND status='confirmed'";
   $q = "letter=$letter";
 }
 
-if ($class)
+if (ctype_digit($class))
 {
   $query .= " AND class=$class";
   $q .= ($q ? "&amp;" : "") . "class=$class";
@@ -48,7 +48,7 @@ print("<option value='-'>(any class)</option>\n");
 for ($i = 0;;++$i)
 {
 	if ($c = get_user_class_name($i))
-	  print("<option value=$i" . ($class && $class == $i ? " selected" : "") . ">$c</option>\n");
+	  print("<option value=$i" . (ctype_digit($class) && $class == $i ? " selected" : "") . ">$c</option>\n");
 	else
 	  break;
 }
@@ -57,17 +57,7 @@ print("<input type='submit' value='Okay' class='btn' />\n");
 print("</form>\n");
 
 print("<br />\n");
-/*
-for ($i = 97; $i < 123; ++$i)
-{
-	$l = chr($i);
-	$L = chr($i - 32);
-	if ($l == $letter)
-    print("<b>$L</b>\n");
-	else
-    print("<a href=?letter=$l><b>$L</b></a>\n");
-}
-*/
+
 
 	$aa = range('0','9');
 	$bb = range('a','z');
@@ -88,14 +78,16 @@ for ($i = 97; $i < 123; ++$i)
 
 print("<br />\n");
   
-$page = isset($_GET['page']) ? (int)$input['page'] : 0;
-$perpage = 100;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$perpage = 50;
 $browsemenu = '';
 $pagemenu = '';
 $out = '';
 
 $res = mysql_query("SELECT COUNT(*) FROM users WHERE $query") or sqlerr();
 $arr = mysql_fetch_row($res);
+
+if($arr[0] > $perpage) {
 $pages = floor($arr[0] / $perpage);
 if ($pages * $perpage < $arr[0])
   ++$pages;
@@ -108,58 +100,53 @@ else
 
 for ($i = 1; $i <= $pages; ++$i)
   if ($i == $page)
-    $pagemenu .= "<b>$i</b>\n";
+    $pagemenu .= "&nbsp;<span class='btn' style='background:orange;'>$i</span>\n";
   else
-    $pagemenu .= "<a href=?$q&page=$i><b>$i</b></a>\n";
+    $pagemenu .= "&nbsp;<a href=users.php?$q&page=$i><span class='btn'>$i</span></a>\n";
 
 
 if ($page == 1)
-  $browsemenu .= "<b>&lt;&lt; Prev</b>";
+  $browsemenu .= "<span class='btn' style='background:orange;'>&lt;&lt; Prev</span>$pagemenu";
 else
-  $browsemenu .= "<a href=?$q&page=" . ($page - 1) . "><b>&lt;&lt; Prev</b></a>";
+  $browsemenu .= "<a href=users.php?$q&page=" . ($page - 1) . "><span class='btn'>&lt;&lt; Prev</span></a>$pagemenu";
 
-$browsemenu .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+//$browsemenu .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 if ($page == $pages)
-  $browsemenu .= "<b>Next &gt;&gt;</b>";
+  $browsemenu .= "<span class='btn' style='background:orange;'>Next &gt;&gt;</span>";
 else
-  $browsemenu .= "<a href=?$q&page=" . ($page + 1) . "><b>Next &gt;&gt;</b></a>";
+  $browsemenu .= "<a href=users.php?$q&page=" . ($page + 1) . "><span class='btn'>Next &gt;&gt;</span></a>";
+}
 
-print("<p>$browsemenu<br>$pagemenu</p>");
+($arr[0] > $perpage) ? print"<p>$browsemenu<br /><br /></p>" : print '<br /><br />';
 
 $offset = ($page * $perpage) - $perpage;
 
-$res = mysql_query("SELECT * FROM users WHERE $query ORDER BY username LIMIT $offset,$perpage") or sqlerr();
-$num = mysql_num_rows($res);
+if($arr[0] > 0) {
+    $res = mysql_query("SELECT users.*, countries.name, countries.flagpic FROM users FORCE INDEX ( username ) LEFT JOIN countries ON country = countries.id WHERE $query ORDER BY username LIMIT $offset,$perpage") or sqlerr();
+//$num = mysql_num_rows($res);
 
 print("<table border=1 cellspacing=0 cellpadding=5>\n");
 print("<tr><td class=colhead align=left>User name</td><td class=colhead>Registered</td><td class=colhead>Last access</td><td class=colhead align=left>Class</td><td class=colhead>Country</td></tr>\n");
-for ($i = 0; $i < $num; ++$i)
+while($row = mysql_fetch_assoc($res))
 {
-  $arr = mysql_fetch_assoc($res);
-  if ($arr['country'] > 0)
-  {
-    $cres = mysql_query("SELECT name,flagpic FROM countries WHERE id=$arr[country]");
-    if (mysql_num_rows($cres) == 1)
-    {
-      $carr = mysql_fetch_assoc($cres);
-      $country = "<td style='padding: 0px' align=center><img src=\"{$pic_base_url}flag/{$carr['flagpic']}\" alt=\"". htmlspecialchars($carr['name']) ."\"></td>";
-    }
-  }
-  else
-    $country = "<td align=center>---</td>";
-  if ($arr['added'] == '0000-00-00 00:00:00')
-    $arr['added'] = '-';
-  if ($arr['last_access'] == '0000-00-00 00:00:00')
-    $arr['last_access'] = '-';
-  $out = "<tr><td align=left><a href=userdetails.php?id={$arr['id']}><b>{$arr['username']}</b></a>" .
-  ($arr["donor"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border=0 alt='Donor'>" : "")."</td>" .
-  "<td>{$arr['added']}</td><td>{$arr['last_access']}</td>".
-    "<td align=left>" . get_user_class_name($arr["class"]) . "</td>$country</tr>\n";
+  
+      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align=center><img src=\"{$pic_base_url}flag/{$row['flagpic']}\" alt=\"". htmlspecialchars($row['name']) ."\"></td>" : "<td align=center>---</td>";
+    
+  if ($row['added'] == '0000-00-00 00:00:00')
+    $row['added'] = '-';
+  if ($row['last_access'] == '0000-00-00 00:00:00')
+    $row['last_access'] = '-';
+    
+  $out .= "<tr><td align=left><a href=userdetails.php?id={$row['id']}><b>{$row['username']}</b></a>" .
+  ($row["donor"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border=0 alt='Donor'>" : "")."</td>" .
+  "<td>{$row['added']}</td><td>{$row['last_access']}</td>".
+    "<td align=left>" . get_user_class_name($row["class"]) . "</td>$country</tr>\n";
 }
 print $out. "</table>\n";
+}
 
-print "<p>$pagemenu<br>$browsemenu</p>";
+($arr[0] > $perpage) ? print"<br /><p>$browsemenu</p>" : print '<br /><br />';
 
 stdfoot();
 die;

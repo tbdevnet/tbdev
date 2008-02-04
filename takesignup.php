@@ -9,8 +9,14 @@ $arr = mysql_fetch_row($res);
 if ($arr[0] >= $maxusers)
 	stderr("Error", "Sorry, user limit reached. Please try again later.");
 
-if (!mkglobal("wantusername:wantpassword:passagain:email"))
+if (!mkglobal("wantusername:wantpassword:passagain:email:captcha"))
 	die();
+	
+session_start();
+  if(empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha)){
+      header('Location: signup.php');
+      exit();
+}
 
 function bark($msg) {
   stdhead();

@@ -41,7 +41,7 @@ if ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)
 $rt = 0 + $_POST["reasontype"];
 
 if (!is_int($rt) || $rt < 1 || $rt > 5)
-	bark("Invalid reason $rt.");
+	bark("Invalid reason");
 
 $r = $_POST["r"];
 $reason = $_POST["reason"];
@@ -56,7 +56,7 @@ elseif ($rt == 4)
 {
 	if (!$reason[2])
 		bark("Please describe the violated rule.");
-  $reasonstr = "TB rules broken: " . trim($reason[2]);
+  $reasonstr = $SITENAME." rules broken: " . trim($reason[2]);
 }
 else
 {

@@ -1,9 +1,15 @@
 <?php
-
+//print_r($_POST);exit();
 require_once("include/bittorrent.php");
 
-if (!mkglobal("username:password"))
+if (!mkglobal("username:password:captcha"))
 	die();
+	
+session_start();
+  if(empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha)){
+      header('Location: login.php');
+      exit();
+}
 
 dbconn();
 

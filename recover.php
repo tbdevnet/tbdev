@@ -1,11 +1,21 @@
 <?php
 
 require "include/bittorrent.php";
+ 	
+ini_set('session.use_trans_sid', '0');
+
+// Begin the session
+session_start();
 
 dbconn();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+  
+    if(empty($_POST['captcha']) || $_SESSION['captcha_id'] != strtoupper($_POST['captcha'])){
+      header('Location: recover.php');
+      exit();
+  }
   $email = trim($_POST["email"]);
   if (!$email)
     stderr("Error", "You must enter an email address");
@@ -107,13 +117,36 @@ EOD;
 }
 else
 {
+
+(time() - $_SESSION['captcha_time'] < 10) ? exit('NO SPAM!') : NULL;
+ 	
  	stdhead();
 	?>
+	<script type="text/javascript" src="captcha/captcha.js"></script>
+	
 	<h1>Recover lost user name or password</h1>
 	<p>Use the form below to have your password reset and your account details mailed back to you.<br>
   (You will have to reply to a confirmation email.)</p>
+  
 	<form method=post action=recover.php>
 	<table border=1 cellspacing=0 cellpadding=10>
+	  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <div id="captchaimage">
+      <a href="<?php echo $_SERVER['PHP_SELF']; ?>" onclick="refreshimg(); return false;" title="Click to refresh image">
+      <img class="cimage" src="captcha/GD_Security_image.php?<?php echo time(); ?>" alt="Captcha image" />
+      </a>
+      </div>
+     </td>
+  </tr>
+  <tr>
+      <td class="rowhead">PIN:</td>
+      <td>
+        <input type="text" maxlength="6" name="captcha" id="captcha" onBlur="check(); return false;"/>
+      </td>
+  </tr>
+
 	<tr><td class=rowhead>Registered email</td>
 	<td><input type=text size=40 name=email></td></tr>
 	<tr><td colspan=2 align=center><input type=submit value='Do it!' class=btn></td></tr>

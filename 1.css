@@ -303,3 +303,21 @@ img.border
   border-color: #000000; 
   border-width: 1px; 
 }
+
+/*
+Cpatcha/pin stuff
+*/
+.cimage 
+{ 
+border: 1px solid #eee; 
+}
+
+p#statusgreen 
+{ 
+font-size: 1.2em; background-color: #fff; color: #0a0; 
+}
+
+p#statusred 
+{ 
+font-size: 1.2em; background-color: #fff; color: #a00; 
+}

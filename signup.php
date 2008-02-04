@@ -3,6 +3,12 @@
 require_once("include/bittorrent.php");
 dbconn();
 
+ini_set('session.use_trans_sid', '0');
+
+// Begin the session
+session_start();
+(time() - $_SESSION['captcha_time'] < 10) ? exit('NO SPAM!') : NULL;
+
 $res = mysql_query("SELECT COUNT(*) FROM users") or sqlerr(__FILE__, __LINE__);
 $arr = mysql_fetch_row($res);
 if ($arr[0] >= $maxusers)
@@ -23,6 +29,8 @@ By proceeding with submitting the form below you grant us permission to scan cer
 </td></tr></table>
 <p>
 -->
+<script type="text/javascript" src="captcha/captcha.js"></script>
+
 Note: You need cookies enabled to sign up or log in.
 <p>
 <form method="post" action="takesignup.php">
@@ -32,9 +40,25 @@ Note: You need cookies enabled to sign up or log in.
 <tr><td align="right" class="heading">Enter password again:</td><td align=left><input type="password" size="40" name="passagain" /></td></tr>
 <tr valign=top><td align="right" class="heading">Email address:</td><td align=left><input type="text" size="40" name="email" />
 <table width=250 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded><font class=small>The email address must be valid.
-You will receive a confirmation email which you need to respond to. The email address won't be publicly shown anywhere.</td></tr>
-</font></td></tr></table>
+You will receive a confirmation email which you need to respond to. The email address won't be publicly shown anywhere.</font></td></tr>
+</td></tr></table>
 </td></tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <div id="captchaimage">
+      <a href="<?php echo $_SERVER['PHP_SELF']; ?>" onclick="refreshimg(); return false;" title="Click to refresh image">
+      <img class="cimage" src="captcha/GD_Security_image.php?<?php echo time(); ?>" alt="Captcha image" />
+      </a>
+      </div>
+     </td>
+  </tr>
+  <tr>
+      <td class="rowhead">PIN:</td>
+      <td>
+        <input type="text" maxlength="6" name="captcha" id="captcha" onBlur="check(); return false;"/>
+      </td>
+  </tr>
 <tr><td align="right" class="heading"></td><td align=left><input type=checkbox name=rulesverify value=yes> I have read the site rules page.<br>
 <input type=checkbox name=faqverify value=yes> I agree to read the FAQ before asking questions.<br>
 <input type=checkbox name=ageverify value=yes> I am at least 13 years old.</td></tr>

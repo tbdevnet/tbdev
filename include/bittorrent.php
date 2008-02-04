@@ -1,5 +1,8 @@
 <?php
 error_reporting(E_ALL);
+
+define('SQL_DEBUG', 1);
+
 function local_user()
 {
   return $_SERVER["SERVER_ADDR"] == $_SERVER["REMOTE_ADDR"];
@@ -22,14 +25,24 @@ $maxusers = 75000; // LoL Who we kiddin' here?
 // Max users on site
 $maxusers = 5000;
 
-// ONLY USE ONE OF THE FOLLOWING DEPENDING ON YOUR O/S!!!
-//$torrent_dir = "/var/tb/torrents";    # FOR UNIX ONLY - must be writable for httpd user
-$torrent_dir = "F:/web/xampp/htdocs/tb/torrents";    # FOR WINDOWS ONLY - must be writable for httpd user
+if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'WIN' )
+  {
+    $file_path = str_replace( "\\", "/", dirname(__FILE__) );
+    $file_path = str_replace( "/include", "", $file_path );
+  }
+  else
+  {
+    $file_path = dirname(__FILE__);
+  }
+  
+define('ROOT_PATH', $file_path);
+$torrent_dir = ROOT_PATH . '/torrents';
+//$torrent_dir = "F:/web/xampp/htdocs/tb/torrents";    # FOR WINDOWS ONLY - must be writable for httpd user
 
 # the first one will be displayed on the pages
 $announce_urls = array();
 $announce_urls[] = "http://localhost/TB/announce.php";
-$announce_urls[] = "http://tracker.zerotracker.com:2710/announce";
+$announce_urls[] = "http://localhost:2710/announce";
 $announce_urls[] = "http://domain.com:83/announce.php";
 
 if ($_SERVER["HTTP_HOST"] == "")
@@ -47,11 +60,12 @@ $MEMBERSONLY = true;
 $PEERLIMIT = 50000;
 
 // Email for sender/return path.
-$SITEEMAIL = "coldfusion@coldfusion.homelinux.net";
+$SITEEMAIL = "coldfusion@localhost";
 
 $SITENAME = "TBDEV.NET";
 
 $autoclean_interval = 900;
+$sql_error_log = './logs/sql_err_'.date("M_D_Y").'.log';
 $pic_base_url = "./pic/";
 $stylesheet = "./1.css";
 $READPOST_EXPIRY = 14*86400; // 14 days
@@ -71,7 +85,7 @@ require_once("cleanup.php");
 
 //Do not modify -- versioning system
 //This will help identify code for support issues at tbdev.net
-define ('TBVERSION','TBDEV.NET-12-09-05');
+define ('TBVERSION','TBDEV.NET-01-01-08-alpha');
 
 /**** validip/getip courtesy of manolete <manolete@myway.com> ****/
 
@@ -146,7 +160,7 @@ function dbconn($autoclean = false)
       }
     }
     mysql_select_db($mysql_db)
-        or die('dbconn: mysql_select_db: ' + mysql_error());
+        or die('dbconn: mysql_select_db: ' . mysql_error());
 
     userlogin();
 
@@ -178,7 +192,7 @@ function userlogin() {
     $row = mysql_fetch_array($res);
     if (!$row)
         return;
-    $sec = hash_pad($row["secret"]);
+    //$sec = hash_pad($row["secret"]);
     if ($_COOKIE["pass"] !== $row["passhash"])
         return;
     mysql_query("UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
@@ -190,7 +204,7 @@ function autoclean() {
     global $autoclean_interval;
 
     $now = time();
-    $docleanup = 0;
+    //$docleanup = 0;
 
     $res = mysql_query("SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
     $row = mysql_fetch_array($res);
@@ -314,7 +328,7 @@ function parsedescr($d, $html) {
 }
 */
 function stdhead($title = "", $msgalert = true) {
-    global $CURUSER, $SITE_ONLINE, $FUNDS, $SITENAME, $pic_base_url, $stylesheet;
+    global $CURUSER, $SITE_ONLINE, $SITENAME, $pic_base_url, $stylesheet;
 
   if (!$SITE_ONLINE)
     die("Site is down for maintenance, please check back again later... thanks<br>");
@@ -338,7 +352,7 @@ function stdhead($title = "", $msgalert = true) {
   
   if ($msgalert && $CURUSER)
   {
-    $res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " && unread='yes'") or die("OopppsY!");
+    $res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " && unread='yes'") or sqlerr(__FILE__,__LINE__);
     $arr = mysql_fetch_row($res);
     $unread = $arr[0];
   }
@@ -348,6 +362,7 @@ function stdhead($title = "", $msgalert = true) {
 		
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
+
 			<meta name="generator" content="TBDev.net" />
 			<meta http-equiv="Content-Language" content="en-us" />
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -565,7 +580,7 @@ function stderr($heading, $text)
   stdfoot();
   die;
 }
-
+/*
 function sqlerr($file = '', $line = '')
 {
   print("<table border=0 bgcolor=blue align=left cellspacing=0 cellpadding=10 style='background: blue'>" .
@@ -573,7 +588,64 @@ function sqlerr($file = '', $line = '')
   "<b>" . mysql_error() . ($file != '' && $line != '' ? "<p>in $file, line $line</p>" : "") . "</b></font></td></tr></table>");
   die;
 }
+*/
+	
+// Basic MySQL error handler
 
+function sqlerr($file = '', $line = '') {
+    global $sql_error_log, $CURUSER;
+    
+		$the_error    = mysql_error();
+		$the_error_no = mysql_errno();
+
+    	if ( SQL_DEBUG == 0 )
+    	{
+			exit();
+    	}
+     	else if ( $sql_error_log AND SQL_DEBUG == 1 )
+		{
+			$_error_string  = "\n===================================================";
+			$_error_string .= "\n Date: ". date( 'r' );
+			$_error_string .= "\n Error Number: " . $the_error_no;
+			$_error_string .= "\n Error: " . $the_error;
+			$_error_string .= "\n IP Address: " . $_SERVER['REMOTE_ADDR'];
+			$_error_string .= "\n in file ".$file." on line ".$line;
+			$_error_string .= "\n URL:".$_SERVER['REQUEST_URI'];
+			$_error_string .= "\n Username: {$CURUSER['username']}[{$CURUSER['id']}]";
+			
+			if ( $FH = @fopen( $sql_error_log, 'a' ) )
+			{
+				@fwrite( $FH, $_error_string );
+				@fclose( $FH );
+			}
+			
+			print "<html><head><title>MySQL Error</title>
+					<style>P,BODY{ font-family:arial,sans-serif; font-size:11px; }</style></head><body>
+		    		   <blockquote><h1>MySQL Error</h1><b>There appears to be an error with the database.</b><br />
+		    		   You can try to refresh the page by clicking <a href=\"javascript:window.location=window.location;\">here</a>
+				  </body></html>";
+		}
+		else
+		{
+    		$the_error = "\nSQL error: ".$the_error."\n";
+	    	$the_error .= "SQL error code: ".$the_error_no."\n";
+	    	$the_error .= "Date: ".date("l dS \of F Y h:i:s A");
+    	
+	    	$out = "<html>\n<head>\n<title>MySQL Error</title>\n
+	    		   <style>P,BODY{ font-family:arial,sans-serif; font-size:11px; }</style>\n</head>\n<body>\n
+	    		   <blockquote>\n<h1>MySQL Error</h1><b>There appears to be an error with the database.</b><br />
+	    		   You can try to refresh the page by clicking <a href=\"javascript:window.location=window.location;\">here</a>.
+	    		   <br /><br /><b>Error Returned</b><br />
+	    		   <form name='mysql'><textarea rows=\"15\" cols=\"60\">".htmlentities($the_error, ENT_QUOTES)."</textarea></form><br>We apologise for any inconvenience</blockquote></body></html>";
+    		   
+    
+	       	print $out;
+		}
+		
+        exit();
+}
+    
+    
 // Returns the current time in GMT in MySQL compatible format.
 function get_date_time($timestamp = 0)
 {
@@ -613,7 +685,7 @@ function get_elapsed_time($ts)
   $hours -= $days * 24;
   $weeks = floor($days / 7);
   $days -= $weeks * 7;
-  $t = "";
+//  $t = "";
   if ($weeks > 0)
     return "$weeks week" . ($weeks > 1 ? "s" : "");
   if ($days > 0)

@@ -135,7 +135,7 @@ if (mysql_num_rows($res) > 0)
 	while ($arr = mysql_fetch_assoc($res))
 	{
 		$newsid = $arr["id"];
-		$body = $arr["body"];
+		$body = htmlentities($arr["body"], ENT_QUOTES);
 	  $userid = $arr["userid"];
 	  $added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
 

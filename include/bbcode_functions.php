@@ -182,34 +182,6 @@ $smilies = array(
   ":soldiers:" => "soldiers.gif",
 );
 
-$privatesmilies = array(
-  ":)" => "smile1.gif",
-//  ";)" => "wink.gif",
-  ":wink:" => "wink.gif",
-  ":D" => "grin.gif",
-  ":P" => "tongue.gif",
-  ":(" => "sad.gif",
-  ":'(" => "cry.gif",
-  ":|" => "noexpression.gif",
-  // "8)" => "cool1.gif",   we don't want this as a smilie...
-  ":Boozer:" => "alcoholic.gif",
-  ":deadhorse:" => "deadhorse.gif",
-  ":spank:" => "spank.gif",
-  ":yoji:" => "yoji.gif",
-  ":locked:" => "locked.gif",
-  ":grrr:" => "angry.gif", 			// legacy
-  "O:-" => "innocent.gif",			// legacy
-  ":sleeping:" => "sleeping.gif",	// legacy
-  "-_-" => "unsure.gif",			// legacy
-  ":clown:" => "clown.gif",
-  ":mml:" => "mml.gif",
-  ":rtf:" => "rtf.gif",
-  ":morepics:" => "morepics.gif",
-  ":rb:" => "rb.gif",
-  ":rblocked:" => "rblocked.gif",
-  ":maxlocked:" => "maxlocked.gif",
-  ":hslocked:" => "hslocked.gif",
-);
 
   
 //Finds last occurrence of needle in haystack
@@ -306,10 +278,10 @@ function format_quotes($s)
 
 function format_comment($text, $strip_html = true)
 {
-	global $smilies, $privatesmilies, $pic_base_url;
+	global $smilies, $pic_base_url;
 
 	$s = $text;
-
+  unset($text);
   // This fixes the extraneous ;) smilies problem. When there was an html escaped
   // char before a closing bracket - like >), "), ... - this would be encoded
   // to &xxx;), hence all the extra smilies. I created a new :wink: label, removed
@@ -402,14 +374,9 @@ function format_comment($text, $strip_html = true)
 	// Maintain spacing
 	$s = str_replace("  ", " &nbsp;", $s);
 
-	reset($smilies);
-	while (list($code, $url) = each($smilies))
+	foreach($smilies as $code => $url) {
 		$s = str_replace($code, "<img border=0 src=\"{$pic_base_url}smilies/{$url}\" alt=\"" . htmlspecialchars($code) . "\">", $s);
-
-	reset($privatesmilies);
-	while (list($code, $url) = each($privatesmilies))
-		$s = str_replace($code, "<img border=0 src=\"{$pic_base_url}smilies/{$url}\">", $s);
-
+}
 	return $s;
 }
 

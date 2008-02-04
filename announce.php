@@ -141,7 +141,7 @@ else
 
 {
 
-$resp = "d" . benc_str("interval") . "i" . $announce_interval . "e5:"."peers" ;
+$resp = "d" . benc_str("interval") . "i" . $announce_interval ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
 
 }
 
