@@ -25,7 +25,7 @@ loggedinorreturn();
 
 $id = 0 + $_GET["id"];
 
-if (!isset($id) || !$id)
+if (!isset($id) || !is_valid_id($id))
 	die();
 	
 	

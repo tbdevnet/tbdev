@@ -78,6 +78,7 @@ $dict = bdec_file($tmpname, $max_torrent_size);
 if (!isset($dict))
 	bark("What the hell did you upload? This is not a bencoded file!");
 
+
 function dict_check($d, $s) {
 	if ($d["type"] != "dictionary")
 		bark("not a dictionary");
@@ -116,7 +117,8 @@ function dict_get($d, $k, $t) {
 	return $v["value"];
 }
 
-list($ann, $info) = dict_check($dict, "announce(string):info");
+list($ann, $info, $tmaker) = dict_check($dict, "announce(string):info:created by");
+unset($dict);
 list($dname, $plen, $pieces) = dict_check($info, "name(string):piece length(integer):pieces(string)");
 
 if (!in_array($ann, $announce_urls, 1))
@@ -124,6 +126,8 @@ if (!in_array($ann, $announce_urls, 1))
 
 if (strlen($pieces) % 20 != 0)
 	bark("invalid pieces");
+
+$tmaker = (isset($tmaker) && !empty($tmaker['value'])) ? sqlesc($tmaker['value']) : '';
 
 $filelist = array();
 $totallen = dict_get($info, "length", "integer");
@@ -155,17 +159,18 @@ else {
 	$type = "multi";
 }
 
+
 $infohash = pack("H*", sha1($info["string"]));
 
-
+unset($info);
 // Replace punctuation characters with spaces
 
 $torrent = str_replace("_", " ", $torrent);
 
 $nfo = sqlesc(str_replace("\x0d\x0d\x0a", "\x0d\x0a", @file_get_contents($nfofilename)));
-$ret = mysql_query("INSERT INTO torrents (search_text, filename, owner, visible, info_hash, name, size, numfiles, type, descr, ori_descr, category, save_as, added, last_action, nfo) VALUES (" .
+$ret = mysql_query("INSERT INTO torrents (search_text, filename, owner, visible, info_hash, name, size, numfiles, type, descr, ori_descr, category, save_as, added, last_action, nfo, client_created_by) VALUES (" .
 		implode(",", array_map("sqlesc", array(searchfield("$shortfname $dname $torrent"), $fname, $CURUSER["id"], "no", $infohash, $torrent, $totallen, count($filelist), $type, $descr, $descr, 0 + $_POST["type"], $dname))) .
-		", '" . get_date_time() . "', '" . get_date_time() . "', $nfo)");
+		", '" . get_date_time() . "', '" . get_date_time() . "', $nfo, $tmaker)");
 if (!$ret) {
 	if (mysql_errno() == 1062)
 		bark("torrent already uploaded!");

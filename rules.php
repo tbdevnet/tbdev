@@ -147,12 +147,9 @@ If you have something interesting that somehow violate these rules (e.g. not ISO
 <li>You can see the complete info of all users.</li>
 <li>You can add comments to users (for other mods and admins to read).</li>
 <li>You can stop reading now 'cuz you already knew about these options. ;)</li>
-<li>Lastly, check out the <a href=http://www.torrentbits.org/staff.php class=altlink>Staff</a> page (top right corner).</li>
+<li>Lastly, check out the <a href=<?=$BASEURL?>/staff.php class=altlink>Staff</a> page (top right corner).</li>
 
-<? end_frame(); ?>
-
-<p align=right><font size=1 color=#004E98><b>Rules edited 2004-05-24 (03:41 GMT)</b></font></p>
-
-<? }
+<? end_frame(); 
+ }
 end_main_frame();
 stdfoot(); ?>

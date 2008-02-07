@@ -98,12 +98,17 @@ else
   if ($page > $pages)
     $page = $pages;
 
-for ($i = 1; $i <= $pages; ++$i)
+for ($i = 1; $i <= $pages; ++$i) {
+  $PageNo = $i+1;
+  if($PageNo < ($page - 2))
+    continue;
+  
   if ($i == $page)
     $pagemenu .= "&nbsp;<span class='btn' style='background:orange;'>$i</span>\n";
   else
     $pagemenu .= "&nbsp;<a href=users.php?$q&page=$i><span class='btn'>$i</span></a>\n";
-
+  if($PageNo > ($page + 3)) break;
+  }
 
 if ($page == 1)
   $browsemenu .= "<span class='btn' style='background:orange;'>&lt;&lt; Prev</span>$pagemenu";

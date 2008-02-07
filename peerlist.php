@@ -11,7 +11,7 @@ loggedinorreturn();
 
 $id = (int)$_GET["id"];
 
-if (!isset($id) || !$id)
+if (!isset($id) || !is_valid_id($id))
 	die();
 
 
@@ -44,12 +44,12 @@ function dltable($name, $arr, $torrent)
 
                 // user/ip/port
                 // check if anyone has this ip
-                ($unr = mysql_query("SELECT username, privacy FROM users WHERE id=$e[userid] ORDER BY last_access DESC LIMIT 1")) or die;
-                $una = mysql_fetch_assoc($unr);
-				if ($una["privacy"] == "strong") continue;
+                //($unr = mysql_query("SELECT username, privacy FROM users WHERE id=$e[userid] ORDER BY last_access DESC LIMIT 1")) or die;
+                //$una = mysql_fetch_assoc($unr);
+				if ($e["privacy"] == "strong") continue;
 		$s .= "<tr>\n";
-                if ($una["username"])
-                  $s .= "<td><a href=userdetails.php?id=$e[userid]><b>$una[username]</b></a></td>\n";
+                if ($e["username"])
+                  $s .= "<td><a href=userdetails.php?id=$e[userid]><b>$e[username]</b></a></td>\n";
                 else
                   $s .= "<td>" . ($mod ? $e["ip"] : preg_replace('/\.\d+$/', ".xxx", $e["ip"])) . "</td>\n";
 		$secs = max(1, ($now - $e["st"]) - ($now - $e["la"]));
@@ -94,7 +94,10 @@ if(mysql_num_rows($res) == 0)
 
 			$downloaders = array();
 			$seeders = array();
-			$subres = mysql_query("SELECT seeder, finishedat, downloadoffset, uploadoffset, ip, port, uploaded, downloaded, to_go, UNIX_TIMESTAMP(started) AS st, connectable, agent, UNIX_TIMESTAMP(last_action) AS la, userid, peer_id FROM peers WHERE torrent = $id") or sqlerr();
+			$subres = mysql_query("SELECT u.username, u.privacy, p.seeder, p.finishedat, p.downloadoffset, p.uploadoffset, p.ip, p.port, p.uploaded, p.downloaded, p.to_go, UNIX_TIMESTAMP( p.started ) AS st, p.connectable, p.agent, UNIX_TIMESTAMP( p.last_action ) AS la, p.userid, p.peer_id
+FROM peers p
+LEFT JOIN users u ON p.userid = u.id
+WHERE p.torrent = $id") or sqlerr();
 			
 			if(mysql_num_rows($subres) == 0)
 				stderr('Warning', 'No downloader/uploader data available!');
@@ -132,8 +135,8 @@ if(mysql_num_rows($res) == 0)
 stdhead('Details');
 
 	print "<h1>Peerlist for <a href='$BASEURL/details.php?id=$id'>".htmlentities($row['name'])."</a></h1>";
-	print dltable("Seeder(s)", $seeders, $row);
-	print '<br />' . dltable("Leecher(s)", $downloaders, $row);
+	print dltable("Seeder(s)<a name=seeders>", $seeders, $row);
+	print '<br />' . dltable("Leecher(s)<a name=leechers>", $downloaders, $row);
 	
 stdfoot();
 ?>

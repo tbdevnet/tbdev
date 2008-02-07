@@ -826,7 +826,7 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
     if (!$sure)
     {
       stderr("Delete topic", "Sanity check: You are about to delete a topic. Click\n" .
-      "<a href=?action=deletetopic&topicid=$topicid&sure=1>here</a> if you are sure.");
+      "<a href=?action=deletetopic&topicid=$topicid&forumid=$forumid&sure=1>here</a> if you are sure.");
     }
 
     mysql_query("DELETE FROM topics WHERE id=$topicid") or sqlerr(__FILE__, __LINE__);

@@ -6,7 +6,7 @@ dbconn(false);
 loggedinorreturn();
 
 // Standard Administrative PM Replies
-$pm_std_reply[1] = "Read the bloody [url=http://torrentbits.org/faq.php]FAQ[/url] and stop bothering me!";
+$pm_std_reply[1] = "Read the bloody [url=".$BASEURL."/faq.php]FAQ[/url] and stop bothering me!";
 $pm_std_reply[2] = "Die! Die! Die!";
 
 // Standard Administrative PMs
@@ -18,7 +18,7 @@ I am sure that you will appreciate the importance of sharing your downloads.
 You may PM any Moderator, if you believe that you are being treated unfairly.\n
 Thank you for your cooperation.");
 $pm_template['2'] = array("Avatar warning", "Hi,\n
-You may not be aware that there are new guidelines on avatar sizes in the [url=http://torrentbits.org/rules.php]rules[/url], in particular \"Resize
+You may not be aware that there are new guidelines on avatar sizes in the [url=".$BASEURL."/rules.php]rules[/url], in particular \"Resize
 your images to a width of 150 px and a size of [b]no more than 150 KB[/b].\"\n
 I'm sorry to say your avatar doesn't conform to them. Please change it as soon as possible.\n
 We understand this may be an inconvenience to some users but feel it is in the community's best interest.\n
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
   $n_pms = $_POST['n_pms'];
   $pmees = $_POST['pmees'];
-  $auto = $_POST['auto'];
+  $auto = isset($_POST['auto']) ? $_POST['auto'] : FALSE;
 
   if ($auto)
   	$body=$mm_template[$auto][1];
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	<? } ?>
 	<table border=1 cellspacing=0 cellpadding=5>
 	<tr><td colspan="2"><div align="center">
-	<textarea name=msg cols=80 rows=15><?=htmlspecialchars($body)?></textarea>
+	<textarea name=msg cols=80 rows=15><?=isset($body) ? htmlentities($body, ENT_QUOTES) : ''?></textarea>
 	</div></td></tr>
 	<tr><td colspan="2"><div align="center"><b>Comment:&nbsp;&nbsp;</b>
   <input name="comment" type="text" size="70">

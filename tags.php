@@ -98,7 +98,7 @@ insert_tag(
 	"Hyperlink (alt. 1)",
 	"Inserts a hyperlink.",
 	"[url]<i>URL</i>[/url]",
-	"[url]http://torrentbits.org/[/url]",
+	"[url]".$BASEURL."/[/url]",
 	"This tag is superfluous; all URLs are automatically hyperlinked."
 );
 
@@ -106,7 +106,7 @@ insert_tag(
 	"Hyperlink (alt. 2)",
 	"Inserts a hyperlink.",
 	"[url=<i>URL</i>]<i>Link text</i>[/url]",
-	"[url=http://torrentbits.org/]TorrentBits[/url]",
+	"[url=".$BASEURL."/]".$SITENAME."[/url]",
 	"You do not have to use this tag unless you want to set the link text; all URLs are automatically hyperlinked."
 );
 
@@ -114,7 +114,7 @@ insert_tag(
 	"Image (alt. 1)",
 	"Inserts a picture.",
 	"[img=<i>URL</i>]",
-	"[img=http://torrentbits.org/pic/logo.gif]",
+	"[img=".$BASEURL."/pic/logo.gif]",
 	"The URL must end with <b>.gif</b>, <b>.jpg</b> or <b>.png</b>."
 );
 
@@ -122,7 +122,7 @@ insert_tag(
 	"Image (alt. 2)",
 	"Inserts a picture.",
 	"[img]<i>URL</i>[/img]",
-	"[img]http://torrentbits.org/pic/logo.gif[/img]",
+	"[img]".$BASEURL."/pic/logo.gif[/img]",
 	"The URL must end with <b>.gif</b>, <b>.jpg</b> or <b>.png</b>."
 );
 

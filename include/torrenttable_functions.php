@@ -179,8 +179,7 @@ print("</td>\n");
         if ($row["leechers"]) {
             if ($variant == "index")
                 print("<td align=right><b><a href=peerlist.php?id=$id#leechers>" .
-                   number_format($row["leechers"]) . ($peerlink ? "</a>" : "") .
-                   "</b></td>\n");
+                   number_format($row["leechers"]) . "</a></b></td>\n");
             else
                 print("<td align=\"right\"><b><a class=\"" . linkcolor($row["leechers"]) . "\" href=\"peerlist.php?id=$id#leechers\">" .
                   $row["leechers"] . "</a></b></td>\n");
