@@ -225,21 +225,21 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		print("<h2>No comments yet</h2>\n");
 	}
 	else {
-		list($pagertop, $pagerbottom, $limit) = pager(20, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
+		$pager = pager(20, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
 
 		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, warned, ".
                   "username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = " .
-                  "$id ORDER BY comments.id $limit") or sqlerr(__FILE__, __LINE__);
+                  "$id ORDER BY comments.id ".$pager['limit']) or sqlerr(__FILE__, __LINE__);
 		$allrows = array();
 		while ($subrow = mysql_fetch_assoc($subres))
 			$allrows[] = $subrow;
 
 		print($commentbar);
-		print($pagertop);
+		print($pager['pagertop']);
 
 		commenttable($allrows);
 
-		print($pagerbottom);
+		print($pager['pagerbottom']);
 	}
 
 	print($commentbar);

@@ -1,6 +1,10 @@
 <?php
 
 function pager($rpp, $count, $href, $opts = array()) {
+    
+    if($rpp > $count)
+          return array('pagertop' => '&nbsp;', 'pagerbottom' => '&nbsp;', 'limit' => '');
+
     $pages = ceil($count / $rpp);
 
     if (!isset($opts["lastpagedefault"]))
@@ -76,7 +80,7 @@ function pager($rpp, $count, $href, $opts = array()) {
 
     $start = $page * $rpp;
 
-    return array($pagertop, $pagerbottom, "LIMIT $start,$rpp");
+    return array('pagertop' => $pagertop, 'pagerbottom' => $pagerbottom, 'limit' => "LIMIT $start,$rpp");
 }
 
 ?>

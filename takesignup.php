@@ -96,7 +96,7 @@ if ($a[0] != 0)
 /*
 // do simple proxy check
 if (isproxy())
-	bark("You appear to be connecting through a proxy server. Your organization or ISP may use a transparent caching HTTP proxy. Please try and access the site on <a href=http://torrentbits.org:81/signup.php>port 81</a> (this should bypass the proxy server). <p><b>Note:</b> if you run an Internet-accessible web server on the local machine you need to shut it down until the sign-up is complete.");
+	bark("You appear to be connecting through a proxy server. Your organization or ISP may use a transparent caching HTTP proxy. Please try and access the site on <a href=".$BASEURL."/signup.php>port 81</a> (this should bypass the proxy server). <p><b>Note:</b> if you run an Internet-accessible web server on the local machine you need to shut it down until the sign-up is complete.");
 */
 
 $secret = mksecret();
@@ -132,7 +132,7 @@ $DEFAULTBASEURL/confirm.php?id=$id&secret=$psecret
 
 After you do this, you will be able to use your new account. If you fail to
 do this, you account will be deleted within a few days. We urge you to read
-the RULES and FAQ before you start using torrentbits.
+the RULES and FAQ before you start using $SITENAME.
 EOD;
 
 if($arr[0])

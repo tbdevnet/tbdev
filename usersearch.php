@@ -13,6 +13,13 @@ loggedinorreturn();
 if (get_user_class() < UC_MODERATOR)
 	stderr("Error", "Permission denied.");
 
+function is_set_not_empty($param) {
+  if(isset($_GET[$param]) && !empty($_GET[$param]))
+    return TRUE;
+  else
+    return FALSE;
+}
+
 stdhead("Administrative User Search");
 
 
@@ -313,6 +320,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // email
+  if(is_set_not_empty('em')) {
   $emaila = explode(' ', trim($_GET['em']));
   if ($emaila[0] !== "")
   {
@@ -339,10 +347,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 		$where_is .= $email_is.")";
     $q .= ($q ? "&amp;" : "") . "em=".urlencode(trim($_GET['em']));
   }
-
+}
   //class
   // NB: the c parameter is passed as two units above the real one
-  $class = $_GET['c'] - 2;
+  $class = is_set_not_empty('c') ? $_GET['c'] - 2 : -2;
 	if (is_valid_id($class + 1))
 	{
   	$where_is .= (!empty($where_is)?" AND ":"")."u.class=$class";
@@ -350,9 +358,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // IP
-  $ip = trim($_GET['ip']);
-  if ($ip)
+  
+  if (is_set_not_empty('ip'))
   {
+  	$ip = trim($_GET['ip']);
   	$regex = "/^(((1?\d{1,2})|(2[0-4]\d)|(25[0-5]))(\.\b|$)){4}$/";
     if (!preg_match($regex, $ip))
     {
@@ -391,9 +400,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // ratio
-  $ratio = trim($_GET['r']);
-  if ($ratio)
+  
+  if (is_set_not_empty('r'))
   {
+  	$ratio = trim($_GET['r']);
   	if ($ratio == '---')
   	{
     	$ratio2 = "";
@@ -447,6 +457,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // comment
+  if(is_set_not_empty('co')) {
   $comments = explode(' ',trim($_GET['co']));
   if ($comments[0] !== "")
   {
@@ -495,13 +506,14 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 	  }
     $q .= ($q ? "&amp;" : "") . "co=".urlencode(trim($_GET['co']));
   }
-
+}
   $unit = 1073741824;		// 1GB
 
   // uploaded
-  $ul = trim($_GET['ul']);
-  if ($ul)
+  
+  if (is_set_not_empty('ul'))
   {
+  	$ul = trim($_GET['ul']);
   	if (!is_numeric($ul) || $ul < 0)
   	{
     	stdmsg("Error", "Bad uploaded amount.");
@@ -540,9 +552,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // downloaded
-  $dl = trim($_GET['dl']);
-  if ($dl)
+  
+  if (is_set_not_empty('dl'))
   {
+  	$dl = trim($_GET['dl']);
   	if (!is_numeric($dl) || $dl < 0)
   	{
     	stdmsg("Error", "Bad downloaded amount.");
@@ -581,9 +594,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // date joined
-  $date = trim($_GET['d']);
-  if ($date)
+  
+  if (is_set_not_empty('d'))
   {
+  	$date = trim($_GET['d']);
   	if (!$date = mkdate($date))
   	{
     	stdmsg("Error", "Invalid date.");
@@ -630,9 +644,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
 	// date last seen
-  $last = trim($_GET['ls']);
-  if ($last)
+  
+  if (is_set_not_empty('ls'))
   {
+  	$last = trim($_GET['ls']);
   	if (!$last = mkdate($last))
   	{
     	stdmsg("Error", "Invalid date.");
@@ -673,9 +688,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // status
-  $status = $_GET['st'];
-  if ($status)
+  
+  if (is_set_not_empty('st'))
   {
+  	$status = $_GET['st'];
   	$where_is .= ((!empty($where_is))?" AND ":"");
     if ($status == "1")
     	$where_is .= "u.status = 'confirmed'";
@@ -685,9 +701,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // account status
-  $accountstatus = $_GET['as'];
-  if ($accountstatus)
+  
+  if (is_set_not_empty('as'))
   {
+  	$accountstatus = $_GET['as'];
   	$where_is .= (!empty($where_is))?" AND ":"";
     if ($accountstatus == "1")
     	$where_is .= " u.enabled = 'yes'";
@@ -697,9 +714,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   //donor
-	$donor = $_GET['do'];
-  if ($donor)
+	
+  if (is_set_not_empty('do'))
   {
+		$donor = $_GET['do'];
 		$where_is .= (!empty($where_is))?" AND ":"";
     if ($donor == 1)
     	$where_is .= " u.donor = 'yes'";
@@ -709,9 +727,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   //warned
-	$warned = $_GET['w'];
-  if ($warned)
+	
+  if (is_set_not_empty('w'))
   {
+		$warned = $_GET['w'];
 		$where_is .= (!empty($where_is))?" AND ":"";
     if ($warned == 1)
     	$where_is .= " u.warned = 'yes'";
@@ -775,9 +794,9 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 
   $perpage = 30;
 
-  list($pagertop, $pagerbottom, $limit) = pager($perpage, $count, $_SERVER["PHP_SELF"]."?".$q);
+  $pager = pager($perpage, $count, $_SERVER["PHP_SELF"]."?".$q);
 
-  $query .= $limit;
+  $query .= $pager['limit'];
 
   $res = mysql_query($query) or sqlerr();
 
@@ -786,7 +805,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   else
   {
   	if ($count > $perpage)
-  		echo $pagertop;
+  		echo $pager['pagertop'];
     echo "<table id=torrenttable border=1 cellspacing=0 cellpadding=5>\n";
     echo "<tr class='fcell_header'><td align=left>Name</td>
     		<td align=left>Ratio</td>
@@ -800,6 +819,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
         "<td>pUL (MB)</td>".
         "<td>pDL (MB)</td>".
         "<td>History</td></tr>";
+        $ids = '';
     while ($user = mysql_fetch_array($res))
     {
     	if ($user['added'] == '0000-00-00 00:00:00')
@@ -849,7 +869,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       // $auxres = mysql_query("SELECT COUNT(c.id) FROM comments AS c LEFT JOIN torrents as t ON c.torrent = t.id WHERE c.user = '".$user['id']."'") or sqlerr(__FILE__, __LINE__);
       $n = mysql_fetch_row($auxres);
       $n_comments = $n[0];
-
+      $ids .= $user['id'].':';
     	echo "<tr><td><b><a href='userdetails.php?id=" . $user['id'] . "'>" .
       		$user['username']."</a></b>" .
       		($user["donor"] == "yes" ? "<img src=pic/star.gif alt=\"Donor\">" : "") .
@@ -866,10 +886,11 @@ if (count($_GET) > 0 && !isset($_GET['h']))
           <td><div align=center>".($n_posts?"<a href=userhistory.php?action=viewposts&id=".$user['id'].">$n_posts</a>":$n_posts).
           "|".($n_comments?"<a href=userhistory.php?action=viewcomments&id=".$user['id'].">$n_comments</a>":$n_comments).
           "</div></td></tr>\n";
+          
     }
     echo "</table>";
     if ($count > $perpage)
-    	echo "$pagerbottom";
+    	echo $pager['pagerbottom'];
 
 	?>
     <br><br>
@@ -878,9 +899,10 @@ if (count($_GET) > 0 && !isset($_GET['h']))
         <tr>
           <td>
             <div align="center">
-              <input name="pmees" type="hidden" value="<?echo $querypm?>" size=10>
+              <!--<input name="pmees" type="hidden" value="<?echo $querypm?>" size=10>-->
+              <input name="pmees" type="hidden" value="<?echo htmlentities(rtrim($ids, ':'))?>" />
               <input name="PM" type="submit" value="PM" class=btn>
-              <input name="n_pms" type="hidden" value="<?echo $count?>" size=10>
+              <input name="n_pms" type="hidden" value="<?echo htmlentities($count)?>" size=10>
             </div></td>
         </tr>
       </table>

@@ -157,10 +157,12 @@ if (!$torrentsperpage)
 
 if ($count)
 {
-	list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
+	//list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
+	$pager = pager($torrentsperpage, $count, "browse.php?" . $addparam);
+
 	$query = "SELECT torrents.id, torrents.category, torrents.leechers, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.type,  torrents.comments,torrents.numfiles,torrents.filename,torrents.owner,IF(torrents.nfo <> '', 1, 0) as nfoav," .
 //	"IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby $limit";
-	"categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby $limit";
+	"categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby {$pager['limit']}";
 	$res = mysql_query($query) or die(mysql_error());
 }
 else
@@ -260,11 +262,11 @@ if (isset($cleansearchstr))
 print("<h2>Search results for \"" . htmlentities($searchstr, ENT_QUOTES) . "\"</h2>\n");
 
 if ($count) {
-	print($pagertop);
+	print($pager['pagertop']);
 
 	torrenttable($res);
 
-	print($pagerbottom);
+	print($pager['pagerbottom']);
 }
 else {
 	if (isset($cleansearchstr)) {

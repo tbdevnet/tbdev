@@ -84,7 +84,7 @@ $browsemenu = '';
 $pagemenu = '';
 $out = '';
 
-$res = mysql_query("SELECT COUNT(*) FROM users WHERE $query") or sqlerr();
+$res = mysql_query("SELECT COUNT(*) FROM users WHERE $query") or sqlerr(__FILE__,__LINE__);
 $arr = mysql_fetch_row($res);
 
 if($arr[0] > $perpage) {
@@ -111,16 +111,16 @@ for ($i = 1; $i <= $pages; ++$i) {
   }
 
 if ($page == 1)
-  $browsemenu .= "<span class='btn' style='background:orange;'>&lt;&lt; Prev</span>$pagemenu";
+  $browsemenu .= "<span class='btn' style='background:orange;'>&lsaquo;</span>$pagemenu";
 else
-  $browsemenu .= "<a href=users.php?$q&page=" . ($page - 1) . "><span class='btn'>&lt;&lt; Prev</span></a>$pagemenu";
+  $browsemenu .= "<a href=users.php?$q&page=1 title='First(1)'><span class='btn'>&laquo;</span></a>&nbsp;<a href=users.php?$q&page=" . ($page - 1) . "><span class='btn'>&lsaquo;</span></a>$pagemenu";
 
 //$browsemenu .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 if ($page == $pages)
-  $browsemenu .= "<span class='btn' style='background:orange;'>Next &gt;&gt;</span>";
+  $browsemenu .= "<span class='btn' style='background:orange;'>&rsaquo;</span>";
 else
-  $browsemenu .= "<a href=users.php?$q&page=" . ($page + 1) . "><span class='btn'>Next &gt;&gt;</span></a>";
+  $browsemenu .= "<a href=users.php?$q&page=" . ($page + 1) . "><span class='btn'>&rsaquo;</span></a>&nbsp;<a href=users.php?$q&page=" . $pages . " title='Last($pages)'><span class='btn'>&raquo;</span></a>";
 }
 
 ($arr[0] > $perpage) ? print"<p>$browsemenu<br /><br /></p>" : print '<br /><br />';
@@ -128,7 +128,7 @@ else
 $offset = ($page * $perpage) - $perpage;
 
 if($arr[0] > 0) {
-    $res = mysql_query("SELECT users.*, countries.name, countries.flagpic FROM users FORCE INDEX ( username ) LEFT JOIN countries ON country = countries.id WHERE $query ORDER BY username LIMIT $offset,$perpage") or sqlerr();
+    $res = mysql_query("SELECT users.*, countries.name, countries.flagpic FROM users FORCE INDEX ( username ) LEFT JOIN countries ON country = countries.id WHERE $query ORDER BY username LIMIT $offset,$perpage") or sqlerr(__FILE__,__LINE__);
 //$num = mysql_num_rows($res);
 
 print("<table border=1 cellspacing=0 cellpadding=5>\n");

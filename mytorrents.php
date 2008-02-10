@@ -22,15 +22,15 @@ if (!$count) {
 <?
 }
 else {
-	list($pagertop, $pagerbottom, $limit) = pager(20, $count, "mytorrents.php?");
+	$pager = pager(20, $count, "mytorrents.php?");
 
-	$res = mysql_query("SELECT torrents.type, torrents.comments, torrents.leechers, torrents.seeders, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.id, categories.name AS cat_name, categories.image AS cat_pic, torrents.name, save_as, numfiles, added, size, views, visible, hits, times_completed, category FROM torrents LEFT JOIN categories ON torrents.category = categories.id $where ORDER BY id DESC $limit");
+	$res = mysql_query("SELECT torrents.type, torrents.comments, torrents.leechers, torrents.seeders, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.id, categories.name AS cat_name, categories.image AS cat_pic, torrents.name, save_as, numfiles, added, size, views, visible, hits, times_completed, category FROM torrents LEFT JOIN categories ON torrents.category = categories.id $where ORDER BY id DESC ".$pager['limit']);
 
-	print($pagertop);
+	print($pager['pagertop']);
 
 	torrenttable($res, "mytorrents");
 
-	print($pagerbottom);
+	print($pager['pagerbottom']);
 }
 
 stdfoot();

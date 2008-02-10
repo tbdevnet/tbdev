@@ -46,7 +46,7 @@ if ($action == "viewposts")
 
 	//------ Make page menu
 
-	list($pagertop, $pagerbottom, $limit) = pager($perpage, $postcount, $_SERVER["PHP_SELF"] . "?action=viewposts&id=$userid&");
+	$pager = pager($perpage, $postcount, $_SERVER["PHP_SELF"] . "?action=viewposts&id=$userid&");
 
 	//------ Get user data
 
@@ -67,7 +67,7 @@ if ($action == "viewposts")
 
 	$select_is = "f.id AS f_id, f.name, t.id AS t_id, t.subject, t.lastpost, r.lastpostread, p.*";
 
-	$query = "SELECT $select_is FROM $from_is WHERE $where_is ORDER BY $order_is $limit";
+	$query = "SELECT $select_is FROM $from_is WHERE $where_is ORDER BY $order_is {$pager['limit']}";
 
 	$res = mysql_query($query) or sqlerr(__FILE__, __LINE__);
 
@@ -77,7 +77,7 @@ if ($action == "viewposts")
 
 	print("<h1>Post history for $subject</h1>\n");
 
-	if ($postcount > $perpage) echo $pagertop;
+	if ($postcount > $perpage) echo $pager['pagertop'];
 
 	//------ Print table
 
@@ -141,7 +141,7 @@ if ($action == "viewposts")
 
 	end_main_frame();
 
-	if ($postcount > $perpage) echo $pagerbottom;
+	if ($postcount > $perpage) echo $pager['pagerbottom'];
 
 	stdfoot();
 
@@ -171,7 +171,7 @@ if ($action == "viewcomments")
 
 	//------ Make page menu
 
-	list($pagertop, $pagerbottom, $limit) = pager($perpage, $commentcount, $_SERVER["PHP_SELF"] . "?action=viewcomments&id=$userid&");
+	$pager = pager($perpage, $commentcount, $_SERVER["PHP_SELF"] . "?action=viewcomments&id=$userid&");
 
 	//------ Get user data
 
@@ -190,7 +190,7 @@ if ($action == "viewcomments")
 
 	$select_is = "t.name, c.torrent AS t_id, c.id, c.added, c.text";
 
-	$query = "SELECT $select_is FROM $from_is WHERE $where_is ORDER BY $order_is $limit";
+	$query = "SELECT $select_is FROM $from_is WHERE $where_is ORDER BY $order_is {$pager['limit']}";
 
 	$res = mysql_query($query) or sqlerr(__FILE__, __LINE__);
 
@@ -200,7 +200,7 @@ if ($action == "viewcomments")
 
 	print("<h1>Comments history for $subject</h1>\n");
 
-	if ($commentcount > $perpage) echo $pagertop;
+	if ($commentcount > $perpage) echo $pager['pagertop'];
 
 	//------ Print table
 
@@ -250,7 +250,7 @@ if ($action == "viewcomments")
 
 	end_main_frame();
 
-	if ($commentcount > $perpage) echo $pagerbottom;
+	if ($commentcount > $perpage) echo $pager['pagerbottom'];
 
 	stdfoot();
 

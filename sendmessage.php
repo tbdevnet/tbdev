@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	if (get_user_class() < UC_MODERATOR)
 		stderr("Error", "Permission denied");
 
-  $n_pms = $_POST['n_pms'];
-  $pmees = $_POST['pmees'];
+  $n_pms = htmlentities($_POST['n_pms']);
+  $pmees = htmlentities($_POST['pmees']);
   $auto = isset($_POST['auto']) ? $_POST['auto'] : FALSE;
 
   if ($auto)

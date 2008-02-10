@@ -24,7 +24,7 @@ if(isset($_POST["search"]) && !empty($_POST['search'])) {
 $query = mysql_query("SELECT id, filename, MATCH (filename)
 						AGAINST (".$cleansearchstr.") AS score
 						FROM files WHERE MATCH (filename)
-						AGAINST (".$cleansearchstr.")");
+						AGAINST (".$cleansearchstr." IN BOOLEAN MODE)");
 
 if(mysql_num_rows($query) == 0)
 	stderr("Error", "Nothing found");

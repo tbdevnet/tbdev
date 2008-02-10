@@ -8,6 +8,22 @@ require_once "include/user_functions.php";
   dbconn();
 
   loggedinorreturn();
+  
+  function ratios($up, $down) {
+  if ($down > 0)
+    {
+      $ratio = number_format($up / $down, 3);
+      return "<font color=" . get_ratio_color($ratio) . ">$ratio</font>";
+    }
+    else
+    {
+      if ($up > 0)
+        return "Inf.";
+      else
+        return "---";
+    }
+    return;
+  }
   $n_pms = isset($_POST["n_pms"]) ? $_POST["n_pms"] : false;
   if ($n_pms)
   {  			                                                      //////  MM  ///
@@ -20,7 +36,8 @@ require_once "include/user_functions.php";
 
     $sender_id = ($_POST['sender'] == 'system' ? 0 : $CURUSER['id']);
 
-    $from_is = $_POST['pmees'];
+    $from_is = explode(':', $_POST['pmees']);
+    $from_is = "FROM users u WHERE u.id IN (" . join(',', $from_is) .")";
 
     $query = "INSERT INTO messages (sender, receiver, added, msg, poster) ".
              "SELECT $sender_id, u.id, '" . get_date_time() . "', " . sqlesc($msg) .
@@ -42,16 +59,18 @@ require_once "include/user_functions.php";
 	      while ($user = mysql_fetch_assoc($res))
 	      {
 	        unset($new);
+	        $new = '';
 	        $old = $user['modcomment'];
 	        if ($comment)
-	          $new = $comment;
+	          $new .= $comment;
 	        if ($snapshot)
 	        {
-	          $new .= ($new?"\n":"") .
+              
+              $new .= ($new?"\n":"") .
 	            "MMed, " . gmdate("Y-m-d") . ", " .
-	            "UL: " . mksizegb($user['uploaded']) . ", " .
-	            "DL: " . mksizegb($user['downloaded']) . ", " .
-	            "r: " . ratios($user['uploaded'],$user['downloaded'], False) . " - " .
+	            "UL: " . mksize($user['uploaded']) . ", " .
+	            "DL: " . mksize($user['downloaded']) . ", " .
+	            "r: " . ratios($user['uploaded'],$user['downloaded']) . " - " .
 	            ($_POST['sender'] == "system"?"System":$CURUSER['username']);
 	        }
 	      	$new .= $old?("\n".$old):$old;
@@ -155,10 +174,11 @@ EOD;
       die;
     }
 
-	  stdhead();
+	 
+	} 
+	stdhead();
 	  stdmsg("Succeeded", (($n_pms > 1) ? "$n messages out of $n_pms were" : "Message was").
 	    " successfully sent!" . ($l ? " $l profile comment" . (($l>1) ? "s were" : " was") . " updated!" : ""));
-	}
 	stdfoot();
 	exit;
 ?>
