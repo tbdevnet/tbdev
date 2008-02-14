@@ -128,11 +128,14 @@ function docleanup() {
 	mysql_query("DELETE FROM users WHERE status='confirmed' AND class <= $maxclass AND last_access < $dt");
 
 	// lock topics where last post was made more than x days ago
-	$secs = 7*86400;
-	$res = mysql_query("SELECT topics.id FROM topics LEFT JOIN posts ON topics.lastpost = posts.id AND topics.sticky = 'no' WHERE " . gmtime() . " - UNIX_TIMESTAMP(posts.added) > $secs") or sqlerr(__FILE__, __LINE__);
+/*	$secs = 7*86400;
+	$res = mysql_query("SELECT topics.id FROM topics LEFT JOIN posts ON topics.lastpost = posts.id WHERE topics.locked = 'no' AND topics.sticky = 'no' AND " . gmtime() . " - UNIX_TIMESTAMP(posts.added) > $secs") or sqlerr(__FILE__, __LINE__);
+  if(mysql_num_rows($res) > 0) {
 	while ($arr = mysql_fetch_assoc($res))
-		mysql_query("UPDATE topics SET locked='yes' WHERE id=$arr[id]") or sqlerr(__FILE__, __LINE__);
-
+    $pids[] = $arr['id'];
+		mysql_query("UPDATE topics SET locked='yes' WHERE id IN (".join(',', $pids).")") or sqlerr(__FILE__, __LINE__);
+  }
+*/  
   //remove expired warnings
   $res = mysql_query("SELECT id FROM users WHERE warned='yes' AND warneduntil < NOW() AND warneduntil <> '0000-00-00 00:00:00'") or sqlerr(__FILE__, __LINE__);
   if (mysql_num_rows($res) > 0)
@@ -183,9 +186,9 @@ function docleanup() {
 	mysql_query("UPDATE avps SET value_u=$leechers WHERE arg='leechers'") or sqlerr(__FILE__, __LINE__);
 
 	// update forum post/topic count
-	$forums = mysql_query("select id from forums");
+	$forums = @mysql_query("SELECT t.forumid, count( DISTINCT p.topicid ) AS topics, count( * ) AS posts FROM posts p LEFT JOIN topics t ON t.id = p.topicid LEFT JOIN forums f ON f.id = t.forumid GROUP BY t.forumid");
 	while ($forum = mysql_fetch_assoc($forums))
-	{
+	{/*
 		$postcount = 0;
 		$topiccount = 0;
 		$topics = mysql_query("select id from topics where forumid=$forum[id]");
@@ -195,8 +198,8 @@ function docleanup() {
 			$arr = mysql_fetch_row($res);
 			$postcount += $arr[0];
 			++$topiccount;
-		}
-		mysql_query("update forums set postcount=$postcount, topiccount=$topiccount where id=$forum[id]");
+		} */
+		@mysql_query("update forums set postcount={$forum['posts']}, topiccount={$forum['topics']} where id={$forum['forumid']}");
 	}
 
 	// delete old torrents
