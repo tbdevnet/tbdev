@@ -30,7 +30,7 @@ $fname = unesc($f["name"]);
 if (empty($fname))
 	bark("Empty filename!");
 	
-$nfo = '';
+$nfo = sqlesc('');
 /////////////////////// NFO FILE ////////////////////////	
 if(isset($_FILES['nfo']) && !empty($_FILES['nfo']['name'])) {
 $nfofile = $_FILES['nfo'];
