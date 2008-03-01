@@ -35,11 +35,9 @@ function maketable($res)
         $ratio = "Inf.";
       else
         $ratio = "---";
-	$catimage = "{$pic_base_url}{$arr['image']}";
+	$catimage = "{$pic_base_url}caticons/{$arr['image']}";
 	$catname = htmlspecialchars($arr["catname"]);
-	$catimage=((is_file($catimage) && is_readable($catimage))?
-		"<img src=\"".htmlspecialchars($catimage) ."\" alt=\"$catname\" width=42 height=42>":
-		$catname);
+	$catimage = "<img src=\"".htmlspecialchars($catimage) ."\" title=\"$catname\" alt=\"$catname\" width=42 height=42 />";
 	$ttl = (28*24) - floor((gmtime() - sql_timestamp_to_unix_timestamp($arr["added"])) / 3600);
 	if ($ttl == 1) $ttl .= "<br>hour"; else $ttl .= "<br>hours";
 	$size = str_replace(" ", "<br>", mksize($arr["size"]));
@@ -64,18 +62,18 @@ if (!is_valid_id($id))
 $r = @mysql_query("SELECT * FROM users WHERE id=$id") or sqlerr();
 $user = mysql_fetch_assoc($r) or bark("No user with ID.");
 if ($user["status"] == "pending") die;
-$r = mysql_query("SELECT id, name, seeders, leechers, category FROM torrents WHERE owner=$id ORDER BY name") or sqlerr();
+$r = mysql_query("SELECT t.id, t.name, t.seeders, t.leechers, c.name AS cname, c.image FROM torrents t LEFT JOIN categories c ON t.category = c.id WHERE t.owner = $id ORDER BY t.name") or sqlerr(__FILE__,__LINE__);
 if (mysql_num_rows($r) > 0)
 {
   $torrents = "<table class=main border=1 cellspacing=0 cellpadding=5>\n" .
     "<tr><td class=colhead>Type</td><td class=colhead>Name</td><td class=colhead>Seeders</td><td class=colhead>Leechers</td></tr>\n";
   while ($a = mysql_fetch_assoc($r))
   {
-		$r2 = mysql_query("SELECT name, image FROM categories WHERE id=$a[category]") or sqlerr(__FILE__, __LINE__);
-		$a2 = mysql_fetch_assoc($r2);
-		$cat = "<img src=\"". htmlspecialchars("{$pic_base_url}{$a2['image']}") ."\" alt=\"$a2[name]\">";
-      $torrents .= "<tr><td style='padding: 0px'>$cat</td><td><a href=details.php?id=" . $a["id"] . "&hit=1><b>" . htmlspecialchars($a["name"]) . "</b></a></td>" .
-        "<td align=right>$a[seeders]</td><td align=right>$a[leechers]</td></tr>\n";
+		//$r2 = mysql_query("SELECT name, image FROM categories WHERE id=$a[category]") or sqlerr(__FILE__, __LINE__);
+		//$a2 = mysql_fetch_assoc($r2);
+		$cat = "<img src=\"". htmlspecialchars("{$pic_base_url}caticons/{$a['image']}") ."\" title=\"{$a['cname']}\" alt=\"{$a['cname']}\">";
+      $torrents .= "<tr><td style='padding: 0px'>$cat</td><td><a href=details.php?id=" . $a['id'] . "&hit=1><b>" . htmlspecialchars($a["name"]) . "</b></a></td>" .
+        "<td align=right>{$a['seeders']}</td><td align=right>{$a['leechers']}</td></tr>\n";
   }
   $torrents .= "</table>";
 }

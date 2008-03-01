@@ -1,14 +1,16 @@
 <?php
 
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn(false);
 loggedinorreturn();
 
-$userid = 0+$_GET['id'];
-$action = $_GET['action'];
+$userid = isset($_GET['id']) ? (int)$_GET['id'] : $CURUSER['id'];
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 
-if (!$userid)
-	$userid = $CURUSER['id'];
+//if (!$userid)
+//	$userid = $CURUSER['id'];
 
 if (!is_valid_id($userid))
 	stderr("Error", "Invalid ID.");
@@ -16,8 +18,6 @@ if (!is_valid_id($userid))
 if ($userid != $CURUSER["id"])
 	stderr("Error", "Access denied.");
 
-$res = mysql_query("SELECT * FROM users WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
-$user = mysql_fetch_assoc($res) or stderr("Error", "No user with ID.");
 
 // action: add -------------------------------------------------------------
 
@@ -55,9 +55,9 @@ if ($action == 'add')
 
 if ($action == 'delete')
 {
-	$targetid = 0+$_GET['targetid'];
-	$sure = htmlentities($_GET['sure']);
-	$type = htmlentities($_GET['type']);
+	$targetid = (int)$_GET['targetid'];
+	$sure = isset($_GET['sure']) ? htmlentities($_GET['sure']) : false;
+	$type = isset($_GET['type']) ? ($_GET['type'] == 'friend' ? 'friend' : 'block') : stderr('Error', 'LoL');
 
   if (!is_valid_id($targetid))
 		stderr("Error", "Invalid ID.");
@@ -89,16 +89,18 @@ if ($action == 'delete')
 
 // main body  -----------------------------------------------------------------
 
-stdhead("Personal lists for " . $user['username']);
+$res = mysql_query("SELECT * FROM users WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
+$user = mysql_fetch_assoc($res) or stderr("Error", "No user with ID.");
 
-if ($user["donor"] == "yes") $donor = "<td class=embedded><img src={$pic_base_url}starbig.gif alt='Donor' style='margin-left: 4pt'></td>";
-if ($user["warned"] == "yes") $warned = "<td class=embedded><img src={$pic_base_url}warnedbig.gif alt='Warned' style='margin-left: 4pt'></td>";
+$donor = ($user["donor"] == "yes") ? "<img src={$pic_base_url}starbig.gif alt='Donor' style='margin-left: 4pt'>" : '';
+$warned = ($user["warned"] == "yes") ? "<img src={$pic_base_url}warnedbig.gif alt='Warned' style='margin-left: 4pt'>" : '';
+
+
+stdhead("Personal lists for " . htmlentities($user['username'], ENT_QUOTES));
+
 
 print("<p><table class=main border=0 cellspacing=0 cellpadding=0>".
-"<tr><td class=embedded><h1 style='margin:0px'><font color=red> - BETA - </font></h1></td></tr></table></p>\n");
-
-print("<p><table class=main border=0 cellspacing=0 cellpadding=0>".
-"<tr><td class=embedded><h1 style='margin:0px'> Personal lists for $user[username]</h1>$donor$warned$country</td></tr></table></p>\n");
+"<tr><td class=embedded><h1 style='margin:0px'> Personal lists for ".htmlentities($user['username'], ENT_QUOTES)."</h1>$donor$warned</td></tr></table></p>\n");
 
 print("<table class=main width=750 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>");
 
@@ -111,7 +113,7 @@ $i = 0;
 
 $res = mysql_query("SELECT f.friendid as id, u.username AS name, u.class, u.avatar, u.title, u.donor, u.warned, u.enabled, u.last_access FROM friends AS f LEFT JOIN users as u ON f.friendid = u.id WHERE userid=$userid ORDER BY name") or sqlerr(__FILE__, __LINE__);
 if(mysql_num_rows($res) == 0)
-	$friends = "<em>Your friends list is empty.</em>";
+	echo "<em>Your friends list is empty.</em>";
 else
 	while ($friend = mysql_fetch_assoc($res))
 	{
@@ -120,7 +122,7 @@ else
 	    $title = get_user_class_name($friend["class"]);
     $body1 = "<a href=userdetails.php?id=" . $friend['id'] . "><b>" . $friend['name'] . "</b></a>" .
     	get_user_icons($friend) . " ($title)<br><br>last seen on " . $friend['last_access'] .
-    	"<br>(" . get_elapsed_time(sql_timestamp_to_unix_timestamp($friend[last_access])) . " ago)";
+    	"<br>(" . get_elapsed_time(sql_timestamp_to_unix_timestamp($friend['last_access'])) . " ago)";
 		$body2 = "<br><a href=friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . ">Remove</a>" .
 			"<br><br><a href=sendmessage.php?receiver=" . $friend['id'] . ">Send PM</a>";
     $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($friend["avatar"]) : "");
@@ -147,7 +149,7 @@ else
 	}
 if ($i % 2 == 1)
 	print("<td class=bottom width=50%>&nbsp;</td></tr></table>\n");
-print($friends);
+//print($friends);
 print("</td></tr></table>\n");
 
 $res = mysql_query("SELECT b.blockid as id, u.username AS name, u.donor, u.warned, u.enabled, u.last_access FROM blocks AS b LEFT JOIN users as u ON b.blockid = u.id WHERE userid=$userid ORDER BY name") or sqlerr(__FILE__, __LINE__);

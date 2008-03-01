@@ -33,15 +33,17 @@ require_once "include/user_functions.php";
     $msg = trim($_POST["msg"]);
 		if (!$msg)
 	  	stderr("Error","Please enter something!");
-
+    
+    $subject = trim($_POST['subject']);
+    
     $sender_id = ($_POST['sender'] == 'system' ? 0 : $CURUSER['id']);
 
     $from_is = explode(':', $_POST['pmees']);
     $from_is = "FROM users u WHERE u.id IN (" . join(',', $from_is) .")";
 
-    $query = "INSERT INTO messages (sender, receiver, added, msg, poster) ".
+    $query = "INSERT INTO messages (sender, receiver, added, msg, subject, location, poster) ".
              "SELECT $sender_id, u.id, '" . get_date_time() . "', " . sqlesc($msg) .
-             ", $sender_id " . $from_is;
+             ", ". sqlesc($subject).", 1, $sender_id " . $from_is;
 
     mysql_query($query) or sqlerr(__FILE__, __LINE__);
     $n = mysql_affected_rows();
@@ -96,7 +98,7 @@ require_once "include/user_functions.php";
 	  if (!$msg)
 	    stderr("Error","Please enter something!");
 
-	  $location = ($save == 'yes') ? "both" : "in";
+	  $save = ($save == 'yes') ? "yes" : "no";
 
 	  $res = mysql_query("SELECT acceptpms, email, notifs, UNIX_TIMESTAMP(last_access) as la FROM users WHERE id=$receiver") or sqlerr(__FILE__, __LINE__);
 	  $user = mysql_fetch_assoc($res);
@@ -122,9 +124,9 @@ require_once "include/user_functions.php";
 	      stderr("Refused", "This user does not accept PMs.");
 	  }
 
-	  mysql_query("INSERT INTO messages (poster, sender, receiver, added, msg, location) VALUES(" . $CURUSER["id"] . ", " .
-	  $CURUSER["id"] . ", $receiver, '" . get_date_time() . "', " .
-	  sqlesc($msg) . ", " . sqlesc($location) . ")") or sqlerr(__FILE__, __LINE__);
+	  $subject = trim($_POST['subject']);
+    
+    mysql_query("INSERT INTO messages (poster, sender, receiver, added, msg, subject, saved, location) VALUES(" . $CURUSER["id"] . ", " . $CURUSER["id"] . ", $receiver, '" . get_date_time() . "', " . sqlesc($msg) . ", " . sqlesc($subject) . ", " . sqlesc($save) . ", 1)") or sqlerr(__FILE__, __LINE__);
 
 	  if (strpos($user['notifs'], '[pm]') !== false)
 	  {
@@ -136,7 +138,7 @@ You have received a PM from $username!
 
 You can use the URL below to view the message (you may have to login).
 
-$DEFAULTBASEURL/inbox.php
+$DEFAULTBASEURL/messages.php
 
 --
 $SITENAME
@@ -158,14 +160,14 @@ EOD;
 	        $arr = mysql_fetch_assoc($res);
 	        if ($arr["receiver"] != $CURUSER["id"])
 	          stderr("w00t","This shouldn't happen.");
-	        if ($arr["location"] == "in")
-	        	mysql_query("DELETE FROM messages WHERE id=$origmsg AND location = 'in'") or sqlerr(__FILE__, __LINE__);
-	        elseif ($arr["location"] == "both")
-	        	mysql_query("UPDATE messages SET location = 'out' WHERE id=$origmsg AND location = 'both'") or sqlerr(__FILE__, __LINE__);
+	        if ($arr["saved"] == "no")
+            mysql_query("DELETE FROM messages WHERE id=$origmsg") or sqlerr(__FILE__, __LINE__);
+          elseif ($arr["saved"] == "yes")
+            mysql_query("UPDATE messages SET location = '0' WHERE id=$origmsg") or sqlerr(__FILE__, __LINE__);
 	      }
       }
    	  if (!$returnto)
-   	  	$returnto = "inbox.php";
+   	  	$returnto = "messages.php";
 	  }
 
     if ($returnto)

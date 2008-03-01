@@ -52,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	<input type=hidden name=returnto value=<?=$_SERVER["HTTP_REFERER"]?>>
 	<? } ?>
 	<table border=1 cellspacing=0 cellpadding=5>
+	<TR>
+  <td colspan="2"><B>Subject:&nbsp;&nbsp;</B>
+  <input name="subject" type="text" size="76"></td>
+  </tr>
 	<tr><td colspan="2"><div align="center">
 	<textarea name=msg cols=80 rows=15><?=isset($body) ? htmlentities($body, ENT_QUOTES) : ''?></textarea>
 	</div></td></tr>
@@ -117,11 +121,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 	  $res = mysql_query("SELECT * FROM messages WHERE id=$replyto") or sqlerr();
 	  $msga = mysql_fetch_assoc($res);
-	  if ($msga["receiver"] != $CURUSER["id"])
+	  if ($msga['receiver'] != $CURUSER['id'])
 	    die;
-	  $res = mysql_query("SELECT username FROM users WHERE id=" . $msga["sender"]) or sqlerr();
+	  $res = mysql_query("SELECT username FROM users WHERE id=" . $msga['sender']) or sqlerr();
 	  $usra = mysql_fetch_assoc($res);
-	  $body .= "\n\n\n-------- $usra[username] wrote: --------\n$msga[msg]\n";
+	  $body .= "\n\n\n-------- $usra[username] wrote: --------\n{$msga['msg']}\n";
+	  $subject = "Re: " . htmlspecialchars($msga['subject']);
 	}
 	stdhead("Send message", false);
 	?>
@@ -133,6 +138,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	<input type=hidden name=returnto value=<?=isset($_GET["returnto"]) ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>>
 	<? } ?>
 	<table border=1 cellspacing=0 cellpadding=5>
+	<tr>
+<td colspan="2"><B>Subject:&nbsp;&nbsp;</B>
+  <input name="subject" type="text" size="76" value="<?=isset($subject) ? htmlentities($subject, ENT_QUOTES) : ''?>"></td>
+</tr>
 	<tr><td<?=$replyto?" colspan=2":""?>><textarea name=msg cols=80 rows=15><?=isset($body) ? htmlspecialchars($body) : ''?></textarea></td></tr>
 	<tr>
 	<? if ($replyto) { ?>

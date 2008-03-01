@@ -291,7 +291,7 @@ function format_comment($text, $strip_html = true)
 	$s = str_replace(";)", ":wink:", $s);
 
 	if ($strip_html)
-		$s = htmlspecialchars($s);
+		$s = htmlentities($s, ENT_QUOTES);
 
 	// [*]
 	$s = preg_replace("/\[\*\]/", "<li>", $s);

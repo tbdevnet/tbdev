@@ -151,7 +151,7 @@ function dbconn($autoclean = false)
 	  {
 		case 1040:
 		case 2002:
-			if ($_SERVER[REQUEST_METHOD] == "GET")
+			if ($_SERVER['REQUEST_METHOD'] == "GET")
 				die("<html><head><meta http-equiv=refresh content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border=0 width=100% height=100%><tr><td><h3 align=center>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
 			else
 				die("Too many users. Please press the Refresh button in your browser to retry.");
@@ -175,14 +175,26 @@ function userlogin() {
 
     $ip = getip();
 	$nip = ip2long($ip);
-    $res = mysql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
+/*    $res = mysql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
     if (mysql_num_rows($res) > 0)
     {
       header("HTTP/1.0 403 Forbidden");
       print("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
       die;
     }
-
+*/
+    require_once "cache/bans_cache.php";
+    if(count($bans) > 0)
+    {
+      foreach($bans as $k) {
+        if($nip >= $k['first'] && $nip <= $k['last']) {
+        header("HTTP/1.0 403 Forbidden");
+        print("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
+        exit();
+        }
+      }
+      unset($bans);
+    }
     if (!$SITE_ONLINE || empty($_COOKIE["uid"]) || empty($_COOKIE["pass"]))
         return;
     $id = 0 + $_COOKIE["uid"];
@@ -734,7 +746,7 @@ function StatusBar() {
 	
 	$warn = "<img src=pic/warned.gif alt=warned title=warned>";
 	
-	$res1 = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location IN ('in', 'both') AND unread='yes'") or print(mysql_error());
+	$res1 = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND unread='yes'") or print(mysql_error());
 	
 	$arr1 = mysql_fetch_row($res1);
 	
@@ -783,7 +795,7 @@ function StatusBar() {
 	$StatusBar .= "<p>".
 
 
-	"<a href=inbox.php>$inbox</a>".
+	"<a href=messages.php>$inbox</a>".
 	"</p></div></td></tr>";
 	
 	return $StatusBar;

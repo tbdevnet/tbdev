@@ -291,5 +291,16 @@ It is your own responsibility to adhere to these terms.</font></p>
 </td></tr></table>
 
 <?
+$sql = mysql_query("select * from countries");
+$configfile="<"."?php\n\n\$countries = array(\n";
+while($row = mysql_fetch_assoc($sql)) {
+$configfile .= "array('id'=> '{$row['id']}', 'name'=> '{$row['name']}', 'flagpic'=> '{$row['flagpic']}'),\n";
+}
+  $configfile .= "\n);\n\n?".">";
+  
+  $filenum = fopen ("countries.php","w");
+  ftruncate($filenum, 0);
+  fwrite($filenum, $configfile);
+  fclose($filenum); 
 stdfoot();
 ?>
