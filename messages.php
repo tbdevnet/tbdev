@@ -270,7 +270,7 @@ while ($row = mysql_fetch_assoc($res))
 {
 echo("<OPTION value=\"" . $row['boxnumber'] . "\">" . htmlspecialchars($row['name']) . "</OPTION>\n");
 }?>
-</SELECT> <INPUT type="submit" name="move" value="Move">
+</SELECT> <INPUT type="submit" name="move" value="Move" class="btn">
 </FORM></TD>
 <TD align="right" ><font color=white>[ <A href="messages.php?action=deletemessage&id=<?=$pm_id?>">Delete</A> ]<?=$reply?> [ <A
 
@@ -550,7 +550,7 @@ stdhead("Editing Mailboxes"); ?>
 <INPUT type="text" name="new1" size="40" maxlength="14"><BR>
 <INPUT type="text" name="new2" size="40" maxlength="14"><BR>
 <INPUT type="text" name="new3" size="40" maxlength="14"><BR>
-<INPUT type="submit" value="Add">
+<INPUT type="submit" value="Add" class="btn">
 </FORM></TD>
 </TR>
 <TR>
@@ -579,7 +579,7 @@ $id = $row['id'];
 $name = htmlspecialchars($row['name']);
 echo("<INPUT type=\"text\" name=\"edit$id\" value=\"$name\" size=\"40\" maxlength=\"14\"><BR>\n");
 }
-echo("<INPUT type=\"submit\" value=\"Edit\">");
+echo("<INPUT type=\"submit\" value=\"Edit\" class=\"btn\">");
 }
 ?></FORM></TD>
 </TR>
@@ -741,6 +741,6 @@ else
 echo("<OPTION value=\"" . $row['boxnumber'] . "\">" . $row['name'] . "</OPTION>\n");
 }
 }
-?></SELECT> <INPUT type="submit" value="Go"></FORM><?
+?></SELECT> <INPUT type="submit" value="Go" class="btn" /></FORM><?
 }
 ?>

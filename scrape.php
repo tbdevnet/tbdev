@@ -1,9 +1,25 @@
 <?php
 
-require_once("include/bittorrent.php");
-require_once("include/benc.php");
+require_once("include/secrets.php");
+//require_once("include/benc.php");
 
-dbconn(false);
+if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
+    {
+	  exit();
+    }
+    @mysql_select_db($mysql_db) or exit();;
+
+
+
+
+function hash_where($name, $hash) {
+    $shhash = preg_replace('/ *$/s', "", $hash);
+    return "($name = " . sqlesc($hash) . " OR $name = " . sqlesc($shhash) . ")";
+}
+
+function benc_str($s) {
+	return strlen($s) . ":$s";
+}
 
 $r = "d" . benc_str("files") . "d";
 
@@ -17,7 +33,7 @@ else
 $res = mysql_query($query);
 
 while ($row = mysql_fetch_assoc($res)) {
-	$r .= "20:" . hash_pad($row["info_hash"]) . "d" .
+	$r .= "20:" . str_pad($row["info_hash"], 20) . "d" .
 		benc_str("complete") . "i" . $row["seeders"] . "e" .
 		benc_str("downloaded") . "i" . $row["times_completed"] . "e" .
 		benc_str("incomplete") . "i" . $row["leechers"] . "e" .

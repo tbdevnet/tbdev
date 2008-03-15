@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
       exit();
   }
   $email = trim($_POST["email"]);
-  if (!$email)
+  if (!validemail($email))
     stderr("Error", "You must enter an email address");
   $res = mysql_query("SELECT * FROM users WHERE email=" . sqlesc($email) . " LIMIT 1") or sqlerr();
   $arr = mysql_fetch_assoc($res) or stderr("Error", "The email address was not found in the database.\n");

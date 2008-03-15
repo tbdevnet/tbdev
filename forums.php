@@ -164,7 +164,7 @@ $res = mysql_query(
 
       $arr = mysql_fetch_assoc($res) or stderr("Forum error", "Topic not found.");
 
-      $subject = $arr["subject"];
+      $subject = htmlentities($arr["subject"], ENT_QUOTES);
 
       print("<p align=center>Reply to topic: <a href=?action=viewtopic&topicid=$id>$subject</a></p>");
     }
@@ -298,11 +298,11 @@ $res = mysql_query(
 
     $newtopic = $forumid > 0;
 
-    $subject = $_POST["subject"];
+    $subject = trim(strip_tags($_POST["subject"]));
 
     if ($newtopic)
     {
-      $subject = trim($subject);
+      //$subject = $subject;
 
       if (!$subject)
         stderr("Error", "You must enter a subject.");
@@ -401,7 +401,7 @@ $res = mysql_query(
     $arr = mysql_fetch_assoc($res) or stderr("Forum error", "Topic not found");
 
     $locked = ($arr["locked"] == 'yes');
-    $subject = $arr["subject"];
+    $subject = htmlentities($arr["subject"], ENT_QUOTES);
     $sticky = $arr["sticky"] == "yes";
     $forumid = $arr["forumid"];
 
@@ -1062,7 +1062,7 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
   	if ($subject == '')
   	  stderr('Error', 'You must enter a new title!');
 
-  	$subject = sqlesc($subject);
+  	$subject = sqlesc(trim(strip_tags($subject)));
 
   	mysql_query("UPDATE topics SET subject=$subject WHERE id=$topicid") or sqlerr();
 

@@ -6,6 +6,7 @@ require_once "include/html_functions.php";
 dbconn(false);
 
 loggedinorreturn();
+/*
 $res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location IN ('in', 'both')") or print(mysql_error());
 $arr = mysql_fetch_row($res);
 $messages = $arr[0];
@@ -15,9 +16,9 @@ $unread = $arr[0];
 $res = mysql_query("SELECT COUNT(*) FROM messages WHERE sender=" . $CURUSER["id"] . " AND location IN ('out', 'both')") or print(mysql_error());
 $arr = mysql_fetch_row($res);
 $outmessages = $arr[0];
+*/
 
-
-stdhead($CURUSER["username"] . "'s private page", false);
+stdhead(htmlentities($CURUSER["username"], ENT_QUOTES) . "'s private page", false);
 
 if (isset($_GET["edited"])) {
 	print("<h1>Profile updated!</h1>\n");
@@ -26,18 +27,23 @@ if (isset($_GET["edited"])) {
 }
 elseif (isset($_GET["emailch"]))
 	print("<h1>Email address changed!</h1>\n");
+//else
+	//print("<h1>Welcome, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");
+$user_header = "<span style='font-size: 20px;'><a href=userdetails.php?id={$CURUSER['id']}>{$CURUSER['username']}</a></span><br />";
+if(!empty($CURUSER['avatar']) && $CURUSER['av_w'] > 5 && $CURUSER['av_h'] > 5)
+$avatar = "<img src='{$CURUSER['avatar']}' width='{$CURUSER['av_w']}' height='{$CURUSER['av_h']}' />";
 else
-	print("<h1>Welcome, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");
-
+$avatar = "<img src='{$pic_base_url}forumicons/default_avatar.gif' />";
 ?>
 <table border="1" cellspacing="0" cellpadding="10" align="center">
-<tr>
+<!--<tr>
 <td align="center" width="33%"><a href=logout.php><b>Logout</b></a></td>
 <td align="center" width="33%"><a href=mytorrents.php><b>My torrents</b></a></td>
 <td align="center" width="33%"><a href=friends.php><b>My users lists</b></a></td>
-</tr>
+</tr>-->
 <tr>
-<td colspan="3">
+<td valign="top"><?=$user_header?><?=$avatar?></td>
+<td>
 <form method="post" action="takeprofedit.php">
 <table border="1" cellspacing=0 cellpadding="5" width="100%">
 <?
@@ -74,7 +80,7 @@ $countries = "<option value=0>---- None selected ----</option>\n";
 $ct_r = mysql_query("SELECT id,name FROM countries ORDER BY name") or die;
 while ($ct_a = mysql_fetch_assoc($ct_r))
   $countries .= "<option value=$ct_a[id]" . ($CURUSER["country"] == $ct_a['id'] ? " selected" : "") . ">$ct_a[name]</option>\n";
-
+/*
 function format_tz($a)
 {
 	$h = floor($a);
@@ -82,7 +88,7 @@ function format_tz($a)
 	return ($a >= 0?"+":"-") . (strlen(abs($h)) > 1?"":"0") . abs($h) .
 		":" . ($m==0?"00":$m);
 }
-
+*/
 tr("Accept PMs",
 "<input type=radio name=acceptpms" . ($CURUSER["acceptpms"] == "yes" ? " checked" : "") . " value=yes>All (except blocks)
 <input type=radio name=acceptpms" .  ($CURUSER["acceptpms"] == "friends" ? " checked" : "") . " value=friends>Friends only
@@ -121,8 +127,8 @@ tr("Torrents per page", "<input type=text size=10 name=torrentsperpage value=$CU
 tr("Topics per page", "<input type=text size=10 name=topicsperpage value=$CURUSER[topicsperpage]> (0=use default setting)",1);
 tr("Posts per page", "<input type=text size=10 name=postsperpage value=$CURUSER[postsperpage]> (0=use default setting)",1);
 tr("View avatars", "<input type=checkbox name=avatars" . ($CURUSER["avatars"] == "yes" ? " checked" : "") . "> (Low bandwidth users might want to turn this off)",1);
-tr("Info", "<textarea name=info cols=50 rows=4>" . $CURUSER["info"] . "</textarea><br>Displayed on your public page. May contain <a href=tags.php target=_new>BB codes</a>.", 1);
-tr("Email address", "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars($CURUSER["email"]) . "\" /><br />Please enter your password if changing your email address!<input type=\"password\" name=\"chmailpass\" size=\"50\" />", 1);
+tr("Info", "<textarea name=info cols=50 rows=4>" . htmlentities($CURUSER["info"], ENT_QUOTES) . "</textarea><br>Displayed on your public page. May contain <a href=tags.php target=_new>BB codes</a>.", 1);
+tr("Email address", "<input type=\"text\" name=\"email\" size=50 value=\"" . htmlspecialchars($CURUSER["email"]) . "\" /><br />Please enter your password if changing your email address!<br /><input type=\"password\" name=\"chmailpass\" size=\"50\" />", 1);
 print("<tr><td colspan=\"2\" align=left><b>Note:</b> In order to change your email address, you will receive another<br>confirmation email to your new address.</td></tr>\n");
 tr("Change password", "<input type=\"password\" name=\"chpassword\" size=\"50\" />", 1);
 tr("Type password again", "<input type=\"password\" name=\"passagain\" size=\"50\" />", 1);
@@ -144,6 +150,7 @@ function priv($name, $descr) {
 </tr>
 </table>
 <?
+/*
 if ($messages){
   print("<p>You have $messages message" . ($messages != 1 ? "s" : "") . " ($unread new) in your <a href=inbox.php><b>inbox</b></a>,<br>\n");
 	if ($outmessages)
@@ -159,8 +166,8 @@ else
 	else
 		print("and so is your <a href=inbox.php?out=1>sentbox</a>.</p>");
 }
-
-print("<p><a href=users.php><b>Find User/Browse User List</b></a></p>");
+*/
+//print("<p><a href=users.php><b>Find User/Browse User List</b></a></p>");
 stdfoot();
 
 ?>

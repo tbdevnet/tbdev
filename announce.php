@@ -1,39 +1,148 @@
 <?php
 
 
-
-require_once "include/bittorrent.php";
-require_once "include/benc.php";
+$agent = $_SERVER["HTTP_USER_AGENT"];
+//phpinfo(); exit;
+// Deny access made with a browser...
+if (
+    ereg("^Mozilla\\/", $agent) || 
+    ereg("^Opera\\/", $agent) || 
+    ereg("^Links ", $agent) || 
+    ereg("^Lynx\\/", $agent) || 
+    isset($_SERVER['HTTP_COOKIE']) || 
+    isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) || 
+    isset($_SERVER['HTTP_ACCEPT_CHARSET'])
+    )
+    err("torrent not registered with this tracker CODE 1");
 
 if(!isset($_SERVER['PATH_INFO']) || empty($_SERVER['PATH_INFO']))
 	err('PATH_INFO Failure');
 	
+require_once "include/secrets.php";
+//require_once "include/benc.php";
+
+$BASEURL = 'http://localhost/TB/';
+$announce_interval = 60 * 30;
 	
+/////////////////////// FUNCTION DEFS ///////////////////////////////////
+function dbconn()
+{
+    global $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
+
+    if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
+    {
+	  err('Please call back later');
+    }
+    mysql_select_db($mysql_db) or err('Please call back later');
+}
+
 function err($msg)
 {
-	benc_resp(array("failure reason" => array('type' => "string", 'value' => $msg)));
+	benc_resp(array('failure reason' => array('type' => 'string', 'value' => $msg)));
 	
 	exit();
 }
 
 function benc_resp($d)
 {
-	benc_resp_raw(benc(array('type' => "dictionary", 'value' => $d)));
+	benc_resp_raw(benc(array('type' => 'dictionary', 'value' => $d)));
 }
 
 function benc_resp_raw($x)
 {
-	header("Content-Type: text/plain");
-	header("Pragma: no-cache");
-	print($x);
+    header( "Content-Type: text/plain" );
+    header( "Pragma: no-cache" );
+
+    if ( $_SERVER['HTTP_ACCEPT_ENCODING'] == 'gzip' )
+    {
+        header( "Content-Encoding: gzip" );
+        echo gzencode( $x, 9, FORCE_GZIP );
+    }
+    else
+        echo $x ;
 }
-/*
-$pathchop = trim($_SERVER["PATH_INFO"], "/");
-$pathtokey = explode("=", $pathchop);
-//echo "key = " . $pathtokey[0] . " AND value = " . $pathtokey[1] . "<br>";
-$GLOBALS["passkey"] = "$pathtokey[1]";
-//echo $passkey;
-*/
+
+function benc($obj) {
+	if (!is_array($obj) || !isset($obj["type"]) || !isset($obj["value"]))
+		return;
+	$c = $obj["value"];
+	switch ($obj["type"]) {
+		case "string":
+			return benc_str($c);
+		case "integer":
+			return benc_int($c);
+		case "list":
+			return benc_list($c);
+		case "dictionary":
+			return benc_dict($c);
+		default:
+			return;
+	}
+}
+
+function benc_str($s) {
+	return strlen($s) . ":$s";
+}
+
+function benc_int($i) {
+	return "i" . $i . "e";
+}
+
+function benc_list($a) {
+	$s = "l";
+	foreach ($a as $e) {
+		$s .= benc($e);
+	}
+	$s .= "e";
+	return $s;
+}
+
+function benc_dict($d) {
+	$s = "d";
+	$keys = array_keys($d);
+	sort($keys);
+	foreach ($keys as $k) {
+		$v = $d[$k];
+		$s .= benc_str($k);
+		$s .= benc($v);
+	}
+	$s .= "e";
+	return $s;
+}
+
+function hash_where($name, $hash) {
+    $shhash = preg_replace('/ *$/s', "", $hash);
+    return "($name = " . sqlesc($hash) . " OR $name = " . sqlesc($shhash) . ")";
+}
+
+function sqlesc($x) {
+    return "'".mysql_real_escape_string($x)."'";
+}
+
+function portblacklisted($port)
+{
+	// direct connect
+	if ($port >= 411 && $port <= 413) return true;
+
+	// bittorrent
+	if ($port >= 6881 && $port <= 6889) return true;
+
+	// kazaa
+	if ($port == 1214) return true;
+
+	// gnutella
+	if ($port >= 6346 && $port <= 6347) return true;
+
+	// emule
+	if ($port == 4662) return true;
+
+	// winmx
+	if ($port == 6699) return true;
+
+	return false;
+}
+/////////////////////// FUNCTION DEFS END ///////////////////////////////
+
 $parts = array();
 $pattern = '[0-9a-fA-F]{32}';
 if(!ereg($pattern, $_SERVER['PATH_INFO'], $parts)) 
@@ -68,13 +177,10 @@ if (strlen($GLOBALS[$x]) != 20) err("Invalid $x (" . strlen($GLOBALS[$x]) . " - 
 
 unset($x);
 
-//if (strlen($GLOBALS['passkey']) != 32) err("Invalid passkey (" . strlen($passkey) . " - $passkey)");
 
 
-
-//if (empty($ip) || !preg_match('/^(d{1,3}.){3}d{1,3}$/s', $ip))
-
-$ip = getip();
+//$ip = getip();
+$ip = $_SERVER['REMOTE_ADDR'];
 
 $port = 0 + $port;
 $downloaded = 0 + $downloaded;
@@ -91,11 +197,6 @@ foreach(array("num want", "numwant", "num_want") as $k)
 	}
 }
 
-$agent = $_SERVER["HTTP_USER_AGENT"];
-
-// Deny access made with a browser...
-if (ereg("^Mozilla\\/", $agent) || ereg("^Opera\\/", $agent) || ereg("^Links ", $agent) || ereg("^Lynx\\/", $agent))
-	err("torrent not registered with this tracker CODE 1");
 
 if (!$port || $port > 0xffff)
 	err("invalid port");
@@ -105,13 +206,24 @@ if (!isset($event))
 
 $seeder = ($left == 0) ? "yes" : "no";
 
-dbconn(false);
+dbconn();
 
-$valid = @mysql_fetch_row(@mysql_query("SELECT COUNT(*) FROM users WHERE passkey=" . sqlesc($passkey)));
+//$valid = @mysql_fetch_row(@mysql_query("SELECT COUNT(*) FROM users WHERE passkey=" . sqlesc($passkey)));
 
-if ($valid[0] != 1) err("Invalid passkey! Re-download the .torrent from $BASEURL");
+//if ($valid[0] != 1) err("Invalid passkey! Re-download the .torrent from $BASEURL");
 
-$res = mysql_query("SELECT id, banned, seeders + leechers AS numpeers, UNIX_TIMESTAMP(added) AS ts FROM torrents WHERE " . hash_where("info_hash", $info_hash));
+
+$user_query = mysql_query("SELECT id, uploaded, downloaded, class, enabled FROM users WHERE passkey=".sqlesc($passkey)) or err("Tracker error 2");
+
+if ( mysql_num_rows($user_query) != 1 )
+
+ err("Unknown passkey. Please redownload the torrent from $BASEURL.");
+ 
+	$user = mysql_fetch_assoc($user_query);
+	if( $user['enabled'] == 'no' ) err('Permission denied, you\'re not enabled');
+	
+	
+$res = mysql_query("SELECT id, banned, seeders + leechers AS numpeers, UNIX_TIMESTAMP(added) AS ts FROM torrents WHERE info_hash = " .sqlesc($info_hash));//" . hash_where("info_hash", $info_hash));
 
 $torrent = mysql_fetch_assoc($res);
 if (!$torrent)
@@ -158,7 +270,7 @@ while ($row = mysql_fetch_assoc($res))
 
 
 
-$row["peer_id"] = hash_pad($row["peer_id"]);
+$row["peer_id"] = str_pad($row["peer_id"], 20);
 
 
 
@@ -249,31 +361,6 @@ $selfwhere = "torrent = $torrentid AND " . hash_where("peer_id", $peer_id);
 
 ///////////////////////////// END NEW COMPACT MODE////////////////////////////////
 
-/************ OLD MODE
-$resp = "d" . benc_str("interval") . "i" . $announce_interval . "e" . benc_str("peers") . "l";
-unset($self);
-while ($row = mysql_fetch_assoc($res))
-{
-	$row["peer_id"] = hash_pad($row["peer_id"]);
-
-	if ($row["peer_id"] === $peer_id)
-	{
-		$userid = $row["userid"];
-		$self = $row;
-		continue;
-	}
-
-	$resp .= "d" .
-		benc_str("ip") . benc_str($row["ip"]) .
-		benc_str("peer id") . benc_str($row["peer_id"]) .
-		benc_str("port") . "i" . $row["port"] . "e" .
-		"e";
-}
-
-$resp .= "ee";
-
-$selfwhere = "torrent = $torrentid AND " . hash_where("peer_id", $peer_id);
-/*********************END OLD MODE */
 
 
 if (!isset($self))
@@ -302,22 +389,14 @@ if ($valid[0] >= 1 && $seeder == 'no') err("Connection limit exceeded! You may o
 if ($valid[0] >= 3 && $seeder == 'yes') err("Connection limit exceeded!");
 
 
+	//$user['id'] = $az["id"];
 
-$rz = mysql_query("SELECT id, uploaded, downloaded, class FROM users WHERE passkey=".sqlesc($passkey)." AND enabled = 'yes' ORDER BY last_access DESC LIMIT 1") or err("Tracker error 2");
-
-if ($MEMBERSONLY && mysql_num_rows($rz) == 0)
-
- err("Unknown passkey. Please redownload the torrent from $BASEURL.");
- 
-	$az = mysql_fetch_assoc($rz);
-	$userid = $az["id"];
-
-	if ($left > 0 && $az["class"] < UC_VIP)
+	if ($left > 0 && $user['class'] < UC_VIP)
 //	if ($az["class"] < UC_VIP)
 	{
-		$gigs = $az["uploaded"] / (1024*1024*1024);
-		$elapsed = floor((gmtime() - $torrent["ts"]) / 3600);
-		$ratio = (($az["downloaded"] > 0) ? ($az["uploaded"] / $az["downloaded"]) : 1);
+		$gigs = $user["uploaded"] / (1024*1024*1024);
+		$elapsed = floor((time() - $torrent["ts"]) / 3600);
+		$ratio = (($user["downloaded"] > 0) ? ($user["uploaded"] / $user["downloaded"]) : 1);
 		if ($ratio < 0.5 || $gigs < 5) $wait = 48;
 		elseif ($ratio < 0.65 || $gigs < 6.5) $wait = 24;
 		elseif ($ratio < 0.8 || $gigs < 8) $wait = 12;
@@ -333,33 +412,11 @@ else
 	$downthis = max(0, $downloaded - $self["downloaded"]);
 
 	if ($upthis > 0 || $downthis > 0)
-		mysql_query("UPDATE users SET uploaded = uploaded + $upthis, downloaded = downloaded + $downthis WHERE id=$userid") or err("Tracker error 3");
+		mysql_query("UPDATE users SET uploaded = uploaded + $upthis, downloaded = downloaded + $downthis WHERE id=".$user['id']) or err("Tracker error 3");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-function portblacklisted($port)
-{
-	// direct connect
-	if ($port >= 411 && $port <= 413) return true;
-
-	// bittorrent
-	if ($port >= 6881 && $port <= 6889) return true;
-
-	// kazaa
-	if ($port == 1214) return true;
-
-	// gnutella
-	if ($port >= 6346 && $port <= 6347) return true;
-
-	// emule
-	if ($port == 4662) return true;
-
-	// winmx
-	if ($port == 6699) return true;
-
-	return false;
-}
 
 $updateset = array();
 
@@ -419,7 +476,7 @@ else
 			}
 		}
 
-		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', $userid, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
+		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
 		
 		if ($ret)
 		{
