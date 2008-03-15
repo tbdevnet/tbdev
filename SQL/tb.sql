@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 18, 2008 at 07:04 PM
+-- Generation Time: Mar 15, 2008 at 01:54 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.5
 
@@ -56,7 +56,7 @@ CREATE TABLE `blocks` (
   `blockid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `userfriend` (`userid`,`blockid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -151,7 +151,7 @@ CREATE TABLE `friends` (
   `friendid` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `userfriend` (`userid`,`friendid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -164,10 +164,12 @@ CREATE TABLE `messages` (
   `sender` int(10) unsigned NOT NULL default '0',
   `receiver` int(10) unsigned NOT NULL default '0',
   `added` datetime default NULL,
-  `msg` text character set latin1 collate latin1_general_ci,
-  `unread` enum('yes','no') character set latin1 collate latin1_general_ci NOT NULL default 'yes',
+  `subject` varchar(30) NOT NULL default 'No Subject',
+  `msg` text,
+  `unread` enum('yes','no') NOT NULL default 'yes',
   `poster` bigint(20) unsigned NOT NULL default '0',
-  `location` enum('in','out','both') character set latin1 collate latin1_general_ci NOT NULL default 'in',
+  `location` smallint(6) NOT NULL default '1',
+  `saved` enum('no','yes') NOT NULL default 'no',
   PRIMARY KEY  (`id`),
   KEY `receiver` (`receiver`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
@@ -221,6 +223,20 @@ CREATE TABLE `peers` (
   KEY `userid` (`userid`),
   KEY `passkey` (`passkey`),
   KEY `torrent_connect` (`torrent`,`connectable`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pmboxes`
+--
+
+CREATE TABLE `pmboxes` (
+  `id` int(11) NOT NULL auto_increment,
+  `userid` int(11) NOT NULL,
+  `boxnumber` tinyint(4) NOT NULL default '2',
+  `name` varchar(15) NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -438,6 +454,8 @@ CREATE TABLE `users` (
   `ip` varchar(15) character set latin1 collate latin1_general_ci NOT NULL default '',
   `class` tinyint(3) unsigned NOT NULL default '0',
   `avatar` varchar(100) character set latin1 collate latin1_general_ci NOT NULL default '',
+  `av_w` smallint(3) unsigned NOT NULL default '0',
+  `av_h` smallint(3) unsigned NOT NULL default '0',
   `uploaded` bigint(20) unsigned NOT NULL default '0',
   `downloaded` bigint(20) unsigned NOT NULL default '0',
   `title` varchar(30) character set latin1 collate latin1_general_ci NOT NULL default '',
@@ -456,12 +474,12 @@ CREATE TABLE `users` (
   `savepms` enum('yes','no') character set latin1 collate latin1_general_ci NOT NULL default 'no',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
-  KEY `status_added` (`status`,`added`),
   KEY `ip` (`ip`),
   KEY `uploaded` (`uploaded`),
   KEY `downloaded` (`downloaded`),
   KEY `country` (`country`),
   KEY `last_access` (`last_access`),
   KEY `enabled` (`enabled`),
-  KEY `warned` (`warned`)
+  KEY `warned` (`warned`),
+  KEY `pkey` (`passkey`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
