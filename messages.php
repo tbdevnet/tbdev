@@ -54,7 +54,7 @@ $image_width = $pm_perc > 0 ? round($pm_perc * 2.5) : 1;
 if($image_width > 250)
     $image_width = 250;
 // Start Page
-stdhead($mailbox_name); 
+stdhead($mailbox_name, false); 
 ?>
 <script type="text/javascript" src='scripts/checkall.js'></script>
 
@@ -246,7 +246,7 @@ $subject = "No Subject";
 mysql_query("UPDATE messages SET unread='no' WHERE id=" . sqlesc($pm_id) . " AND receiver=" . sqlesc($CURUSER['id']) . " LIMIT 1");
 
 // Display message
-stdhead("PM ($subject)"); ?>
+stdhead("PM ($subject)", flase); ?>
 <H1><?=$subject?></H1>
 <TABLE width="737" border="0" cellpadding="4" cellspacing="0">
 <TR>
@@ -411,7 +411,7 @@ $from_name = "<A href=\"userdetails.php?id=" . $from . "\">" . $from2['username'
 
 $body = "-------- Original Message from " . $from2['username'] . ": --------<BR>" . format_comment($message['msg']);
 
-stdhead($subject);?>
+stdhead($subject, false);?>
 <H1><?=$subject?></H1>
 <FORM action="messages.php" method="post">
 <INPUT type="hidden" name="action" value="forward">
@@ -535,7 +535,7 @@ if ($action == "editmailboxes")
 {
 $res = mysql_query("SELECT * FROM pmboxes WHERE userid=" . sqlesc($CURUSER['id'])) or sqlerr(__FILE__,__LINE__);
 
-stdhead("Editing Mailboxes"); ?>
+stdhead("Editing Mailboxes", false); ?>
 <H1>Editing Mailboxes</H1>
 <TABLE width="737" border="0" cellpadding="4" cellspacing="0">
 <TR>
@@ -597,7 +597,7 @@ if ($action2 == "add")
 {
 $name1 = $_GET['new1'];
 $name2 = $_GET['new2'];
-$name2 = $_GET['new3'];
+$name3 = $_GET['new3'];
 
 // Get current max box number
 $res = mysql_query("SELECT MAX(boxnumber) FROM pmboxes WHERE userid=" . sqlesc($CURUSER['id']));
