@@ -10,9 +10,11 @@
 			$arr[$row['searchedfor']] = $row['howmuch'];
 		}
 		//sort array by key
+		if (isset($arr)) {
 		ksort($arr);
 		
 		return $arr;
+		}
 	}
 
 	function cloud() {
@@ -22,6 +24,7 @@
 		//get tag info from worker function
 		$tags = tag_info();
 		//amounts
+		if (isset($tags)) {
 		$minimum_count = min(array_values($tags));
 		$maximum_count = max(array_values($tags));
 		$spread = $maximum_count - $minimum_count;
@@ -47,5 +50,6 @@
 		$cloud_html = join("\n", $cloud_tags) . "\n";
 		
 		return $cloud_html;
+		}
 	}
 ?>

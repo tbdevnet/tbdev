@@ -43,7 +43,7 @@ $rt = 0 + $_POST["reasontype"];
 if (!is_int($rt) || $rt < 1 || $rt > 5)
 	bark("Invalid reason");
 
-$r = $_POST["r"];
+//$r = $_POST["r"]; // whats this
 $reason = $_POST["reason"];
 
 if ($rt == 1)
@@ -78,8 +78,8 @@ else
 
 ?>
 <h2>Torrent deleted!</h2>
-<p><?= $ret ?></p>
-<?
+<p><?php echo $ret ?></p>
+<?php
 
 stdfoot();
 

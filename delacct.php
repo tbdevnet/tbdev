@@ -31,13 +31,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 stdhead("Delete account");
 ?>
 <h1>Delete account</h1>
-<table border=1 cellspacing=0 cellpadding=5>
-<form method=post action=delacct.php>
-<tr><td class=rowhead>User name</td><td><input size=40 name=username></td></tr>
-<tr><td class=rowhead>Password</td><td><input type=password size=40 name=password></td></tr>
-<tr><td colspan=2><input type=submit class=btn value='Delete'></td></tr>
-</form>
+<form method='post' action='delacct.php'>
+<table border='1' cellspacing='0' cellpadding='5'>
+<tr><td class='rowhead'>User name</td><td><input size='40' name='username' /></td></tr>
+<tr><td class='rowhead'>Password</td><td><input type='password' size='40' name='password' /></td></tr>
+<tr><td colspan='2'><input type='submit' class='btn' value='Delete' /></td></tr>
 </table>
-<?
+</form>
+<?php
 stdfoot();
 ?>

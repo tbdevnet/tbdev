@@ -209,10 +209,10 @@ function _strlastpos ($haystack, $needle, $offset = 0)
 
     begin_table(false, 5);
 
-    print("<tr><td class=colhead>Type...</td><td class=colhead>To make a...</td></tr>\n");
+    print("<tr><td class='colhead'>Type...</td><td class='colhead'>To make a...</td></tr>\n");
 
     while (list($code, $url) = each($smilies))
-      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\"></td>\n");
+      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\" alt='' /></td>\n");
 
     end_table();
 
@@ -263,12 +263,12 @@ function format_quotes($s)
 	  //[quote]Text[/quote]
 	  $quote = preg_replace(
 	    "/\[quote\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-	    "<p class=sub><b>Quote:</b></p><table class=main border=1 cellspacing=0 cellpadding=10><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br>", $quote);
+	    "<p class='sub'><b>Quote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br>", $quote);
 
 	  //[quote=Author]Text[/quote]
 	  $quote = preg_replace(
 	    "/\[quote=(.+?)\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-	    "<p class=sub><b>\\1 wrote:</b></p><table class=main border=1 cellspacing=0 cellpadding=10><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br>", $quote);
+	    "<p class='sub'><b>\\1 wrote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br>", $quote);
 
 	  $s = substr($s,0,$open) . $quote . substr($s,$close + 8);
   }
@@ -309,20 +309,20 @@ function format_comment($text, $strip_html = true)
 	$s = preg_replace("/\[u\]((\s|.)+?)\[\/u\]/i", "<u>\\1</u>", $s);
 
 	// [img]http://www/image.gif[/img]
-	$s = preg_replace("/\[img\](http:\/\/[^\s'\"<>]+(\.(jpg|gif|png)))\[\/img\]/i", "<IMG border=\"0\" src=\"\\1\">", $s);
+	$s = preg_replace("/\[img\](http:\/\/[^\s'\"<>]+(\.(jpg|gif|png)))\[\/img\]/i", "<img border=\"0\" src=\"\\1\" alt='' />", $s);
 
 	// [img=http://www/image.gif]
-	$s = preg_replace("/\[img=(http:\/\/[^\s'\"<>]+(\.(gif|jpg|png)))\]/i", "<IMG border=\"0\" src=\"\\1\">", $s);
+	$s = preg_replace("/\[img=(http:\/\/[^\s'\"<>]+(\.(gif|jpg|png)))\]/i", "<img border=\"0\" src=\"\\1\" alt='' />", $s);
 
 	// [color=blue]Text[/color]
 	$s = preg_replace(
 		"/\[color=([a-zA-Z]+)\]((\s|.)+?)\[\/color\]/i",
-		"<font color=\\1>\\2</font>", $s);
+		"<font color='\\1'>\\2</font>", $s);
 
 	// [color=#ffcc99]Text[/color]
 	$s = preg_replace(
 		"/\[color=(#[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9])\]((\s|.)+?)\[\/color\]/i",
-		"<font color=\\1>\\2</font>", $s);
+		"<font color='\\1'>\\2</font>", $s);
 
 	// [url=http://www.example.com]Text[/url]
 	$s = preg_replace(
@@ -337,7 +337,7 @@ function format_comment($text, $strip_html = true)
 	// [size=4]Text[/size]
 	$s = preg_replace(
 		"/\[size=([1-7])\]((\s|.)+?)\[\/size\]/i",
-		"<font size=\\1>\\2</font>", $s);
+		"<font size='\\1'>\\2</font>", $s);
 
 	// [font=Arial]Text[/font]
 	$s = preg_replace(
@@ -365,17 +365,17 @@ function format_comment($text, $strip_html = true)
 	$s = nl2br($s);
 
 	// [pre]Preformatted[/pre]
-	$s = preg_replace("/\[pre\]((\s|.)+?)\[\/pre\]/i", "<tt><nobr>\\1</nobr></tt>", $s);
+	$s = preg_replace("/\[pre\]((\s|.)+?)\[\/pre\]/i", "<tt><span style=\"white-space: nowrap;\">\\1</span></tt>", $s);
 
 	// [nfo]NFO-preformatted[/nfo]
-	$s = preg_replace("/\[nfo\]((\s|.)+?)\[\/nfo\]/i", "<tt><nobr><font face='MS Linedraw' size=2 style='font-size: 10pt; line-height: " .
-		"10pt'>\\1</font></nobr></tt>", $s);
+	$s = preg_replace("/\[nfo\]((\s|.)+?)\[\/nfo\]/i", "<tt><span style=\"white-space: nowrap;\"><font face='MS Linedraw' size='2' style='font-size: 10pt; line-height: " .
+		"10pt'>\\1</font></span></tt>", $s);
 
 	// Maintain spacing
 	$s = str_replace("  ", " &nbsp;", $s);
 
 	foreach($smilies as $code => $url) {
-		$s = str_replace($code, "<img border=0 src=\"{$pic_base_url}smilies/{$url}\" alt=\"" . htmlspecialchars($code) . "\">", $s);
+		$s = str_replace($code, "<img border='0' src=\"{$pic_base_url}smilies/{$url}\" alt=\"" . htmlspecialchars($code) . "\" />", $s);
 }
 	return $s;
 }

@@ -173,7 +173,7 @@ else
 	stdhead();
 
 ?>
-<style type="text/css">
+<!-- <style type="text/css">
 .tag_cloud
     {padding: 3px; text-decoration: none;
     font-family: verdana;     }
@@ -181,7 +181,7 @@ else
 .tag_cloud:visited { color: #00CCFF; }
 .tag_cloud:hover { color: #0000FF; background: #00CCFF; }
 .tag_cloud:active { color: #0000FF; background: #FFFFFF; }
-</style>
+</style> --> <!-- moved to css -->
 <div id="wrapper" style="width:90%;border:1px solid black;background-color:pink;">
 <?php
 //print out the tag cloud
@@ -190,23 +190,23 @@ print cloud();
 ?>
 </div><br /><br />
 <form method="get" action="browse.php">
-<table class=bottom>
+<table class='bottom'>
 <tr>
-<td class=bottom>
-	<table class=bottom>
+<td class='bottom'>
+	<table class='bottom'>
 	<tr>
 
-<?
+<?php
 $i = 0;
 foreach ($cats as $cat)
 {
 	$catsperrow = 7;
 	print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
-	print("<td class=bottom style=\"padding-bottom: 2px;padding-left: 7px\"><input name=c".$cat['id']." type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked " : "") . "value=1><a class=catlink href=browse.php?cat=$cat[id]>" . htmlspecialchars($cat['name']) . "</a></td>\n");
+	print("<td class='bottom' style=\"padding-bottom: 2px;padding-left: 7px\"><input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat=$cat[id]'>" . htmlspecialchars($cat['name']) . "</a></td>\n");
 	$i++;
 }
 
-$alllink = "<div align=left>(<a href=browse.php?all=1><b>Show all</b></a>)</div>";
+$alllink = "<div align='left'>(<a href='browse.php?all=1'><b>Show all</b></a>)</div>";
 
 $ncats = count($cats);
 $nrows = ceil($ncats/$catsperrow);
@@ -216,9 +216,9 @@ if ($lastrowcols != 0)
 {
 	if ($catsperrow - $lastrowcols != 1)
 		{
-			print("<td class=bottom rowspan=" . ($catsperrow  - $lastrowcols - 1) . ">&nbsp;</td>");
+			print("<td class='bottom' rowspan='" . ($catsperrow  - $lastrowcols - 1) . "'>&nbsp;</td>");
 		}
-	print("<td class=bottom style=\"padding-left: 5px\">$alllink</td>\n");
+	print("<td class='bottom' style=\"padding-left: 5px\">$alllink</td>\n");
 }
 
 $selected = (isset($_GET["incldead"])) ? (int)$_GET["incldead"] : "";
@@ -227,26 +227,26 @@ $selected = (isset($_GET["incldead"])) ? (int)$_GET["incldead"] : "";
 	</table>
 </td>
 
-<td class=bottom>
-<table class=main>
+<td class='bottom'>
+<table class='main'>
 	<tr>
-		<td class=bottom style="padding: 1px;padding-left: 10px">
-			<select name=incldead>
+		<td class='bottom' style="padding: 1px;padding-left: 10px">
+			<select name='incldead'>
 <option value="0">active</option>
-<option value="1"<? print($selected == 1 ? " selected" : ""); ?>>including dead</option>
-<option value="2"<? print($selected == 2 ? " selected" : ""); ?>>only dead</option>
+<option value="1"<?php print($selected == 1 ? " selected='selected'" : ""); ?>>including dead</option>
+<option value="2"<?php print($selected == 2 ? " selected='selected'" : ""); ?>>only dead</option>
 			</select>
   	</td>
-<?
+<?php
 if ($ncats % $catsperrow == 0)
-	print("<td class=bottom style=\"padding-left: 15px\" rowspan=$nrows valign=center align=right>$alllink</td>\n");
+	print("<td class='bottom' style=\"padding-left: 15px\" rowspan='$nrows' valign='center' align='right'>$alllink</td>\n");
 ?>
 
   </tr>
   <tr>
-  	<td class=bottom style="padding: 1px;padding-left: 10px">
-  	<div align=center>
-  		<input type="submit" class=btn value="Go!"/>
+  	<td class='bottom' style="padding: 1px;padding-left: 10px">
+  	<div align='center'>
+  		<input type="submit" class='btn' value="Go!"/>
   	</div>
   	</td>
   </tr>
@@ -256,7 +256,7 @@ if ($ncats % $catsperrow == 0)
 </table>
 </form>
 
-<?
+<?php
 
 if (isset($cleansearchstr))
 print("<h2>Search results for \"" . htmlentities($searchstr, ENT_QUOTES) . "\"</h2>\n");

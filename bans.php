@@ -57,12 +57,12 @@ stdhead("Bans");
 print("<h1>Current Bans</h1>\n");
 
 if (mysql_num_rows($res) == 0)
-  print("<p align=center><b>Nothing found</b></p>\n");
+  print("<p align='center'><b>Nothing found</b></p>\n");
 else
 {
-  print("<table border=1 cellspacing=0 cellpadding=5>\n");
-  print("<tr><td class=colhead>Added</td><td class=colhead align=left>First IP</td><td class=colhead align=left>Last IP</td>".
-    "<td class=colhead align=left>By</td><td class=colhead align=left>Comment</td><td class=colhead>Remove</td></tr>\n");
+  print("<table border='1' cellspacing='0' cellpadding='5'>\n");
+  print("<tr><td class='colhead'>Added</td><td class='colhead' align='left'>First IP</td><td class='colhead' align='left'>Last IP</td>".
+    "<td class='colhead' align='left'>By</td><td class='colhead' align='left'>Comment</td><td class='colhead'>Remove</td></tr>\n");
     
 
 
@@ -75,8 +75,8 @@ else
     }
 	$arr["first"] = long2ip($arr["first"]);
 	$arr["last"] = long2ip($arr["last"]);
- 	  print("<tr><td>{$arr['added']}</td><td align=left>{$arr['first']}</td><td align=left>{$arr['last']}</td><td align=left><a href=userdetails.php?id={$arr['addedby']}>{$arr['username']}".
- 	    "</a></td><td align=left>".htmlentities($arr['comment'], ENT_QUOTES)."</td><td><a href=bans.php?remove={$arr['id']}>Remove</a></td></tr>\n");
+ 	  print("<tr><td>{$arr['added']}</td><td align='left'>{$arr['first']}</td><td align='left'>{$arr['last']}</td><td align='left'><a href='userdetails.php?id={$arr['addedby']}'>{$arr['username']}".
+ 	    "</a></td><td align='left'>".htmlentities($arr['comment'], ENT_QUOTES)."</td><td><a href='bans.php?remove={$arr['id']}'>Remove</a></td></tr>\n");
   }
   print("</table>\n");
   
@@ -93,15 +93,15 @@ else
 if (get_user_class() >= UC_ADMINISTRATOR)
 {
 	print("<h2>Add ban</h2>\n");
-	print("<table border=1 cellspacing=0 cellpadding=5>\n");
-	print("<form method=post action=bans.php>\n");
-	print("<tr><td class=rowhead>First IP</td><td><input type=text name=first size=40></td>\n");
-	print("<tr><td class=rowhead>Last IP</td><td><input type=text name=last size=40></td>\n");
-	print("<tr><td class=rowhead>Comment</td><td><input type=text name=comment size=40></td>\n");
-	print("<tr><td colspan=2 align='center'><input type=submit name='okay' value='Add' class=btn></td></tr>\n");
-	print("<tr><td colspan=2 align='center'><input type=submit name='cacheit' value='Cache' class=btn></td></tr>\n");
+	print("<form method='post' action='bans.php'>\n");
+	print("<table border='1' cellspacing='0' cellpadding='5'>\n");
+	print("<tr><td class='rowhead'>First IP</td><td><input type='text' name='first' size='40' /></td></tr>\n");
+	print("<tr><td class='rowhead'>Last IP</td><td><input type='text' name='last' size='40' /></td></tr>\n");
+	print("<tr><td class='rowhead'>Comment</td><td><input type='text' name='comment' size='40' /></td></tr>\n");
+	print("<tr><td colspan='2' align='center'><input type='submit' name='okay' value='Add' class='btn' /></td></tr>\n");
+	print("<tr><td colspan='2' align='center'><input type='submit' name='cacheit' value='Cache' class='btn' /></td></tr>\n");
 
-	print("</form>\n</table>\n");
+	print("</table>\n</form>\n");
 }
 
 stdfoot();

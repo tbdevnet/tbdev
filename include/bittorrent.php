@@ -71,7 +71,7 @@ function dbconn($autoclean = false)
 		case 1040:
 		case 2002:
 			if ($_SERVER['REQUEST_METHOD'] == "GET")
-				die("<html><head><meta http-equiv=refresh content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border=0 width=100% height=100%><tr><td><h3 align=center>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
+				die("<html><head><meta http-equiv='refresh' content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border='0' width='100%' height='100%'><tr><td><h3 align='center'>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
 			else
 				die("Too many users. Please press the Refresh button in your browser to retry.");
         default:
@@ -300,73 +300,73 @@ function stdhead($title = "", $msgalert = true) {
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<meta name="MSSmartTagsPreventParsing" content="TRUE" />
 			
-			<title><?= $title ?></title>
-			<link rel="stylesheet" href="<?=$stylesheet?>" type="text/css">
+			<title><?php echo  $title ?></title>
+			<link rel="stylesheet" href="<?php echo $stylesheet?>" type="text/css" />
 		</head>
 <body>
 
-<table width=100% cellspacing=0 cellpadding=0 style='background: transparent'>
+<table width='100%' cellspacing='0' cellpadding='0' style='background: transparent'>
 <tr>
 
-<td class=clear>
+<td class='clear'>
 <div id="logostrip">
-<img src="<?=$pic_base_url?>logo.jpg" />
+<img src="<?php echo $pic_base_url?>logo.jpg" alt='' />
 
-<a href=donate.php><img src="./pic/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px'></a>
+<a href='donate.php'><img src="./pic/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px' /></a>
 </div>
 </td>
 
 </tr></table>
 
-<table class=mainouter width="100%" border="1" cellspacing="0" cellpadding="10">
+<table class='mainouter' width="100%" border="1" cellspacing="0" cellpadding="10">
 <!-- STATUSBAR -->
 <?php
 print StatusBar();
 ?>
-<!------------- MENU ------------------------------------------------------------------------>
+<!-- MENU -->
 
 
-<tr><td class=outer>
+<tr><td class='outer'>
 <div id="submenu">
 
-<? if ($CURUSER) { ?>
+<?php if ($CURUSER) { ?>
 <div class="tb-top-left-link">
-<a href=index.php>Home</a>
-<a href=browse.php>Browse</a>
-<a href=search.php>Search</a>
-<a href=upload.php>Upload</a>
-<a href=chat.php>Chat</a>
-<a href=forums.php>Forums</a>
-<a href=misc/dox.php>DOX</a>
-<a href=topten.php>Top 10</a>
-<a href=log.php>Log</a>
-<a href=rules.php>Rules</a>
-<a href=faq.php>FAQ</a>
-<a href=links.php>Links</a>
-<a href=staff.php>Staff</a>
+<a href='index.php'>Home</a>
+<a href='browse.php'>Browse</a>
+<a href='search.php'>Search</a>
+<a href='upload.php'>Upload</a>
+<a href='chat.php'>Chat</a>
+<a href='forums.php'>Forums</a>
+<a href='misc/dox.php'>DOX</a>
+<a href='topten.php'>Top 10</a>
+<a href='log.php'>Log</a>
+<a href='rules.php'>Rules</a>
+<a href='faq.php'>FAQ</a>
+<a href='links.php'>Links</a>
+<a href='staff.php'>Staff</a>
 </div>
 <div class="tb-top-right-link">
-<a href=my.php>Profile</a>
-<a href=logout.php>Logout</a>
+<a href='my.php'>Profile</a>
+<a href='logout.php'>Logout</a>
 </div>
-<? } else { ?>
+<?php } else { ?>
 <div class="tb-top-left-link">
-<a href=login.php>Login</a>
-<a href=signup.php>Signup</a>
-<a href=recover.php>Recover Account</a>
+<a href='login.php'>Login</a>
+<a href='signup.php'>Signup</a>
+<a href='recover.php'>Recover Account</a>
 </div>
-<? } ?>
+<?php } ?>
 
 </div>
 </td>
 </tr>
-<tr><td align=center class=outer style="padding-top: 20px; padding-bottom: 20px">
-<?
+<tr><td align='center' class='outer' style="padding-top: 20px; padding-bottom: 20px">
+<?php
 
 if (isset($unread) && !empty($unread))
 {
-  print("<p><table border=0 cellspacing=0 cellpadding=10 bgcolor=red><tr><td style='padding: 10px; background: red'>\n");
-  print("<b><a href=inbox.php><font color=white>You have $unread new message" . ($unread > 1 ? "s" : "") . "!</font></a></b>");
+  print("<p><table border='0' cellspacing='0' cellpadding='10' bgcolor='red'><tr><td style='padding: 10px; background: red'>\n");
+  print("<b><a href='messages.php'><font color='white'>You have $unread new message" . ($unread > 1 ? "s" : "") . "!</font></a></b>");
   print("</td></tr></table></p>\n");
 }
 
@@ -497,10 +497,10 @@ function get_row_count($table, $suffix = "")
 
 function stdmsg($heading, $text)
 {
-  print("<table class=main width=750 border=0 cellpadding=0 cellspacing=0><tr><td class=embedded>\n");
+  print("<table class='main' width='750' border='0' cellpadding='0' cellspacing='0'><tr><td class='embedded'>\n");
   if ($heading)
     print("<h2>$heading</h2>\n");
-  print("<table width=100% border=1 cellspacing=0 cellpadding=10><tr><td class=text>\n");
+  print("<table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'>\n");
   print($text . "</td></tr></table></td></tr></table>\n");
 }
 
@@ -654,13 +654,13 @@ function StatusBar() {
 	$IsDonor = '';
 	if ($CURUSER['donor'] == "yes")
 	
-	$IsDonor = "<img src=pic/star.gif alt=donor title=donor>";
+	$IsDonor = "<img src='pic/star.gif' alt='donor' title='donor' />";
 
 
 	$warn = '';
 	if ($CURUSER['warned'] == "yes")
 	
-	$warn = "<img src=pic/warned.gif alt=warned title=warned>";
+	$warn = "<img src='pic/warned.gif' alt='warned' title='warned' />";
 	
 	$res1 = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND unread='yes'") or print(mysql_error());
 	
@@ -703,15 +703,15 @@ function StatusBar() {
 		"&nbsp;&nbsp;Uploaded:$upped".
 		"&nbsp;&nbsp;Downloaded:$downed".
 		
-		"&nbsp;&nbsp;Active Torrents:&nbsp;<img alt='Torrents seeding' title='Torrents seeding' src='pic/arrowup.gif'>&nbsp;{$seedleech['yes']}".
+		"&nbsp;&nbsp;Active Torrents:&nbsp;<img alt='Torrents seeding' title='Torrents seeding' src='pic/arrowup.gif' />&nbsp;{$seedleech['yes']}".
 		
-		"&nbsp;&nbsp;<img alt='Torrents leeching' title='Torrents leeching' src='pic/arrowdown.gif'>&nbsp;{$seedleech['no']}</p>";
+		"&nbsp;&nbsp;<img alt='Torrents leeching' title='Torrents leeching' src='pic/arrowdown.gif' />&nbsp;{$seedleech['no']}</p>";
 		
 
 	$StatusBar .= "<p>".
 
 
-	"<a href=messages.php>$inbox</a>".
+	"<a href='messages.php'>$inbox</a>".
 	"</p></div></td></tr>";
 	
 	return $StatusBar;

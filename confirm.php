@@ -3,8 +3,8 @@
 require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
 
-
-$id = (int)$_GET["id"];
+$id = $_GET["id"];
+//$id = (int)$_GET["id"];
 $md5 = $_GET["secret"];
 
 if (!is_valid_id($id))

@@ -87,7 +87,7 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 
 $s=$row["name"];
 		print("<h1>$s</h1>\n");
-                print("<table width=750 border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
+                print("<table width='750' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
 
 		$url = "edit.php?id=" . $row["id"];
 		if (isset($_GET["returnto"])) {
@@ -102,7 +102,7 @@ $s=$row["name"];
 //			$s .= " $spacer<$editlink>[Edit torrent]</a>";
 //		tr("Name", $s, 1);
 
-		print("<tr><td class=rowhead width=1%>Download</td><td width=99% align=left><a class=\"index\" href=\"download.php/$id/" . rawurlencode($row["filename"]) . "\">" . htmlspecialchars($row["filename"]) . "</a></td></tr>");
+		print("<tr><td class='rowhead' width='1%'>Download</td><td width='99%' align='left'><a class=\"index\" href=\"download.php/$id/" . rawurlencode($row["filename"]) . "\">" . htmlspecialchars($row["filename"]) . "</a></td></tr>");
 //		tr("Downloads&nbsp;as", $row["save_as"]);
 
 		function hex_esc($matches) {
@@ -111,10 +111,10 @@ $s=$row["name"];
 		tr("Info hash", preg_replace_callback('/./s', "hex_esc", hash_pad($row["info_hash"])));
 
 		if (!empty($row["descr"]))
-			print("<tr><td style='vertical-align:top'>Description</td><td><div style='background-color:#d9e2ff;width:100%;height:150px;overflow: auto'>". str_replace(array("\n", "  "), array("<br>\n", "&nbsp; "), format_urls(htmlspecialchars($row["descr"])))."</div></td></tr>");
+			print("<tr><td class='rowhead' style='vertical-align:top'>Description</td><td><div style='background-color:#E9D58F;width:100%;height:150px;overflow: auto'>". str_replace(array("\n", "  "), array("<br />\n", "&nbsp; "), format_urls(htmlspecialchars($row["descr"])))."</div></td></tr>");
 			
 if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
-  print("<tr><td class=rowhead>NFO</td><td align=left><a href=viewnfo.php?id=$row[id]><b>View NFO</b></a> (" .
+  print("<tr><td class='rowhead'>NFO</td><td align='left'><a href='viewnfo.php?id=$row[id]'><b>View NFO</b></a> (" .
      mksize($row["nfosz"]) . ")</td></tr>\n");
 		if ($row["visible"] == "no")
 			tr("Visible", "<b>no</b> (dead)", 1);
@@ -151,17 +151,17 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 				$s .= "$rpic (" . $row["rating"] . " out of 5 with " . $row["numratings"] . " vote(s) total)";
 		}
 		$s .= "\n";
-		$s .= "</td><td class=embedded>$spacer</td><td valign=\"top\" class=embedded>";
-		if (!isset($CURUSER))
-			$s .= "(<a href=\"login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;nowarn=1\">Log in</a> to rate it)";
-		else {
+		$s .= "</td><td class='embedded'>$spacer</td><td valign=\"top\" class='embedded'>";
+	//	if (!isset($CURUSER))
+	//		$s .= "(<a href=\"login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;nowarn=1\">Log in</a> to rate it)";
+	//	else {
 			$ratings = array(
 					5 => "Kewl!",
 					4 => "Pretty good",
 					3 => "Decent",
 					2 => "Pretty bad",
 					1 => "Sucks!",
-			);
+	//   	);
 			if (!$owned || $moderator) {
 				$xres = mysql_query("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . $CURUSER["id"]);
 				$xrow = mysql_fetch_assoc($xres);
@@ -191,7 +191,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		tr("Snatched", $row["times_completed"] . " time(s)");
 
 		$keepget = "";
-		$uprow = (isset($row["username"]) ? ("<a href=userdetails.php?id=" . $row["owner"] . "><b>" . htmlspecialchars($row["username"]) . "</b></a>") : "<i>unknown</i>");
+		$uprow = (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlspecialchars($row["username"]) . "</b></a>") : "<i>unknown</i>");
 		if ($owned)
 			$uprow .= " $spacer<$editlink><b>[Edit this torrent]</b></a>";
 		tr("Upped by", $uprow, 1);
@@ -210,12 +210,12 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		print "</table>";
 
 		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
-		print("<h1>Comments for <a href=details.php?id=$id>" . $row["name"] . "</a></h1>\n");
+		print("<h1>Comments for <a href='details.php?id=$id'>" . $row["name"] . "</a></h1>\n");
 
 
 	print("<p><a name=\"startcomments\"></a></p>\n");
 
-	$commentbar = "<p align=center><a class=index href=comment.php?action=add&amp;tid=$id>Add a comment</a></p>\n";
+	$commentbar = "<p align='center'><a class='index' href='comment.php?action=add&amp;tid=$id'>Add a comment</a></p>\n";
 
 	$subres = mysql_query("SELECT COUNT(*) FROM comments WHERE torrent = $id");
 	$subrow = mysql_fetch_array($subres,MYSQL_NUM);
@@ -225,7 +225,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		print("<h2>No comments yet</h2>\n");
 	}
 	else {
-		$pager = pager(20, $count, "details.php?id=$id&", array('lastpagedefault' => 1));
+		$pager = pager(20, $count, "details.php?id=$id&amp;", array('lastpagedefault' => 1));
 
 		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, warned, ".
                   "username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = " .

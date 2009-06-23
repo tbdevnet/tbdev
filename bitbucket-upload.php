@@ -36,24 +36,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		stderr("Error", "File name needs an extension.");
 	move_uploaded_file($file["tmp_name"], $tgtfile) or stderr("Error", "Internal error 2.");
 	$url = str_replace(" ", "%20", htmlspecialchars("$BASEURL/bitbucket/$filename"));
-	stderr("Success", "Use the following URL to access the file: <b><a href=\"$url\">$url</a></b><p><a href=bitbucket-upload>Upload another file</a>.");
+	stderr("Success", "Use the following URL to access the file: <b><a href=\"$url\">$url</a></b><p><a href='bitbucket-upload.php'>Upload another file</a>.");
 }
 
 stdhead("Bit-bucket upload");
 ?>
 <h1>Bit-bucket upload</h1>
-<form method=post action="bitbucket-upload" enctype="multipart/form-data">
+<form method='post' action="bitbucket-upload" enctype="multipart/form-data">
 <p><b>Maximum file size: <?=number_format($maxfilesize); ?> bytes.</b></p>
-<table border=1 cellspacing=0 cellpadding=5>
-<tr><td class=rowhead>Upload file</td><td><input type=file name=file size=60></td></tr>
-<tr><td colspan=2 align=center><input type=submit value="Upload" class=btn></td></tr>
+<table border='1' cellspacing='0' cellpadding='5'>
+<tr><td class='rowhead'>Upload file</td><td><input type='file' name='file' size='60' /></td></tr>
+<tr><td colspan='2' align='center'><input type='submit' value="Upload" class='btn' /></td></tr>
 </table>
 </form>
-<p>
-<table class=main width=410 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
-<font class=small><b>Disclaimer:</b> Do not upload unauthorized or illegal pictures. Uploaded pictures should be considered "public domain"; do not upload pictures you wouldn't want a stranger to have access to.</font>
+<br />
+<table class='main' width='410' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
+<font class='small'><b>Disclaimer:</b> Do not upload unauthorized or illegal pictures. Uploaded pictures should be considered "public domain"; do not upload pictures you wouldn't want a stranger to have access to.</font>
 </td></tr></table>
-<?
+<?php
 stdfoot();
 
 ?>

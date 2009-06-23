@@ -49,15 +49,15 @@ function showForums() {
 	stdhead("Forum Management Tools");
 	echo '<span class="btn"><a href="forummanage.php?action=add">Add New</a></span><br /><br />';
 	begin_main_frame();
-	echo '<table width="700"  border="0" align="center" cellpadding="2" cellspacing="0">';
-	echo "<tr><td class=colhead align=left>Name</td><td class=colhead>Topics</td><td class=colhead>Posts</td><td class=colhead>Read</td><td class=colhead>Write</td><td class=colhead>Create Topic</td><td class=colhead>Modify</td></tr>";
+	echo '<table width="700" border="0" align="center" cellpadding="2" cellspacing="0">';
+	echo "<tr><td class='colhead' align='left'>Name</td><td class='colhead'>Topics</td><td class='colhead'>Posts</td><td class='colhead'>Read</td><td class='colhead'>Write</td><td class='colhead'>Create Topic</td><td class='colhead'>Modify</td></tr>";
 	$result = mysql_query ("SELECT  * FROM forums ORDER BY sort ASC");
 	if ( mysql_num_rows($result) > 0) {
 	
 		while($row = mysql_fetch_assoc($result)){
 	
-		echo "<tr><td><a href=forums.php?action=viewforum&forumid=".$row["id"]."><b>".htmlentities($row["name"], ENT_QUOTES)."</b></a><br>".htmlentities($row["description"], ENT_QUOTES)."</td>";
-		echo "<td>".$row["topiccount"]."</td><td>".$row["postcount"]."</td><td>minimal " . get_user_class_name($row["minclassread"]) . "</td><td>minimal " . get_user_class_name($row["minclasswrite"]) . "</td><td>minimal " . get_user_class_name($row["minclasscreate"]) . "</td><td align=center nowrap><b><a href=\"".$_SERVER['PHP_SELF']."?action=edit&id=".$row["id"]."\">EDIT</a>&nbsp;|&nbsp;<a href=\"forummanage.php?action=delete&id=".$row["id"]."\"><font color=red>DELETE</font></a></b></td></tr>"; 
+		echo "<tr><td><a href='forums.php?action=viewforum&amp;forumid=".$row["id"]."'><b>".htmlentities($row["name"], ENT_QUOTES)."</b></a><br />".htmlentities($row["description"], ENT_QUOTES)."</td>";
+		echo "<td>".$row["topiccount"]."</td><td>".$row["postcount"]."</td><td>minimal " . get_user_class_name($row["minclassread"]) . "</td><td>minimal " . get_user_class_name($row["minclasswrite"]) . "</td><td>minimal " . get_user_class_name($row["minclasscreate"]) . "</td><td align='center' style=\"white-space: nowrap;\"><b><a href=\"?action=edit&amp;id=".$row["id"]."\">EDIT</a>&nbsp;|&nbsp;<a href=\"forummanage.php?action=delete&amp;id=".$row["id"]."\"><font color='red'>DELETE</font></a></b></td></tr>"; 
 			  
 	} 
 	} 
@@ -78,59 +78,59 @@ function addForum() {
 	begin_main_frame();
 ?>
 
-	<form method=post action="forummanage.php?action=takeadd">
+	<form method='post' action="forummanage.php?action=takeadd">
 	<table width="600"  border="0" cellspacing="0" cellpadding="3" align="center">
 		<tr align="center">
-			<td colspan="2" class=colhead>Make New Forum</td>
+			<td colspan="2" class='colhead'>Make New Forum</td>
 		</tr>
 		<tr>
-			<td><b>Forum Name</td>
-			<td><input name="name" type="text" size="20" maxlength="60"></td>
+			<td><b>Forum Name</b></td>
+			<td><input name="name" type="text" size="20" maxlength="60" /></td>
 		</tr>
 		<tr>
-			<td><b>Forum Description  </td>
-			<td><input name="desc" type="text" size="30" maxlength="200"></td>
+			<td><b>Forum Description</b></td>
+			<td><input name="desc" type="text" size="30" maxlength="200" /></td>
 		</tr>
 		<tr>
-			<td><b>Minimum Read Permission </td>
+			<td><b>Minimum Read Permission</b></td>
 			<td><select name="readclass">
-<?
+<?php
 	$maxclass = get_user_class();
 		for ($i = 0; $i <= $maxclass; ++$i)
-		print("<option value=$i" . ($CURUSER["class"] == $i ? " selected" : "") . ">" . get_user_class_name($i) . "\n");
+		print("<option value='$i'" . ($CURUSER["class"] == $i ? " selected='selected'" : "") . ">" . get_user_class_name($i) . "</option>\n");
 ?>
 			</select>
 			</td>
 		</tr>
 		<tr>
-			<td><b>Minimum Write Permission </td>
-			<td><select name=writeclass>n
-<?
+			<td><b>Minimum Write Permission</b></td>
+			<td><select name='writeclass'>
+<?php
 	$maxclass = get_user_class();
 		for ($i = 0; $i <= $maxclass; ++$i)
-		print("<option value=$i" . ($CURUSER["class"] == $i ? " selected" : "") . ">" . get_user_class_name($i) . "\n");
+		print("<option value='$i'" . ($CURUSER["class"] == $i ? " selected='selected'" : "") . ">" . get_user_class_name($i) . "</option>\n");
 ?>
 			</select></td>
 		</tr>
 		<tr>
-			<td><b>Minimun Create Topic Permission </td>
-			<td><select name=createclass>n
-<?
+			<td><b>Minimun Create Topic Permission</b></td>
+			<td><select name='createclass'>
+<?php
 	$maxclass = get_user_class();
 		for ($i = 0; $i <= $maxclass; ++$i)
-		print("<option value=$i" . ($CURUSER["class"] == $i ? " selected" : "") . ">" . get_user_class_name($i) . "\n");
+		print("<option value='$i'" . ($CURUSER["class"] == $i ? " selected='selected'" : "") . ">" . get_user_class_name($i) . "</option>\n");
 ?>
 			</select></td>
 		</tr>
 		<tr>
-			<td><b>Forum Rank </td>
+			<td><b>Forum Rank</b></td>
 			<td><select name="sort">
-<?
+<?php
 	$res = mysql_query ("SELECT sort FROM forums");
 	$nr = mysql_num_rows($res);
 	$maxclass = $nr + 1;
 		for ($i = 0; $i <= $maxclass; ++$i)
-		print("<option value=$i>$i \n");
+		print("<option value='$i'>$i </option>\n");
 ?>
 			</select>
    
@@ -143,9 +143,9 @@ function addForum() {
 			<input type="submit" name="Submit" value="Make Forum" class="btn" /></td>
 		</tr>
 		</table>
-
-<?
-	end_frame();
+          </form>
+<?php
+//	end_frame();
 	end_main_frame();
 	stdfoot();
 
@@ -168,59 +168,59 @@ function editForum() {
 		<form method="post" action="forummanage.php?action=takeedit">
 		<table width="600"  border="0" cellspacing="0" cellpadding="3" align="center">
 		<tr align="center">
-			<td colspan="2" class=colhead>Edit Forum: <?=htmlentities($row["name"], ENT_QUOTES);?></td>
+			<td colspan="2" class='colhead'>Edit Forum: <?php echo htmlentities($row["name"], ENT_QUOTES);?></td>
 		</tr>
 		<tr>
-			<td><b>Forum Name</td>
-			<td><input name="name" type="text" size="30" maxlength="60" value="<?=htmlentities($row["name"], ENT_QUOTES);?>"></td>
+			<td><b>Forum Name</b></td>
+			<td><input name="name" type="text" size="30" maxlength="60" value="<?php echo htmlentities($row["name"], ENT_QUOTES);?>" /></td>
 		</tr>
 		<tr>
-			<td><b>Forum Description  </td>
-			<td><input name="desc" type="text" size="30" maxlength="200" value="<?=htmlentities($row["description"], ENT_QUOTES);?>"></td>
+			<td><b>Forum Description</b></td>
+			<td><input name="desc" type="text" size="30" maxlength="200" value="<?php echo htmlentities($row["description"], ENT_QUOTES);?>" /></td>
 		</tr>
 		<tr>
-			<td><b>Minimun Read Permission </td>
-			<td><select name=readclass>
-<?
+			<td><b>Minimun Read Permission</b></td>
+			<td><select name='readclass'>
+<?php
 	$maxclass = get_user_class();
 		for ($i = 0; $i <= $maxclass; ++$i)
 		if( get_user_class_name($i) != "" )
-		print("<option value=$i" . ($row["minclassread"] == $i ? " selected" : "") . ">" . get_user_class_name($i) . "");
+		print("<option value='$i'" . ($row["minclassread"] == $i ? " selected='selected'" : "") . ">" . get_user_class_name($i) . "</option>");
 ?>
 			</select>
 			</td>
 		</tr>
 		<tr>
-			<td><b>Minimal Post Rank </td>
-			<td><select name=writeclass>
-<?
+			<td><b>Minimal Post Rank</b></td>
+			<td><select name='writeclass'>
+<?php
 	$maxclass = get_user_class();
 		for ($i = 0; $i <= $maxclass; ++$i)
 		if( get_user_class_name($i) != "" )
-		print("<option value=$i" . ($row["minclasswrite"] == $i ? " selected" : "") . ">" . get_user_class_name($i));
+		print("<option value='$i'" . ($row["minclasswrite"] == $i ? " selected='selected'" : "") . ">" . get_user_class_name($i)."</option>");
 ?>
 			</select></td>
 		</tr>
 		<tr>
-			<td><b>Minimal Create Topic Rank </td>
-			<td><select name=createclass>n
-<?
+			<td><b>Minimal Create Topic Rank</b></td>
+			<td><select name='createclass'>
+<?php
 	$maxclass = get_user_class();
 		for ($i = 0; $i <= $maxclass; ++$i)
 		if( get_user_class_name($i) != "" )
-		print("<option value=$i" . ($row["minclasscreate"] == $i ? " selected" : "") . ">" . get_user_class_name($i));
+		print("<option value='$i'" . ($row["minclasscreate"] == $i ? " selected='selected'" : "") . ">" . get_user_class_name($i)."</option>");
 ?>
 			</select></td>
 		</tr>
 		<tr>
-			<td><b>Forum Rank </td>
-			<td><select name=sort>
-<?
+			<td><b>Forum Rank</b></td>
+			<td><select name='sort'>
+<?php
 	$res = mysql_query ("SELECT sort FROM forums");
 	$nr = mysql_num_rows($res);
 	$maxclass = $nr + 1;
 		for ($i = 0; $i <= $maxclass; ++$i)
-		print("<option value=$i" . ($row["sort"] == $i ? " selected" : "") . ">$i");
+		print("<option value='$i'" . ($row["sort"] == $i ? " selected='selected'" : "") . ">$i</option>");
 ?>
 			</select>
 			</td>
@@ -228,19 +228,19 @@ function editForum() {
  
 		<tr align="center">
 			<td colspan="2">
-			<input type="hidden" name="id" value="<?=$id;?>" />
+			<input type="hidden" name="id" value="<?php echo $id;?>" />
 			<input type="submit" name="Submit" value="Edit Forum" class="btn" />
 			</td>
 		</tr>
 		</table>
-
-<?
+ </form>
+<?php
 			}
 	} 
 	else 
 	{print "Sorry, no records were found!";}      
 	
-	end_frame();
+//	end_frame();
 	end_main_frame();
 	stdfoot();
 }
@@ -258,9 +258,9 @@ function takeaddForum() {
 	sqlesc($_POST['createclass']) . ")");
 	
 	if(mysql_affected_rows() === 1)
-		stderr("Success", "Forum Added. <a href='forummanage.php>Return to Forum Management</a>");
+		stderr("Success", "Forum Added. <a href='forummanage.php'>Return to Forum Management</a>");
 	else
-		stderr("Error", "There was an error. <a href='forummanage.php>Return to Forum Management</a>");
+		stderr("Error", "There was an error. <a href='forummanage.php'>Return to Forum Management</a>");
 die();
 
 }
@@ -279,9 +279,9 @@ function takeeditForum() {
 	sqlesc($_POST['id'])."");
 
 	if(mysql_affected_rows() === 1)
-		stderr("Success", "Forum Edited. <a href='forummanage.php>Return to Forum Management</a>");
+		stderr("Success", "Forum Edited. <a href='forummanage.php'>Return to Forum Management</a>");
 	else
-		stderr("Error", "There was an error. <a href='forummanage.php>Return to Forum Management</a>");
+		stderr("Error", "There was an error. <a href='forummanage.php'>Return to Forum Management</a>");
 die();
 }
 
@@ -299,7 +299,7 @@ function deleteForum() {
 		exit();
 	}
 	else
-		stderr("Warning", "You are about to delete a forum, there is no UNDELETE!! <a href=forummanage.php?action=takedelete&id=$id>Continue?</a>");
+		stderr("Warning", "You are about to delete a forum, there is no UNDELETE!! <a href='forummanage.php?action=takedelete&amp;id=$id'>Continue?</a>");
 	
 }
 
@@ -315,7 +315,7 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : stderr("Error", "No fecking id!");
 				@mysql_query("DELETE FROM forums WHERE id=$id");
 			
 			(mysql_affected_rows() > 0) ? 
-		stderr("Success", "Forum deleted return to <a href=forummanage.php>Forum Management</a>") : stderr("Error", "Something bad happened!");
+		stderr("Success", "Forum deleted return to <a href='forummanage.php'>Forum Management</a>") : stderr("Error", "Something bad happened!");
 		}
 		else
 		{
@@ -335,7 +335,7 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : stderr("Error", "No fecking id!");
 				@mysql_query("DELETE FROM forums WHERE id=$id");
 				
 			(mysql_affected_rows() > 0) ? 
-		stderr("Success", "Forum deleted return to <a href=forummanage.php>Forum Management</a>") : stderr("Error", "Something bad happened!");
+		stderr("Success", "Forum deleted return to <a href='forummanage.php'>Forum Management</a>") : stderr("Error", "Something bad happened!");
 				
 			
 		}
@@ -347,13 +347,13 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : stderr("Error", "No fecking id!");
 
 function forum_select($currentforum = 0)
   {
-    print("<p align='center'><form method='post' action='forummanage.php?action=takedelete&id=$currentforum' name='jump'>\n");
+    print("<p align='center'><form method='post' action='forummanage.php?action=takedelete&amp;id=$currentforum' name='jump'>\n");
 
-    print("<input type='hidden' name='deleteall' value='true'>\n");
+    print("<input type='hidden' name='deleteall' value='true' />\n");
 
     print("Select Forum to move topics to: ");
 
-    print("<select name=forumid>\n");
+    print("<select name='forumid'>\n");
 
     $res = mysql_query("SELECT * FROM forums ORDER BY name") or sqlerr(__FILE__, __LINE__);
 
@@ -361,12 +361,12 @@ function forum_select($currentforum = 0)
     {
       if ($arr["id"] == $currentforum)
 		continue;
-        print("<option value=" . $arr["id"] . ($currentforum == $arr["id"] ? " selected>" : ">") . $arr["name"] . "\n");
+        print("<option value='" . $arr["id"] . ($currentforum == $arr["id"] ? "' selected='selected'>" : "'>") . $arr["name"] . "</option>\n");
     }
 
     print("</select>\n");
 
-    print("<input type=submit value='Move To...' class='btn'>\n");
+    print("<input type='submit' value='Move To...' class='btn' />\n");
 
     print("</form>\n</p>");
   }

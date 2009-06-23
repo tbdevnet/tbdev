@@ -1,6 +1,6 @@
 body {
 	font-family: "tahoma", "arial", "helvetica", "sans-serif";
-	font-size: 8pt;
+	font-size: 10pt;
 background-color: #004E98;
   color: #000000;
   margin-top: 0px;
@@ -28,7 +28,7 @@ background-color: #004E98;
 .tb-top-right-link
 {
 	float: right;
-	font-size: 10px;
+	font-size: 12px;
 	font-weight: bold; 
 	letter-spacing: 0.5px;
 	margin-top: 4px;
@@ -69,7 +69,7 @@ status bar style
 #statusbar p{
 	background: transparent !important;
 	border: 0 !important;
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: bold; 
 	letter-spacing: 1px;
 	margin: 0 !important;
@@ -89,6 +89,8 @@ status bar style
 status bar
 */
 
+
+
 table {
   border-collapse: collapse;
   border: none;
@@ -96,7 +98,7 @@ table {
 }
 
 table.main, table.mainouter {
-  background-color: #F5F4EA;
+  background-color: #F5F4EA; /** #F4F4F0; **/
 }
 
 table.bottom {
@@ -104,21 +106,21 @@ table.bottom {
 }
 
 h1 {
-  font-size: 12pt;
+  font-size: 14pt;
 }
 
 h2 {
-  font-size: 10pt;
+  font-size: 12pt;
   margin-bottom: 6px;
 }
 
 h3 {
-  font-size: 11pt;
+  font-size: 13pt;
   margin-bottom: 6px;
 }
 
 p {
-	font-size: 8pt;
+	font-size: 10pt;
 }
 
 p.sub { 
@@ -126,7 +128,7 @@ p.sub {
 }
 
 td {
-	font-size: 8pt;
+	font-size: 10pt;
 	border: solid #000000 1px;
 }
 
@@ -145,13 +147,13 @@ td.heading {
 }
 
 td.text {
-  padding: 10pt;
+  padding: 12pt;
   text-align: left;
 }
 
 td.comment {
-  padding: 10pt;
-  font-size: 8pt;
+  padding: 12pt;
+  font-size: 10pt;
   text-align: left;
 }
 
@@ -168,7 +170,7 @@ td.rowhead {
 }
 
 td.title {
-	font-size: 14pt;
+	font-size: 10pt;
 }
 
 td.navigation {
@@ -190,7 +192,7 @@ form {
 
 .sublink {
 	font-style: italic;
-	font-size: 7pt;
+	font-size: 9pt;
 	font-weight: normal;
 }
 
@@ -216,7 +218,7 @@ a.index {
 
 a.biglink {
 	font-weight: bold;
-	font-size: 12pt;
+	font-size: 15pt;
 }
 
 a.altlink:link, a.altlink:visited{
@@ -251,7 +253,7 @@ a.altlink_green:hover {
 
 .important {
 	font-weight: bold;
-	font-size: 8pt;
+	font-size: 10pt;
 }
 
 .red {
@@ -268,7 +270,7 @@ a.altlink_green:hover {
 
 input, select, textarea {
 	font-family: "tahoma", "arial", "helvetica", "sans-serif";
-	font-size: 8pt;
+	font-size: 10pt;
 }
 
 .btn
@@ -288,16 +290,16 @@ input, select, textarea {
 }
 
 .big {
-  font-size: 10pt;
+  font-size: 12pt;
 }
 
 li {
-  margin-top: 6pt;
-  margin-bottom: 6pt;
+  margin-top: 8pt;
+  margin-bottom: 8pt;
 }
 
 ul {
-  margin-left: 16pt;
+  margin-left: 20pt;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -307,24 +309,6 @@ img.border
   border-style: solid;  
   border-color: #000000; 
   border-width: 1px; 
-}
-
-/*
-Cpatcha/pin stuff
-*/
-.cimage 
-{ 
-border: 1px solid #eee; 
-}
-
-p#statusgreen 
-{ 
-font-size: 1.2em; background-color: #fff; color: #0a0; 
-}
-
-p#statusred 
-{ 
-font-size: 1.2em; background-color: #fff; color: #a00; 
 }
 
 .tag_cloud

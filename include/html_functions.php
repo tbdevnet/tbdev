@@ -4,8 +4,8 @@
 
   function begin_main_frame()
   {
-    print("<table class=main width=750 border=0 cellspacing=0 cellpadding=0>" .
-      "<tr><td class=embedded>\n");
+    print("<table class='main' width='750' border='0' cellspacing='0' cellpadding='0'>" .
+      "<tr><td class='embedded'>\n");
   }
 
   //-------- Ends a main frame
@@ -23,9 +23,9 @@
       print("<h2>$caption</h2>\n");
 
     if ($center)
-      $tdextra .= " align=center";
+      $tdextra .= " align='center'";
 
-    print("<table width=100% border=1 cellspacing=0 cellpadding=$padding><tr><td$tdextra>\n");
+    print("<table width='100%' border='1' cellspacing='0' cellpadding='$padding'><tr><td$tdextra>\n");
 
   }
 
@@ -44,8 +44,8 @@
     $width = "";
     
     if ($fullwidth)
-      $width .= " width=100%";
-    print("<table class=main$width border=1 cellspacing=0 cellpadding=$padding>\n");
+      $width .= " width='100%'";
+    print("<table class='main'$width border='1' cellspacing='0' cellpadding='$padding'>\n");
   }
 
   function end_table()
@@ -60,7 +60,7 @@
 			$a = htmlspecialchars($y);
 			$a = str_replace("\n", "<br />\n", $a);
 		}
-		print("<tr><td class=\"heading\" valign=\"top\" align=\"right\">$x</td><td valign=\"top\" align=left>$a</td></tr>\n");
+		print("<tr><td class=\"heading\" valign=\"top\" align=\"right\">$x</td><td valign=\"top\" align='left'>$a</td></tr>\n");
 	}
 
 ?>

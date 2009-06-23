@@ -54,7 +54,7 @@ if ($action == "add")
 	print("<p><form method=\"post\" action=\"comment.php?action=add\">\n");
 	print("<input type=\"hidden\" name=\"tid\" value=\"$torrentid\"/>\n");
 	print("<textarea name=\"text\" rows=\"10\" cols=\"60\"></textarea></p>\n");
-	print("<p><input type=\"submit\" class=btn value=\"Do it!\" /></p></form>\n");
+	print("<p><input type=\"submit\" class='btn' value=\"Do it!\" /></p></form>\n");
 
 	$res = mysql_query("SELECT comments.id, text, comments.added, username, users.id as user, users.avatar FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $torrentid ORDER BY comments.id DESC LIMIT 5");
 
@@ -87,7 +87,7 @@ elseif ($action == "edit")
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 	  $text = $_POST["text"];
-    $returnto = $_POST["returnto"];
+    $returnto = htmlspecialchars($_POST["returnto"]);
 
 	  if ($text == "")
 	  	stderr("Error", "Comment body cannot be empty!");
@@ -112,7 +112,7 @@ elseif ($action == "edit")
 	print("<input type=\"hidden\" name=\"returnto\" value=\"" . $_SERVER["HTTP_REFERER"] . "\" />\n");
 	print("<input type=\"hidden\" name=\"cid\" value=\"$commentid\" />\n");
 	print("<textarea name=\"text\" rows=\"10\" cols=\"60\">" . htmlspecialchars($arr["text"]) . "</textarea></p>\n");
-	print("<p><input type=\"submit\" class=btn value=\"Do it!\" /></p></form>\n");
+	print("<p><input type=\"submit\" class='btn' value=\"Do it!\" /></p></form>\n");
 
 	stdfoot();
 	die;
@@ -133,9 +133,9 @@ elseif ($action == "delete")
   {
  		$referer = $_SERVER["HTTP_REFERER"];
 		stderr("Delete comment", "You are about to delete a comment. Click\n" .
-			"<a href=comment.php?action=delete&cid=$commentid&sure=1" .
-			($referer ? "&returnto=" . urlencode($referer) : "") .
-			">here</a> if you are sure.");
+			"<a href='comment.php?action=delete&amp;cid=$commentid&amp;sure=1" .
+			($referer ? "&amp;returnto=" . urlencode($referer) : "") .
+			"'>here</a> if you are sure.");
   }
 
 
@@ -173,17 +173,17 @@ elseif ($action == "vieworiginal")
 
   stdhead("Original comment");
   print("<h1>Original contents of comment #$commentid</h1><p>\n");
-	print("<table width=500 border=1 cellspacing=0 cellpadding=5>");
-  print("<tr><td class=comment>\n");
+	print("<table width='500' border='1' cellspacing='0' cellpadding='5'>");
+  print("<tr><td class='comment'>\n");
 	echo htmlspecialchars($arr["ori_text"]);
   print("</td></tr></table>\n");
 
-  $returnto = $_SERVER["HTTP_REFERER"];
+  $returnto = htmlspecialchars($_SERVER["HTTP_REFERER"]);
 
 //	$returnto = "details.php?id=$torrentid&amp;viewcomm=$commentid#$commentid";
 
 	if ($returnto)
- 		print("<p><font size=small>(<a href=$returnto>back</a>)</font></p>\n");
+ 		print("<p><font size='small'>(<a href='$returnto'>back</a>)</font></p>\n");
 
 	stdfoot();
 	die;
