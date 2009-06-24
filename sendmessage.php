@@ -32,7 +32,7 @@ the forums for details.");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {						          ////////  MM  //
-	if (get_user_class() < UC_MODERATOR)
+	if ($CURUSER['class'] < UC_MODERATOR)
 		stderr("Error", "Permission denied");
 
   $n_pms = htmlentities($_POST['n_pms']);
@@ -44,54 +44,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
   stdhead("Send message", false);
 	?>
-  <table class=main width=750 border=0 cellspacing=0 cellpadding=0>
-	<tr><td class=embedded><div align=center>
-	<h1>Mass Message to <?=$n_pms?> user<?=($n_pms>1?"s":"")?>!</h1>
-	<form method=post action=takemessage.php>
-	<? if ($_SERVER["HTTP_REFERER"]) { ?>
-	<input type=hidden name=returnto value=<?=$_SERVER["HTTP_REFERER"]?>>
-	<? } ?>
-	<table border=1 cellspacing=0 cellpadding=5>
-	<TR>
-  <td colspan="2"><B>Subject:&nbsp;&nbsp;</B>
-  <input name="subject" type="text" size="76"></td>
+  <table class='main' width='750' border='0' cellspacing='0' cellpadding='0'>
+	<tr><td class='embedded'><div align='center'>
+	<h1>Mass Message to <?php echo $n_pms?> user<?php echo ($n_pms>1?"s":"")?>!</h1>
+	<form method='post' action='takemessage.php'>
+	<?php if ($_SERVER["HTTP_REFERER"]) { ?>
+	<input type='hidden' name='returnto' value='<?php echo $_SERVER["HTTP_REFERER"]?>' />
+	<?php } ?>
+	<table border='1' cellspacing='0' cellpadding='5'>
+	<tr>
+  <td colspan="2"><b>Subject:&nbsp;&nbsp;</b>
+  <input name="subject" type="text" size="76" /></td>
   </tr>
 	<tr><td colspan="2"><div align="center">
-	<textarea name=msg cols=80 rows=15><?=isset($body) ? htmlentities($body, ENT_QUOTES) : ''?></textarea>
+	<textarea name='msg' cols='80' rows='15'><?php echo isset($body) ? htmlentities($body, ENT_QUOTES) : ''?></textarea>
 	</div></td></tr>
 	<tr><td colspan="2"><div align="center"><b>Comment:&nbsp;&nbsp;</b>
-  <input name="comment" type="text" size="70">
+  <input name="comment" type="text" size="70" />
 	</div></td></tr>
   <tr><td><div align="center"><b>From:&nbsp;&nbsp;</b>
-	<?=$CURUSER['username']?>
-	<input name="sender" type="radio" value="self" checked>
+	<?php echo $CURUSER['username']?>
+	<input name="sender" type="radio" value="self" checked='checked' />
 	&nbsp; System
-	<input name="sender" type="radio" value="system">
+	<input name="sender" type="radio" value="system" />
 	</div></td>
-  <td><div align="center"><b>Take snapshot:</b>&nbsp;<input name="snap" type="checkbox" value="1">
+  <td><div align="center"><b>Take snapshot:</b>&nbsp;<input name="snap" type="checkbox" value="1" />
   </div></td></tr>
-	<tr><td colspan="2" align=center><input type=submit value="Send it!" class=btn>
+	<tr><td colspan="2" align='center'><input type='submit' value="Send it!" class='btn' />
 	</td></tr></table>
-	<input type=hidden name=pmees value="<?=$pmees?>">
-	<input type=hidden name=n_pms value=<?=$n_pms?>>
-	</form><br><br>
-	<form method=post action=<?=$_SERVER['PHP_SELF']?>>
-	<table border=1 cellspacing=0 cellpadding=5>
+	<input type='hidden' name='pmees' value="<?php echo $pmees?>" />
+	<input type='hidden' name='n_pms' value='<?php echo $n_pms?>' />
+	</form><br /><br />
+	<form method='post' action='sendmessage.php'>
+	<table border='1' cellspacing='0' cellpadding='5'>
 	<tr><td>
 	<b>Templates:</b>
 	<select name="auto">
-	<?
+	<?php
 	for ($i = 1; $i <= count($mm_template); $i++)	{
-		echo "<option value=$i ".($auto == $i?"selected":"").
+		echo "<option value='$i' ".($auto == $i?"selected='selected'":"").
     		">".$mm_template[$i][0]."</option>\n";}
   ?>
 	</select>
-	<input type=submit value="Use" class=btn>
+	<input type='submit' value="Use" class='btn' />
 	</td></tr></table>
-	<input type=hidden name=pmees value="<?=$pmees?>">
-	<input type=hidden name=n_pms value=<?=$n_pms?>>
+	<input type='hidden' name='pmees' value="<?php echo $pmees?>" />
+	<input type='hidden' name='n_pms' value='<?php echo $n_pms?>' />
 	</form></div></td></tr></table>
-  <?
+  <?php
 } else {                                                        ////////  PM  //
 	$receiver = 0+$_GET["receiver"];
 	if (!is_valid_id($receiver))
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	$auto = isset($_GET["auto"]) ? $_GET["auto"] : false;
 	$std = isset($_GET["std"]) ? $_GET["std"] : false;
 
-	if (($auto || $std ) && get_user_class() < UC_MODERATOR)
+	if (($auto || $std ) && $CURUSER['class'] < UC_MODERATOR)
 	  die("Permission denied.");
 
 	$res = mysql_query("SELECT * FROM users WHERE id=$receiver") or die(mysql_error());
@@ -130,59 +130,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 	stdhead("Send message", false);
 	?>
-	<table class=main width=750 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
-	<div align=center>
-	<h1>Message to <a href=userdetails.php?id=<?=$receiver?>><?=$user["username"]?></a></h1>
-	<form method=post action=takemessage.php>
-	<? if (isset($_GET["returnto"]) || $_SERVER["HTTP_REFERER"]) { ?>
-	<input type=hidden name=returnto value=<?=isset($_GET["returnto"]) ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>>
-	<? } ?>
-	<table border=1 cellspacing=0 cellpadding=5>
+	<table class='main' width='750' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
+	<div align='center'>
+	<h1>Message to <a href='userdetails.php?id=<?php echo $receiver?>'><?php echo $user["username"]?></a></h1>
+	<form method='post' action='takemessage.php'>
+	<?php if (isset($_GET["returnto"]) || isset($_SERVER["HTTP_REFERER"])) { ?>
+	<input type='hidden' name='returnto' value='<?php echo isset($_GET["returnto"]) ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"]?>' />
+	<?php } ?>
+	<table border='1' cellspacing='0' cellpadding='5'>
 	<tr>
-<td colspan="2"><B>Subject:&nbsp;&nbsp;</B>
-  <input name="subject" type="text" size="76" value="<?=isset($subject) ? htmlentities($subject, ENT_QUOTES) : ''?>"></td>
+<td colspan="2"><b>Subject:&nbsp;&nbsp;</b>
+  <input name="subject" type="text" size="76" value="<?php echo isset($subject) ? htmlentities($subject, ENT_QUOTES) : ''?>" /></td>
 </tr>
-	<tr><td<?=$replyto?" colspan=2":""?>><textarea name=msg cols=80 rows=15><?=isset($body) ? htmlspecialchars($body) : ''?></textarea></td></tr>
+	<tr><td<?php echo $replyto?" colspan=2":""?>><textarea name='msg' cols='80' rows='15'><?php echo isset($body) ? htmlspecialchars($body) : ''?></textarea></td></tr>
 	<tr>
-	<? if ($replyto) { ?>
-	<td align=center><input type=checkbox name='delete' value='yes' <?=$CURUSER['deletepms'] == 'yes'?"checked":""?>>Delete message you are replying to
-	<input type=hidden name=origmsg value=<?=$replyto?>></td>
-	<? } ?>
-	<td align=center><input type=checkbox name='save' value='yes' <?=$CURUSER['savepms'] == 'yes'?"checked":""?>>Save message to Sentbox</td></tr>
-	<tr><td<?=$replyto?" colspan=2":""?> align=center><input type=submit value="Send it!" class=btn></td></tr>
+	<?php if ($replyto) { ?>
+	<td align='center'><input type='checkbox' name='delete' value='yes' <?php echo $CURUSER['deletepms'] == 'yes'?"checked='checked'":""?> />Delete message you are replying to
+	<input type='hidden' name='origmsg' value='<?php echo $replyto?>' /></td>
+	<?php } ?>
+	<td align='center'><input type='checkbox' name='save' value='yes' <?php echo $CURUSER['savepms'] == 'yes'?"checked='checked'":""?> />Save message to Sentbox</td></tr>
+	<tr><td<?php echo $replyto?" colspan='2'":""?> align='center'><input type='submit' value="Send it!" class='btn' /></td></tr>
 	</table>
-	<input type=hidden name=receiver value=<?=$receiver?>>
+	<input type='hidden' name='receiver' value='<?php echo $receiver?>' />
 	</form>
-<!--
-  <?
-  if (get_user_class() >= UC_MODERATOR)
+	<!--
+  <?php
+  if ($CURUSER['class'] >= UC_MODERATOR)
   {
   ?>
-  	<br><br>
-  	<form method=get action=<?=$_SERVER['PHP_SELF']?>>
-	  <table border=1 cellspacing=0 cellpadding=5>
+  	<br /><br />
+  	<form method='get' action='sendmessage.php'>
+	  <table border='1' cellspacing='0' cellpadding='5'>
 	  <tr><td>
 	  <b>PM Templates:</b>
-	  <select name="std"><?
+	  <select name="std"><?php
 	  for ($i = 1; $i <= count($pm_template); $i++)
 	  {
-	    echo "<option value=$i ".($std == $i?"selected":"").
+	    echo "<option value='$i' ".($std == $i?"selected='selected'":"").
 	      ">".$pm_template[$i][0]."</option>\n";
 	  }?>
 	  </select>
-		<? if ($_SERVER["HTTP_REFERER"]) { ?>
-		<input type=hidden name=returnto value=<?=$_GET["returnto"]?$_GET["returnto"]:$_SERVER["HTTP_REFERER"]?>>
-    <? } ?>
-  	<input type=hidden name=receiver value=<?=$receiver?>>
-		<input type=hidden name=replyto value=<?=$replyto?>>
-	  <input type=submit value="Use" class=btn>
+		<?php if (isset($_SERVER["HTTP_REFERER"])) { ?>
+		<input type='hidden' name='returnto' value='<?php echo $_GET["returnto"]?$_GET["returnto"]:$_SERVER["HTTP_REFERER"]?>' />
+    <?php } ?>
+  	<input type='hidden' name='receiver' value='<?php echo $receiver?>' />
+		<input type='hidden' name='replyto' value='<?php echo $replyto?>' />
+	  <input type='submit' value="Use" class='btn' />
 	  </td></tr></table></form>
-	<?
+	<?php
   }
 	?>
--->
+	-->
  	</div></td></tr></table>
-	<?
+	<?php
 }
 stdfoot();
 ?>

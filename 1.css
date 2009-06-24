@@ -249,6 +249,16 @@ a.altlink_green:hover {
   text-decoration: underline;
 }
 
+a.colheadlink:link, a.colheadlink:visited {
+   font-weight: bold;
+   color: #FFFFFF;
+   text-decoration: none;
+}
+
+a.colheadlink:hover {
+   text-decoration: underline;
+}
+
 .important {
 	font-weight: bold;
 	font-size: 8pt;

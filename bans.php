@@ -7,7 +7,7 @@ dbconn(false);
 
 loggedinorreturn();
 
-if (get_user_class() < UC_MODERATOR)
+if ($CURUSER['class'] < UC_MODERATOR)
   die;
 
 $doUpdate = false;
@@ -20,7 +20,7 @@ if (is_valid_id($remove))
   $doUpdate = true;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && get_user_class() >= UC_ADMINISTRATOR)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $CURUSER['class'] >= UC_ADMINISTRATOR)
 {
 	//we doing just a cache rewrite or an add & rewrite?
 	if(isset($_POST['cacheit'])) 
@@ -90,7 +90,7 @@ else
       fclose($filenum);
       }
       
-if (get_user_class() >= UC_ADMINISTRATOR)
+if ($CURUSER['class'] >= UC_ADMINISTRATOR)
 {
 	print("<h2>Add ban</h2>\n");
 	print("<form method='post' action='bans.php'>\n");

@@ -8,7 +8,7 @@ require_once "include/html_functions.php";
 dbconn();
 loggedinorreturn();
 
-if (get_user_class() < UC_ADMINISTRATOR)
+if ($CURUSER['class'] < UC_ADMINISTRATOR)
 	stderr("Error", "Permission denied.");
 
 $action = isset($_GET["action"]) ? $_GET['action'] : '';
@@ -26,7 +26,7 @@ if ($action == 'delete')
   $sure = isset($_GET["sure"]) ? $_GET['sure'] : 0;
   if (!$sure)
     stderr("Delete news item","Do you really want to delete a news item? Click\n" .
-    	"<a href=?action=delete&newsid=$newsid&returnto=$returnto&sure=1>here</a> if you are sure.");
+    	"<a href='?action=delete&amp;newsid=$newsid&amp;returnto=$returnto&amp;sure=1'>here</a> if you are sure.");
 
   mysql_query("DELETE FROM news WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
@@ -99,11 +99,11 @@ if ($action == 'edit')
  	 	$returnto = isset($_GET['returnto']) ? htmlentities($_GET['returnto']) : $BASEURL.'/news.php';
 	  stdhead();
 	  print("<h1>Edit News Item</h1>\n");
-	  print("<form method=post action=?action=edit&newsid=$newsid>\n");
-	  print("<table border=1 cellspacing=0 cellpadding=5>\n");
-	  print("<tr><td><input type=hidden name=returnto value=$returnto></td></tr>\n");
-	  print("<tr><td style='padding: 0px'><textarea name=body cols=145 rows=5 style='border: 0px'>" . htmlspecialchars($arr["body"]) . "</textarea></td></tr>\n");
-	  print("<tr><td align=center><input type=submit value='Okay' class=btn></td></tr>\n");
+	  print("<form method='post' action='?action=edit&amp;newsid=$newsid'>\n");
+	  print("<table border='1' cellspacing='0' cellpadding='5'>\n");
+	  print("<tr><td><input type='hidden' name='returnto' value='$returnto' /></td></tr>\n");
+	  print("<tr><td style='padding: 0px'><textarea name='body' cols='145' rows='5' style='border: 0px'>" . htmlspecialchars($arr["body"]) . "</textarea></td></tr>\n");
+	  print("<tr><td align='center'><input type='submit' value='Okay' class='btn' /></td></tr>\n");
 	  print("</table>\n");
 	  print("</form>\n");
 	  stdfoot();
@@ -116,12 +116,12 @@ if ($action == 'edit')
 stdhead("Site news");
 print("<h1>Submit News Item</h1>\n");
 if (!empty($warning))
-	print("<p><font size=-3>($warning)</font></p>");
-print("<form method=post action=?action=add>\n");
-print("<table border=1 cellspacing=0 cellpadding=5>\n");
-print("<tr><td style='padding: 10px'><textarea name=body cols=141 rows=5 style='border: 0px'></textarea>\n");
-print("<br><br><div align=center><input type=submit value='Okay' class=btn></div></td></tr>\n");
-print("</table></form><br><br>\n");
+	print("<p><font size='-3'>($warning)</font></p>");
+print("<form method='post' action='?action=add'>\n");
+print("<table border='1' cellspacing='0' cellpadding='5'>\n");
+print("<tr><td style='padding: 10px'><textarea name='body' cols='141' rows='5' style='border: 0px'></textarea>\n");
+print("<br /><br /><div align='center'><input type='submit' value='Okay' class='btn' /></div></td></tr>\n");
+print("</table></form><br /><br />\n");
 
 $res = mysql_query("SELECT * FROM news ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
 
@@ -147,17 +147,17 @@ if (mysql_num_rows($res) > 0)
     if ($postername == "")
     	$by = "unknown[$userid]";
     else
-    	$by = "<a href=userdetails.php?id=$userid><b>$postername</b></a>" .
-    		($arr2["donor"] == "yes" ? "<img src=\"{$pic_base_url}star.gif\" alt='Donor'>" : "");
+    	$by = "<a href='userdetails.php?id=$userid'><b>$postername</b></a>" .
+    		($arr2["donor"] == "yes" ? "<img src=\"{$pic_base_url}star.gif\" alt='Donor' />" : "");
 
-	  print("<p class=sub><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>");
+	  print("<div class='sub'><table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>");
     print("$added&nbsp;---&nbsp;by&nbsp$by");
-    print(" - [<a href=?action=edit&newsid=$newsid><b>Edit</b></a>]");
-    print(" - [<a href=?action=delete&newsid=$newsid><b>Delete</b></a>]");
-    print("</td></tr></table></p>\n");
+    print(" - [<a href='?action=edit&amp;newsid=$newsid'><b>Edit</b></a>]");
+    print(" - [<a href='?action=delete&amp;newsid=$newsid'><b>Delete</b></a>]");
+    print("</td></tr></table></div>\n");
 
 	  begin_table(true);
-	  print("<tr valign=top><td class=comment>$body</td></tr>\n");
+	  print("<tr valign='top'><td class='comment'>$body</td></tr>\n");
 	  end_table();
 	}
 	end_frame();

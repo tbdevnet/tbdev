@@ -107,7 +107,7 @@ $wait = 0;
             print("<a href=\"download.php/$id/" . rawurlencode($row["filename"]) . "\"><img src=\"{$pic_base_url}download.gif\" border='0' alt='Download' /></a>\n");
 
         else */ if ($variant == "mytorrents")
-            print("<td align=\"center\"><a href=\"edit.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;id=" . $row["id"] . "\">edit</a>\n");
+            print("</td><td align=\"center\"><a href=\"edit.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;id=" . $row["id"] . "\">edit</a>\n");
 print("</td>\n");
         if ($variant == "mytorrents") {
             print("<td align=\"right\">");

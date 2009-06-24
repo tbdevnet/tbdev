@@ -27,11 +27,11 @@ while($arr2 = mysql_fetch_assoc($query)) {
 	}
 /*
 print_r($sysops);
-print("<BR>");
+print("<br />");
 print_r($admins);
-print("<BR>");
+print("<br />");
 print_r($mods);
-print("<BR>");
+print("<br />");
 print(count($mods));
 */
 function DoStaff($staff, $staffclass, $cols = 2) {
@@ -40,7 +40,7 @@ function DoStaff($staff, $staffclass, $cols = 2) {
 	$dt = time() - 180;
 	
 	if($staff===false) {
-		print("<br><table width='75%' border=1 cellpadding=3>");
+		print("<br /><table width='75%' border='1' cellpadding='3'>");
 		print("<tr><td class='colhead'><h2>{$staffclass}</h2></td></tr>");
 		print("<tr><td>None defined yet!</td></tr></table>");
 		return;
@@ -49,24 +49,24 @@ function DoStaff($staff, $staffclass, $cols = 2) {
 		
 	$rows = ceil($counter/$cols);
 	$cols = ($counter < $cols) ? $counter : $cols;
-	//echo "<br>" . $cols . "   " . $rows;
+	//echo "<br />" . $cols . "   " . $rows;
 	$r = 0;
-	print("<br><table width='75%' border=1 cellpadding=3>");
-	print("<tr><td class='colhead' colspan={$counter}><h2>{$staffclass}</h2></td></tr>");
+	print("<br /><table width='75%' border='1' cellpadding='3'>");
+	print("<tr><td class='colhead' colspan='{$counter}'><h2>{$staffclass}</h2></td></tr>");
 	
 	for($ia = 0; $ia < $rows; $ia++){
 
         echo "<tr>";
         for($i = 0; $i < $cols; $i++){
 			if( isset($staff[$r]) )  {
-			echo "<td><a href=userdetails.php?id={$staff[$r]['id']}>".$staff[$r]["username"]."</a>".
-			"   <img style='vertical-align: middle;' src={$pic_base_url}staff".
-			($staff[$r]['last_access']>$dt?"/online.gif":"/offline.gif" )." border=0>".
-			"<a href=sendmessage.php?receiver={$staff[$r]['id']}>".
-			"   <img style='vertical-align: middle;' src={$pic_base_url}staff/users.png border=0 title=\"Personal Message\"></a>".
-			"<a href=email-gateway.php?id={$staff[$r]['id']}>".
-			"   <img style='vertical-align: middle;' src={$pic_base_url}staff/mail.png border=0 alt={$staff[$r]['username']} title=\"Send Mail\"></a>".
-			"   <img style='vertical-align: middle;' src={$pic_base_url}flag/{$staff[$r]['flagpic']} border=0 alt='{$staff[$r]['name']}'></td>";
+			echo "<td><a href='userdetails.php?id={$staff[$r]['id']}'>".$staff[$r]["username"]."</a>".
+			"   <img style='vertical-align: middle;' src='{$pic_base_url}staff".
+			($staff[$r]['last_access']>$dt?"/online.gif":"/offline.gif" )."' border='0' alt='' />".
+			"<a href='sendmessage.php?receiver={$staff[$r]['id']}'>".
+			"   <img style='vertical-align: middle;' src='{$pic_base_url}staff/users.png' border='0' title=\"Personal Message\" alt='' /></a>".
+			"<a href='email-gateway.php?id={$staff[$r]['id']}'>".
+			"   <img style='vertical-align: middle;' src='{$pic_base_url}staff/mail.png' border='0' alt='{$staff[$r]['username']}' title=\"Send Mail\" /></a>".
+			"   <img style='vertical-align: middle;' src='{$pic_base_url}flag/{$staff[$r]['flagpic']}' border='0' alt='{$staff[$r]['name']}' /></td>";
 			$r++;
         }else{
 			echo "<td>&nbsp;</td>";
@@ -78,7 +78,7 @@ function DoStaff($staff, $staffclass, $cols = 2) {
 	print("</table>");
 /*
 print("</table>");
-print("<br><table border=1><tr>");
+print("<br /><table border=1><tr>");
 for ($i = 0; $i <= count($staff)-1; $i++) {
 		print("<td>{$staff[$i]["username"]}</td>");
 		}
@@ -93,7 +93,7 @@ isset($mods) ? DoStaff($mods, "Moderators") : DoStaff($mods=false, "Moderators")
 //isset($vips) ? DoStaff($vips, "VIP's") : DoStaff($vips=false, "VIP's");
 
 
- if (get_user_class() >= UC_MODERATOR) { 
+ if ($CURUSER['class'] >= UC_MODERATOR) { 
 ?>
 
 <br />
@@ -159,7 +159,7 @@ isset($mods) ? DoStaff($mods, "Moderators") : DoStaff($mods=false, "Moderators")
 			<span class="btn"><a href="resetpassword.php">Reset Password </a></span>
 			
 		</td></tr></table>
-<? }
+<?php }
 
 stdfoot();
 

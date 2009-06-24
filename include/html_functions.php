@@ -50,8 +50,13 @@
 
   function end_table()
   {
-    print("</td></tr></table>\n");
+    print("</table>\n");
   }
+  
+  //  function end_table()
+//  {
+//    print("</td></tr></table>\n");
+//  }
   
 	function tr($x,$y,$noesc=0) {
 		if ($noesc)

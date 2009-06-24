@@ -31,6 +31,6 @@ if(mysql_num_rows($query) == 0)
 	
 	while($row = mysql_fetch_assoc($query)) {
 	
-		print '<pre>'.$row['id']."-".$row['filename']."-".$row['score'].'</pre>';
+		print '<pre>'.$row['id']."-".htmlspecialchars($row['filename'])."-".$row['score'].'</pre>';
 	}
 ?>

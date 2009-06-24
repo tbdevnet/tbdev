@@ -41,14 +41,14 @@ stdhead("Users");
 
 print("<h1>Users</h1>\n");
 
-print("<form method=get action=?>\n");
-print("Search: <input type=text size=30 name=search>\n");
-print("<select name=class>\n");
+print("<form method='get' action='?'>\n");
+print("Search: <input type='text' size='30' name='search' />\n");
+print("<select name='class'>\n");
 print("<option value='-'>(any class)</option>\n");
 for ($i = 0;;++$i)
 {
 	if ($c = get_user_class_name($i))
-	  print("<option value=$i" . (ctype_digit($class) && $class == $i ? " selected" : "") . ">$c</option>\n");
+	  print("<option value='$i'" . (ctype_digit($class) && $class == $i ? " selected='selected'" : "") . ">$c</option>\n");
 	else
 	  break;
 }
@@ -113,14 +113,14 @@ for ($i = 1; $i <= $pages; ++$i) {
 if ($page == 1)
   $browsemenu .= "<span class='btn' style='background:orange;'>&lsaquo;</span>$pagemenu";
 else
-  $browsemenu .= "<a href=users.php?$q&page=1 title='First(1)'><span class='btn'>&laquo;</span></a>&nbsp;<a href=users.php?$q&page=" . ($page - 1) . "><span class='btn'>&lsaquo;</span></a>$pagemenu";
+  $browsemenu .= "<a href='users.php?$q&page=1' title='First(1)'><span class='btn'>&laquo;</span></a>&nbsp;<a href='users.php?$q&page=" . ($page - 1) . "'><span class='btn'>&lsaquo;</span></a>$pagemenu";
 
 //$browsemenu .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 if ($page == $pages)
   $browsemenu .= "<span class='btn' style='background:orange;'>&rsaquo;</span>";
 else
-  $browsemenu .= "<a href=users.php?$q&page=" . ($page + 1) . "><span class='btn'>&rsaquo;</span></a>&nbsp;<a href=users.php?$q&page=" . $pages . " title='Last($pages)'><span class='btn'>&raquo;</span></a>";
+  $browsemenu .= "<a href='users.php?$q&page=" . ($page + 1) . "'><span class='btn'>&rsaquo;</span></a>&nbsp;<a href='users.php?$q&page=" . $pages . "' title='Last($pages)'><span class='btn'>&raquo;</span></a>";
 }
 
 ($arr[0] > $perpage) ? print"<p>$browsemenu<br /><br /></p>" : print '<br /><br />';
@@ -131,22 +131,22 @@ if($arr[0] > 0) {
     $res = mysql_query("SELECT users.*, countries.name, countries.flagpic FROM users FORCE INDEX ( username ) LEFT JOIN countries ON country = countries.id WHERE $query ORDER BY username LIMIT $offset,$perpage") or sqlerr(__FILE__,__LINE__);
 //$num = mysql_num_rows($res);
 
-print("<table border=1 cellspacing=0 cellpadding=5>\n");
-print("<tr><td class=colhead align=left>User name</td><td class=colhead>Registered</td><td class=colhead>Last access</td><td class=colhead align=left>Class</td><td class=colhead>Country</td></tr>\n");
+print("<table border='1' cellspacing='0' cellpadding='5'>\n");
+print("<tr><td class='colhead' align='left'>User name</td><td class='colhead'>Registered</td><td class='colhead'>Last access</td><td class='colhead' align='left'>Class</td><td class='colhead'>Country</td></tr>\n");
 while($row = mysql_fetch_assoc($res))
 {
   
-      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align=center><img src=\"{$pic_base_url}flag/{$row['flagpic']}\" alt=\"". htmlspecialchars($row['name']) ."\"></td>" : "<td align=center>---</td>";
+      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align='center'><img src=\"{$pic_base_url}flag/{$row['flagpic']}\" alt=\"". htmlspecialchars($row['name']) ."\" /></td>" : "<td align='center'>---</td>";
     
   if ($row['added'] == '0000-00-00 00:00:00')
     $row['added'] = '-';
   if ($row['last_access'] == '0000-00-00 00:00:00')
     $row['last_access'] = '-';
     
-  $out .= "<tr><td align=left><a href=userdetails.php?id={$row['id']}><b>{$row['username']}</b></a>" .
-  ($row["donor"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border=0 alt='Donor'>" : "")."</td>" .
+  $out .= "<tr><td align='left'><a href='userdetails.php?id={$row['id']}'><b>{$row['username']}</b></a>" .
+  ($row["donor"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border='0' alt='Donor' />" : "")."</td>" .
   "<td>{$row['added']}</td><td>{$row['last_access']}</td>".
-    "<td align=left>" . get_user_class_name($row["class"]) . "</td>$country</tr>\n";
+    "<td align='left'>" . get_user_class_name($row["class"]) . "</td>$country</tr>\n";
 }
 print $out. "</table>\n";
 }

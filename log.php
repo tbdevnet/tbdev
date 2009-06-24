@@ -14,13 +14,13 @@
     print("<b>Log is empty</b>\n");
   else
   {
-    print("<table border=1 cellspacing=0 cellpadding=5>\n");
-    print("<tr><td class=colhead align=left>Date</td><td class=colhead align=left>Time</td><td class=colhead align=left>Event</td></tr>\n");
+    print("<table border='1' cellspacing='0' cellpadding='5'>\n");
+    print("<tr><td class='colhead' align='left'>Date</td><td class='colhead' align='left'>Time</td><td class='colhead' align='left'>Event</td></tr>\n");
     while ($arr = mysql_fetch_assoc($res))
     {
       $date = substr($arr['added'], 0, strpos($arr['added'], " "));
       $time = substr($arr['added'], strpos($arr['added'], " ") + 1);
-      print("<tr><td>$date</td><td>$time</td><td align=left>$arr[txt]</td></tr>\n");
+      print("<tr><td>$date</td><td>$time</td><td align='left'>".htmlspecialchars($arr['txt'])."</td></tr>\n");
     }
     print("</table>");
   }

@@ -10,7 +10,7 @@ $DEBUG_MODE = 0;
 dbconn();
 loggedinorreturn();
 
-if (get_user_class() < UC_MODERATOR)
+if ($CURUSER['class'] < UC_MODERATOR)
 	stderr("Error", "Permission denied.");
 
 function is_set_not_empty($param) {
@@ -32,93 +32,93 @@ $comments_exc = '';
 $email_is = '';
 if (isset($_GET['h']))
 {
-	echo "<table id=torrenttable border=0 align=center><tr><td class=embedded bgcolor='#F5F4EA'><div align=left>\n
+	echo "<table border='0' align='center'><tr><td class='embedded' bgcolor='#F5F4EA'><div align='left'>\n
 	Fields left blank will be ignored;\n
 	Wildcards * and ? may be used in Name, Email and Comments, as well as multiple values\n
 	separated by spaces (e.g. 'wyz Max*' in Name will list both users named\n
 	'wyz' and those whose names start by 'Max'. Similarly  '~' can be used for\n
 	negation, e.g. '~alfiest' in comments will restrict the search to users\n
-	that do not have 'alfiest' in their comments).<br><br>\n
-    The Ratio field accepts 'Inf' and '---' besides the usual numeric values.<br><br>\n
+	that do not have 'alfiest' in their comments).<br /><br />\n
+    The Ratio field accepts 'Inf' and '---' besides the usual numeric values.<br /><br />\n
 	The subnet mask may be entered either in dotted decimal or CIDR notation\n
-	(e.g. 255.255.255.0 is the same as /24).<br><br>\n
-    Uploaded and Downloaded should be entered in GB.<br><br>\n
+	(e.g. 255.255.255.0 is the same as /24).<br /><br />\n
+    Uploaded and Downloaded should be entered in GB.<br /><br />\n
 	For search parameters with multiple text fields the second will be\n
-	ignored unless relevant for the type of search chosen. <br><br>\n
+	ignored unless relevant for the type of search chosen. <br /><br />\n
 	'Active only' restricts the search to users currently leeching or seeding,\n
-	'Disabled IPs' to those whose IPs also show up in disabled accounts.<br><br>\n
+	'Disabled IPs' to those whose IPs also show up in disabled accounts.<br /><br />\n
 	The 'p' columns in the results show partial stats, that is, those\n
-	of the torrents in progress. <br><br>\n
+	of the torrents in progress. <br /><br />\n
 	The History column lists the number of forum posts and torrent comments,\n
 	respectively, as well as linking to the history page.\n
-	</div></td></tr></table><br><br>\n";
+	</div></td></tr></table><br /><br />\n";
 }
 else
 {
-	echo "<p align=center>(<a href='".$_SERVER["PHP_SELF"]."?h=1'>Instructions</a>)";
-	echo "&nbsp;-&nbsp;(<a href='".$_SERVER["PHP_SELF"]."'>Reset</a>)</p>\n";
+	echo "<p align='center'>(<a href='usersearch.php?h=1'>Instructions</a>)";
+	echo "&nbsp;-&nbsp;(<a href='usersearch.php'>Reset</a>)</p>\n";
 }
 
-$highlight = " bgcolor=lightgrey";
+$highlight = " bgcolor='lightgrey'";
 
 ?>
 
-<form method=get action=<?=$_SERVER["PHP_SELF"]?>>
-<table id="torrenttable" border="1" cellspacing="0" cellpadding="5">
+<form method='get' action='usersearch.php'>
+<table border="1" cellspacing="0" cellpadding="5">
 <tr>
 
-  <td valign="middle" class=rowhead>Name:</td>
-  <td<?=(isset($_GET['n'])&&!empty($_GET['n']))?$highlight:""?>><input name="n" type="text" value="<?=isset($_GET['n'])?htmlentities($_GET['n']):""?>" size=25></td>
+  <td valign="middle" class='rowhead'>Name:</td>
+  <td<?php echo (isset($_GET['n'])&&!empty($_GET['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_GET['n'])?htmlentities($_GET['n']):""?>" size='25' /></td>
 
-  <td valign="middle" class=rowhead>Ratio:</td>
-  <td<?=(isset($_GET['r'])&&!empty($_GET['r']))?$highlight:""?>><select name="rt">
-    <?
+  <td valign="middle" class='rowhead'>Ratio:</td>
+  <td<?php echo (isset($_GET['r'])&&!empty($_GET['r']))?$highlight:""?>><select name="rt">
+    <?php
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
-	    echo "<option value=$i ".(((isset($_GET['rt'])?$_GET['rt']:"3")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+	    echo "<option value='$i' ".(((isset($_GET['rt'])?$_GET['rt']:"3")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
 	?>
     </select>
-    <input name="r" type="text" value="<?=isset($_GET['r'])?$_GET['r']:''?>" size="5" maxlength="4">
-    <input name="r2" type="text" value="<?=isset($_GET['r2'])?$_GET['r2']:''?>" size="5" maxlength="4"></td>
+    <input name="r" type="text" value="<?php echo isset($_GET['r'])?$_GET['r']:''?>" size="5" maxlength="4" />
+    <input name="r2" type="text" value="<?php echo isset($_GET['r2'])?$_GET['r2']:''?>" size="5" maxlength="4" /></td>
 
-  <td valign="middle" class=rowhead>Member status:</td>
-  <td<?=(isset($_GET['st'])&&!empty($_GET['st']))?$highlight:""?>><select name="st">
+  <td valign="middle" class='rowhead'>Member status:</td>
+  <td<?php echo (isset($_GET['st'])&&!empty($_GET['st']))?$highlight:""?>><select name="st">
     <?
 	$options = array("(any)","confirmed","pending");
 	for ($i = 0; $i < count($options); $i++){
-	    echo "<option value=$i ".(((isset($_GET['st'])?$_GET['st']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+	    echo "<option value='$i' ".(((isset($_GET['st'])?$_GET['st']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
     ?>
     </select></td></tr>
-<tr><td valign="middle" class=rowhead>Email:</td>
-  <td<?=(isset($_GET['em'])&&!empty($_GET['em']))?$highlight:""?>><input name="em" type="text" value="<?=isset($_GET['em'])?$_GET['em']:''?>" size="25"></td>
-  <td valign="middle" class=rowhead>IP:</td>
-  <td<?=(isset($_GET['ip'])&&!empty($_GET['ip']))?$highlight:""?>><input name="ip" type="text" value="<?=isset($_GET['ip'])?$_GET['ip']:''?>" maxlength="17"></td>
+<tr><td valign="middle" class='rowhead'>Email:</td>
+  <td<?php echo (isset($_GET['em'])&&!empty($_GET['em']))?$highlight:""?>><input name="em" type="text" value="<?php echo isset($_GET['em'])?$_GET['em']:''?>" size="25" /></td>
+  <td valign="middle" class='rowhead'>IP:</td>
+  <td<?php echo (isset($_GET['ip'])&&!empty($_GET['ip']))?$highlight:""?>><input name="ip" type="text" value="<?php echo isset($_GET['ip'])?$_GET['ip']:''?>" maxlength="17" /></td>
 
-  <td valign="middle" class=rowhead>Account status:</td>
-  <td<?=(isset($_GET['as'])&&!empty($_GET['as']))?$highlight:""?>><select name="as">
-    <?
+  <td valign="middle" class='rowhead'>Account status:</td>
+  <td<?php echo (isset($_GET['as'])&&!empty($_GET['as']))?$highlight:""?>><select name="as">
+    <?php
     $options = array("(any)","enabled","disabled");
     for ($i = 0; $i < count($options); $i++){
-      echo "<option value=$i ".(((isset($_GET['as'])?$_GET['as']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+      echo "<option value='$i' ".(((isset($_GET['as'])?$_GET['as']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
     }
     ?>
     </select></td></tr>
 <tr>
-  <td valign="middle" class=rowhead>Comment:</td>
-  <td<?=(isset($_GET['co'])&&!empty($_GET['co']))?$highlight:""?>><input name="co" type="text" value="<?=isset($_GET['co'])?$_GET['co']:""?>" size="25"></td>
-  <td valign="middle" class=rowhead>Mask:</td>
-  <td<?=(isset($_GET['ma'])&&!empty($_GET['ma']))?$highlight:""?>><input name="ma" type="text" value="<?=isset($_GET['ma'])?$_GET['ma']:""?>" maxlength="17"></td>
-  <td valign="middle" class=rowhead>Class:</td>
-  <td<?=(isset($_GET['c']) && !empty($_GET['c']))?$highlight:""?>><select name="c"><option value='1'>(any)</option>
-  <?
+  <td valign="middle" class='rowhead'>Comment:</td>
+  <td<?php echo (isset($_GET['co'])&&!empty($_GET['co']))?$highlight:""?>><input name="co" type="text" value="<?php echo isset($_GET['co'])?$_GET['co']:""?>" size="25" /></td>
+  <td valign="middle" class='rowhead'>Mask:</td>
+  <td<?php echo (isset($_GET['ma'])&&!empty($_GET['ma']))?$highlight:""?>><input name="ma" type="text" value="<?php echo isset($_GET['ma'])?$_GET['ma']:""?>" maxlength="17" /></td>
+  <td valign="middle" class='rowhead'>Class:</td>
+  <td<?php echo (isset($_GET['c']) && !empty($_GET['c']))?$highlight:""?>><select name="c"><option value='1'>(any)</option>
+  <?php
   $class = isset($_GET['c']) ? (int)$_GET['c'] : '';
   if (!is_valid_id($class))
   	$class = '';
   for ($i = 2;;++$i) {
 		if ($c = get_user_class_name($i-2))
-       	 print("<option value=" . $i . ((isset($class)?$class:0) == $i? " selected" : "") . ">$c</option>\n");
+       	 print("<option value='" . $i . "'".((isset($class)?$class:0) == $i? " selected='selected'" : "") . ">$c</option>\n");
 	  else
 	   	break;
 	}
@@ -126,100 +126,100 @@ $highlight = " bgcolor=lightgrey";
     </select></td></tr>
 <tr>
 
-    <td valign="middle" class=rowhead>Joined:</td>
+    <td valign="middle" class='rowhead'>Joined:</td>
 
-  <td<?=(isset($_GET['d'])&&!empty($_GET['d']))?$highlight:""?>><select name="dt">
-    <?
+  <td<?php echo (isset($_GET['d'])&&!empty($_GET['d']))?$highlight:""?>><select name="dt">
+    <?php
 	$options = array("on","before","after","between");
 	for ($i = 0; $i < count($options); $i++){
-	  echo "<option value=$i ".(((isset($_GET['dt'])?$_GET['dt']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+	  echo "<option value='$i' ".(((isset($_GET['dt'])?$_GET['dt']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
     ?>
     </select>
 
-    <input name="d" type="text" value="<?=isset($_GET['d'])?$_GET['d']:''?>" size="12" maxlength="10" />
+    <input name="d" type="text" value="<?php echo isset($_GET['d'])?$_GET['d']:''?>" size="12" maxlength="10" />
 
-    <input name="d2" type="text" value="<?=isset($_GET['d2'])?$_GET['d2']:''?>" size="12" maxlength="10" /></td>
+    <input name="d2" type="text" value="<?php echo isset($_GET['d2'])?$_GET['d2']:''?>" size="12" maxlength="10" /></td>
 
 
-  <td valign="middle" class=rowhead>Uploaded:</td>
+  <td valign="middle" class='rowhead'>Uploaded:</td>
 
-  <td<?=(isset($_GET['ult'])&&!empty($_GET['ult']))?$highlight:""?>><select name="ult" id="ult">
-    <?
+  <td<?php echo (isset($_GET['ult'])&&!empty($_GET['ult']))?$highlight:""?>><select name="ult" id="ult">
+    <?php
     $options = array("equal","above","below","between");
     for ($i = 0; $i < count($options); $i++){
-  	  echo "<option value=$i ".(((isset($_GET['ult'])?$_GET['ult']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+  	  echo "<option value='$i' ".(((isset($_GET['ult'])?$_GET['ult']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
     }
     ?>
     </select>
 
-    <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?=isset($_GET['ul'])?$_GET['ul']:''?>">
+    <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?php echo isset($_GET['ul'])?$_GET['ul']:''?>" />
 
-    <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?=isset($_GET['ul2'])?$_GET['ul2']:''?>"></td>
+    <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?php echo isset($_GET['ul2'])?$_GET['ul2']:''?>" /></td>
   <td valign="middle" class="rowhead">Donor:</td>
 
-  <td<?=(isset($_GET['do'])&&!empty($_GET['do']))?$highlight:""?>><select name="do">
-    <?
+  <td<?php echo (isset($_GET['do'])&&!empty($_GET['do']))?$highlight:""?>><select name="do">
+    <?php
     $options = array("(any)","Yes","No");
 	for ($i = 0; $i < count($options); $i++){
-	  echo "<option value=$i ".(((isset($_GET['do'])?$_GET['do']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+	  echo "<option value='$i' ".(((isset($_GET['do'])?$_GET['do']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
     }
     ?>
 	</select></td></tr>
 <tr>
 
-<td valign="middle" class=rowhead>Last seen:</td>
+<td valign="middle" class='rowhead'>Last seen:</td>
 
-  <td <?=(isset($_GET['ls'])&&!empty($_GET['ls']))?$highlight:""?>><select name="lst">
-  <?
+  <td <?php echo (isset($_GET['ls'])&&!empty($_GET['ls']))?$highlight:""?>><select name="lst">
+  <?php
   $options = array("on","before","after","between");
   for ($i = 0; $i < count($options); $i++){
-    echo "<option value=$i ".(((isset($_GET['lst'])?$_GET['lst']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+    echo "<option value='$i' ".(((isset($_GET['lst'])?$_GET['lst']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
   }
   ?>
   </select>
 
-  <input name="ls" type="text" value="<?=isset($_GET['ls'])?$_GET['ls']:''?>" size="12" maxlength="10">
+  <input name="ls" type="text" value="<?php echo isset($_GET['ls'])?$_GET['ls']:''?>" size="12" maxlength="10" />
 
-  <input name="ls2" type="text" value="<?=isset($_GET['ls2'])?$_GET['ls2']:''?>" size="12" maxlength="10"></td>
-	  <td valign="middle" class=rowhead>Downloaded:</td>
+  <input name="ls2" type="text" value="<?php echo isset($_GET['ls2'])?$_GET['ls2']:''?>" size="12" maxlength="10" /></td>
+	  <td valign="middle" class='rowhead'>Downloaded:</td>
 
-  <td<?=(isset($_GET['dl'])&&!empty($_GET['dl']))?$highlight:""?>><select name="dlt" id="dlt">
-  <?
+  <td<?php echo (isset($_GET['dl'])&&!empty($_GET['dl']))?$highlight:""?>><select name="dlt" id="dlt">
+  <?php
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
-	  echo "<option value=$i ".(((isset($_GET['dlt'])?$_GET['dlt']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+	  echo "<option value='$i' ".(((isset($_GET['dlt'])?$_GET['dlt']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
 	?>
     </select>
 
-    <input name="dl" type="text" id="dl" size="8" maxlength="7" value="<?=isset($_GET['dl'])?$_GET['dl']:''?>">
+    <input name="dl" type="text" id="dl" size="8" maxlength="7" value="<?php echo isset($_GET['dl'])?$_GET['dl']:''?>" />
 
-    <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?=isset($_GET['dl2'])?$_GET['dl2']:''?>"></td>
+    <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?php echo isset($_GET['dl2'])?$_GET['dl2']:''?>" /></td>
 
-	<td valign="middle" class=rowhead>Warned:</td>
+	<td valign="middle" class='rowhead'>Warned:</td>
 
-	<td<?=(isset($_GET['w'])&&!empty($_GET['w']))?$highlight:""?>><select name="w">
-  <?
+	<td<?php echo (isset($_GET['w'])&&!empty($_GET['w']))?$highlight:""?>><select name="w">
+  <?php
   $options = array("(any)","Yes","No");
 	for ($i = 0; $i < count($options); $i++){
-		echo "<option value=$i ".(((isset($_GET['w'])?$_GET['w']:"0")=="$i")?"selected":"").">".$options[$i]."</option>\n";
+		echo "<option value='$i' ".(((isset($_GET['w'])?$_GET['w']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
   }
   ?>
 	</select></td></tr>
 
 <tr><td class="rowhead"></td><td></td>
-  <td valign="middle" class=rowhead>Active only:</td>
-	<td<?=(isset($_GET['ac'])&&!empty($_GET['ac']))?$highlight:""?>><input name="ac" type="checkbox" value="1" <?=(isset($_GET['ac']))?"checked":"" ?>></td>
-  <td valign="middle" class=rowhead>Disabled IP: </td>
-  <td<?=(isset($_GET['dip'])&&!empty($_GET['dip']))?$highlight:""?>><input name="dip" type="checkbox" value="1" <?=(isset($_GET['dip']))?"checked":"" ?>></td>
+  <td valign="middle" class='rowhead'>Active only:</td>
+	<td<?php echo (isset($_GET['ac'])&&!empty($_GET['ac']))?$highlight:""?>><input name="ac" type="checkbox" value="1" <?php echo (isset($_GET['ac']))?"checked='checked'":"" ?> /></td>
+  <td valign="middle" class='rowhead'>Disabled IP: </td>
+  <td<?php echo (isset($_GET['dip'])&&!empty($_GET['dip']))?$highlight:""?>><input name="dip" type="checkbox" value="1" <?php echo (isset($_GET['dip']))?"checked='checked'":"" ?> /></td>
   </tr>
-<tr><td colspan="6" align=center><input name="submit" type=submit class=btn></td></tr>
+<tr><td colspan="6" align='center'><input name="submit" type='submit' class='btn' /></td></tr>
 </table>
-<br><br>
+<br /><br />
 </form>
 
-<?
+<?php
 
 // Validates date in the form [yy]yy-mm-dd;
 // Returns date if valid, 0 otherwise.
@@ -246,7 +246,7 @@ function ratios($up,$down, $color = True)
 	{
 		$r = number_format($up / $down, 2);
     if ($color)
-			$r = "<font color=".get_ratio_color($r).">$r</font>";
+			$r = "<font color='".get_ratio_color($r)."'>$r</font>";
 	}
 	else
 		if ($up > 0)
@@ -776,9 +776,9 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   if ($DEBUG_MODE > 0)
   {
   	stdmsg("Count Query",$queryc);
-    echo "<BR><BR>";
+    echo "<br /><br />";
     stdmsg("Search Query",$query);
-    echo "<BR><BR>";
+    echo "<br /><br />";
     stdmsg("URL Parameters 'Actually' Used",$q);
     if ($DEBUG_MODE == 2)
     	stdfoot();
@@ -794,7 +794,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 
   $perpage = 30;
 
-  $pager = pager($perpage, $count, $_SERVER["PHP_SELF"]."?".$q);
+  $pager = pager($perpage, $count, "usersearch.php?".$q);
 
   $query .= $pager['limit'];
 
@@ -806,15 +806,15 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   {
   	if ($count > $perpage)
   		echo $pager['pagertop'];
-    echo "<table id=torrenttable border=1 cellspacing=0 cellpadding=5>\n";
-    echo "<tr class='fcell_header'><td align=left>Name</td>
-    		<td align=left>Ratio</td>
-        <td align=left>IP</td>
-        <td align=left>Email</td>".
-        "<td align=left>Joined:</td>".
-        "<td align=left>Last seen:</td>".
-        "<td align=left>Status</td>".
-        "<td align=left>Enabled</td>".
+    echo "<table border='1' cellspacing='0' cellpadding='5'>\n";
+    echo "<tr class='rowhead'><td align='left'>Name</td>
+    		<td align='left'>Ratio</td>
+        <td align='left'>IP</td>
+        <td align='left'>Email</td>".
+        "<td align='left'>Joined:</td>".
+        "<td align='left'>Last seen:</td>".
+        "<td align='left'>Status</td>".
+        "<td align='left'>Enabled</td>".
         "<td>pR</td>".
         "<td>pUL (MB)</td>".
         "<td>pDL (MB)</td>".
@@ -835,7 +835,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     	  if ($array[0] == 0)
       		$ipstr = $user['ip'];
 	  	  else
-	      	$ipstr = "<a href='/testip.php?ip=".$user['ip']."'><font color='#FF0000'><b>".$user['ip']."</b></font></a>";
+	      	$ipstr = "<a href='testip.php?ip=".$user['ip']."'><font color='#FF0000'><b>".$user['ip']."</b></font></a>";
 			}
 			else
       	$ipstr = "---";
@@ -872,19 +872,19 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       $ids .= $user['id'].':';
     	echo "<tr><td><b><a href='userdetails.php?id=" . $user['id'] . "'>" .
       		$user['username']."</a></b>" .
-      		($user["donor"] == "yes" ? "<img src=pic/star.gif alt=\"Donor\">" : "") .
-					($user["warned"] == "yes" ? "<img src=\"/pic/warned.gif\" alt=\"Warned\">" : "") . "</td>
+      		($user["donor"] == "yes" ? "<img src='pic/star.gif' alt=\"Donor\" />" : "") .
+					($user["warned"] == "yes" ? "<img src=\"pic/warned.gif\" alt=\"Warned\" />" : "") . "</td>
           <td>" . ratios($user['uploaded'], $user['downloaded']) . "</td>
           <td>" . $ipstr . "</td><td>" . $user['email'] . "</td>
-          <td><div align=center>" . $user['added'] . "</div></td>
-          <td><div align=center>" . $user['last_access'] . "</div></td>
-          <td><div align=center>" . $user['status'] . "</div></td>
-          <td><div align=center>" . $user['enabled']."</div></td>
-          <td><div align=center>" . ratios($pul,$pdl) . "</div></td>
-          <td><div align=right>" . number_format($pul / 1048576) . "</div></td>
-          <td><div align=right>" . number_format($pdl / 1048576) . "</div></td>
-          <td><div align=center>".($n_posts?"<a href=userhistory.php?action=viewposts&id=".$user['id'].">$n_posts</a>":$n_posts).
-          "|".($n_comments?"<a href=userhistory.php?action=viewcomments&id=".$user['id'].">$n_comments</a>":$n_comments).
+          <td><div align='center'>" . $user['added'] . "</div></td>
+          <td><div align='center'>" . $user['last_access'] . "</div></td>
+          <td><div align='center'>" . $user['status'] . "</div></td>
+          <td><div align='center'>" . $user['enabled']."</div></td>
+          <td><div align='center'>" . ratios($pul,$pdl) . "</div></td>
+          <td><div align='right'>" . number_format($pul / 1048576) . "</div></td>
+          <td><div align='right'>" . number_format($pdl / 1048576) . "</div></td>
+          <td><div align='center'>".($n_posts?"<a href='userhistory.php?action=viewposts&amp;id=".$user['id']."'>$n_posts</a>":$n_posts).
+          "|".($n_comments?"<a href='userhistory.php?action=viewcomments&amp;id=".$user['id']."'>$n_comments</a>":$n_comments).
           "</div></td></tr>\n";
           
     }
@@ -893,26 +893,26 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     	echo $pager['pagerbottom'];
 
 	?>
-    <br><br>
-    <form method=post action=sendmessage.php>
+    <br /><br />
+    <form method='post' action='sendmessage.php'>
       <table border="1" cellpadding="5" cellspacing="0">
         <tr>
           <td>
             <div align="center">
-              <!--<input name="pmees" type="hidden" value="<?echo $querypm?>" size=10>-->
-              <input name="pmees" type="hidden" value="<?echo htmlentities(rtrim($ids, ':'))?>" />
-              <input name="PM" type="submit" value="PM" class=btn>
-              <input name="n_pms" type="hidden" value="<?echo htmlentities($count)?>" size=10>
+              <!--<input name="pmees" type="hidden" value="<?php echo $querypm?>" size=10>-->
+              <input name="pmees" type="hidden" value="<?php echo htmlentities(rtrim($ids, ':'))?>" />
+              <input name="PM" type="submit" value="PM" class='btn' />
+              <input name="n_pms" type="hidden" value="<?php echo htmlentities($count)?>" size='10' />
             </div></td>
         </tr>
       </table>
     </form>
-    <?
+    <?php
 
   }
 }
 if(isset($pagemenu))
-print("<p>$pagemenu<br>$browsemenu</p>");
+print("<p>$pagemenu<br />$browsemenu</p>");
 stdfoot();
 die;
 

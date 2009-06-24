@@ -2,14 +2,17 @@
   require "include/bittorrent.php";
   dbconn(false);
   loggedinorreturn();
+  
+error_reporting(E_ALL ^ E_NOTICE); // grrr!
+   
+$action = isset($_GET["action"]) ?$_GET["action"] : '';
+$pollid = isset($_GET["pollid"]) ?$_GET["pollid"] : '';
+$returnto = isset($_GET["returnto"]) ?$_GET["returnto"] : '';
 
-  $action = $_GET["action"];
-  $pollid = 0+$_GET["pollid"];
-  $returnto = $_GET["returnto"];
 
   if ($action == "delete")
   {
-  	if (get_user_class() < UC_MODERATOR)
+  	if ($CURUSER['class'] < UC_MODERATOR)
   		stderr("Error", "Permission denied.");
 
   	if (!is_valid_id($pollid))
@@ -18,7 +21,7 @@
    	$sure = $_GET["sure"];
    	if (!$sure)
     	stderr("Delete poll","Do you really want to delete a poll? Click\n" .
-    		"<a href=?action=delete&pollid=$pollid&returnto=$returnto&sure=1>here</a> if you are sure.");
+    		"<a href='?action=delete&amp;pollid=$pollid&amp;returnto=$returnto&amp;sure=1'>here</a> if you are sure.");
 
 		mysql_query("DELETE FROM pollanswers WHERE pollid = $pollid") or sqlerr();
 		mysql_query("DELETE FROM polls WHERE id = $pollid") or sqlerr();
@@ -52,26 +55,26 @@
     $poll["option10"], $poll["option11"], $poll["option12"], $poll["option13"], $poll["option14"],
     $poll["option15"], $poll["option16"], $poll["option17"], $poll["option18"], $poll["option19"]);
 
-    print("<p><table width=750 border=1 cellspacing=0 cellpadding=10><tr><td align=center>\n");
+    print("<table width='750' border='1' cellspacing='0' cellpadding='10'><tr><td align='center'>\n");
 
-    print("<p class=sub>");
+    print("<p class='sub'>");
     $added = gmdate("Y-m-d",strtotime($poll['added'])) . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($poll["added"]))) . " ago)";
 
     print("$added");
 
-    if (get_user_class() >= UC_ADMINISTRATOR)
+    if ($CURUSER['class'] >= UC_ADMINISTRATOR)
     {
-    	print(" - [<a href=makepoll.php?action=edit&pollid=$poll[id]><b>Edit</b></a>]\n");
-			print(" - [<a href=?action=delete&pollid=$poll[id]><b>Delete</b></a>]\n");
+    	print(" - [<a href='makepoll.php?action=edit&amp;pollid=$poll[id]'><b>Edit</b></a>]\n");
+			print(" - [<a href='?action=delete&amp;pollid=$poll[id]'><b>Delete</b></a>]\n");
 		}
 
-		print("<a name=$poll[id]>");
+		print("<a name='$poll[id]'></a>");
 
 		print("</p>\n");
 
-    print("<table class=main border=1 cellspacing=0 cellpadding=5><tr><td class=text>\n");
+    print("<table class='main' border='1' cellspacing='0' cellpadding='5'><tr><td class='text'>\n");
 
-    print("<p align=center><b>" . $poll["question"] . "</b></p>");
+    print("<p align='center'><b>" . $poll["question"] . "</b></p>");
 
     $pollanswers = mysql_query("SELECT selection FROM pollanswers WHERE pollid=" . $poll["id"] . " AND  selection < 20") or sqlerr();
 
@@ -93,7 +96,7 @@
     if ($poll["sort"] == "yes")
     	usort($os, srt);
 
-    print("<table width=100% class=main border=0 cellspacing=0 cellpadding=0>\n");
+    print("<table width='100%' class='main' border='0' cellspacing='0' cellpadding='0'>\n");
     $i = 0;
     while ($a = $os[$i])
     {
@@ -104,18 +107,18 @@
       if ($i % 2)
         $c = "";
       else
-        $c = " bgcolor=#ECE9D8";
-      print("<tr><td class=embedded$c>" . $a[1] . "&nbsp;&nbsp;</td><td class=embedded$c>" .
-        "<img src=\"{$pic_base_url}bar_left.gif\"><img src=\"{$pic_base_url}bar.gif\" height=9 width=" . ($p * 3) . "><img src=\"{$pic_base_url}bar_right.gif\"> $p%</td></tr>\n");
+        $c = " bgcolor='#ECE9D8'";
+      print("<tr><td class='embedded'$c>" . $a[1] . "&nbsp;&nbsp;</td><td class='embedded'$c>" .
+        "<img src=\"{$pic_base_url}bar_left.gif\" alt='' /><img src=\"{$pic_base_url}bar.gif\" height='9' width='" . ($p * 3) . "' alt='' /><img src=\"{$pic_base_url}bar_right.gif\" alt='' /> $p%</td></tr>\n");
       ++$i;
     }
     print("</table>\n");
 	$tvotes = number_format($tvotes);
-    print("<p align=center>Votes: $tvotes</p>\n");
+    print("<p align='center'>Votes: $tvotes</p>\n");
 
     print("</td></tr></table>\n");
 
-    print("</td></tr></table></p>\n");
+    print("</td></tr></table>\n");
 
   }
 

@@ -13,12 +13,12 @@ $userid = (int)$_GET["id"];
 
 if (!is_valid_id($userid)) stderr("Error", "Invalid ID");
 
-if (get_user_class()< UC_POWER_USER || ($CURUSER["id"] != $userid && get_user_class() < UC_MODERATOR))
+if ($CURUSER['class']< UC_POWER_USER || ($CURUSER["id"] != $userid && $CURUSER['class'] < UC_MODERATOR))
 	stderr("Error", "Permission denied");
 
-$page = $_GET["page"];
+$page = (isset($_GET['page'])?$_GET["page"]:''); // not used?
 
-$action = $_GET["action"];
+$action = (isset($_GET['action'])?$_GET["action"]:'');
 
 //-------- Global variables
 
@@ -46,7 +46,7 @@ if ($action == "viewposts")
 
 	//------ Make page menu
 
-	$pager = pager($perpage, $postcount, $_SERVER["PHP_SELF"] . "?action=viewposts&id=$userid&");
+	$pager = pager($perpage, $postcount, "userhistory.php?action=viewposts&amp;id=$userid&amp;");
 
 	//------ Get user data
 
@@ -56,7 +56,7 @@ if ($action == "viewposts")
 	{
   	$arr = mysql_fetch_assoc($res);
 
-	  $subject = "<a href=userdetails.php?id=$userid><b>$arr[username]</b></a>" . get_user_icons($arr, true);
+	  $subject = "<a href='userdetails.php?id=$userid'><b>$arr[username]</b></a>" . get_user_icons($arr, true);
 	}
 	else
 	    $subject = "unknown[$userid]";
@@ -108,15 +108,15 @@ if ($action == "viewposts")
 
 		$added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
 
-	    print("<p class=sub><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>
+	    print("<div class='sub'><table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
 	    $added&nbsp;--&nbsp;<b>Forum:&nbsp;</b>
-	    <a href=forums.php?action=viewforum&forumid=$forumid>$forumname</a>
+	    <a href='forums.php?action=viewforum&amp;forumid=$forumid'>$forumname</a>
 	    &nbsp;--&nbsp;<b>Topic:&nbsp;</b>
-	    <a href=forums.php?action=viewtopic&topicid=$topicid>$topicname</a>
+	    <a href='forums.php?action=viewtopic&amp;topicid=$topicid'>$topicname</a>
       &nbsp;--&nbsp;<b>Post:&nbsp;</b>
-      #<a href=forums.php?action=viewtopic&topicid=$topicid&page=p$postid#$postid>$postid</a>" .
-      ($newposts ? " &nbsp;<b>(<font color=red>NEW!</font>)</b>" : "") .
-	    "</td></tr></table></p>\n");
+      #<a href='forums.php?action=viewtopic&amp;topicid=$topicid&amp;page=p$postid#$postid'>$postid</a>" .
+      ($newposts ? " &nbsp;<b>(<font color='red'>NEW!</font>)</b>" : "") .
+	    "</td></tr></table></div>\n");
 
 	    begin_table(true);
 
@@ -128,11 +128,11 @@ if ($action == "viewposts")
 	        if (mysql_num_rows($subres) == 1)
 	        {
 	            $subrow = mysql_fetch_assoc($subres);
-	            $body .= "<p><font size=1 class=small>Last edited by <a href=userdetails.php?id=$arr[editedby]><b>$subrow[username]</b></a> at $arr[editedat] GMT</font></p>\n";
+	            $body .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id=$arr[editedby]'><b>$subrow[username]</b></a> at $arr[editedat] GMT</font></p>\n";
 	        }
 	    }
 
-	    print("<tr valign=top><td class=comment>$body</td></tr>\n");
+	    print("<tr valign='top'><td class='comment'>$body</td></tr>\n");
 
 	    end_table();
 	}
@@ -171,7 +171,7 @@ if ($action == "viewcomments")
 
 	//------ Make page menu
 
-	$pager = pager($perpage, $commentcount, $_SERVER["PHP_SELF"] . "?action=viewcomments&id=$userid&");
+	$pager = pager($perpage, $commentcount, "userhistory.php?action=viewcomments&amp;id=$userid&amp;");
 
 	//------ Get user data
 
@@ -181,7 +181,7 @@ if ($action == "viewcomments")
 	{
 		$arr = mysql_fetch_assoc($res);
 
-	  $subject = "<a href=userdetails.php?id=$userid><b>$arr[username]</b></a>" . get_user_icons($arr, true);
+	  $subject = "<a href='userdetails.php?id=$userid'><b>$arr[username]</b></a>" . get_user_icons($arr, true);
 	}
 	else
 	  $subject = "unknown[$userid]";
@@ -227,21 +227,21 @@ if ($action == "viewcomments")
 	  $subrow = mysql_fetch_row($subres);
     $count = $subrow[0];
     $comm_page = floor($count/20);
-    $page_url = $comm_page?"&page=$comm_page":"";
+    $page_url = $comm_page?"&amp;page=$comm_page":"";
 
 	  $added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
 
-	  print("<p class=sub><table border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>".
+	  print("<div class='sub'><table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>".
 	  "$added&nbsp;---&nbsp;<b>Torrent:&nbsp;</b>".
-	  ($torrent?("<a href=details.php?id=$torrentid&tocomm=1>$torrent</a>"):" [Deleted] ").
-	  "&nbsp;---&nbsp;<b>Comment:&nbsp;</b>#<a href=details.php?id=$torrentid&tocomm=1$page_url>$commentid</a>
-	  </td></tr></table></p>\n");
+	  ($torrent?("<a href='details.php?id=$torrentid&amp;tocomm=1'>$torrent</a>"):" [Deleted] ").
+	  "&nbsp;---&nbsp;<b>Comment:&nbsp;</b>#<a href='details.php?id=$torrentid&amp;tocomm=1$page_url'>$commentid</a>
+	  </td></tr></table></div>\n");
 
 	  begin_table(true);
 
 	  $body = format_comment($arr["text"]);
 
-	  print("<tr valign=top><td class=comment>$body</td></tr>\n");
+	  print("<tr valign='top'><td class='comment'>$body</td></tr>\n");
 
 	  end_table();
 	}

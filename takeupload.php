@@ -14,7 +14,7 @@ dbconn();
 
 loggedinorreturn();
 
-if (get_user_class() < UC_UPLOADER)
+if ($CURUSER['class'] < UC_UPLOADER)
   die;
 
 foreach(explode(":","descr:type:name") as $v) {

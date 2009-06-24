@@ -22,7 +22,7 @@ $row = mysql_fetch_assoc($res);
 if (!$row)
 	die();
 
-if ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)
+if ($CURUSER["id"] != $row["owner"] && $CURUSER['class'] < UC_MODERATOR)
 	bark("You're not the owner! How did that happen?\n");
 
 $updateset = array();
@@ -48,11 +48,12 @@ else
     $updateset[] = "nfo = ''";
 
 $updateset[] = "name = " . sqlesc($name);
-$updateset[] = "search_text = " . sqlesc(searchfield("$shortfname $dname $torrent"));
+$updateset[] = "search_text = " . sqlesc(searchfield("$shortfname $dname $name"));
 $updateset[] = "descr = " . sqlesc($descr);
 $updateset[] = "ori_descr = " . sqlesc($descr);
 $updateset[] = "category = " . (0 + $type);
-if ($CURUSER["admin"] == "yes") {
+//if ($CURUSER["admin"] == "yes") {
+if ($CURUSER['class'] > UC_MODERATOR) {
 	if ($_POST["banned"]) {
 		$updateset[] = "banned = 'yes'";
 		$_POST["visible"] = 0;

@@ -19,7 +19,7 @@ if (!$count) {
 ?>
 <h1>No torrents</h1>
 <p>You haven't uploaded any torrents yet, so there's nothing in this page.</p>
-<?
+<?php
 }
 else {
 	$pager = pager(20, $count, "mytorrents.php?");

@@ -13,7 +13,7 @@ require_once "include/user_functions.php";
   if ($down > 0)
     {
       $ratio = number_format($up / $down, 3);
-      return "<font color=" . get_ratio_color($ratio) . ">$ratio</font>";
+      return "<font color='" . get_ratio_color($ratio) . "'>$ratio</font>";
     }
     else
     {
@@ -27,7 +27,7 @@ require_once "include/user_functions.php";
   $n_pms = isset($_POST["n_pms"]) ? $_POST["n_pms"] : false;
   if ($n_pms)
   {  			                                                      //////  MM  ///
-    if (get_user_class() < UC_MODERATOR)
+    if ($CURUSER['class'] < UC_MODERATOR)
 	  stderr("Error", "Permission denied");
 
     $msg = trim($_POST["msg"]);
@@ -106,7 +106,7 @@ require_once "include/user_functions.php";
 	    stderr("Error", "No user with ID.");
 
 	  //Make sure recipient wants this message
-		if (get_user_class() < UC_MODERATOR)
+		if ($CURUSER['class'] < UC_MODERATOR)
 		{
     	if ($user["acceptpms"] == "yes")
 	    {
@@ -179,6 +179,7 @@ EOD;
 	 
 	} 
 	stdhead();
+	$l = (isset($l)?$l:'');
 	  stdmsg("Succeeded", (($n_pms > 1) ? "$n messages out of $n_pms were" : "Message was").
 	    " successfully sent!" . ($l ? " $l profile comment" . (($l>1) ? "s were" : " was") . " updated!" : ""));
 	stdfoot();

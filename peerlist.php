@@ -23,19 +23,19 @@ function dltable($name, $arr, $torrent)
 	if (!count($arr))
 		return $s = "<div align='left'><b>No $name data available</b></div>\n";
 	$s = "\n";
-	$s .= "<table width=100% class=main border=1 cellspacing=0 cellpadding=5>\n";
-	$s .= "<tr><td colspan=11 class=colhead>" . count($arr) . " $name</td></tr>" .
-			"<tr><td class=colhead>User/IP</td>" .
-          "<td class=colhead align=center>Connectable</td>".
-          "<td class=colhead align=right>Uploaded</td>".
-          "<td class=colhead align=right>Rate</td>".
-          "<td class=colhead align=right>Downloaded</td>" .
-          "<td class=colhead align=right>Rate</td>" .
-          "<td class=colhead align=right>Ratio</td>" .
-          "<td class=colhead align=right>Complete</td>" .
-          "<td class=colhead align=right>Connected</td>" .
-          "<td class=colhead align=right>Idle</td>" .
-          "<td class=colhead align=left>Client</td></tr>\n";
+	$s .= "<table width='100%' class='main' border='1' cellspacing='0' cellpadding='5'>\n";
+	$s .= "<tr><td colspan='11' class='colhead'>" . count($arr) . " $name</td></tr>" .
+			"<tr><td class='colhead'>User/IP</td>" .
+          "<td class='colhead' align='center'>Connectable</td>".
+          "<td class='colhead' align='right'>Uploaded</td>".
+          "<td class='colhead' align='right'>Rate</td>".
+          "<td class='colhead' align='right'>Downloaded</td>" .
+          "<td class='colhead' align='right'>Rate</td>" .
+          "<td class='colhead' align='right'>Ratio</td>" .
+          "<td class='colhead' align='right'>Complete</td>" .
+          "<td class='colhead' align='right'>Connected</td>" .
+          "<td class='colhead' align='right'>Idle</td>" .
+          "<td class='colhead' align='left'>Client</td></tr>\n";
 	$now = time();
 	//$moderator = (isset($CURUSER) && get_user_class() >= UC_MODERATOR);
 //$mod = get_user_class() >= UC_MODERATOR;
@@ -49,33 +49,33 @@ function dltable($name, $arr, $torrent)
 				if ($e["privacy"] == "strong") continue;
 		$s .= "<tr>\n";
                 if ($e["username"])
-                  $s .= "<td><a href=userdetails.php?id=$e[userid]><b>$e[username]</b></a></td>\n";
+                  $s .= "<td><a href='userdetails.php?id=$e[userid]'><b>$e[username]</b></a></td>\n";
                 else
                   $s .= "<td>" . ($mod ? $e["ip"] : preg_replace('/\.\d+$/', ".xxx", $e["ip"])) . "</td>\n";
 		$secs = max(1, ($now - $e["st"]) - ($now - $e["la"]));
 		//$revived = $e["revived"] == "yes";
-        $s .= "<td align=center>" . ($e['connectable'] == "yes" ? "Yes" : "<font color=red>No</font>") . "</td>\n";
-		$s .= "<td align=right>" . mksize($e["uploaded"]) . "</td>\n";
-		$s .= "<td align=right><nobr>" . mksize(($e["uploaded"] - $e["uploadoffset"]) / $secs) . "/s</nobr></td>\n";
-		$s .= "<td align=right>" . mksize($e["downloaded"]) . "</td>\n";
+        $s .= "<td align='center'>" . ($e['connectable'] == "yes" ? "Yes" : "<font color='red'>No</font>") . "</td>\n";
+		$s .= "<td align='right'>" . mksize($e["uploaded"]) . "</td>\n";
+		$s .= "<td align='right'><span style=\"white-space: nowrap;\">" . mksize(($e["uploaded"] - $e["uploadoffset"]) / $secs) . "/s</span></td>\n";
+		$s .= "<td align='right'>" . mksize($e["downloaded"]) . "</td>\n";
 		if ($e["seeder"] == "no")
-			$s .= "<td align=right><nobr>" . mksize(($e["downloaded"] - $e["downloadoffset"]) / $secs) . "/s</nobr></td>\n";
+			$s .= "<td align='right'><span style=\"white-space: nowrap;\">" . mksize(($e["downloaded"] - $e["downloadoffset"]) / $secs) . "/s</span></td>\n";
 		else
-			$s .= "<td align=right><nobr>" . mksize(($e["downloaded"] - $e["downloadoffset"]) / max(1, $e["finishedat"] - $e['st'])) .	"/s</nobr></td>\n";
+			$s .= "<td align='right'><span style=\"white-space: nowrap;\">" . mksize(($e["downloaded"] - $e["downloadoffset"]) / max(1, $e["finishedat"] - $e['st'])) .	"/s</span></td>\n";
                 if ($e["downloaded"])
 				{
                   $ratio = floor(($e["uploaded"] / $e["downloaded"]) * 1000) / 1000;
-                    $s .= "<td align=\"right\"><font color=" . get_ratio_color($ratio) . ">" . number_format($ratio, 3) . "</font></td>\n";
+                    $s .= "<td align=\"right\"><font color='" . get_ratio_color($ratio) . "'>" . number_format($ratio, 3) . "</font></td>\n";
 				}
 	               else
                   if ($e["uploaded"])
-                    $s .= "<td align=right>Inf.</td>\n";
+                    $s .= "<td align='right'>Inf.</td>\n";
                   else
-                    $s .= "<td align=right>---</td>\n";
-		$s .= "<td align=right>" . sprintf("%.2f%%", 100 * (1 - ($e["to_go"] / $torrent["size"]))) . "</td>\n";
-		$s .= "<td align=right>" . mkprettytime($now - $e["st"]) . "</td>\n";
-		$s .= "<td align=right>" . mkprettytime($now - $e["la"]) . "</td>\n";
-		$s .= "<td align=left>" . htmlspecialchars(getagent($e["agent"], $e['peer_id'])) . "</td>\n";
+                    $s .= "<td align='right'>---</td>\n";
+		$s .= "<td align='right'>" . sprintf("%.2f%%", 100 * (1 - ($e["to_go"] / $torrent["size"]))) . "</td>\n";
+		$s .= "<td align='right'>" . mkprettytime($now - $e["st"]) . "</td>\n";
+		$s .= "<td align='right'>" . mkprettytime($now - $e["la"]) . "</td>\n";
+		$s .= "<td align='left'>" . htmlspecialchars(getagent($e["agent"], $e['peer_id'])) . "</td>\n";
 		$s .= "</tr>\n";
 	}
 	$s .= "</table>\n";
@@ -135,8 +135,8 @@ WHERE p.torrent = $id") or sqlerr();
 stdhead('Details');
 
 	print "<h1>Peerlist for <a href='$BASEURL/details.php?id=$id'>".htmlentities($row['name'])."</a></h1>";
-	print dltable("Seeder(s)<a name=seeders>", $seeders, $row);
-	print '<br />' . dltable("Leecher(s)<a name=leechers>", $downloaders, $row);
+	print dltable("Seeder(s)<a name='seeders'></a>", $seeders, $row);
+	print '<br />' . dltable("Leecher(s)<a name='leechers'></a>", $downloaders, $row);
 	
 stdfoot();
 ?>

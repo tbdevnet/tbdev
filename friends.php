@@ -64,7 +64,7 @@ if ($action == 'delete')
 
   if (!$sure)
     stderr("Delete $type","Do you really want to delete a $type? Click\n" .
-    	"<a href=?id=$userid&action=delete&type=$type&targetid=$targetid&sure=1>here</a> if you are sure.");
+    	"<a href='?id=$userid&amp;action=delete&amp;type=$type&amp;targetid=$targetid&amp;sure=1'>here</a> if you are sure.");
 
   if ($type == 'friend')
   {
@@ -92,22 +92,22 @@ if ($action == 'delete')
 $res = mysql_query("SELECT * FROM users WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
 $user = mysql_fetch_assoc($res) or stderr("Error", "No user with ID.");
 
-$donor = ($user["donor"] == "yes") ? "<img src={$pic_base_url}starbig.gif alt='Donor' style='margin-left: 4pt'>" : '';
-$warned = ($user["warned"] == "yes") ? "<img src={$pic_base_url}warnedbig.gif alt='Warned' style='margin-left: 4pt'>" : '';
+$donor = ($user["donor"] == "yes") ? "<img src='{$pic_base_url}starbig.gif' alt='Donor' style='margin-left: 4pt' />" : '';
+$warned = ($user["warned"] == "yes") ? "<img src='{$pic_base_url}warnedbig.gif' alt='Warned' style='margin-left: 4pt' />" : '';
 
 
 stdhead("Personal lists for " . htmlentities($user['username'], ENT_QUOTES));
 
 
-print("<p><table class=main border=0 cellspacing=0 cellpadding=0>".
-"<tr><td class=embedded><h1 style='margin:0px'> Personal lists for ".htmlentities($user['username'], ENT_QUOTES)."</h1>$donor$warned</td></tr></table></p>\n");
+print("<p></p><table class='main' border='0' cellspacing='0' cellpadding='0'>".
+"<tr><td class='embedded'><h1 style='margin:0px'> Personal lists for ".htmlentities($user['username'], ENT_QUOTES)."</h1>$donor$warned</td></tr></table><p></p>\n");
 
-print("<table class=main width=750 border=0 cellspacing=0 cellpadding=0><tr><td class=embedded>");
+print("<table class='main' width='750' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>");
 
-print("<br>");
-print("<h2 align=left><a name=\"friends\">Friends list</a></h2>\n");
+print("<br />");
+print("<h2 align='left'><a name=\"friends\">Friends list</a></h2>\n");
 
-print("<table width=750 border=1 cellspacing=0 cellpadding=5><tr><td>");
+print("<table width='750' border='1' cellspacing='0' cellpadding='5'><tr><td>");
 
 $i = 0;
 
@@ -120,26 +120,26 @@ else
     $title = $friend["title"];
 		if (!$title)
 	    $title = get_user_class_name($friend["class"]);
-    $body1 = "<a href=userdetails.php?id=" . $friend['id'] . "><b>" . $friend['name'] . "</b></a>" .
-    	get_user_icons($friend) . " ($title)<br><br>last seen on " . $friend['last_access'] .
-    	"<br>(" . get_elapsed_time(sql_timestamp_to_unix_timestamp($friend['last_access'])) . " ago)";
-		$body2 = "<br><a href=friends.php?id=$userid&action=delete&type=friend&targetid=" . $friend['id'] . ">Remove</a>" .
-			"<br><br><a href=sendmessage.php?receiver=" . $friend['id'] . ">Send PM</a>";
+    $body1 = "<a href='userdetails.php?id=" . $friend['id'] . "'><b>" . $friend['name'] . "</b></a>" .
+    	get_user_icons($friend) . " ($title)<br /><br />last seen on " . $friend['last_access'] .
+    	"<br />(" . get_elapsed_time(sql_timestamp_to_unix_timestamp($friend['last_access'])) . " ago)";
+		$body2 = "<br /><a href='friends.php?id=$userid&amp;action=delete&amp;type=friend&amp;targetid=" . $friend['id'] . "'>Remove</a>" .
+			"<br /><br /><a href='sendmessage.php?receiver=" . $friend['id'] . "'>Send PM</a>";
     $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($friend["avatar"]) : "");
 		if (!$avatar)
 			$avatar = "{$pic_base_url}default_avatar.gif";
     if ($i % 2 == 0)
-    	print("<table width=100% style='padding: 0px'><tr><td class=bottom style='padding: 5px' width=50% align=center>");
+    	print("<table width='100%' style='padding: 0px'><tr><td class='bottom' style='padding: 5px' width='50%' align='center'>");
     else
-    	print("<td class=bottom style='padding: 5px' width=50% align=center>");
-    print("<table class=main width=100% height=75px>");
-    print("<tr valign=top><td width=75 align=center style='padding: 0px'>" .
-			($avatar ? "<div style='width:75px;height:75px;overflow: hidden'><img width=75px src=\"$avatar\"></div>" : ""). "</td><td>\n");
-    print("<table class=main>");
-    print("<tr><td class=embedded style='padding: 5px' width=80%>$body1</td>\n");
-    print("<td class=embedded style='padding: 5px' width=20%>$body2</td></tr>\n");
-    print("</table>");
-		print("</td></tr>");
+    	print("<td class='bottom' style='padding: 5px' width='50%' align='center'>");
+    print("<table class='main' width='100%'>");
+    print("<tr valign='top'><td width='75' align='center' style='padding: 0px'>" .
+			($avatar ? "<div style='width:75px;height:75px;overflow: hidden'><img width='75px' src=\"$avatar\" alt='' /></div>" : ""). "</td><td>\n");
+    print("<table class='main'>");
+    print("<tr><td class='embedded' style='padding: 5px' width='80%'>$body1</td>\n");
+    print("<td class='embedded' style='padding: 5px' width='20%'>$body2</td></tr>\n");
+    print("</td></tr></table>");
+		print("</td></tr></table>");
 		print("</td></tr></table>\n");
     if ($i % 2 == 1)
 			print("</td></tr></table>\n");
@@ -148,7 +148,7 @@ else
 		$i++;
 	}
 if ($i % 2 == 1)
-	print("<td class=bottom width=50%>&nbsp;</td></tr></table>\n");
+	print("<td class='bottom' width='50%'>&nbsp;</td></tr></table>\n");
 //print($friends);
 print("</td></tr></table>\n");
 
@@ -158,13 +158,13 @@ if(mysql_num_rows($res) == 0)
 else
 {
 	$i = 0;
-	$blocks = "<table width=100% cellspacing=0 cellpadding=0>";
+	$blocks = "<table width='100%' cellspacing='0' cellpadding='0'>";
 	while ($block = mysql_fetch_assoc($res))
 	{
 		if ($i % 6 == 0)
 			$blocks .= "<tr>";
-    	$blocks .= "<td style='border: none; padding: 4px; spacing: 0px;'>[<font class=small><a href=friends.php?id=$userid&action=delete&type=block&targetid=" .
-				$block['id'] . ">D</a></font>] <a href=userdetails.php?id=" . $block['id'] . "><b>" . $block['name'] . "</b></a>" .
+    	$blocks .= "<td style='border: none; padding: 4px; spacing: 0px;'>[<font class='small'><a href='friends.php?id=$userid&amp;action=delete&amp;type=block&amp;targetid=" .
+				$block['id'] . "'>D</a></font>] <a href='userdetails.php?id=" . $block['id'] . "'><b>" . $block['name'] . "</b></a>" .
 				get_user_icons($block) . "</td>";
 		if ($i % 6 == 5)
 			$blocks .= "</tr>";
@@ -172,13 +172,13 @@ else
 	}
 	print("</table>\n");
 }
-print("<br><br>");
-print("<table class=main width=750 border=0 cellspacing=0 cellpadding=10><tr><td class=embedded>");
-print("<h2 align=left><a name=\"blocks\">Blocked users list</a></h2></td></tr>");
+print("<br /><br />");
+print("<table class='main' width='750' border='0' cellspacing='0' cellpadding='10'><tr><td class='embedded'>");
+print("<h2 align='left'><a name=\"blocks\">Blocked users list</a></h2></td></tr>");
 print("<tr><td style='padding: 10px;background-color: #ECE9D8'>");
 print("$blocks\n");
 print("</td></tr></table>\n");
 print("</td></tr></table>\n");
-print("<p><a href=users.php><b>Find User/Browse User List</b></a></p>");
+print("<p><a href='users.php'><b>Find User/Browse User List</b></a></p>");
 stdfoot();
 ?>

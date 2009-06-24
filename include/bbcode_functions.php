@@ -212,7 +212,7 @@ function _strlastpos ($haystack, $needle, $offset = 0)
     print("<tr><td class='colhead'>Type...</td><td class='colhead'>To make a...</td></tr>\n");
 
     while (list($code, $url) = each($smilies))
-      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\" alt='' /></td>\n");
+      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\" alt='' /></td></tr>\n");
 
     end_table();
 
@@ -263,12 +263,12 @@ function format_quotes($s)
 	  //[quote]Text[/quote]
 	  $quote = preg_replace(
 	    "/\[quote\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-	    "<p class='sub'><b>Quote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br>", $quote);
+	    "<p class='sub'><b>Quote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br />", $quote);
 
 	  //[quote=Author]Text[/quote]
 	  $quote = preg_replace(
 	    "/\[quote=(.+?)\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-	    "<p class='sub'><b>\\1 wrote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br>", $quote);
+	    "<p class='sub'><b>\\1 wrote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br />", $quote);
 
 	  $s = substr($s,0,$open) . $quote . substr($s,$close + 8);
   }
@@ -347,12 +347,12 @@ function format_comment($text, $strip_html = true)
 //  //[quote]Text[/quote]
 //  $s = preg_replace(
 //    "/\[quote\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-//    "<p class=sub><b>Quote:</b></p><table class=main border=1 cellspacing=0 cellpadding=10><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br>", $s);
+//    "<p class=sub><b>Quote:</b></p><table class=main border=1 cellspacing=0 cellpadding=10><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br />", $s);
 
 //  //[quote=Author]Text[/quote]
 //  $s = preg_replace(
 //    "/\[quote=(.+?)\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-//    "<p class=sub><b>\\1 wrote:</b></p><table class=main border=1 cellspacing=0 cellpadding=10><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br>", $s);
+//    "<p class=sub><b>\\1 wrote:</b></p><table class=main border=1 cellspacing=0 cellpadding=10><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br />", $s);
 
 	// Quotes
 	$s = format_quotes($s);

@@ -11,14 +11,14 @@ loggedinorreturn();
 function insert_tag($name, $description, $syntax, $example, $remarks)
 {
 	$result = format_comment($example);
-	print("<p class=sub><b>$name</b></p>\n");
-	print("<table class=main width=100% border=1 cellspacing=0 cellpadding=5>\n");
-	print("<tr valign=top><td width=25%>Description:</td><td>$description\n");
-	print("<tr valign=top><td>Syntax:</td><td><tt>$syntax</tt>\n");
-	print("<tr valign=top><td>Example:</td><td><tt>$example</tt>\n");
-	print("<tr valign=top><td>Result:</td><td>$result\n");
+	print("<div class='sub'><b>$name</b></div>\n");
+	print("<table class='main' width='100%' border='1' cellspacing='0' cellpadding='5'>\n");
+	print("<tr valign='top'><td width='25%'>Description:</td><td>$description</td></tr>\n");
+	print("<tr valign='top'><td>Syntax:</td><td><tt>$syntax</tt></td></tr>\n");
+	print("<tr valign='top'><td>Example:</td><td><tt>$example</tt></td></tr>\n");
+	print("<tr valign='top'><td>Result:</td><td>$result</td></tr>\n");
 	if ($remarks != "")
-		print("<tr><td>Remarks:</td><td>$remarks\n");
+		print("<tr><td>Remarks:</td><td>$remarks</td></tr>\n");
 	print("</table>\n");
 }
 
@@ -27,13 +27,13 @@ begin_main_frame();
 begin_frame("Tags");
 $test = isset($_POST["test"]) ? $_POST["test"] : '';
 ?>
-<p>The <?=$SITENAME?> forums supports a number of <i>BB tags</i> which you can embed to modify how your posts are displayed.</p>
+<p>The <?php echo $SITENAME?> forums supports a number of <i>BB tags</i> which you can embed to modify how your posts are displayed.</p>
 
-<form method=post action=?>
-<textarea name=test cols=60 rows=3><? print($test ? htmlspecialchars($test) : "")?></textarea>
-<input type=submit value="Test this code!" style='height: 23px; margin-left: 5px'>
+<form method='post' action='?'>
+<textarea name='test' cols='60' rows='3'><?php print($test ? htmlspecialchars($test) : "")?></textarea>
+<input type='submit' value="Test this code!" style='height: 23px; margin-left: 5px' />
 </form>
-<?
+<?php
 
 if ($test != "")
   print("<p><hr>" . format_comment($test) . "<hr></p>\n");

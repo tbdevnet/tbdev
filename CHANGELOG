@@ -1,3 +1,5 @@
+2009-06-24 - pdq - All files (minus forums.php and friends.php) successfully checked as XHTML 1.0 Transitional!
+
 2004-05-26 - wyz - Security fix in userdetails.php. Avatar field was not being escaped, html injection was possible (confirmed).
 
 2004-05-26 - rb - userdetails: added seeder/leecher count and did some optimizations.
