@@ -110,8 +110,8 @@ if (mysql_num_rows($res) > 0)
 	  print("<li>" . gmdate("Y-m-d",strtotime($array['added'])) . "<br />" . format_comment($array['body']));
     if (get_user_class() >= UC_ADMINISTRATOR)
     {
-    	print(" <br /><font size=\"-2\">[<a class='altlink' href='news.php?action=edit&amp;]newsid=" . $array['id'] . "&amp;returnto=" . urlencode($_SERVER['PHP_SELF']) . "'><b>E</b></a>]</font>");
-    	print(" <font size=\"-2\">[<a class='altlink' href='news.php?action=delete&amp;newsid=" . $array['id'] . "&amp;returnto=" . urlencode($_SERVER['PHP_SELF']) . "'><b>D</b></a>]</font>");
+    	print(" <br /><font size=\"-2\">[<a class='altlink' href='news.php?action=edit&amp;]newsid=" . $array['id'] . "&amp;returnto=index.php'><b>E</b></a>]</font>");
+    	print(" <font size=\"-2\">[<a class='altlink' href='news.php?action=delete&amp;newsid=" . $array['id'] . "&amp;returnto=index.php'><b>D</b></a>]</font>");
     }
     print("</li>");
   }
@@ -124,6 +124,8 @@ if (mysql_num_rows($res) > 0)
 <?php echo $activeusers?>
 </td></tr></table>
 */
+
+if($CURUSER) {
 
 // Get current poll
 $res = mysql_query("SELECT p.*, pa.id AS pa_id, pa.selection FROM polls AS p ".
@@ -204,7 +206,7 @@ return 0;
 
 // now os is an array like this: array(array(123, "Option 1"), array(45, "Option 2"))
 if($uservote!=-1)
-$os[$uservote]['casted'] = true;
+$os[$uservote]['casted'] = true
 
 if ($arr["sort"] == "yes")
 usort($os, "srt");
@@ -219,7 +221,7 @@ if (isset($a['casted']))
 $a[1] .= "&nbsp;*";
 $p = ($tvotes == 0 ? 0 : round($a[0] / $tvotes * 100));
 $c = ($i % 2 ? '' : ' bgcolor="#ECE9D8"');
-print("<tr><td width='1%' class='embedded' style=\"white-space: nowrap;\"$c>" . $a[1] . "&nbsp;&nbsp;</td><td width='99%' class='embedded'$c>" .
+print("<tr><td width='1%' class='embednowrap$c'>" . $a[1] . "&nbsp;&nbsp;</td><td width='99%' class='embedded$c'>" .
 "<img src=\"{$pic_base_url}bar_left.gif\" alt='' /><img src=\"{$pic_base_url}bar.gif\" alt=\"\" height=\"9\" width=\"" . ($p * 3) .
 "\" /><img src=\"{$pic_base_url}bar_right.gif\" alt=\"\" /> $p%</td></tr>\n");
 ++$i;
@@ -261,6 +263,8 @@ echo "<p align='center'><a href='polls.php'>Previous polls</a></p>";
 </table>
 <p><br /></p>
 <?php
+}
+
 }
 ?>
 

@@ -63,9 +63,12 @@ if ($action == "add")
 	  $allrows[] = $row;
 
 	if (count($allrows)) {
-	  print("<h2>Most recent comments, in reverse order</h2>\n");
-	  commenttable($allrows);
-	}
+          require_once "include/torrenttable_functions.php";
+          require_once "include/html_functions.php";
+          require_once "include/bbcode_functions.php";
+      print("<h2>Most recent comments, in reverse order</h2>\n");
+      commenttable($allrows);
+    }
 
   stdfoot();
 	die;

@@ -173,16 +173,10 @@ else
 	stdhead();
 
 ?>
-<!-- <style type="text/css">
-.tag_cloud
-    {padding: 3px; text-decoration: none;
-    font-family: verdana;     }
-.tag_cloud:link  { color: #0099FF; text-decoration:none;}
-.tag_cloud:visited { color: #00CCFF; }
-.tag_cloud:hover { color: #0000FF; background: #00CCFF; }
-.tag_cloud:active { color: #0000FF; background: #FFFFFF; }
-</style> --> <!-- moved to css -->
+
+
 <div id="wrapper" style="width:90%;border:1px solid black;background-color:pink;">
+
 <?php
 //print out the tag cloud
 require_once "include/searchcloud_functions.php";

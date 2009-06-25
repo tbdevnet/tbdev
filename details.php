@@ -61,7 +61,7 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 
 
 
-		stdhead("Details for torrent \"" . $row["name"] . "\"");
+		stdhead("Details for torrent \"" . htmlentities($row["name"], ENT_QUOTES) . "\"");
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 			$owned = 1;
@@ -79,13 +79,13 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 			if (isset($_GET["returnto"]))
 				print("<p><b>Go back to <a href=\"" . htmlspecialchars($_GET["returnto"]) . "\">whence you came</a>.</b></p>\n");
 		}
-		elseif (isset($_GET["searched"])) {
+		/* elseif (isset($_GET["searched"])) {
 			print("<h2>Your search for \"" . htmlspecialchars($_GET["searched"]) . "\" gave a single result:</h2>\n");
-		}
+		} */
 		elseif (isset($_GET["rated"]))
 			print("<h2>Rating added!</h2>\n");
 
-$s=$row["name"];
+    $s = htmlentities( $row["name"], ENT_QUOTES );
 		print("<h1>$s</h1>\n");
                 print("<table width='750' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
 
@@ -163,9 +163,11 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 					1 => "Sucks!",
 	//   	);
 			if (!$owned || $moderator) {
-				$xres = mysql_query("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . $CURUSER["id"]);
-				$xrow = mysql_fetch_assoc($xres);
-				if ($xrow)
+				if (!empty($row['numratings'])){
+$xres = mysql_query("SELECT rating, added FROM ratings WHERE torrent = $id AND user = " . $CURUSER["id"]);
+$xrow = mysql_fetch_assoc($xres);
+}
+if (!empty($xrow))
 					$s .= "(you rated this torrent as \"" . $xrow["rating"] . " - " . $ratings[$xrow["rating"]] . "\")";
 				else {
 					$s .= "<form method=\"post\" action=\"takerate.php\"><input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
@@ -210,7 +212,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		print "</table>";
 
 		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
-		print("<h1>Comments for <a href='details.php?id=$id'>" . $row["name"] . "</a></h1>\n");
+		print("<h1>Comments for <a href='details.php?id=$id'>" . htmlentities( $row["name"], ENT_QUOTES ) . "</a></h1>\n");
 
 
 	print("<p><a name=\"startcomments\"></a></p>\n");
