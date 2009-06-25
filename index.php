@@ -206,7 +206,7 @@ return 0;
 
 // now os is an array like this: array(array(123, "Option 1"), array(45, "Option 2"))
 if($uservote!=-1)
-$os[$uservote]['casted'] = true
+$os[$uservote]['casted'] = true;
 
 if ($arr["sort"] == "yes")
 usort($os, "srt");
