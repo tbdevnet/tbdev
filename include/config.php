@@ -83,6 +83,6 @@ define ('UC_SYSOP', 6);
 
 //Do not modify -- versioning system
 //This will help identify code for support issues at tbdev.net
-define ('TBVERSION','TBDEV.NET-01-01-08-alpha');
+define ('TBVERSION','TBDev_ALPHA_1_16.06.09');
 
 ?>
