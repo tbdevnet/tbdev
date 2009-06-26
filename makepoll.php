@@ -105,11 +105,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   	")") or sqlerr(__FILE__, __LINE__);
 
   if ($returnto == "main")
-		header("Location: $BASEURL");
+		header("Location: $BASEURL/index,php");
   elseif ($pollid)
 		header("Location: $BASEURL/polls.php#$pollid");
 	else
-		header("Location: $BASEURL");
+		header("Location: $BASEURL/index.php");
 	die;
 }
 
@@ -171,7 +171,7 @@ else
 <p><font color='red'>*</font> required</p>
 <input type='hidden' name='pollid' value='<?php echo isset($poll["id"]) ? $poll['id'] : 0?>' />
 <input type='hidden' name='action' value='<?php echo $pollid?'edit':'create'?>' />
-<input type='hidden' name='returnto' value='<?php echo $_GET["returnto"]?>' />
+<input type='hidden' name='returnto' value='main' />
 </form>
 
 <?php stdfoot(); ?>

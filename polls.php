@@ -18,15 +18,15 @@ $returnto = isset($_GET["returnto"]) ?$_GET["returnto"] : '';
   	if (!is_valid_id($pollid))
 			stderr("Error", "Invalid ID.");
 
-   	$sure = $_GET["sure"];
+   	$sure = isset($_GET["sure"]) ? (int)$_GET["sure"] : 0;
    	if (!$sure)
     	stderr("Delete poll","Do you really want to delete a poll? Click\n" .
-    		"<a href='?action=delete&amp;pollid=$pollid&amp;returnto=$returnto&amp;sure=1'>here</a> if you are sure.");
+    		"<a href='?action=delete&amp;pollid=$pollid&amp;returnto=main&amp;sure=1'>here</a> if you are sure.");
 
 		mysql_query("DELETE FROM pollanswers WHERE pollid = $pollid") or sqlerr();
 		mysql_query("DELETE FROM polls WHERE id = $pollid") or sqlerr();
 		if ($returnto == "main")
-			header("Location: $BASEURL");
+			header("Location: $BASEURL/index.php");
 		else
 			header("Location: $BASEURL/polls.php?deleted=1");
 		die;

@@ -23,15 +23,15 @@ if ($action == 'delete')
 
   $returnto = htmlentities($_GET["returnto"]);
 
-  $sure = isset($_GET["sure"]) ? $_GET['sure'] : 0;
+  $sure = isset($_GET["sure"]) ? (int)$_GET['sure'] : 0;
   if (!$sure)
     stderr("Delete news item","Do you really want to delete a news item? Click\n" .
-    	"<a href='?action=delete&amp;newsid=$newsid&amp;returnto=$returnto&amp;sure=1'>here</a> if you are sure.");
+    	"<a href='?action=delete&amp;newsid=$newsid&amp;returnto=news&amp;sure=1'>here</a> if you are sure.");
 
   mysql_query("DELETE FROM news WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
 	if ($returnto != "")
-		header("Location: $returnto");
+		header("Location: $BASEURL/news.php");
 	else
 		$warning = "News item was deleted successfully.";
 }
@@ -90,18 +90,18 @@ if ($action == 'edit')
     $returnto = htmlentities($_POST['returnto']);
 
 		if ($returnto != "")
-			header("Location: $returnto");
+			header("Location: $BASEURL/news.php");
 		else
 			$warning = "News item was edited successfully.";
   }
   else
   {
- 	 	$returnto = isset($_GET['returnto']) ? htmlentities($_GET['returnto']) : $BASEURL.'/news.php';
+ 	 	//$returnto = isset($_GET['returnto']) ? htmlentities($_GET['returnto']) : $BASEURL.'/news.php';
 	  stdhead();
 	  print("<h1>Edit News Item</h1>\n");
-	  print("<form method='post' action='?action=edit&amp;newsid=$newsid'>\n");
+	  print("<form method='post' action='news.php?action=edit&amp;newsid=$newsid'>\n");
 	  print("<table border='1' cellspacing='0' cellpadding='5'>\n");
-	  print("<tr><td><input type='hidden' name='returnto' value='$returnto' /></td></tr>\n");
+	  //print("<tr><td><input type='hidden' name='returnto' value='$returnto' /></td></tr>\n");
 	  print("<tr><td style='padding: 0px'><textarea name='body' cols='145' rows='5' style='border: 0px'>" . htmlspecialchars($arr["body"]) . "</textarea></td></tr>\n");
 	  print("<tr><td align='center'><input type='submit' value='Okay' class='btn' /></td></tr>\n");
 	  print("</table>\n");
