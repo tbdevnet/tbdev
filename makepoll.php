@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   	")") or sqlerr(__FILE__, __LINE__);
 
   if ($returnto == "main")
-		header("Location: $BASEURL/index,php");
+		header("Location: $BASEURL/index.php");
   elseif ($pollid)
 		header("Location: $BASEURL/polls.php#$pollid");
 	else
