@@ -37,7 +37,7 @@ print(count($mods));
 function DoStaff($staff, $staffclass, $cols = 2) {
 	global $pic_base_url;
 	
-	$dt = time() - 180;
+	$dt = gmtime() - 180;
 	
 	if($staff===false) {
 		print("<br /><table width='75%' border='1' cellpadding='3'>");
