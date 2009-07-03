@@ -104,13 +104,14 @@ if (isset($cleansearchstr))
 	/////////////// SEARCH CLOUD MALARKY //////////////////////
 
     $searchcloud = sqlesc($cleansearchstr);
-    $r = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM searchcloud WHERE searchedfor = $searchcloud"), MYSQL_NUM);
-    $a = $r[0];
-    if ($a)
-        mysql_query("UPDATE searchcloud SET howmuch = howmuch + 1 WHERE searchedfor = $searchcloud");
-    else
-        mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)");
-	
+   // $r = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM searchcloud WHERE searchedfor = $searchcloud"), MYSQL_NUM);
+    //$a = $r[0];
+    //if ($a)
+       // mysql_query("UPDATE searchcloud SET howmuch = howmuch + 1 WHERE searchedfor = $searchcloud");
+    //else
+       // mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)");
+    mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)
+                ON DUPLICATE KEY UPDATE howmuch=howmuch+1");
 	/////////////// SEARCH CLOUD MALARKY END ///////////////////
 }
 

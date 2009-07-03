@@ -335,7 +335,8 @@ CREATE TABLE `searchcloud` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `searchedfor` varchar(50) NOT NULL,
   `howmuch` int(10) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `searchedfor` (`searchedfor`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
