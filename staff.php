@@ -87,6 +87,7 @@ for ($i = 0; $i <= count($staff)-1; $i++) {
 }
 
 print("<h1>Staff Page</h1>");
+
 DoStaff($sysops, "Sysops");
 isset($admins) ? DoStaff($admins, "Administrators") : DoStaff($admins=false, "Administrators");
 isset($mods) ? DoStaff($mods, "Moderators") : DoStaff($mods=false, "Moderators");
@@ -157,6 +158,14 @@ isset($mods) ? DoStaff($mods, "Moderators") : DoStaff($mods=false, "Moderators")
 			<span class="btn"><a href="newusers.php">Newest Users</a></span>
 			
 			<span class="btn"><a href="resetpassword.php">Reset Password </a></span>
+			
+			</td></tr>
+			<!-- row 5 -->
+			<tr><td>
+			
+			<span class="btn"><a href="reputation_ad.php">Rep System</a></span>
+			
+			<span class="btn"><a href="reputation_settings.php">Rep Settings</a></span>
 			
 		</td></tr></table>
 <?php }
