@@ -294,7 +294,8 @@ if (strlen($subject) <= 0)
 $subject = "No Subject";
 }
 
-if ($message['unread'] === 'yes'){
+//if ($message['unread'] === 'yes'){
+if ($message['unread'] === 'yes' && $message['receiver'] === $CURUSER['id']) {
 // Mark message unread
 mysql_query("UPDATE messages SET unread='no' WHERE id=" . sqlesc($pm_id) . " AND receiver=" . sqlesc($CURUSER['id']) . " LIMIT 1");
 }

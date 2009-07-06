@@ -335,8 +335,7 @@ CREATE TABLE `searchcloud` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `searchedfor` varchar(50) NOT NULL,
   `howmuch` int(10) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `searchedfor` (`searchedfor`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -473,6 +472,7 @@ CREATE TABLE `users` (
   `postsperpage` int(3) unsigned NOT NULL default '0',
   `deletepms` enum('yes','no') character set latin1 collate latin1_general_ci NOT NULL default 'yes',
   `savepms` enum('yes','no') character set latin1 collate latin1_general_ci NOT NULL default 'no',
+  `reputation` int(10) NOT NULL default '10',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `ip` (`ip`),

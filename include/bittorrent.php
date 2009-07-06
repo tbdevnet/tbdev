@@ -684,6 +684,12 @@ function StatusBar() {
 	}
 	
 	
+/////////////// REP SYSTEM /////////////
+//$CURUSER['reputation'] = 49;
+
+	$member_reputation = get_reputation($CURUSER, 1);
+////////////// REP SYSTEM END //////////
+
 	$StatusBar = '';
 		$StatusBar = "<tr>".
 
@@ -692,7 +698,7 @@ function StatusBar() {
 		"<div id='statusbar'>".
 		"<p class='home' style='color:black;'>Welcome back, <a href='userdetails.php?id=".$CURUSER['id']."'>".$CURUSER['username']."</a>".
 		  
-		"$IsDonor$warn&nbsp; [<a href='logout.php'>logout</a>]</p>".
+		"$IsDonor$warn&nbsp; [<a href='logout.php'>logout</a>]&nbsp;$member_reputation</p>".
     
 		"<p>".date(DATE_RFC822)."</p>";
 

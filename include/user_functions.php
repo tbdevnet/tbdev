@@ -1,5 +1,112 @@
 <?php
 
+
+/////////////// REP SYSTEM /////////////
+//$CURUSER['reputation'] = 650;
+
+function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
+	{
+	global $BASEURL;
+	
+	
+	
+	$member_reputation = "";
+	if( $rep_is_on )
+		{
+			@include 'cache/rep_cache.php';
+			// ok long winded file checking, but it's much better than file_exists
+			if( ! isset( $reputations ) || ! is_array( $reputations ) || count( $reputations ) < 1)
+			{
+				return '<span title="Cache doesn\'t exist or zero length">Reputation: Offline</span>';
+			}
+			
+			$user['g_rep_hide'] = isset( $user['g_rep_hide'] ) ? $user['g_rep_hide'] : 0;
+	
+			// Hmmm...bit of jiggery-pokery here, couldn't think of a better way.
+			$max_rep = max(array_keys($reputations));
+			if($user['reputation'] >= $max_rep)
+			{
+				$user_reputation = $reputations[$max_rep];
+			}
+			else
+			foreach($reputations as $y => $x) 
+			{
+				if( $y > $user['reputation'] ) { $user_reputation = $old; break; }
+				$old = $x;
+			}
+			
+			//$rep_is_on = TRUE;
+			//$CURUSER['g_rep_hide'] = FALSE;
+					
+			$rep_power = $user['reputation'];
+			$posneg = '';
+			if( $user['reputation'] == 0 )
+			{
+				$rep_img   = 'balance';
+				$rep_power = $user['reputation'] * -1;
+			}
+			elseif( $user['reputation'] < 0 )
+			{
+				$rep_img   = 'neg';
+				$rep_img_2 = 'highneg';
+				$rep_power = $user['reputation'] * -1;
+			}
+			else
+			{
+				$rep_img   = 'pos';
+				$rep_img_2 = 'highpos';
+			}
+
+			if( $rep_power > 500 )
+			{
+				// work out the bright green shiny bars, cos they cost 100 points, not the normal 100
+				$rep_power = ( $rep_power - ($rep_power - 500) ) + ( ($rep_power - 500) / 2 );
+			}
+
+			// shiny, shiny, shiny boots...
+			// ok, now we can work out the number of bars/pippy things
+			$rep_bar = intval($rep_power / 100);
+			if( $rep_bar > 10 )
+			{
+				$rep_bar = 10;
+			}
+
+			if( $user['g_rep_hide'] ) // can set this to a group option if required, via admin?
+			{
+				$posneg = 'off';
+				$rep_level = 'rep_off';
+			}
+			else
+			{ // it ain't off then, so get on with it! I wanna see shiny stuff!!
+				$rep_level = $user_reputation ? $user_reputation : 'rep_undefined';// just incase
+
+				for( $i = 0; $i <= $rep_bar; $i++ )
+				{
+					if( $i >= 5 )
+					{
+						$posneg .= "<img src='pic/rep/reputation_$rep_img_2.gif' border='0' alt=\"Reputation Power $rep_power\n{$user['username']} $rep_level\" title=\"Reputation Power $rep_power {$user['username']} $rep_level\" />";
+					}
+					else
+					{
+						$posneg .= "<img src='pic/rep/reputation_$rep_img.gif' border='0' alt=\"Reputation Power $rep_power\n{$user['username']} $rep_level\" title=\"Reputation Power $rep_power {$user['username']} $rep_level\" />";
+					}
+				}
+			}
+			
+			// now decide if we in a forum or statusbar?
+			if( $mode === 0 )
+			return "Rep: ".$posneg . "<br /><a href='javascript:;' onclick=\"PopUp('$BASEURL/reputation.php?pid={$user['id']}','Reputation',400,241,1,1);\"><img src='./pic/plus.gif' border='0' alt='Add reputation:: {$user['username']}' title='Add reputation:: {$user['username']}' /></a>";
+			else
+			return "Rep: ".$posneg;
+			
+		} // END IF ONLINE
+		
+		// default
+		return '<span title="Set offline by admin setting">Rep System Offline</span>';
+	}
+////////////// REP SYSTEM END //////////
+
+
 function get_user_icons($arr, $big = false)
 {
 	global $pic_base_url;
