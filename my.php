@@ -2,6 +2,7 @@
 
 require_once "include/bittorrent.php";
 require_once "include/html_functions.php";
+require_once "include/user_functions.php";
 
 dbconn(false);
 
@@ -29,7 +30,7 @@ elseif (isset($_GET["emailch"]))
 	print("<h1>Email address changed!</h1>\n");
 //else
 	//print("<h1>Welcome, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");
-$user_header = "<span style='font-size: 20px;'><a href='userdetails.php?id={$CURUSER['id']}'>{$CURUSER['username']}</a></span><br />";
+$user_header = "<span style='font-size: 20px;'><a href='userdetails.php?id={$CURUSER['id']}'>{$CURUSER['username']}</a></span>";
 if(!empty($CURUSER['avatar']) && $CURUSER['av_w'] > 5 && $CURUSER['av_h'] > 5)
 $avatar = "<img src='{$CURUSER['avatar']}' width='{$CURUSER['av_w']}' height='{$CURUSER['av_h']}' alt='' />";
 else
@@ -42,7 +43,13 @@ $avatar = "<img src='{$pic_base_url}forumicons/default_avatar.gif' alt='' />";
 <td align="center" width="33%"><a href='friends.php'><b>My users lists</b></a></td>
 </tr>-->
 <tr>
-<td valign="top"><?php echo $user_header?><?php echo $avatar?></td>
+  <td valign="top">
+  <?php echo $user_header?><br />
+  <?php echo $avatar?><br />
+  <a href='mytorrents.php'>View/Edit your Torrents</a><br />
+  <a href='friends.php'>View/Edit your Friends</a><br />
+  <a href='users.php'>Search Members</a>
+  </td>
 <td>
 <form method="post" action="takeprofedit.php">
 <table border="1" cellspacing='0' cellpadding="5" width="100%">

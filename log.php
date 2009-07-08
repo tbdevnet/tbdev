@@ -1,5 +1,6 @@
 <?php
-  require "include/bittorrent.php";
+  require_once "include/bittorrent.php";
+  require_once "include/user_functions.php";
   dbconn(false);
 
   loggedinorreturn();
@@ -20,7 +21,7 @@
     {
       $date = substr($arr['added'], 0, strpos($arr['added'], " "));
       $time = substr($arr['added'], strpos($arr['added'], " ") + 1);
-      print("<tr><td>$date</td><td>$time</td><td align='left'>".htmlspecialchars($arr['txt'])."</td></tr>\n");
+      print("<tr><td>$date</td><td>$time</td><td align='left'>".htmlentities($arr['txt'], ENT_QUOTES)."</td></tr>\n");
     }
     print("</table>");
   }

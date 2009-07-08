@@ -54,14 +54,14 @@ $updateset[] = "ori_descr = " . sqlesc($descr);
 $updateset[] = "category = " . (0 + $type);
 //if ($CURUSER["admin"] == "yes") {
 if ($CURUSER['class'] > UC_MODERATOR) {
-	if ($_POST["banned"]) {
+	if ( isset($_POST["banned"]) ) {
 		$updateset[] = "banned = 'yes'";
 		$_POST["visible"] = 0;
 	}
 	else
 		$updateset[] = "banned = 'no'";
 }
-$updateset[] = "visible = '" . ($_POST["visible"] ? "yes" : "no") . "'";
+$updateset[] = "visible = '" . ( isset($_POST["visible"]) ? "yes" : "no") . "'";
 
 mysql_query("UPDATE torrents SET " . join(",", $updateset) . " WHERE id = $id");
 
