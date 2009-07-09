@@ -62,7 +62,7 @@ if ($action == 'add')
 if ($action == 'edit')
 {
 
-	$newsid = (int)$_GET["newsid"];
+	$newsid = isset( $_GET["newsid"]) ? (int)$_GET["newsid"] : '';
 
   if (!is_valid_id($newsid))
   	stderr("Error","Invalid news item ID - Code 2.");
@@ -87,7 +87,7 @@ if ($action == 'edit')
 
     mysql_query("UPDATE news SET body=$body WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
-    $returnto = htmlentities($_POST['returnto']);
+    $returnto = isset($_POST['returnto']) ? htmlentities($_POST['returnto']) : '';
 
 		if ($returnto != "")
 			header("Location: $BASEURL/news.php");
@@ -135,7 +135,7 @@ if (mysql_num_rows($res) > 0)
 	while ($arr = mysql_fetch_assoc($res))
 	{
 		$newsid = $arr["id"];
-		$body = htmlentities($arr["body"], ENT_QUOTES);
+		$body = format_comment($arr["body"]);
 	  $userid = $arr["userid"];
 	  $added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
 

@@ -1,6 +1,7 @@
 <?php
 
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
 
 dbconn(false);
 stdhead("Links");
@@ -15,7 +16,7 @@ function add_link($url, $title, $description = "")
 }
 
 if ($CURUSER) { ?>
-<p><a href='sendmessage.php?receiver=2'>Please report dead links!</a></p>
+<p><a href='sendmessage.php?receiver=1'>Please report dead links!</a></p>
 <?php } ?>
 <table width='750' class='main' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
 

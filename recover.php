@@ -1,6 +1,7 @@
 <?php
 
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
  	
 ini_set('session.use_trans_sid', '0');
 

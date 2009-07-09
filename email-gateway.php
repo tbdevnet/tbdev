@@ -1,10 +1,12 @@
 <?php
 
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn();
 
 $id = 0 + $_GET["id"];
-if (!$id)
+if ( !is_valid_id($id) )
 	stderr("Error", "Bad or missing ID.");
 
 $res = mysql_query("SELECT username, class, email FROM users WHERE id=$id");
