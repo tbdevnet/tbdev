@@ -149,7 +149,7 @@ function std_view() {
       "by <a href=userdetails.php?id=$lastposterid><b>$lastposter</b></a><br>" .
       "in <a href=?action=viewtopic&topicid=$lasttopicid&amp;page=p$lastpostid#$lastpostid><b>$lasttopic</b></a></nobr>";
 
-      $r = mysql_query("SELECT lastpostread FROM readposts WHERE userid=$CURUSER[id] AND topicid=$lasttopicid") or sqlerr(__FILE__, __LINE__);
+      $r = mysql_query("SELECT lastpostread FROM readposts WHERE userid={$CURUSER['id']} AND topicid=$lasttopicid") or sqlerr(__FILE__, __LINE__);
 
       $a = mysql_fetch_row($r);
 

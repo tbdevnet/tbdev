@@ -38,7 +38,11 @@ require_once "include/user_functions.php";
     
     $sender_id = ($_POST['sender'] == 'system' ? 0 : $CURUSER['id']);
 
-    $from_is = explode(':', $_POST['pmees']);
+    //$from_is = explode(':', $_POST['pmees']);
+    foreach( explode(':', $_POST['pmees']) as $k => $v ) {
+        if( ctype_digit($v) )
+        $from_is[] = sqlesc($v);
+    }
     $from_is = "FROM users u WHERE u.id IN (" . join(',', $from_is) .")";
 
     $query = "INSERT INTO messages (sender, receiver, added, msg, subject, location, poster) ".
