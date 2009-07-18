@@ -223,7 +223,7 @@ if ( mysql_num_rows($user_query) != 1 )
 	if( $user['enabled'] == 'no' ) err('Permission denied, you\'re not enabled');
 	
 	
-$res = mysql_query("SELECT id, banned, seeders + leechers AS numpeers, UNIX_TIMESTAMP(added) AS ts FROM torrents WHERE info_hash = " .sqlesc($info_hash));//" . hash_where("info_hash", $info_hash));
+$res = mysql_query("SELECT id, banned, seeders + leechers AS numpeers, added AS ts FROM torrents WHERE info_hash = " .sqlesc($info_hash));//" . hash_where("info_hash", $info_hash));
 
 $torrent = mysql_fetch_assoc($res);
 if (!$torrent)
@@ -476,7 +476,7 @@ else
 			}
 		}
 
-		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, NOW(), NOW(), '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
+		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, ".time().", ".time().", '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
 		
 		if ($ret)
 		{
@@ -492,7 +492,7 @@ if ($seeder == "yes")
 {
 	if ($torrent["banned"] != "yes")
 		$updateset[] = "visible = 'yes'";
-	$updateset[] = "last_action = NOW()";
+	$updateset[] = "last_action = ".time();
 }
 
 if (count($updateset))
