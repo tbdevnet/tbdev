@@ -73,7 +73,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     //------ Insert post
 
-    $added = "'" . get_date_time() . "'";
+    $added = time();
 
     $body = sqlesc($body);
 

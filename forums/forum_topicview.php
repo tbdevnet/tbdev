@@ -160,7 +160,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
 
       $posterid = $arr["userid"];
 
-      $added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
+      $added = get_date( $arr['added'] -$CURUSER['time_offset'],'');
 
       //---- Get poster details
 
@@ -237,7 +237,7 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
         if (mysql_num_rows($res2) == 1)
         {
           $arr2 = mysql_fetch_assoc($res2);
-          $body .= "<p><font size=1 class=small>Last edited by <a href=userdetails.php?id={$arr['editedby']}><b>{$arr2['username']}</b></a> at {$arr['editedat']} GMT</font></p>\n";
+          $body .= "<p><font size=1 class=small>Last edited by <a href=userdetails.php?id={$arr['editedby']}><b>{$arr2['username']}</b></a> on ".get_date( $arr['editedat'] -$CURUSER['time_offset'],'')."</font></p>\n";
         }
       }
 
@@ -249,7 +249,7 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
     
     $postadd = $arr['added'];
 	//..rp..
-	if (($postid > $lpr) AND ($postadd > (get_date_time(gmtime() - $READPOST_EXPIRY)))) {
+	if (($postid > $lpr) AND ($postadd > (time() - $READPOST_EXPIRY))) {
 	
 	if ($lpr)
 	mysql_query("UPDATE readposts SET lastpostread=$postid ".

@@ -44,7 +44,7 @@ if (!isset($id) || !is_valid_id($id))
 		exit();
 	}
 	
-$res = mysql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, LENGTH(torrents.nfo) AS nfosz, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(torrents.last_action) AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
+$res = mysql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, LENGTH(torrents.nfo) AS nfosz, torrents.last_action AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
 	or sqlerr();
 $row = mysql_fetch_assoc($res);
 
@@ -126,7 +126,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		else
 			tr("Type", "(none selected)");
 
-		tr("Last&nbsp;seeder", "Last activity " . mkprettytime($row["lastseed"]) . " ago");
+		tr("Last&nbsp;seeder", "Last activity " .get_date( $row['lastseed'] - $CURUSER['time_offset'],'',0,1));
 		tr("Size",mksize($row["size"]) . " (" . number_format($row["size"]) . " bytes)");
 /*
 		$s = "";
@@ -187,7 +187,7 @@ if (!empty($xrow))
 
 */
 
-		tr("Added", $row["added"]);
+		tr("Added", get_date( $row['added'] - $CURUSER['time_offset'],'LONG'));
 		tr("Views", $row["views"]);
 		tr("Hits", $row["hits"]);
 		tr("Snatched", $row["times_completed"] . " time(s)");

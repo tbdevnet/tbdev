@@ -68,4 +68,25 @@
 		print("<tr><td class=\"heading\" valign=\"top\" align=\"right\">$x</td><td valign=\"top\" align='left'>$a</td></tr>\n");
 	}
 
+
+  //-------- Inserts a smilies frame
+
+function insert_smilies_frame()
+  {
+    global $smilies, $BASEURL, $pic_base_url;
+
+    begin_frame("Smilies", true);
+
+    begin_table(false, 5);
+
+    print("<tr><td class='colhead'>Type...</td><td class='colhead'>To make a...</td></tr>\n");
+
+    while (list($code, $url) = each($smilies))
+      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\" alt='' /></td></tr>\n");
+
+    end_table();
+
+    end_frame();
+}
+
 ?>

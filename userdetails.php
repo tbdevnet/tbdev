@@ -38,7 +38,7 @@ function maketable($res)
 	$catimage = "{$pic_base_url}caticons/{$arr['image']}";
 	$catname = htmlspecialchars($arr["catname"]);
 	$catimage = "<img src=\"".htmlspecialchars($catimage) ."\" title=\"$catname\" alt=\"$catname\" width='42' height='42' />";
-	$ttl = (28*24) - floor((gmtime() - sql_timestamp_to_unix_timestamp($arr["added"])) / 3600);
+	$ttl = (28*24) - floor((time() - $arr["added"]) / 3600);
 	if ($ttl == 1) $ttl .= "<br />hour"; else $ttl .= "<br />hours";
 	$size = str_replace(" ", "<br />", mksize($arr["size"]));
 	$uploaded = str_replace(" ", "<br />", mksize($arr["uploaded"]));
@@ -96,17 +96,21 @@ if ($user["ip"] && ($CURUSER['class'] >= UC_MODERATOR || $user["id"] == $CURUSER
     $addr = "$ip ($dom)";
   }
 }
-if ($user['added'] == "0000-00-00 00:00:00")
+
+
+if ($user['added'] == 0)
   $joindate = 'N/A';
 else
-  $joindate = "{$user['added']} (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($user["added"])) . " ago)";
+  $joindate = get_date( $user['added'] - $CURUSER['time_offset'],'');
 $lastseen = $user["last_access"];
-if ($lastseen == "0000-00-00 00:00:00")
+if ($lastseen == 0)
   $lastseen = "never";
 else
 {
-  $lastseen .= " (" . get_elapsed_time(sql_timestamp_to_unix_timestamp($lastseen)) . " ago)";
+  $lastseen = get_date( $user['last_access'] - $CURUSER['time_offset'],'',0,1);
 }
+
+
   $res = mysql_query("SELECT COUNT(*) FROM comments WHERE user=" . $user['id']) or sqlerr();
   $arr3 = mysql_fetch_row($res);
   $torrentcomments = $arr3[0];

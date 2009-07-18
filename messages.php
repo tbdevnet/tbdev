@@ -294,8 +294,7 @@ if (strlen($subject) <= 0)
 $subject = "No Subject";
 }
 
-//if ($message['unread'] === 'yes'){
-if ($message['unread'] === 'yes' && $message['receiver'] === $CURUSER['id']) {
+if ($message['unread'] === 'yes'){
 // Mark message unread
 mysql_query("UPDATE messages SET unread='no' WHERE id=" . sqlesc($pm_id) . " AND receiver=" . sqlesc($CURUSER['id']) . " LIMIT 1");
 }
@@ -579,7 +578,7 @@ stderr("Refused", "This user does not accept PMs.");
 }
 
 mysql_query("INSERT INTO messages (poster, sender, receiver, added, subject, msg, location, saved) VALUES(" . $CURUSER["id"] . ", " .
-$CURUSER["id"] . ", $to, '" . get_date_time() . "', " . sqlesc($subject) . "," .
+$CURUSER["id"] . ", $to, " . time() . ", " . sqlesc($subject) . "," .
 sqlesc($body) . ", " . sqlesc(PM_INBOX) . ", " . sqlesc($save) . ")") or sqlerr(__FILE__, __LINE__);
 
 stderr("Success", "PM forwarded");

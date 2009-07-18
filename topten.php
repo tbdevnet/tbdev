@@ -83,8 +83,8 @@ ob_start("ob_gzhandler");
          	"</td><td align='right'$highlight>" . mksize($a["downloaded"]) .
       		"</td><td align='right'$highlight>" . mksize($a["downspeed"]) . "/s" .
       		"</td><td align='right'$highlight>" . $ratio .
-      		"</td><td align='left'>" . gmdate("Y-m-d",strtotime($a["added"])) . " (" .
-      		get_elapsed_time(sql_timestamp_to_unix_timestamp($a["added"])) . " ago)</td></tr>");
+      		"</td><td align='left'>" . get_date( $a['added'] - $CURUSER['time_offset'],'') . " (" .
+      		get_date( $a['added'] - $CURUSER['time_offset'],'',0,1) . ")</td></tr>");
     }
     end_table();
     end_frame();

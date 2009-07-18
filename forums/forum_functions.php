@@ -15,7 +15,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $userid = $CURUSER["id"];
 
     //..rp..
-$dt = sqlesc((get_date_time(gmtime() - $READPOST_EXPIRY)));
+$dt = (time() - $READPOST_EXPIRY);
 
 $res = mysql_query(
 "SELECT t.id, t.lastpost FROM topics AS t ".
@@ -225,7 +225,7 @@ $res = mysql_query(
           else
             $avatar = "<img width=100 src='{$forum_pic_url}default_avatar.gif' />";
 
-        print("<p class=sub>#" . $post["id"] . " by " . $user["username"] . " at " . $post["added"] . " GMT</p>");
+        print("<p class=sub>#" . $post["id"] . " by " . $user["username"] . " on " . get_date( $post['added'] - $CURUSER['time_offset'],''));
 
         begin_table(true);
 

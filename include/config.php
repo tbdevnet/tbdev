@@ -2,17 +2,22 @@
 
 error_reporting(E_ALL);
 
-define('SQL_DEBUG', 1);
+define('SQL_DEBUG', 2);
 
-function local_user()
-{
-  return $_SERVER["SERVER_ADDR"] == $_SERVER["REMOTE_ADDR"];
-}
-//$FUNDS = "$2,610.31";
+define('TIME_NOW', time());
+
+$CONFIG_INFO = array( 'time_adjust' =>  0, 
+                      'time_offset' => '0', 
+                      'time_use_relative' => 1,
+                      'time_use_relative_format' => '{--}, h:i A',
+                      'time_joined' => 'j-F y',
+                      'time_short' => 'jS F Y - h:i A',
+                      'time_long' => 'M j Y, h:i A',
+                      'time_tiny' => '',
+                      'time_date' => '');
+
 
 $SITE_ONLINE = true;
-//$SITE_ONLINE = local_user();
-//$SITE_ONLINE = false;
 
 $max_torrent_size = 1000000;
 $announce_interval = 60 * 30;
@@ -42,16 +47,16 @@ $torrent_dir = ROOT_PATH . '/torrents';
 
 # the first one will be displayed on the pages
 $announce_urls = array();
-$announce_urls[] = "http://localhost/TB/announce.php";
-$announce_urls[] = "http://localhost:2710/announce";
-$announce_urls[] = "http://domain.com:83/announce.php";
+$announce_urls[] = "http://localhost/test/announce.php";
+//$announce_urls[] = "http://localhost:2710/announce";
+//$announce_urls[] = "http://domain.com:83/announce.php";
 
 if ($_SERVER["HTTP_HOST"] == "")
   $_SERVER["HTTP_HOST"] = $_SERVER["SERVER_NAME"];
-$BASEURL = "http://" . $_SERVER["HTTP_HOST"]."/TB";
+$BASEURL = "http://" . $_SERVER["HTTP_HOST"]."/test";
 
 // Set this to your site URL... No ending slash!
-$DEFAULTBASEURL = "http://localhost/TB";
+$DEFAULTBASEURL = "http://localhost/test";
 
 //set this to true to make this a tracker that only registered users may use
 $MEMBERSONLY = true;
@@ -83,6 +88,6 @@ define ('UC_SYSOP', 6);
 
 //Do not modify -- versioning system
 //This will help identify code for support issues at tbdev.net
-define ('TBVERSION','TBDev_ALPHA_1_16.06.09');
+define ('TBVERSION','TBDev_2009_svn');
 
 ?>

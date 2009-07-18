@@ -44,7 +44,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $body = sqlesc($body);
 
-      $editedat = sqlesc(get_date_time());
+      $editedat = time();
 
       mysql_query("UPDATE posts SET body=$body, editedat=$editedat, editedby=$CURUSER[id] WHERE id=$postid") or sqlerr(__FILE__, __LINE__);
 

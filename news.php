@@ -47,7 +47,7 @@ if ($action == 'add')
 
 	$added = isset($_POST["added"]) ? $_POST['added'] : 0;
 	if (!$added)
-		$added = sqlesc(get_date_time());
+		$added = time();
 
   mysql_query("INSERT INTO news (userid, added, body) VALUES (".
   	$CURUSER['id'] . ", $added, " . sqlesc($body) . ")") or sqlerr(__FILE__, __LINE__);
@@ -83,7 +83,7 @@ if ($action == 'edit')
 
     $body = sqlesc($body);
 
-    $editedat = sqlesc(get_date_time());
+    $editedat = time();
 
     mysql_query("UPDATE news SET body=$body WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
@@ -137,7 +137,7 @@ if (mysql_num_rows($res) > 0)
 		$newsid = $arr["id"];
 		$body = format_comment($arr["body"]);
 	  $userid = $arr["userid"];
-	  $added = $arr["added"] . " GMT (" . (get_elapsed_time(sql_timestamp_to_unix_timestamp($arr["added"]))) . " ago)";
+	  $added = get_date( $arr['added'] - $CURUSER['time_offset'],'');
 
     $res2 = mysql_query("SELECT username, donor FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
     $arr2 = mysql_fetch_assoc($res2);

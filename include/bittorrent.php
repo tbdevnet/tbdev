@@ -4,7 +4,9 @@ require_once("include/config.php");
 require_once("secrets.php");
 require_once("cleanup.php");
 
-
+/* Compare php version for date/time stuff etc! */
+	if (version_compare(PHP_VERSION, "5.1.0RC1", ">="))
+		date_default_timezone_set('Europe/London');
 
 /**** validip/getip courtesy of manolete <manolete@myway.com> ****/
 
@@ -126,7 +128,7 @@ function userlogin() {
     //$sec = hash_pad($row["secret"]);
     if ($_COOKIE["pass"] !== $row["passhash"])
         return;
-    mysql_query("UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
+    mysql_query("UPDATE users SET last_access='" . TIME_NOW . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
     $row['ip'] = $ip;
     $GLOBALS["CURUSER"] = $row;
 }
@@ -422,7 +424,7 @@ function logincookie($id, $passhash, $updatedb = 1, $expires = 0x7fffffff)
 	setcookie("pass", $passhash, $expires, "/");
 
   if ($updatedb)
-  	mysql_query("UPDATE users SET last_login = NOW() WHERE id = $id");
+  	mysql_query("UPDATE users SET last_login = ".TIME_NOW." WHERE id = $id");
 }
 
 
@@ -577,7 +579,7 @@ function sqlerr($file = '', $line = '') {
         exit();
 }
     
-    
+/*    
 // Returns the current time in GMT in MySQL compatible format.
 function get_date_time($timestamp = 0)
 {
@@ -586,7 +588,7 @@ function get_date_time($timestamp = 0)
   else
     return gmdate("Y-m-d H:i:s");
 }
-
+*/
 
 function get_dt_num()
 {
@@ -598,7 +600,7 @@ function get_dt_num()
 function write_log($text)
 {
   $text = sqlesc($text);
-  $added = sqlesc(get_date_time());
+  $added = TIME_NOW;
   mysql_query("INSERT INTO sitelog (added, txt) VALUES($added, $text)") or sqlerr(__FILE__, __LINE__);
 }
 
@@ -608,6 +610,7 @@ function sql_timestamp_to_unix_timestamp($s)
   return mktime(substr($s, 11, 2), substr($s, 14, 2), substr($s, 17, 2), substr($s, 5, 2), substr($s, 8, 2), substr($s, 0, 4));
 }
 
+/*
 function get_elapsed_time($ts)
 {
   $mins = floor((gmtime() - $ts) / 60);
@@ -627,6 +630,172 @@ function get_elapsed_time($ts)
   if ($mins > 0)
     return "$mins min" . ($mins > 1 ? "s" : "");
   return "< 1 min";
+}
+*/
+
+
+function unixstamp_to_human( $unix=0 )
+    {
+    	$offset = get_time_offset();
+    	$tmp    = gmdate( 'j,n,Y,G,i', $unix + $offset );
+    	
+    	list( $day, $month, $year, $hour, $min ) = explode( ',', $tmp );
+  
+    	return array( 'day'    => $day,
+                    'month'  => $month,
+                    'year'   => $year,
+                    'hour'   => $hour,
+                    'minute' => $min );
+    }
+    
+
+
+function get_time_offset() {
+    
+    	global $CURUSER, $CONFIG_INFO;
+    	$r = 0;
+    	
+    	$r = ( ($CURUSER['time_offset'] != "") ? $CURUSER['time_offset'] : $CONFIG_INFO['time_offset'] ) * 3600;
+			
+      if ( $CONFIG_INFO['time_adjust'] )
+      {
+        $r += ($CONFIG_INFO['time_adjust'] * 60);
+      }
+      
+      if ( $CURUSER['dst_in_use'] )
+      {
+        $r += 3600;
+      }
+        
+        return $r;
+}
+    
+
+function get_date($date, $method, $norelative=0, $full_relative=0)
+    {
+        global $CONFIG_INFO;
+        
+        static $offset_set = 0;
+        static $today_time = 0;
+        static $yesterday_time = 0;
+        $time_options = array( 
+        'JOINED' => $CONFIG_INFO['time_joined'],
+        'SHORT'  => $CONFIG_INFO['time_short'],
+				'LONG'   => $CONFIG_INFO['time_long'],
+				'TINY'   => $CONFIG_INFO['time_tiny'] ? $CONFIG_INFO['time_tiny'] : 'j M Y - G:i',
+				'DATE'   => $CONFIG_INFO['time_date'] ? $CONFIG_INFO['time_date'] : 'j M Y'
+				);
+        
+        if ( ! $date )
+        {
+            return '--';
+        }
+        
+        if ( empty($method) )
+        {
+        	$method = 'LONG';
+        }
+        
+        if ($offset_set == 0)
+        {
+        	$GLOBALS['offset'] = get_time_offset();
+			
+          if ( $CONFIG_INFO['time_use_relative'] )
+          {
+            $today_time     = gmdate('d,m,Y', ( time() + $GLOBALS['offset']) );
+            $yesterday_time = gmdate('d,m,Y', ( (time() - 86400) + $GLOBALS['offset']) );
+          }	
+        
+          $offset_set = 1;
+        }
+        
+        if ( $CONFIG_INFO['time_use_relative'] == 3 )
+        {
+        	$full_relative = 1;
+        }
+        
+        if ( $full_relative and ( $norelative != 1 ) )
+        {
+          $diff = time() - $date;
+          
+          if ( $diff < 3600 )
+          {
+            if ( $diff < 120 )
+            {
+              return '< 1 minute ago';
+            }
+            else
+            {
+              return sprintf( '%s minutes ago', intval($diff / 60) );
+            }
+          }
+          else if ( $diff < 7200 )
+          {
+            return '< 1 hour ago';
+          }
+          else if ( $diff < 86400 )
+          {
+            return sprintf( '%s hours ago', intval($diff / 3600) );
+          }
+          else if ( $diff < 172800 )
+          {
+            return '< 1 day ago';
+          }
+          else if ( $diff < 604800 )
+          {
+            return sprintf( '%s days ago', intval($diff / 86400) );
+          }
+          else if ( $diff < 1209600 )
+          {
+            return '< 1 week ago';
+          }
+          else if ( $diff < 3024000 )
+          {
+            return sprintf( '%s weeks ago', intval($diff / 604900) );
+          }
+          else
+          {
+            return gmdate($time_options[$method], ($date + $GLOBALS['offset']) );
+          }
+        }
+        else if ( $CONFIG_INFO['time_use_relative'] and ( $norelative != 1 ) )
+        {
+          $this_time = gmdate('d,m,Y', ($date + $GLOBALS['offset']) );
+          
+          if ( $CONFIG_INFO['time_use_relative'] == 2 )
+          {
+            $diff = time() - $date;
+          
+            if ( $diff < 3600 )
+            {
+              if ( $diff < 120 )
+              {
+                return '< 1 minute ago';
+              }
+              else
+              {
+                return sprintf( '%s minutes ago', intval($diff / 60) );
+              }
+            }
+          }
+          
+            if ( $this_time == $today_time )
+            {
+              return str_replace( '{--}', 'Today', gmdate($CONFIG_INFO['time_use_relative_format'], ($date + $GLOBALS['offset']) ) );
+            }
+            else if  ( $this_time == $yesterday_time )
+            {
+              return str_replace( '{--}', 'Yesterday', gmdate($CONFIG_INFO['time_use_relative_format'], ($date + $GLOBALS['offset']) ) );
+            }
+            else
+            {
+              return gmdate($time_options[$method], ($date + $GLOBALS['offset']) );
+            }
+        }
+        else
+        {
+          return gmdate($time_options[$method], ($date + $GLOBALS['offset']) );
+        }
 }
 
 
@@ -682,7 +851,6 @@ function StatusBar() {
 			$seedleech['no'] = $row['pCount'];
 		
 	}
-	
 	
 /////////////// REP SYSTEM /////////////
 //$CURUSER['reputation'] = 49;

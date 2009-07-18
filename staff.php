@@ -9,7 +9,7 @@ dbconn();
 loggedinorreturn();
 stdhead("Staff");
 
-$query = mysql_query("SELECT users.id, username, email, UNIX_TIMESTAMP(last_access) as last_access, class, title, country, status, countries.flagpic, countries.name FROM users LEFT  JOIN countries ON countries.id = users.country WHERE class >=4 AND status='confirmed' ORDER BY username") or sqlerr();
+$query = mysql_query("SELECT users.id, username, email, last_access, class, title, country, status, countries.flagpic, countries.name FROM users LEFT  JOIN countries ON countries.id = users.country WHERE class >=4 AND status='confirmed' ORDER BY username") or sqlerr();
 
 while($arr2 = mysql_fetch_assoc($query)) {
 	
@@ -37,7 +37,7 @@ print(count($mods));
 function DoStaff($staff, $staffclass, $cols = 2) {
 	global $pic_base_url;
 	
-	$dt = gmtime() - 180;
+	$dt = time() - 180;
 	
 	if($staff===false) {
 		print("<br /><table width='75%' border='1' cellpadding='3'>");
@@ -115,6 +115,8 @@ isset($mods) ? DoStaff($mods, "Moderators") : DoStaff($mods=false, "Moderators")
 			
 			
 			<span class="btn"><a href="users.php">Users List</a></span>
+			
+			<span class="btn"><a href="stats.php">Stats</a></span>
 			
 			</td></tr>
 			<!-- row 2 -->

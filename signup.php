@@ -1,6 +1,8 @@
 <?php
 
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php";
+require_once ROOT_PATH."/cache/timezones.php";
+
 dbconn();
 
 ini_set('session.use_trans_sid', '0');
@@ -15,21 +17,27 @@ $arr = mysql_fetch_row($res);
 if ($arr[0] >= $maxusers)
 	stderr("Sorry", "The current user account limit (" . number_format($maxusers) . ") has been reached. Inactive accounts are pruned all the time, please check back again later...");
 
-
+// TIMEZONE STUFF
+ 		$offset = (string)$CONFIG_INFO['time_offset'];
+ 		
+ 		$time_select = "<select name='user_timezone'>";
+ 		
+ 		foreach( $lang as $off => $words )
+ 		{
+ 			if ( preg_match("/^time_(-?[\d\.]+)$/", $off, $match))
+ 			{
+				$time_select .= $match[1] == $offset ? "<option value='{$match[1]}' selected='selected'>$words</option>\n" : "<option value='{$match[1]}'>$words</option>\n";
+ 			}
+ 		}
+ 		
+ 		$time_select .= "</select>";
+// TIMEZONE END
+ 		
 stdhead("Signup");
 
 ?>
-<!--
-<table width='500' border='1' cellspacing='0' cellpadding='10'><tr><td align='left'>
-<h2 align='center'>Proxy check</h2>
-<b><font color='red'>Important - please read:</font></b> We do not accept users connecting through public proxies. When you
-submit the form below we will check whether any commonly used proxy ports on your computer is open. If you have a firewall it may alert of you of port
-scanning activity originating from <b>69.10.142.42</b> (<?php echo $SITENAME; ?>). This is only our proxy-detector in action.
-<b>The check takes up to 30 seconds to complete, please be patient.</b> The IP address we will test is <b><?php echo $_SERVER["REMOTE_ADDR"]; ?></b>.
-By proceeding with submitting the form below you grant us permission to scan certain ports on this computer.
-</td></tr></table>
-<p>
--->
+
+
 <script type="text/javascript" src="captcha/captcha.js"></script>
 
 <p>Note: You need cookies enabled to sign up or log in.</p>
@@ -44,6 +52,7 @@ By proceeding with submitting the form below you grant us permission to scan cer
 You will receive a confirmation email which you need to respond to. The email address won't be publicly shown anywhere.</font></td></tr>
 </table>
 </td></tr>
+<tr><td align="right" class="heading">Timezone</td><td align="left"><?php echo $time_select; ?></td></tr>
   <tr>
     <td>&nbsp;</td>
     <td>

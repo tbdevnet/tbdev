@@ -35,37 +35,7 @@ $peers = number_format($seeders + $leechers);
 $seeders = number_format($seeders);
 $leechers = number_format($leechers);
 
-/*
-$dt = gmtime() - 180;
-$dt = sqlesc(get_date_time($dt));
-$res = mysql_query("SELECT id, username, class, donated FROM users WHERE last_access >= $dt ORDER BY username") or print(mysql_error());
-while ($arr = mysql_fetch_assoc($res))
-{
-  if ($activeusers) $activeusers .= ",\n";
-  switch ($arr["class"])
-  {
-    case UC_SYSOP:
-    case UC_ADMINISTRATOR:
-    case UC_MODERATOR:
-      $arr["username"] = "<font color='#A83838'>" . $arr["username"] . "</font>";
-      break;
-     case UC_UPLOADER:
-      $arr["username"] = "<font color='#4040C0'>" . $arr["username"] . "</font>";
-      break;
-  }
-  $donator = $arr["donated"] > 0;
-  if ($donator)
-    $activeusers .= "<span style=\"white-space: nowrap;\">";
-  if ($CURUSER)
-    $activeusers .= "<a href='userdetails.php?id=" . $arr["id"] . "'><b>" . $arr["username"] . "</b></a>";
-  else
-    $activeusers .= "<b>$arr[username]</b>";
-  if ($donator)
-    $activeusers .= "<img src=\"{$pic_base_url}star.gif\" alt='Donated $arr[donated]'></span>";
-}
-if (!$activeusers)
-  $activeusers = "There have been no active users in the last 15 minutes.";
-*/
+
 stdhead();
 //echo "<font class='small''>Welcome to our newest member, <b>$latestuser</b>!</font>\n";
 
@@ -74,7 +44,9 @@ print("<h2>Recent news");
 if (get_user_class() >= UC_ADMINISTRATOR)
 	print(" - <font class='small'>[<a class='altlink' href='news.php'><b>News page</b></a>]</font>");
 print("</h2>\n");
-$res = mysql_query("SELECT * FROM news WHERE ADDDATE(added, INTERVAL 45 DAY) > NOW() ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
+$res = mysql_query("SELECT * FROM news
+					WHERE added + ( 3600 *24 *45 ) >
+					UNIX_TIMESTAMP( ) ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
 if (mysql_num_rows($res) > 0)
 {
 	require_once "include/bbcode_functions.php";
@@ -82,10 +54,10 @@ if (mysql_num_rows($res) > 0)
 	print("<table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'>\n<ul>");
 	while($array = mysql_fetch_assoc($res))
 	{
-	  print("<li>" . gmdate("Y-m-d",strtotime($array['added'])) . "<br />" . format_comment($array['body']));
+	  print("<li>" . get_date( $array['added'] -$CURUSER['time_offset'],'DATE') . "<br />" . format_comment($array['body']));
     if (get_user_class() >= UC_ADMINISTRATOR)
     {
-    	print(" <br /><font size=\"-2\">[<a class='altlink' href='news.php?action=edit&amp;]newsid=" . $array['id'] . "&amp;returnto=index.php'><b>E</b></a>]</font>");
+    	print(" <br /><font size=\"-2\">[<a class='altlink' href='news.php?action=edit&amp;newsid=" . $array['id'] . "&amp;returnto=index.php'><b>E</b></a>]</font>");
     	print(" <font size=\"-2\">[<a class='altlink' href='news.php?action=delete&amp;newsid=" . $array['id'] . "&amp;returnto=index.php'><b>D</b></a>]</font>");
     }
     print("</li>");
@@ -93,12 +65,6 @@ if (mysql_num_rows($res) > 0)
   print("</ul></td></tr></table>\n");
 }
 
-/*
-<h2>Active users</h2>
-<table width='100%' border='1' cellspacing='0' cellpadding='1'0><tr><td class='text'>
-<?php echo $activeusers?>
-</td></tr></table>
-*/
 
 ?>
 

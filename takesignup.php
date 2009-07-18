@@ -91,21 +91,26 @@ if ($_POST["rulesverify"] != "yes" || $_POST["faqverify"] != "yes" || $_POST["ag
 // check if email addy is already in use
 $a = (@mysql_fetch_row(@mysql_query("select count(*) from users where email='$email'"))) or die(mysql_error());
 if ($a[0] != 0)
-  bark("The e-mail address $email is already in use.");
+  bark("The e-mail address is already in use.");
 
-/*
-// do simple proxy check
-if (isproxy())
-	bark("You appear to be connecting through a proxy server. Your organization or ISP may use a transparent caching HTTP proxy. Please try and access the site on <a href=".$BASEURL."/signup.php>port 81</a> (this should bypass the proxy server). <p><b>Note:</b> if you run an Internet-accessible web server on the local machine you need to shut it down until the sign-up is complete.");
-*/
+      // TIMEZONE STUFF
+      if(isset($_POST["user_timezone"]) && preg_match('#^\-?\d{1,2}(?:\.\d{1,2})?$#', $_POST['user_timezone']))
+      {
+      $time_offset = sqlesc($_POST['user_timezone']);
+      }
+      else
+      { $time_offset = isset($CONFIG_INFO['time_offse']) ? sqlesc($CONFIG_INFO['time_offse']) : '0'; }
+      // have a stab at getting dst parameter?
+      $dst_in_use = localtime(time() + ($time_offset * 3600), true);
+      // TIMEZONE STUFF END
 
 $secret = mksecret();
 $wantpasshash = md5($secret . $wantpassword . $secret);
 $editsecret = (!$arr[0]?"":mksecret());
 
-$ret = mysql_query("INSERT INTO users (username, passhash, secret, editsecret, email, status, ". (!$arr[0]?"class, ":"") ."added) VALUES (" .
+$ret = mysql_query("INSERT INTO users (username, passhash, secret, editsecret, email, status, ". (!$arr[0]?"class, ":"") ."added, time_offset, dst_in_use) VALUES (" .
 		implode(",", array_map("sqlesc", array($wantusername, $wantpasshash, $secret, $editsecret, $email, (!$arr[0]?'confirmed':'pending')))).
-		", ". (!$arr[0]?UC_SYSOP.", ":""). "'". get_date_time() ."')");
+		", ". (!$arr[0]?UC_SYSOP.", ":""). "". time() ." , $time_offset, {$dst_in_use['tm_isdst']})");
 
 if (!$ret) {
 	if (mysql_errno() == 1062)

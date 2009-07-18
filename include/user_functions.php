@@ -106,7 +106,6 @@ function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
 	}
 ////////////// REP SYSTEM END //////////
 
-
 function get_user_icons($arr, $big = false)
 {
 	global $pic_base_url;

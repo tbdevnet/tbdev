@@ -55,7 +55,7 @@ $wait = 0;
 <td class="colhead" align="center">Snatched</td>
 <td class="colhead" align="right">Seeders</td>
 <td class="colhead" align="right">Leechers</td>
-<?
+<?php
 
     if ($variant == "index")
         print("<td class=\"colhead\" align='center'>Upped&nbsp;by</td>\n");
@@ -90,7 +90,7 @@ $wait = 0;
 
 				if ($wait)
 				{
-				  $elapsed = floor((gmtime() - strtotime($row["added"])) / 3600);
+				  $elapsed = floor((time() - $row["added"]) / 3600);
 	        if ($elapsed < $wait)
 	        {
 	          $color = dechex(floor(127*($wait - $elapsed)/48 + 128)*65536);
@@ -150,8 +150,8 @@ print("</td>\n");
         }
         print("</td>\n");
 */
-        print("<td align='center'><span style=\"white-space: nowrap;\">" . str_replace(" ", "<br />", $row["added"]) . "</span></td>\n");
-		$ttl = (28*24) - floor((gmtime() - sql_timestamp_to_unix_timestamp($row["added"])) / 3600);
+        print("<td align='center'><span style=\"white-space: nowrap;\">" . str_replace(",", "<br />", get_date( $row['added'] - $CURUSER['time_offset'],'')) . "</span></td>\n");
+		$ttl = (28*24) - floor((time() - $row["added"]) / 3600);
 		if ($ttl == 1) $ttl .= "<br />hour"; else $ttl .= "<br />hours";
         print("<td align='center'>$ttl</td>\n");
         print("<td align='center'>" . str_replace(" ", "<br />", mksize($row["size"])) . "</td>\n");
@@ -222,7 +222,7 @@ function commenttable($rows)
 		else
    		print("<a name=\"comm" . $row["id"] . "\"><i>(orphaned)</i></a>\n");
 
-		print(" at " . $row["added"] . " GMT" .
+		print(get_date( $row['added'] - $CURUSER['time_offset'],'') .
 			($row["user"] == $CURUSER["id"] || get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=edit&amp;cid=$row[id]'>Edit</a>]" : "") .
 			(get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=delete&amp;cid=$row[id]'>Delete</a>]" : "") .
 			($row["editedby"] && get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=vieworiginal&amp;cid=$row[id]'>View original</a>]" : "") . "</p>\n");
@@ -231,7 +231,7 @@ function commenttable($rows)
 			$avatar = "{$pic_base_url}default_avatar.gif";
 		$text = format_comment($row["text"]);
     if ($row["editedby"])
-    	$text .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id=$row[editedby]'><b>$row[username]</b></a> at $row[editedat] GMT</font></p>\n";
+    	$text .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id={$row['editedby']}'><b>{$row['username']}</b></a> at ".get_date($row['editedat'] - $CURUSER['time_offset'],'DATE')."</font></p>\n";
 		begin_table(true);
 		print("<tr valign='top'>\n");
 		print("<td align='center' width='150' style='padding: 0px'><img width='150' src=\"{$avatar}\" alt='' /></td>\n");

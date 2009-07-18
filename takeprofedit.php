@@ -77,8 +77,12 @@ $avatar='';
 $info = $_POST["info"];
 $stylesheet = $_POST["stylesheet"];
 $country = $_POST["country"];
-//$timezone = 0 + $_POST["timezone"];
-//$dst = ($_POST["dst"] != "" ? "yes" : "no");
+
+if(isset($_POST["user_timezone"]) && preg_match('#^\-?\d{1,2}(?:\.\d{1,2})?$#', $_POST['user_timezone']))
+$updateset[] = "time_offset = " . sqlesc($_POST['user_timezone']);
+
+$updateset[] = "auto_correct_dst = " .(isset($_POST['checkdst']) ? 1 : 0);
+$updateset[] = "dst_in_use = " .(isset($_POST['manualdst']) ? 1 : 0);
 
 /*
 if ($privacy != "normal" && $privacy != "low" && $privacy != "strong")
@@ -93,11 +97,11 @@ $updateset[] = "postsperpage = " . min(100, 0 + $_POST["postsperpage"]);
 
 if (is_valid_id($stylesheet))
   $updateset[] = "stylesheet = '$stylesheet'";
+  
 if (is_valid_id($country))
   $updateset[] = "country = $country";
 
-//$updateset[] = "timezone = $timezone";
-//$updateset[] = "dst = '$dst'";
+
 $updateset[] = "info = " . sqlesc($info);
 $updateset[] = "acceptpms = " . sqlesc($acceptpms);
 $updateset[] = "deletepms = '$deletepms'";
@@ -138,7 +142,7 @@ EOD;
 	$urladd .= "&mailsent=1";
 }
 
-mysql_query("UPDATE users SET " . implode(",", $updateset) . " WHERE id = " . $CURUSER["id"]) or sqlerr(__FILE__,__LINE__);
+@mysql_query("UPDATE users SET " . implode(", ", $updateset) . " WHERE id = " . $CURUSER["id"]) or sqlerr(__FILE__,__LINE__);
 
 header("Location: $BASEURL/my.php?edited=1" . $urladd);
 

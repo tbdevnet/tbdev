@@ -35,7 +35,7 @@ require_once "include/benc.php";
 
 if (!isset($CURUSER['passkey']) || strlen($CURUSER['passkey']) != 32) {
 
-$CURUSER['passkey'] = md5($CURUSER['username'].get_date_time().$CURUSER['passhash']);
+$CURUSER['passkey'] = md5($CURUSER['username'].time().$CURUSER['passhash']);
 
 mysql_query("UPDATE users SET passkey='{$CURUSER['passkey']}' WHERE id={$CURUSER['id']}");
 
@@ -43,7 +43,7 @@ mysql_query("UPDATE users SET passkey='{$CURUSER['passkey']}' WHERE id={$CURUSER
 
 
 
-$dict = bdec_file($fn, (1024*1024));
+$dict = bdec_file($fn, filesize($fn));
 
 //$dict['value']['announce']['value'] = "$BASEURL/announce.php/passkey=$CURUSER[passkey]";
 $dict['value']['announce']['value'] = "{$announce_urls[0]}/passkey={$CURUSER['passkey']}";

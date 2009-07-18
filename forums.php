@@ -129,7 +129,7 @@ function std_view() {
 
       $lastposterid = $post_arr["userid"];
 
-      $lastpostdate = $post_arr["added"];
+      $lastpostdate = get_date( $post_arr["added"] -$CURUSER['time_offset'],'' );
 
       $lasttopicid = $post_arr["topicid"];
 
@@ -154,7 +154,7 @@ function std_view() {
       $a = mysql_fetch_row($r);
 
 	//..rp..
-	$npostcheck = ($post_arr['added'] > (get_date_time(gmtime() - $READPOST_EXPIRY))) ? (!$a OR $lastpostid > $a[0]) : 0;
+	$npostcheck = ($post_arr['added'] > (time() - $READPOST_EXPIRY)) ? (!$a OR $lastpostid > $a[0]) : 0;
 	
 	/* if ($a && $a[0] >= $lastpostid)
 	$img = "unlocked";

@@ -3,6 +3,7 @@
 require_once "include/bittorrent.php";
 require_once "include/html_functions.php";
 require_once "include/user_functions.php";
+require_once ROOT_PATH."/cache/timezones.php";
 
 dbconn(false);
 
@@ -36,6 +37,24 @@ $avatar = "<img src='{$CURUSER['avatar']}' width='{$CURUSER['av_w']}' height='{$
 else
 $avatar = "<img src='{$pic_base_url}forumicons/default_avatar.gif' alt='' />";
 ?>
+
+<script type="text/javascript">
+
+function daylight_show()
+{
+	if ( document.getElementById( 'tz-checkdst' ).checked )
+	{
+		document.getElementById( 'tz-checkmanual' ).style.display = 'none';
+	}
+	else
+	{
+		document.getElementById( 'tz-checkmanual' ).style.display = 'block';
+	}
+}
+
+</script>
+
+
 <table border="1" cellspacing="0" cellpadding="10" align="center">
 <!--<tr>
 <td align="center" width="33%"><a href='logout.php'><b>Logout</b></a></td>
@@ -87,15 +106,56 @@ $countries = "<option value='0'>---- None selected ----</option>\n";
 $ct_r = mysql_query("SELECT id,name FROM countries ORDER BY name") or die;
 while ($ct_a = mysql_fetch_assoc($ct_r))
   $countries .= "<option value='$ct_a[id]'" . ($CURUSER["country"] == $ct_a['id'] ? " selected='selected'" : "") . ">$ct_a[name]</option>\n";
-/*
-function format_tz($a)
-{
-	$h = floor($a);
-	$m = ($a - floor($a)) * 60;
-	return ($a >= 0?"+":"-") . (strlen(abs($h)) > 1?"":"0") . abs($h) .
-		":" . ($m==0?"00":$m);
-}
-*/
+
+ 		//-----------------------------------------
+ 		// Work out the timezone selection
+ 		//-----------------------------------------
+		$offset = ($CURUSER['time_offset'] != "") ? (string)$CURUSER['time_offset'] : (string)$CONFIG_INFO['time_offset'];
+ 		
+ 		$time_select = "<select name='user_timezone'>";
+ 		
+ 		//-----------------------------------------
+ 		// Loop through the langauge time offsets and names to build our
+ 		// HTML jump box.
+ 		//-----------------------------------------
+ 		
+ 		foreach( $lang as $off => $words )
+ 		{
+ 			if ( preg_match("/^time_(-?[\d\.]+)$/", $off, $match))
+ 			{
+				$time_select .= $match[1] == $offset ? "<option value='{$match[1]}' selected='selected'>$words</option>\n" : "<option value='{$match[1]}'>$words</option>\n";
+ 			}
+ 		}
+ 		
+ 		$time_select .= "</select>";
+ 
+ 		//-----------------------------------------
+ 		// DST IN USE?
+ 		//-----------------------------------------
+ 		
+ 		if ($CURUSER['dst_in_use'])
+ 		{
+ 			$dst_check = 'checked="checked"';
+ 		}
+ 		else
+ 		{
+ 			$dst_check = '';
+ 		}
+ 		
+ 		//-----------------------------------------
+ 		// DST CORRECTION IN USE?
+ 		//-----------------------------------------
+ 		
+ 		if ($CURUSER['auto_correct_dst'])
+ 		{
+ 			$dst_correction = 'checked="checked"';
+ 		}
+ 		else
+ 		{
+ 			$dst_correction = '';
+ 		}
+ 		
+ 		
 tr("Accept PMs",
 "<input type='radio' name='acceptpms'" . ($CURUSER["acceptpms"] == "yes" ? " checked='checked'" : "") . " value='yes' />All (except blocks)
 <input type='radio' name='acceptpms'" .  ($CURUSER["acceptpms"] == "friends" ? " checked='checked'" : "") . " value='friends' />Friends only
@@ -128,6 +188,13 @@ tr("Email notification", "<input type='checkbox' name='pmnotif'" . (strpos($CURU
 tr("Browse default<br />categories",$categories,1);
 tr("Stylesheet", "<select name='stylesheet'>\n$stylesheets\n</select>",1);
 tr("Country", "<select name='country'>\n$countries\n</select>",1);
+
+// Timezone stuff //
+tr("Timezone", $time_select ,1);
+tr("Daylight Saving", "<input type='checkbox' name='checkdst' id='tz-checkdst' onclick='daylight_show()' value='1' $dst_correction />&nbsp;Auto correct DST?<br />
+<div id='tz-checkmanual' style='display: none;'><input type='checkbox' name='manualdst' value='1' $dst_check />&nbsp;Is daylight saving time in effect?</div>",1);
+// Timezone stuff end //
+
 tr("Avatar URL", "<input name='avatar' size='50' value=\"" . htmlspecialchars($CURUSER["avatar"]) .
   "\" /><br />\nWidth should be 150 pixels (will be resized if necessary)\n<br />If you need a host for the picture, try the <a href='bitbucket-upload.php'>bitbucket</a>.",1);
 tr("Torrents per page", "<input type='text' size='10' name='torrentsperpage' value='$CURUSER[torrentsperpage]' /> (0=use default setting)",1);

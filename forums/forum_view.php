@@ -187,7 +187,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 		
         $lpuserid = 0 + $arr["userid"];
 
-        $lpadded = "<nobr>" . $arr["added"] . "</nobr>";
+        $lpadded = "<nobr>" . get_date( $arr['added'] - $CURUSER['time_offset'],'') . "</nobr>";
 
         //------ Get name of last poster
 
@@ -224,7 +224,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
         $new = !$a || $lppostid > $a[0];
 
 		// ..rp..
-		$new = ($lppostadd > (get_date_time(gmtime() - $READPOST_EXPIRY))) ? (!$a || $lppostid > $a[0]) : 0;
+		$new = ($lppostadd > (time() - $READPOST_EXPIRY)) ? (!$a || $lppostid > $a[0]) : 0;
 		//..rp..
 
         $topicpic = ($locked ? ($new ? "lockednew" : "locked") : ($new ? "unlockednew" : "unlocked"));

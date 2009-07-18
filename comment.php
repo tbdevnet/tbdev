@@ -18,7 +18,7 @@ if ($action == "add")
 	  if (!is_valid_id($torrentid))
 			stderr("Error", "Invalid ID.");
 
-		$res = mysql_query("SELECT name FROM torrents WHERE id = $torrentid") or sqlerr(__FILE__,__LINE__);
+		$res = @mysql_query("SELECT name FROM torrents WHERE id = $torrentid") or sqlerr(__FILE__,__LINE__);
 		$arr = mysql_fetch_array($res,MYSQL_NUM);
 		if (!$arr)
 		  stderr("Error", "No torrent with ID.");
@@ -27,13 +27,13 @@ if ($action == "add")
 	  if (!$text)
 			stderr("Error", "Comment body cannot be empty!");
 
-	  mysql_query("INSERT INTO comments (user, torrent, added, text, ori_text) VALUES (" .
-	      $CURUSER["id"] . ",$torrentid, '" . get_date_time() . "', " . sqlesc($text) .
+	  @mysql_query("INSERT INTO comments (user, torrent, added, text, ori_text) VALUES (" .
+	      $CURUSER["id"] . ",$torrentid, " . time() . ", " . sqlesc($text) .
 	       "," . sqlesc($text) . ")");
 
 	  $newid = mysql_insert_id();
 
-	  mysql_query("UPDATE torrents SET comments = comments + 1 WHERE id = $torrentid");
+	  @mysql_query("UPDATE torrents SET comments = comments + 1 WHERE id = $torrentid");
 
 	  header("Refresh: 0; url=details.php?id=$torrentid&viewcomm=$newid#comm$newid");
 	  die;
@@ -97,9 +97,9 @@ elseif ($action == "edit")
 
 	  $text = sqlesc($text);
 
-	  $editedat = sqlesc(get_date_time());
+	  $editedat = time();
 
-	  mysql_query("UPDATE comments SET text=$text, editedat=$editedat, editedby=$CURUSER[id] WHERE id=$commentid") or sqlerr(__FILE__, __LINE__);
+	  mysql_query("UPDATE comments SET text=$text, editedat=$editedat, editedby={$CURUSER['id']} WHERE id=$commentid") or sqlerr(__FILE__, __LINE__);
 
 		if ($returnto)
 	  	header("Location: $returnto");

@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $CURUSER['class'] >= UC_ADMINISTRATO
 	if ($first == -1 || $first === FALSE || $last == -1 || $last === FALSE)
 		stderr("Error", "Bad IP address.");
 	$comment = sqlesc($comment);
-	$added = sqlesc(get_date_time());
+	$added = time();
 
 	mysql_query("INSERT INTO bans (added, addedby, first, last, comment) 
                 VALUES($added, {$CURUSER['id']}, $first, $last, $comment)") or sqlerr(__FILE__, __LINE__);
