@@ -160,7 +160,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
 
       $posterid = $arr["userid"];
 
-      $added = get_date( $arr['added'] -$CURUSER['time_offset'],'');
+      $added = get_date( $arr['added'],'');
 
       //---- Get poster details
 
@@ -237,7 +237,7 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
         if (mysql_num_rows($res2) == 1)
         {
           $arr2 = mysql_fetch_assoc($res2);
-          $body .= "<p><font size=1 class=small>Last edited by <a href=userdetails.php?id={$arr['editedby']}><b>{$arr2['username']}</b></a> on ".get_date( $arr['editedat'] -$CURUSER['time_offset'],'')."</font></p>\n";
+          $body .= "<p><font size=1 class=small>Last edited by <a href=userdetails.php?id={$arr['editedby']}><b>{$arr2['username']}</b></a> on ".get_date( $arr['editedat'],'')."</font></p>\n";
         }
       }
 

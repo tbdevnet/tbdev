@@ -150,7 +150,7 @@ print("</td>\n");
         }
         print("</td>\n");
 */
-        print("<td align='center'><span style=\"white-space: nowrap;\">" . str_replace(",", "<br />", get_date( $row['added'] - $CURUSER['time_offset'],'')) . "</span></td>\n");
+        print("<td align='center'><span style=\"white-space: nowrap;\">" . str_replace(",", "<br />", get_date( $row['added'],'')) . "</span></td>\n");
 		$ttl = (28*24) - floor((time() - $row["added"]) / 3600);
 		if ($ttl == 1) $ttl .= "<br />hour"; else $ttl .= "<br />hours";
         print("<td align='center'>$ttl</td>\n");
@@ -222,7 +222,7 @@ function commenttable($rows)
 		else
    		print("<a name=\"comm" . $row["id"] . "\"><i>(orphaned)</i></a>\n");
 
-		print(get_date( $row['added'] - $CURUSER['time_offset'],'') .
+		print(get_date( $row['added'],'') .
 			($row["user"] == $CURUSER["id"] || get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=edit&amp;cid=$row[id]'>Edit</a>]" : "") .
 			(get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=delete&amp;cid=$row[id]'>Delete</a>]" : "") .
 			($row["editedby"] && get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=vieworiginal&amp;cid=$row[id]'>View original</a>]" : "") . "</p>\n");
@@ -231,7 +231,7 @@ function commenttable($rows)
 			$avatar = "{$pic_base_url}default_avatar.gif";
 		$text = format_comment($row["text"]);
     if ($row["editedby"])
-    	$text .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id={$row['editedby']}'><b>{$row['username']}</b></a> at ".get_date($row['editedat'] - $CURUSER['time_offset'],'DATE')."</font></p>\n";
+    	$text .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id={$row['editedby']}'><b>{$row['username']}</b></a> at ".get_date($row['editedat'],'DATE')."</font></p>\n";
 		begin_table(true);
 		print("<tr valign='top'>\n");
 		print("<td align='center' width='150' style='padding: 0px'><img width='150' src=\"{$avatar}\" alt='' /></td>\n");

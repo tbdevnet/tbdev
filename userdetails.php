@@ -101,13 +101,13 @@ if ($user["ip"] && ($CURUSER['class'] >= UC_MODERATOR || $user["id"] == $CURUSER
 if ($user['added'] == 0)
   $joindate = 'N/A';
 else
-  $joindate = get_date( $user['added'] - $CURUSER['time_offset'],'');
+  $joindate = get_date( $user['added'],'');
 $lastseen = $user["last_access"];
 if ($lastseen == 0)
   $lastseen = "never";
 else
 {
-  $lastseen = get_date( $user['last_access'] - $CURUSER['time_offset'],'',0,1);
+  $lastseen = get_date( $user['last_access'],'',0,1);
 }
 
 

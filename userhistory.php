@@ -106,7 +106,7 @@ if ($action == "viewposts")
 		if ($arr['added'] > $dt)
 			$newposts = ($arr["lastpostread"] < $arr["lastpost"]) && $CURUSER["id"] == $userid;
 
-		$added = get_date( $arr['added'] - $CURUSER['time_offset'],'');
+		$added = get_date( $arr['added'],'');
 
 	    print("<div class='sub'><table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
 	    $added&nbsp;--&nbsp;<b>Forum:&nbsp;</b>
@@ -229,7 +229,7 @@ if ($action == "viewcomments")
     $comm_page = floor($count/20);
     $page_url = $comm_page?"&amp;page=$comm_page":"";
 
-	  $added = get_date( $arr['added'] - $CURUSER['time_offset'],'') . " (" . get_date( $arr['added'] - $CURUSER['time_offset'],'',0,1) . ")";
+	  $added = get_date( $arr['added'],'') . " (" . get_date( $arr['added'],'',0,1) . ")";
 
 	  print("<div class='sub'><table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>".
 	  "$added&nbsp;---&nbsp;<b>Torrent:&nbsp;</b>".

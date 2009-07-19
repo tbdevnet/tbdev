@@ -58,7 +58,7 @@ else
 	while ($uper = mysql_fetch_assoc($res))
 	{
 		print("<tr><td><a href='userdetails.php?id=".$uper['id']."'><b>".$uper['name']."</b></a></td>\n");
-		print("<td " . ($uper['last']?(">".get_date( $uper['last'] - $CURUSER['time_offset'],'')." (".get_date( $uper['last'] - $CURUSER['time_offset'],'',0,1).")"):"align='center'>---") . "</td>\n");
+		print("<td " . ($uper['last']?(">".get_date( $uper['last'],'')." (".get_date( $uper['last'],'',0,1).")"):"align='center'>---") . "</td>\n");
 		print("<td align='right'>" . $uper['n_t'] . "</td>\n");
 		print("<td align='right'>" . ($n_tor > 0?number_format(100 * $uper['n_t']/$n_tor,1)."%":"---") . "</td>\n");
 		print("<td align='right'>" . $uper['n_p']."</td>\n");
@@ -96,7 +96,7 @@ else
 	while ($cat = mysql_fetch_assoc($res))
 	{
 		print("<tr><td class='rowhead'>" . $cat['name'] . "</td>");
-		print("<td " . ($cat['last']?(">".get_date( $cat['last'] - $CURUSER['time_offset'],'')." (".get_date( $cat['last'] - $CURUSER['time_offset'],'',0,1).")"):"align='center'>---") ."</td>");
+		print("<td " . ($cat['last']?(">".get_date( $cat['last'],'')." (".get_date( $cat['last'],'',0,1).")"):"align='center'>---") ."</td>");
 		print("<td align='right'>" . $cat['n_t'] . "</td>");
 		print("<td align='right'>" . number_format(100 * $cat['n_t']/$n_tor,1) . "%</td>");
 		print("<td align='right'>" . $cat['n_p'] . "</td>");

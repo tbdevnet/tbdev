@@ -129,7 +129,7 @@ function std_view() {
 
       $lastposterid = $post_arr["userid"];
 
-      $lastpostdate = get_date( $post_arr["added"] -$CURUSER['time_offset'],'' );
+      $lastpostdate = get_date( $post_arr["added"],'' );
 
       $lasttopicid = $post_arr["topicid"];
 

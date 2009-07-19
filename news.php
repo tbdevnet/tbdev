@@ -137,7 +137,7 @@ if (mysql_num_rows($res) > 0)
 		$newsid = $arr["id"];
 		$body = format_comment($arr["body"]);
 	  $userid = $arr["userid"];
-	  $added = get_date( $arr['added'] - $CURUSER['time_offset'],'');
+	  $added = get_date( $arr['added'],'');
 
     $res2 = mysql_query("SELECT username, donor FROM users WHERE id = $userid") or sqlerr(__FILE__, __LINE__);
     $arr2 = mysql_fetch_assoc($res2);

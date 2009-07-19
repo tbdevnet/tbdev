@@ -41,22 +41,22 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Notify user
     $what = ($class > $user['class'] ? "promoted" : "demoted");
     $msg = sqlesc("You have been $what to '" . get_user_class_name($class) . "' by ".$CURUSER['username']);
-    $added = date_time();
+    $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES(0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
 
     $updateset[] = "class = ".sqlesc($class);
 
-    $modcomment = gmdate("Y-m-d") . " - $what to '" . get_user_class_name($class) . "' by $CURUSER[username].\n". $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - $what to '" . get_user_class_name($class) . "' by $CURUSER[username].\n". $modcomment;
     }
 
     // Clear Warning - Code not called for setting warning
     if (isset($_POST['warned']) && (($warned = $_POST['warned']) != $user['warned']))
     {
     $updateset[] = "warned = " . sqlesc($warned);
-    $updateset[] = "warneduntil = '0000-00-00 00:00:00'";
+    $updateset[] = "warneduntil = 0";
     if ($warned == 'no')
     {
-    $modcomment = gmdate("Y-m-d") . " - Warning removed by " . $CURUSER['username'] . ".\n". $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Warning removed by " . $CURUSER['username'] . ".\n". $modcomment;
     $msg = sqlesc("Your warning has been removed by " . $CURUSER['username'] . ".");
     $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -71,17 +71,17 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
 
     if ($warnlength == 255)
     {
-    $modcomment = gmdate("Y-m-d") . " - Warned by " . $CURUSER['username'] . ".\nReason: $warnpm\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Warned by " . $CURUSER['username'] . ".\nReason: $warnpm\n" . $modcomment;
     $msg = sqlesc("You have received a warning from ".$CURUSER['username'].($warnpm ? "\n\nReason: $warnpm" : ""));
-    $updateset[] = "warneduntil = '0000-00-00 00:00:00'";
+    $updateset[] = "warneduntil = 0";
     }
     else
     {
     $warneduntil = (time() + $warnlength * 604800);
     $dur = $warnlength . " week" . ($warnlength > 1 ? "s" : "");
     $msg = sqlesc("You have received a $dur warning from ".$CURUSER['username'].($warnpm ? "\n\nReason: $warnpm" : ""));
-    $modcomment = gmdate("Y-m-d") . " - Warned for $dur by " . $CURUSER['username'] . ".\nReason: $warnpm\n" . $modcomment;
-    $updateset[] = "warneduntil = ".sqlesc($warneduntil);
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Warned for $dur by " . $CURUSER['username'] . ".\nReason: $warnpm\n" . $modcomment;
+    $updateset[] = "warneduntil = ".$warneduntil;
     }
     $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -92,10 +92,10 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     if (isset($_POST['donor']) && (($donor = $_POST['donor']) != $user['donor']))
     {
     $updateset[] = "donor = " . sqlesc($donor);
-    $updateset[] = "warneduntil = '0000-00-00 00:00:00'";
+    $updateset[] = "warneduntil = 0";
     if ($donor == 'no')
     {
-    $modcomment = gmdate("Y-m-d") . " - Donor status removed by ".$CURUSER['username'].".\n". $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Donor status removed by ".$CURUSER['username'].".\n". $modcomment;
     $msg = sqlesc("Your donator status has expired.");
     $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -107,17 +107,17 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     {
     if ($donorlength == 255)
     {
-    $modcomment = gmdate("Y-m-d") . " - Donor status set by " . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Donor status set by " . $CURUSER['username'] . ".\n" . $modcomment;
     $msg = sqlesc("You have received donor status from ".$CURUSER['username']);
-    $updateset[] = "donoruntil = '0000-00-00 00:00:00'";
+    $updateset[] = "donoruntil = 0";
     }
     else
     {
     $donoruntil = (time() + $donorlength * 604800);
     $dur = $donorlength . " week" . ($donorlength > 1 ? "s" : "");
     $msg = sqlesc("You have received donator status for $dur from " . $CURUSER['username']);
-    $modcomment = gmdate("Y-m-d") . " - Donator status set for $dur by " . $CURUSER['username']."\n".$modcomment;
-    $updateset[] = "donoruntil = ".sqlesc($donoruntil);
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Donator status set for $dur by " . $CURUSER['username']."\n".$modcomment;
+    $updateset[] = "donoruntil = ".$donoruntil;
     }
     $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -128,9 +128,9 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     if ((isset($_POST['enabled'])) && (($enabled = $_POST['enabled']) != $user['enabled']))
     {
     if ($enabled == 'yes')
-    $modcomment = gmdate("Y-m-d") . " - Enabled by " . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Enabled by " . $CURUSER['username'] . ".\n" . $modcomment;
     else
-    $modcomment = gmdate("Y-m-d") . " - Disabled by " . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Disabled by " . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "enabled = " . sqlesc($enabled);
     }
@@ -158,7 +158,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Change Custom Title
     if ((isset($_POST['title'])) && (($title = $_POST['title']) != ($curtitle = $user['title'])))
     {
-    $modcomment = gmdate("Y-m-d") . " - Custom Title changed to '".$title."' from '".$curtitle."' by " . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Custom Title changed to '".$title."' from '".$curtitle."' by " . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "title = " . sqlesc($title);
     }
@@ -171,7 +171,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     if ((isset($_POST['resetpasskey'])) && ($_POST['resetpasskey']))
     {
     $newpasskey = md5($user['username'].time().$user['passhash']);
-    $modcomment = gmdate("Y-m-d") . " - Passkey ".sqlesc($user['passkey'])." Reset to ".sqlesc($newpasskey)." by " . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Passkey ".sqlesc($user['passkey'])." Reset to ".sqlesc($newpasskey)." by " . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "passkey=".sqlesc($newpasskey);
     }
@@ -238,7 +238,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Avatar Changed
     if ((isset($_POST['avatar'])) && (($avatar = $_POST['avatar']) != ($curavatar = $user['avatar'])))
     {
-    $modcomment = gmdate("Y-m-d") . " - Avatar changed from ".htmlspecialchars($curavatar)." to ".htmlspecialchars($avatar)." by " . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( time(), 'DATE', 1 ) . " - Avatar changed from ".htmlspecialchars($curavatar)." to ".htmlspecialchars($avatar)." by " . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "avatar = ".sqlesc($avatar);
     }

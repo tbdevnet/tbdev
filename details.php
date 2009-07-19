@@ -126,7 +126,7 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		else
 			tr("Type", "(none selected)");
 
-		tr("Last&nbsp;seeder", "Last activity " .get_date( $row['lastseed'] - $CURUSER['time_offset'],'',0,1));
+		tr("Last&nbsp;seeder", "Last activity " .get_date( $row['lastseed'],'',0,1));
 		tr("Size",mksize($row["size"]) . " (" . number_format($row["size"]) . " bytes)");
 /*
 		$s = "";
@@ -187,7 +187,7 @@ if (!empty($xrow))
 
 */
 
-		tr("Added", get_date( $row['added'] - $CURUSER['time_offset'],'LONG'));
+		tr("Added", get_date( $row['added'],'LONG'));
 		tr("Views", $row["views"]);
 		tr("Hits", $row["hits"]);
 		tr("Snatched", $row["times_completed"] . " time(s)");

@@ -225,7 +225,7 @@ $res = mysql_query(
           else
             $avatar = "<img width=100 src='{$forum_pic_url}default_avatar.gif' />";
 
-        print("<p class=sub>#" . $post["id"] . " by " . $user["username"] . " on " . get_date( $post['added'] - $CURUSER['time_offset'],''));
+        print("<p class=sub>#" . $post["id"] . " by " . $user["username"] . " on " . get_date( $post['added'],''));
 
         begin_table(true);
 

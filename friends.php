@@ -121,8 +121,8 @@ else
 		if (!$title)
 	    $title = get_user_class_name($friend["class"]);
     $body1 = "<a href='userdetails.php?id=" . $friend['id'] . "'><b>" . $friend['name'] . "</b></a>" .
-    	get_user_icons($friend) . " ($title)<br /><br />last seen on " . get_date( $friend['last_access'] - $CURUSER['time_offset'],'') .
-    	"<br />(" . get_date( $friend['last_access'] - $CURUSER['time_offset'],'',0,1) . ")";
+    	get_user_icons($friend) . " ($title)<br /><br />last seen on " . get_date( $friend['last_access'],'') .
+    	"<br />(" . get_date( $friend['last_access'],'',0,1) . ")";
 		$body2 = "<br /><a href='friends.php?id=$userid&amp;action=delete&amp;type=friend&amp;targetid=" . $friend['id'] . "'>Remove</a>" .
 			"<br /><br /><a href='sendmessage.php?receiver=" . $friend['id'] . "'>Send PM</a>";
     $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($friend["avatar"]) : "");

@@ -187,7 +187,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 		
         $lpuserid = 0 + $arr["userid"];
 
-        $lpadded = "<nobr>" . get_date( $arr['added'] - $CURUSER['time_offset'],'') . "</nobr>";
+        $lpadded = "<nobr>" . get_date( $arr['added'],'') . "</nobr>";
 
         //------ Get name of last poster
 
