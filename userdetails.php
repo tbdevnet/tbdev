@@ -291,12 +291,12 @@ if ($CURUSER['class'] >= UC_MODERATOR && $user["class"] < $CURUSER['class'])
 	if ($warned)
 	{
 		$warneduntil = $user['warneduntil'];
-		if ($warneduntil == '0000-00-00 00:00:00')
+		if ($warneduntil == 0)
     	print("<td align='center'>(arbitrary duration)</td></tr>\n");
 		else
 		{
-    	print("<td align='center'>Until $warneduntil");
-	    print(" (" . mkprettytime(strtotime($warneduntil) - gmtime()) . " to go)</td></tr>\n");
+    	print("<td align='center'>Until ".get_date($warneduntil, 'DATE'));
+	    print(" (" . mkprettytime($warneduntil - time())  . " to go)</td></tr>\n");
  	  }
   }
   else
