@@ -39,6 +39,7 @@ if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'WIN' )
   else
   {
     $file_path = dirname(__FILE__);
+    $file_path = str_replace( "/include", "", $file_path );
   }
   
 define('ROOT_PATH', $file_path);
