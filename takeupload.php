@@ -117,8 +117,12 @@ function dict_get($d, $k, $t) {
 	return $v["value"];
 }
 
-list($ann, $info, $tmaker) = dict_check($dict, "announce(string):info:created by");
+list($ann, $info) = dict_check($dict, "announce(string):info");
+
+$tmaker = (isset($dict['value']['created by']) && !empty($dict['value']['created by']['value'])) ? sqlesc($dict['value']['created by']['value']) : sqlesc('Unknown');
+
 unset($dict);
+
 list($dname, $plen, $pieces) = dict_check($info, "name(string):piece length(integer):pieces(string)");
 
 if (!in_array($ann, $announce_urls, 1))
@@ -126,8 +130,6 @@ if (!in_array($ann, $announce_urls, 1))
 
 if (strlen($pieces) % 20 != 0)
 	bark("invalid pieces");
-
-$tmaker = (isset($tmaker) && !empty($tmaker['value'])) ? sqlesc($tmaker['value']) : '';
 
 $filelist = array();
 $totallen = dict_get($info, "length", "integer");

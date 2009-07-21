@@ -2,7 +2,7 @@
 require "include/bittorrent.php";
 require_once "include/user_functions.php";
 require_once "include/html_functions.php";
-require_once "include/bbcode_functions.php";
+require_once "include/emoticons.php";
 
 dbconn(false);
 loggedinorreturn();

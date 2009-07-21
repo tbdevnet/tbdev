@@ -1,6 +1,8 @@
 <?php
 
 require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
+
 dbconn();
 
 loggedinorreturn();

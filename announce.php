@@ -2,7 +2,7 @@
 
 
 $agent = $_SERVER["HTTP_USER_AGENT"];
-//phpinfo(); exit;
+
 // Deny access made with a browser...
 if (
     ereg("^Mozilla\\/", $agent) || 
@@ -23,7 +23,8 @@ require_once "include/secrets.php";
 
 $BASEURL = 'http://localhost/TB/';
 $announce_interval = 60 * 30;
-	
+define ('UC_VIP', 2);
+
 /////////////////////// FUNCTION DEFS ///////////////////////////////////
 function dbconn()
 {
@@ -441,7 +442,7 @@ else
 
 	if (isset($self))
 	{
-		mysql_query("UPDATE peers SET uploaded = $uploaded, downloaded = $downloaded, to_go = $left, last_action = NOW(), seeder = '$seeder'"
+		mysql_query("UPDATE peers SET uploaded = $uploaded, downloaded = $downloaded, to_go = $left, last_action = ".time().", seeder = '$seeder'"
 			. ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . time() : "") . " WHERE $selfwhere");
 		if (mysql_affected_rows() && $self["seeder"] != $seeder)
 		{
