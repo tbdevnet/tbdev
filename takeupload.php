@@ -181,9 +181,15 @@ if (!$ret) {
 $id = mysql_insert_id();
 
 @mysql_query("DELETE FROM files WHERE torrent = $id");
-foreach ($filelist as $file) {
-	@mysql_query("INSERT INTO files (torrent, filename, size) VALUES ($id, ".sqlesc($file[0]).",".$file[1].")");
+
+function file_list($arr,$id)
+{
+    foreach($arr as $v)
+        $new[] = "($id,".sqlesc($v[0]).",".$v[1].")";
+    return join(",",$new);
 }
+
+mysql_query("INSERT INTO files (torrent, filename, size) VALUES ".file_list($filelist,$id));
 
 move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");
 
