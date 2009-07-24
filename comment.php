@@ -56,7 +56,7 @@ if ($action == "add")
 	print("<textarea name=\"text\" rows=\"10\" cols=\"60\"></textarea></p>\n");
 	print("<p><input type=\"submit\" class='btn' value=\"Do it!\" /></p></form>\n");
 
-	$res = mysql_query("SELECT comments.id, text, comments.added, username, users.id as user, users.avatar FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $torrentid ORDER BY comments.id DESC LIMIT 5");
+	$res = mysql_query("SELECT comments.id, text, comments.added, comments.editedby, comments.editedat, username, users.id as user, users.title, users.avatar, users.class, users.donor, users.warned FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $torrentid ORDER BY comments.id DESC LIMIT 5");
 
 	$allrows = array();
 	while ($row = mysql_fetch_assoc($res))
