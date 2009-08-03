@@ -134,7 +134,7 @@ require_once "include/user_functions.php";
 
 	  if (strpos($user['notifs'], '[pm]') !== false)
 	  {
-	    if (gmtime() - $user["la"] >= 300)
+	    if (time() - $user["la"] >= 300)
 	    {
 	    $username = $CURUSER["username"];
 $body = <<<EOD

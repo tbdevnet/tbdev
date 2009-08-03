@@ -401,12 +401,12 @@ function httperr($code = 404) {
     print("<p>Sorry pal :(</p>\n");
     exit();
 }
-
+/*
 function gmtime()
 {
     return strtotime(get_date_time());
 }
-
+*/
 /*
 function logincookie($id, $password, $secret, $updatedb = 1, $expires = 0x7fffffff) {
     $md5 = md5($secret . $password . $secret);

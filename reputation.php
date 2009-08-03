@@ -418,7 +418,7 @@ function fetch_reppower($user=array(),$rep='pos')
 
 			if( $GVARS['rep_rdpower'] )
 			{ // time based power
-				$reppower += intval((TIMENOW - strtotime( $user['added'] )) / 86400 / $GVARS['rep_rdpower']);
+				$reppower += intval((TIMENOW - $user['added']) / 86400 / $GVARS['rep_rdpower']);
 			}
 
 			if( $rep != 'pos' )

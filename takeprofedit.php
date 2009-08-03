@@ -45,7 +45,7 @@ if ($email != $CURUSER["email"]) {
 
 
 $acceptpms = $_POST["acceptpms"];
-$deletepms = ($_POST["deletepms"] != "" ? "yes" : "no");
+$deletepms = isset($_POST["deletepms"]) ? "yes" : "no";
 $savepms = (isset($_POST['savepms']) && $_POST["savepms"] != "" ? "yes" : "no");
 $pmnotif = isset($_POST["pmnotif"]) ? $_POST["pmnotif"] : '';
 $emailnotif = isset($_POST["emailnotif"]) ? $_POST["emailnotif"] : '';
