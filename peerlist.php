@@ -94,7 +94,7 @@ if(mysql_num_rows($res) == 0)
 
 			$downloaders = array();
 			$seeders = array();
-			$subres = mysql_query("SELECT u.username, u.privacy, p.seeder, p.finishedat, p.downloadoffset, p.uploadoffset, p.ip, p.port, p.uploaded, p.downloaded, p.to_go, UNIX_TIMESTAMP( p.started ) AS st, p.connectable, p.agent, UNIX_TIMESTAMP( p.last_action ) AS la, p.userid, p.peer_id
+			$subres = mysql_query("SELECT u.username, u.privacy, p.seeder, p.finishedat, p.downloadoffset, p.uploadoffset, p.ip, p.port, p.uploaded, p.downloaded, p.to_go, p.started AS st, p.connectable, p.agent, p.last_action AS la, p.userid, p.peer_id
 FROM peers p
 LEFT JOIN users u ON p.userid = u.id
 WHERE p.torrent = $id") or sqlerr();
