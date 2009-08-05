@@ -491,14 +491,16 @@ function view_list()
 			if( $total['cnt'] > $deflimit ) 
 			{
 			
-				require_once "include/pager_alternative.php";
+				require_once "include/pager.php";
 				
-				$links = pager( array( 'TOTAL_POSS'  => $total['cnt'],
-										'PER_PAGE'    => $deflimit,
-										'CUR_ST_VAL'  => $first,
-										'L_SINGLE'    => "",
-										'BASE_URL'    => "reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=$orderby&amp;startstamp=$start&amp;endstamp=$end" ) 
-										);
+				$links = pager( 
+                  array( 
+                  'count'  => $total['cnt'],
+                  'perpage'    => $deflimit,
+                  'start_value'  => $first,
+                  'url'    => "reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=$orderby&amp;startstamp=$start&amp;endstamp=$end"
+                        )
+                  );
 			}
 			
 			// mofo query!
