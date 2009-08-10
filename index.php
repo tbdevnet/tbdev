@@ -46,7 +46,7 @@ if (get_user_class() >= UC_ADMINISTRATOR)
 print("</h2>\n");
 $res = mysql_query("SELECT * FROM news
 					WHERE added + ( 3600 *24 *45 ) >
-					UNIX_TIMESTAMP( ) ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
+					".time()." ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
 if (mysql_num_rows($res) > 0)
 {
 	require_once "include/bbcode_functions.php";

@@ -611,7 +611,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     // For mySQL 4.1.1 or above use instead
     // $where_is .= (isset($where_is)?" AND ":"")."DATE(added) = DATE('$date')";
     $where_is .= (!empty($where_is)?" AND ":"").
-    		"(UNIX_TIMESTAMP(added) - UNIX_TIMESTAMP('$date')) BETWEEN 0 and 86400";
+    		"(added - UNIX_TIMESTAMP('$date')) BETWEEN 0 and 86400";
     else
     {
       $where_is .= (!empty($where_is)?" AND ":"")."u.added ";
@@ -661,7 +661,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     // For mySQL 4.1.1 or above use instead
     // $where_is .= (isset($where_is)?" AND ":"")."DATE(added) = DATE('$date')";
     	$where_is .= (!empty($where_is)?" AND ":"").
-      		"(UNIX_TIMESTAMP(last_access) - UNIX_TIMESTAMP('$last')) BETWEEN 0 and 86400";
+      		"(last_access - UNIX_TIMESTAMP('$last')) BETWEEN 0 and 86400";
     else
     {
     	$where_is .= (!empty($where_is)?" AND ":"")."u.last_access ";

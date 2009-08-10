@@ -201,7 +201,7 @@ ob_start("ob_gzhandler");
 
   if ($type == 1)
   {
-    $mainquery = "SELECT id as userid, username, added, uploaded, downloaded, uploaded / (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(added)) AS upspeed, downloaded / (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(added)) AS downspeed FROM users WHERE enabled = 'yes'";
+    $mainquery = "SELECT id as userid, username, added, uploaded, downloaded, uploaded / (".time()." - added) AS upspeed, downloaded / (".time()." - added) AS downspeed FROM users WHERE enabled = 'yes'";
 
   	if (!$limit || $limit > 250)
   		$limit = 10;
@@ -329,7 +329,7 @@ ob_start("ob_gzhandler");
 //				$r = mysql_query("SELECT users.id AS userid, peers.id AS peerid, username, peers.uploaded, peers.downloaded, (peers.uploaded - peers.uploadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started)) AS uprate, (peers.downloaded - peers.downloadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started)) AS downrate FROM peers LEFT JOIN users ON peers.userid = users.id ORDER BY uprate DESC LIMIT $limit") or sqlerr();
 //				peerstable($r, "Top $limit Fastest Uploaders (timeout corrected)" . ($limit == 10 && $pu ? " <font class='small'> - [<a href='topten.php?type=4&amp;lim=100&amp;subtype=ul'>Top 100</a>] - [<a href='topten.php?type=4&amp;lim=250&amp;subtype=ul'>Top 250</a>]</font>" : ""));
 
-				$r = mysql_query( "SELECT users.id AS userid, username, (peers.uploaded - peers.uploadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started)) AS uprate, IF(seeder = 'yes',(peers.downloaded - peers.downloadoffset)  / (finishedat - UNIX_TIMESTAMP(started)),(peers.downloaded - peers.downloadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started))) AS downrate FROM peers LEFT JOIN users ON peers.userid = users.id ORDER BY uprate DESC LIMIT $limit") or sqlerr();
+				$r = mysql_query( "SELECT users.id AS userid, username, (peers.uploaded - peers.uploadoffset) / (last_action - started) AS uprate, IF(seeder = 'yes',(peers.downloaded - peers.downloadoffset)  / (finishedat - started),(peers.downloaded - peers.downloadoffset) / (last_action - started)) AS downrate FROM peers LEFT JOIN users ON peers.userid = users.id ORDER BY uprate DESC LIMIT $limit") or sqlerr();
 				peerstable($r, "Top $limit Fastest Uploaders" . ($limit == 10 && $pu ? " <font class='small'> - [<a href='topten.php?type=4&amp;lim=100&amp;subtype=ul'>Top 100</a>] - [<a href='topten.php?type=4&amp;lim=250&amp;subtype=ul'>Top 250</a>]</font>" : ""));
 	  	}
 
@@ -338,7 +338,7 @@ ob_start("ob_gzhandler");
 //				$r = mysql_query("SELECT users.id AS userid, peers.id AS peerid, username, peers.uploaded, peers.downloaded, (peers.uploaded - peers.uploadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started)) AS uprate, (peers.downloaded - peers.downloadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started)) AS downrate FROM peers LEFT JOIN users ON peers.userid = users.id ORDER BY downrate DESC LIMIT $limit") or sqlerr();
 //				peerstable($r, "Top $limit Fastest Downloaders (timeout corrected)" . ($limit == 10 && $pu ? " <font class='small'> - [<a href='topten.php?type=4&amp;lim=100&amp;subtype=dl'>Top 100</a>] - [<a href='topten.php?type=4&amp;lim=250&amp;subtype=dl'>Top 250</a>]</font>" : ""));
 
-				$r = mysql_query("SELECT users.id AS userid, peers.id AS peerid, username, peers.uploaded, peers.downloaded,(peers.uploaded - peers.uploadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started)) AS uprate, IF(seeder = 'yes',(peers.downloaded - peers.downloadoffset)  / (finishedat - UNIX_TIMESTAMP(started)),(peers.downloaded - peers.downloadoffset) / (UNIX_TIMESTAMP(last_action) - UNIX_TIMESTAMP(started))) AS downrate FROM peers LEFT JOIN users ON peers.userid = users.id ORDER BY downrate DESC LIMIT $limit") or sqlerr();
+				$r = mysql_query("SELECT users.id AS userid, peers.id AS peerid, username, peers.uploaded, peers.downloaded,(peers.uploaded - peers.uploadoffset) / (last_action - started) AS uprate, IF(seeder = 'yes',(peers.downloaded - peers.downloadoffset)  / (finishedat - started),(peers.downloaded - peers.downloadoffset) / (last_action - started)) AS downrate FROM peers LEFT JOIN users ON peers.userid = users.id ORDER BY downrate DESC LIMIT $limit") or sqlerr();
 				peerstable($r, "Top $limit Fastest Downloaders" . ($limit == 10 && $pu ? " <font class='small'> - [<a href='topten.php?type=4&amp;lim=100&amp;subtype=dl'>Top 100</a>] - [<a href='topten.php?type=4&amp;lim=250&amp;subtype=dl'>Top 250</a>]</font>" : ""));
 	  	}
 	}

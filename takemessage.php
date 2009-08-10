@@ -104,7 +104,7 @@ require_once "include/user_functions.php";
 
 	  $save = ($save == 'yes') ? "yes" : "no";
 
-	  $res = mysql_query("SELECT acceptpms, email, notifs, UNIX_TIMESTAMP(last_access) as la FROM users WHERE id=$receiver") or sqlerr(__FILE__, __LINE__);
+	  $res = mysql_query("SELECT acceptpms, email, notifs, last_access as la FROM users WHERE id=$receiver") or sqlerr(__FILE__, __LINE__);
 	  $user = mysql_fetch_assoc($res);
 	  if (!$user)
 	    stderr("Error", "No user with ID.");
