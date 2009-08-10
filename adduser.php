@@ -23,8 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$secret = mksecret();
 	$passhash = sqlesc(md5($secret . $password . $secret));
 	$secret = sqlesc($secret);
-
-	mysql_query("INSERT INTO users (added, last_access, secret, username, passhash, status, email) VALUES(NOW(), NOW(), $secret, $username, $passhash, 'confirmed', $email)") or sqlerr(__FILE__, __LINE__);
+  $time_now = time();
+  
+	mysql_query("INSERT INTO users (added, last_access, secret, username, passhash, status, email) VALUES($time_now, $time_now, $secret, $username, $passhash, 'confirmed', $email)") or sqlerr(__FILE__, __LINE__);
 	$res = mysql_query("SELECT id FROM users WHERE username=$username");
 	$arr = mysql_fetch_row($res);
 	if (!$arr)

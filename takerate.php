@@ -29,8 +29,8 @@ if (!$row)
 
 //if ($row["owner"] == $CURUSER["id"])
 //	bark("You can't vote on your own torrents.");
-
-$res = mysql_query("INSERT INTO ratings (torrent, user, rating, added) VALUES ($id, " . $CURUSER["id"] . ", $rating, NOW())");
+$time_now = time();
+$res = mysql_query("INSERT INTO ratings (torrent, user, rating, added) VALUES ($id, " . $CURUSER["id"] . ", $rating, $time_now)");
 if (!$res) {
 	if (mysql_errno() == 1062)
 		bark("You have already rated this torrent.");
