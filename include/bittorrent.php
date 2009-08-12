@@ -375,9 +375,13 @@ if (isset($unread) && !empty($unread))
 } // stdhead
 
 function stdfoot() {
-  //global $pic_base_url;
-  print("</td></tr></table>\n");
-  print("</body></html>\n");
+  global $pic_base_url;
+  
+  print "<p align='center'>
+<a href='http://www.tbdev.net'><img src='{$pic_base_url}tbdev_btn_red.png' border='0' alt='Powered By TBDev &copy;2009' title='Powered By TBDev &copy;2009' /></a></p>";
+
+  print "</td></tr></table>\n";
+  print "</body></html>\n";
 }
 
 function genbark($x,$y) {
