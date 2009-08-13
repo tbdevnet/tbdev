@@ -10,10 +10,10 @@
 |   svn: http://sourceforge.net/projects/tbdevnet/
 |   Licence Info: GPL
 +------------------------------------------------
-|   $Date: $
-|   $Revision: $
-|   $Author: $
-|   $URL: $
+|   $Date$
+|   $Revision$
+|   $Author$
+|   $URL$
 +------------------------------------------------
 */
 if ( ! defined( 'IN_TBDEV_FORUM' ) )
