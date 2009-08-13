@@ -1,4 +1,21 @@
 <?php
+/*
++------------------------------------------------
+|   TBDev.net BitTorrent Tracker PHP
+|   =============================================
+|   by CoLdFuSiOn
+|   (c) 2003 - 2009 TBDev.Net
+|   http://www.tbdev.net
+|   =============================================
+|   svn: http://sourceforge.net/projects/tbdevnet/
+|   Licence Info: GPL
++------------------------------------------------
+|   $Date: $
+|   $Revision: $
+|   $Author: $
+|   $URL: $
++------------------------------------------------
+*/
 ob_start("ob_gzhandler");
 
 require_once "include/bittorrent.php";
@@ -101,12 +118,6 @@ print("<img height='1'5 width=$width src=\"{$pic_base_url}{$pic}\" alt='$percent
 The administrator of this site (www.tbdev.net) cannot be held responsible for what its users post, or any other actions of its users.
 You may not use this site to distribute or download any material when you do not have the legal rights to do so.
 It is your own responsibility to adhere to these terms.</font></p>
-
-<p align='center'>
-<a href="http://www.tbdev.net"><img src="<?=$pic_base_url?>tbdev_btn_red.png" border='0' alt="P2P Legal Defense Fund" /></a>
-</p>
-
-
 </td></tr></table>
 
 <?php
