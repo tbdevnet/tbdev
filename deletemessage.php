@@ -1,4 +1,21 @@
 <?php
+/*
++------------------------------------------------
+|   TBDev.net BitTorrent Tracker PHP
+|   =============================================
+|   by CoLdFuSiOn
+|   (c) 2003 - 2009 TBDev.Net
+|   http://www.tbdev.net
+|   =============================================
+|   svn: http://sourceforge.net/projects/tbdevnet/
+|   Licence Info: GPL
++------------------------------------------------
+|   $Date: $
+|   $Revision: $
+|   $Author: $
+|   $URL: $
++------------------------------------------------
+*/
   require "include/bittorrent.php";
   $id = 0+$_GET["id"];
   if (!is_numeric($id) || $id < 1 || floor($id) != $id)
