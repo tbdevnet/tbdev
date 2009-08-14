@@ -27,10 +27,7 @@ loggedinorreturn();
 
 function bark($msg)
 {
-  stdhead();
-  stdmsg("Error", $msg);
-  stdfoot();
-  exit;
+  stderr("Error", $msg);
 }
 
 function maketable($res)
@@ -40,7 +37,7 @@ function maketable($res)
   $ret = "<table class='main' border='1' cellspacing='0' cellpadding='5'>" .
     "<tr><td class='colhead' align='center'>Type</td><td class='colhead'>Name</td><td class='colhead' align='center'>TTL</td><td class='colhead' align='center'>Size</td><td class='colhead' align='right'>Se.</td><td class='colhead' align='right'>Le.</td><td class='colhead' align='center'>Upl.</td>\n" .
     "<td class='colhead' align='center'>Downl.</td><td class='colhead' align='center'>Ratio</td></tr>\n";
-  while ($arr = mysql_fetch_assoc($res))
+  foreach ($res as $arr)
   {
     if ($arr["downloaded"] > 0)
     {
@@ -95,23 +92,10 @@ if (mysql_num_rows($r) > 0)
   $torrents .= "</table>";
 }
 
-if ($user["ip"] && ($CURUSER['class'] >= UC_MODERATOR || $user["id"] == $CURUSER["id"]))
+if ($user['ip'] && ($CURUSER['class'] >= UC_MODERATOR || $user['id'] == $CURUSER['id']))
 {
-  $ip = $user["ip"];
-  $dom = @gethostbyaddr($user["ip"]);
-  if ($dom == $user["ip"] || @gethostbyname($dom) != $user["ip"])
-    $addr = $ip;
-  else
-  {
-    $dom = strtoupper($dom);
-    //$domparts = explode(".", $dom);
-    //$domain = $domparts[count($domparts) - 2];
-    //if ($domain == "COM" || $domain == "CO" || $domain == "NET" || $domain == "NE" || $domain == "ORG" || $domain == "OR" )
-     // $l = 2;
-   // else
-     // $l = 1;
-    $addr = "$ip ($dom)";
-  }
+    $dom = @gethostbyaddr($user['ip']);
+    $addr = ($dom == $user['ip'] || @gethostbyname($dom) != $user['ip']) ? $user['ip'] : $user['ip'].' ('.$dom.')';
 }
 
 
@@ -148,12 +132,15 @@ if (mysql_num_rows($res) == 1)
 //if ($user["donor"] == "yes") $donor = "<td class='embedded'><img src='{$pic_base_url}starbig.gif' alt='Donor' style='margin-left: 4pt' /></td>";
 //if ($user["warned"] == "yes") $warned = "<td class='embedded'><img src=\"{$pic_base_url}warnedbig.gif\" alt='Warned' style='margin-left: 4pt' /></td>";
 
-$res = mysql_query("SELECT torrent,added,uploaded,downloaded,torrents.name as torrentname,categories.name as catname,size,image,category,seeders,leechers FROM peers LEFT JOIN torrents ON peers.torrent = torrents.id LEFT JOIN categories ON torrents.category = categories.id WHERE userid=$id AND seeder='no'") or sqlerr();
-if (mysql_num_rows($res) > 0)
-  $leeching = maketable($res);
-$res = mysql_query("SELECT torrent,added,uploaded,downloaded,torrents.name as torrentname,categories.name as catname,size,image,category,seeders,leechers FROM peers LEFT JOIN torrents ON peers.torrent = torrents.id LEFT JOIN categories ON torrents.category = categories.id WHERE userid=$id AND seeder='yes'") or sqlerr();
-if (mysql_num_rows($res) > 0)
-  $seeding = maketable($res);
+$res = mysql_query("SELECT p.torrent, p.uploaded, p.downloaded, p.seeder, t.added, t.name as torrentname, t.size, t.category, t.seeders, t.leechers, c.name as catname, c.image FROM peers p LEFT JOIN torrents t ON p.torrent = t.id LEFT JOIN categories c ON t.category = c.id WHERE p.userid=$id") or sqlerr();
+
+while ($arr = mysql_fetch_assoc($res))
+{
+    if ($arr['seeder'] == 'yes')
+        $seeding[] = $arr;
+    else
+        $leeching[] = $arr;
+}
 
 stdhead("Details for " . $user["username"]);
 $enabled = $user["enabled"] == 'yes';
@@ -229,6 +216,7 @@ if ($torrentcomments && (($user["class"] >= UC_POWER_USER && $user["id"] == $CUR
 else
 	print("<td align='left'>$torrentcomments</td></tr>\n");
 print("<tr><td class='rowhead'>Forum&nbsp;posts</td>");
+
 if ($forumposts && (($user["class"] >= UC_POWER_USER && $user["id"] == $CURUSER["id"]) || $CURUSER['class'] >= UC_MODERATOR))
 	print("<td align='left'><a href='userhistory.php?action=viewposts&amp;id=$id'>$forumposts</a></td></tr>\n");
 else
@@ -236,10 +224,13 @@ else
 
 if (isset($torrents))
   print("<tr valign='top'><td class='rowhead'>Uploaded&nbsp;torrents</td><td align='left'>$torrents</td></tr>\n");
+  
 if (isset($seeding))
-  print("<tr valign='top'><td class='rowhead'>Currently&nbsp;seeding</td><td align='left'>$seeding</td></tr>\n");
+  print("<tr valign=top><td class=rowhead>Currently&nbsp;seeding</td><td align=left>".maketable($seeding)."</td></tr>\n");
+  
 if (isset($leeching))
-  print("<tr valign='top'><td class='rowhead'>Currently&nbsp;leeching</td><td align='left'>$leeching</td></tr>\n");
+   print("<tr valign=top><td class=rowhead>Currently&nbsp;leeching</td><td align=left>".maketable($leeching)."</td></tr>\n");
+   
 if ($user["info"])
  print("<tr valign='top'><td align='left' colspan='2' class='text' bgcolor='#F4F4F0'>" . format_comment($user["info"]) . "</td></tr>\n");
 
