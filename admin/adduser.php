@@ -10,10 +10,10 @@
 |   svn: http://sourceforge.net/projects/tbdevnet/
 |   Licence Info: GPL
 +------------------------------------------------
-|   $Date$
-|   $Revision$
-|   $Author$
-|   $URL$
+|   $Date: 2009-08-12 18:19:03 +0100 (Wed, 12 Aug 2009) $
+|   $Revision: 182 $
+|   $Author: tbdevnet $
+|   $URL: https://tbdevnet.svn.sourceforge.net/svnroot/tbdevnet/trunk/TB/adduser.php $
 +------------------------------------------------
 */
 

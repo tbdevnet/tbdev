@@ -10,10 +10,10 @@
 |   svn: http://sourceforge.net/projects/tbdevnet/
 |   Licence Info: GPL
 +------------------------------------------------
-|   $Date$
-|   $Revision$
-|   $Author$
-|   $URL$
+|   $Date: 2009-08-13 16:42:39 +0100 (Thu, 13 Aug 2009) $
+|   $Revision: 185 $
+|   $Author: tbdevnet $
+|   $URL: https://tbdevnet.svn.sourceforge.net/svnroot/tbdevnet/trunk/TB/stats.php $
 +------------------------------------------------
 */
 require "include/bittorrent.php";

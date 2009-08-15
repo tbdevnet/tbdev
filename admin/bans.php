@@ -10,10 +10,10 @@
 |   svn: http://sourceforge.net/projects/tbdevnet/
 |   Licence Info: GPL
 +------------------------------------------------
-|   $Date$
-|   $Revision$
-|   $Author$
-|   $URL$
+|   $Date: 2009-08-13 14:23:23 +0100 (Thu, 13 Aug 2009) $
+|   $Revision: 184 $
+|   $Author: tbdevnet $
+|   $URL: https://tbdevnet.svn.sourceforge.net/svnroot/tbdevnet/trunk/TB/bans.php $
 +------------------------------------------------
 */
 require_once "include/bittorrent.php";

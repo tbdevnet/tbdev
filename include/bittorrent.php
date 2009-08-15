@@ -364,6 +364,12 @@ print StatusBar();
 <a href='staff.php'>Staff</a>
 </div>
 <div class="tb-top-right-link">
+<?php
+if( $CURUSER['class'] >= UC_MODERATOR )
+{
+  echo "<a href='admin.php'>Admin</a>";
+}
+?>
 <a href='my.php'>Profile</a>
 <a href='logout.php'>Logout</a>
 </div>
