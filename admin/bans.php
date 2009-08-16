@@ -16,15 +16,13 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once "include/bittorrent.php";
+if ( ! defined( 'IN_TBDEV_ADMIN' ) )
+{
+	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	exit();
+}
+
 require_once "include/user_functions.php";
-
-dbconn(false);
-
-loggedinorreturn();
-
-if ($CURUSER['class'] < UC_MODERATOR)
-  die;
 
 $doUpdate = false;
 

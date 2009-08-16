@@ -16,12 +16,14 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once "include/bittorrent.php";
+if ( ! defined( 'IN_TBDEV_ADMIN' ) )
+{
+	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	exit();
+}
+
 require_once "include/user_functions.php";
 
-dbconn();
-loggedinorreturn();
-if ($CURUSER['class'] < UC_MODERATOR) stderr("Error", "Permission denied");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$ip = isset($_POST["ip"]) ? $_POST["ip"] : false;

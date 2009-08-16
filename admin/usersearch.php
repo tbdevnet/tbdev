@@ -16,18 +16,18 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once "include/bittorrent.php";
+if ( ! defined( 'IN_TBDEV_ADMIN' ) )
+{
+	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	exit();
+}
+
 require_once "include/user_functions.php";
 require_once "include/pager_functions.php";
 
 // 0 - No debug; 1 - Show and run SQL query; 2 - Show SQL query only
 $DEBUG_MODE = 0;
 
-dbconn();
-loggedinorreturn();
-
-if ($CURUSER['class'] < UC_MODERATOR)
-	stderr("Error", "Permission denied.");
 
 function is_set_not_empty($param) {
   if(isset($_GET[$param]) && !empty($_GET[$param]))

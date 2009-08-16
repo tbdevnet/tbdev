@@ -16,10 +16,11 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once("include/bittorrent.php");
-
-dbconn();
-loggedinorreturn();
+if ( ! defined( 'IN_TBDEV_ADMIN' ) )
+{
+	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	exit();
+}
 
 if( get_user_class() != UC_SYSOP )
 	exit();

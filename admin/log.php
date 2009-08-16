@@ -16,11 +16,14 @@
 |   $URL$
 +------------------------------------------------
 */
-  require_once "include/bittorrent.php";
-  require_once "include/user_functions.php";
-  dbconn(false);
+if ( ! defined( 'IN_TBDEV_ADMIN' ) )
+{
+	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	exit();
+}
 
-  loggedinorreturn();
+  require_once "include/user_functions.php";
+
 
   // delete items older than a week
   $secs = 24 * 60 * 60;
