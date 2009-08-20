@@ -16,6 +16,7 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
@@ -24,9 +25,7 @@ if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 
 require_once "include/user_functions.php";
 
-if( get_user_class() < UC_MODERATOR )
-	stderr('Error', 'Move along, nothing to see here');
-	
+
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
   $username = trim($_POST["username"]);
@@ -50,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 stdhead("Delete account");
 ?>
 <h1>Delete account</h1>
-<form method='post' action='delacct.php'>
+<form method='post' action='admin.php?action=delacct'>
 <table border='1' cellspacing='0' cellpadding='5'>
 <tr><td class='rowhead'>User name</td><td><input size='40' name='username' /></td></tr>
 <tr><td class='rowhead'>Password</td><td><input type='password' size='40' name='password' /></td></tr>

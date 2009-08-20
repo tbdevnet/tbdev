@@ -16,6 +16,7 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
@@ -58,7 +59,7 @@ stdhead("Add user");
 ?>
 <h1>Add user</h1>
 <br />
-<form method='post' action='adduser.php'>
+<form method='post' action='admin.php?action=adduser'>
 <table border='1' cellspacing='0' cellpadding='5'>
 <tr><td class='rowhead'>User name</td><td><input type='text' name='username' size='40' /></td></tr>
 <tr><td class='rowhead'>Password</td><td><input type='password' name='password' size='40' /></td></tr>

@@ -16,6 +16,7 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
@@ -23,6 +24,8 @@ if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 }
 
 require_once "include/user_functions.php";
+
+
 
 $doUpdate = false;
 
@@ -107,7 +110,7 @@ else
 if ($CURUSER['class'] >= UC_ADMINISTRATOR)
 {
 	print("<h2>Add ban</h2>\n");
-	print("<form method='post' action='bans.php'>\n");
+	print("<form method='post' action='admin.php?action=bans'>\n");
 	print("<table border='1' cellspacing='0' cellpadding='5'>\n");
 	print("<tr><td class='rowhead'>First IP</td><td><input type='text' name='first' size='40' /></td></tr>\n");
 	print("<tr><td class='rowhead'>Last IP</td><td><input type='text' name='last' size='40' /></td></tr>\n");

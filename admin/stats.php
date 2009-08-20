@@ -16,6 +16,7 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
@@ -65,11 +66,11 @@ else
 	begin_frame("Uploader Activity", True);
 	begin_table();
 	print("<tr>\n
-	<td class='colhead'><a href=\"stats.php?uporder=uploader&amp;catorder=$catorder\" class='colheadlink'>Uploader</a></td>\n
-	<td class='colhead'><a href=\"stats.php?uporder=lastul&amp;catorder=$catorder\" class='colheadlink'>Last Upload</a></td>\n
-	<td class='colhead'><a href=\"stats.php?uporder=torrents&amp;catorder=$catorder\" class='colheadlink'>Torrents</a></td>\n
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=uploader&amp;catorder=$catorder\" class='colheadlink'>Uploader</a></td>\n
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=lastul&amp;catorder=$catorder\" class='colheadlink'>Last Upload</a></td>\n
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=torrents&amp;catorder=$catorder\" class='colheadlink'>Torrents</a></td>\n
 	<td class='colhead'>Perc.</td>\n
-	<td class='colhead'><a href=\"stats.php?uporder=peers&amp;catorder=$catorder\" class='colheadlink'>Peers</a></td>\n
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=peers&amp;catorder=$catorder\" class='colheadlink'>Peers</a></td>\n
 	<td class='colhead'>Perc.</td>\n
 	</tr>\n");
 	while ($uper = mysql_fetch_assoc($res))
@@ -104,11 +105,11 @@ else
 
 	begin_frame("Category Activity", True);
 	begin_table();
-	print("<tr><td class='colhead'><a href=\"stats.php?uporder=$uporder&amp;catorder=category\" class='colheadlink'>Category</a></td>
-	<td class='colhead'><a href=\"stats.php?uporder=$uporder&amp;catorder=lastul\" class='colheadlink'>Last Upload</a></td>
-	<td class='colhead'><a href=\"stats.php?uporder=$uporder&amp;catorder=torrents\" class='colheadlink'>Torrents</a></td>
+	print("<tr><td class='colhead'><a href=\"admin.php?action=stats&uporder=$uporder&amp;catorder=category\" class='colheadlink'>Category</a></td>
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=$uporder&amp;catorder=lastul\" class='colheadlink'>Last Upload</a></td>
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=$uporder&amp;catorder=torrents\" class='colheadlink'>Torrents</a></td>
 	<td class='colhead'>Perc.</td>
-	<td class='colhead'><a href=\"stats.php?uporder=$uporder&amp;catorder=peers\" class='colheadlink'>Peers</a></td>
+	<td class='colhead'><a href=\"admin.php?action=stats&uporder=$uporder&amp;catorder=peers\" class='colheadlink'>Peers</a></td>
 	<td class='colhead'>Perc.</td></tr>\n");
 	while ($cat = mysql_fetch_assoc($res))
 	{

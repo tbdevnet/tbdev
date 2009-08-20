@@ -16,6 +16,7 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
@@ -30,7 +31,7 @@ $DEBUG_MODE = 0;
 
 
 function is_set_not_empty($param) {
-  if(isset($_GET[$param]) && !empty($_GET[$param]))
+  if(isset($_POST[$param]) && !empty($_POST[$param]))
     return TRUE;
   else
     return FALSE;
@@ -71,65 +72,65 @@ if (isset($_GET['h']))
 }
 else
 {
-	echo "<p align='center'>(<a href='usersearch.php?h=1'>Instructions</a>)";
-	echo "&nbsp;-&nbsp;(<a href='usersearch.php'>Reset</a>)</p>\n";
+	echo "<p align='center'>(<a href='admin.php?action=usersearch&h=1'>Instructions</a>)";
+	echo "&nbsp;-&nbsp;(<a href='admin.php?action=usersearch'>Reset</a>)</p>\n";
 }
 
 $highlight = " bgcolor='lightgrey'";
 
 ?>
 
-<form method='get' action='usersearch.php'>
+<form method='post' action='admin.php?action=usersearch'>
 <table border="1" cellspacing="0" cellpadding="5">
 <tr>
 
   <td valign="middle" class='rowhead'>Name:</td>
-  <td<?php echo (isset($_GET['n'])&&!empty($_GET['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_GET['n'])?htmlentities($_GET['n']):""?>" size='25' /></td>
+  <td<?php echo (isset($_POST['n'])&&!empty($_POST['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_POST['n'])?htmlentities($_POST['n']):""?>" size='25' /></td>
 
   <td valign="middle" class='rowhead'>Ratio:</td>
-  <td<?php echo (isset($_GET['r'])&&!empty($_GET['r']))?$highlight:""?>><select name="rt">
+  <td<?php echo (isset($_POST['r'])&&!empty($_POST['r']))?$highlight:""?>><select name="rt">
     <?php
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
-	    echo "<option value='$i' ".(((isset($_GET['rt'])?$_GET['rt']:"3")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	    echo "<option value='$i' ".(((isset($_POST['rt'])?$_POST['rt']:"3")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
 	?>
     </select>
-    <input name="r" type="text" value="<?php echo isset($_GET['r'])?$_GET['r']:''?>" size="5" maxlength="4" />
-    <input name="r2" type="text" value="<?php echo isset($_GET['r2'])?$_GET['r2']:''?>" size="5" maxlength="4" /></td>
+    <input name="r" type="text" value="<?php echo isset($_POST['r'])?$_POST['r']:''?>" size="5" maxlength="4" />
+    <input name="r2" type="text" value="<?php echo isset($_POST['r2'])?$_POST['r2']:''?>" size="5" maxlength="4" /></td>
 
   <td valign="middle" class='rowhead'>Member status:</td>
-  <td<?php echo (isset($_GET['st'])&&!empty($_GET['st']))?$highlight:""?>><select name="st">
+  <td<?php echo (isset($_POST['st'])&&!empty($_POST['st']))?$highlight:""?>><select name="st">
     <?
 	$options = array("(any)","confirmed","pending");
 	for ($i = 0; $i < count($options); $i++){
-	    echo "<option value='$i' ".(((isset($_GET['st'])?$_GET['st']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	    echo "<option value='$i' ".(((isset($_POST['st'])?$_POST['st']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
     ?>
     </select></td></tr>
 <tr><td valign="middle" class='rowhead'>Email:</td>
-  <td<?php echo (isset($_GET['em'])&&!empty($_GET['em']))?$highlight:""?>><input name="em" type="text" value="<?php echo isset($_GET['em'])?$_GET['em']:''?>" size="25" /></td>
+  <td<?php echo (isset($_POST['em'])&&!empty($_POST['em']))?$highlight:""?>><input name="em" type="text" value="<?php echo isset($_POST['em'])?$_POST['em']:''?>" size="25" /></td>
   <td valign="middle" class='rowhead'>IP:</td>
-  <td<?php echo (isset($_GET['ip'])&&!empty($_GET['ip']))?$highlight:""?>><input name="ip" type="text" value="<?php echo isset($_GET['ip'])?$_GET['ip']:''?>" maxlength="17" /></td>
+  <td<?php echo (isset($_POST['ip'])&&!empty($_POST['ip']))?$highlight:""?>><input name="ip" type="text" value="<?php echo isset($_POST['ip'])?$_POST['ip']:''?>" maxlength="17" /></td>
 
   <td valign="middle" class='rowhead'>Account status:</td>
-  <td<?php echo (isset($_GET['as'])&&!empty($_GET['as']))?$highlight:""?>><select name="as">
+  <td<?php echo (isset($_POST['as'])&&!empty($_POST['as']))?$highlight:""?>><select name="as">
     <?php
     $options = array("(any)","enabled","disabled");
     for ($i = 0; $i < count($options); $i++){
-      echo "<option value='$i' ".(((isset($_GET['as'])?$_GET['as']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+      echo "<option value='$i' ".(((isset($_POST['as'])?$_POST['as']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
     }
     ?>
     </select></td></tr>
 <tr>
   <td valign="middle" class='rowhead'>Comment:</td>
-  <td<?php echo (isset($_GET['co'])&&!empty($_GET['co']))?$highlight:""?>><input name="co" type="text" value="<?php echo isset($_GET['co'])?$_GET['co']:""?>" size="25" /></td>
+  <td<?php echo (isset($_POST['co'])&&!empty($_POST['co']))?$highlight:""?>><input name="co" type="text" value="<?php echo isset($_POST['co'])?$_POST['co']:""?>" size="25" /></td>
   <td valign="middle" class='rowhead'>Mask:</td>
-  <td<?php echo (isset($_GET['ma'])&&!empty($_GET['ma']))?$highlight:""?>><input name="ma" type="text" value="<?php echo isset($_GET['ma'])?$_GET['ma']:""?>" maxlength="17" /></td>
+  <td<?php echo (isset($_POST['ma'])&&!empty($_POST['ma']))?$highlight:""?>><input name="ma" type="text" value="<?php echo isset($_POST['ma'])?$_POST['ma']:""?>" maxlength="17" /></td>
   <td valign="middle" class='rowhead'>Class:</td>
-  <td<?php echo (isset($_GET['c']) && !empty($_GET['c']))?$highlight:""?>><select name="c"><option value='1'>(any)</option>
+  <td<?php echo (isset($_POST['c']) && !empty($_POST['c']))?$highlight:""?>><select name="c"><option value='1'>(any)</option>
   <?php
-  $class = isset($_GET['c']) ? (int)$_GET['c'] : '';
+  $class = isset($_POST['c']) ? (int)$_POST['c'] : '';
   if (!is_valid_id($class))
   	$class = '';
   for ($i = 2;;++$i) {
@@ -144,41 +145,41 @@ $highlight = " bgcolor='lightgrey'";
 
     <td valign="middle" class='rowhead'>Joined:</td>
 
-  <td<?php echo (isset($_GET['d'])&&!empty($_GET['d']))?$highlight:""?>><select name="dt">
+  <td<?php echo (isset($_POST['d'])&&!empty($_POST['d']))?$highlight:""?>><select name="dt">
     <?php
 	$options = array("on","before","after","between");
 	for ($i = 0; $i < count($options); $i++){
-	  echo "<option value='$i' ".(((isset($_GET['dt'])?$_GET['dt']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	  echo "<option value='$i' ".(((isset($_POST['dt'])?$_POST['dt']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
     ?>
     </select>
 
-    <input name="d" type="text" value="<?php echo isset($_GET['d'])?$_GET['d']:''?>" size="12" maxlength="10" />
+    <input name="d" type="text" value="<?php echo isset($_POST['d'])?$_POST['d']:''?>" size="12" maxlength="10" />
 
-    <input name="d2" type="text" value="<?php echo isset($_GET['d2'])?$_GET['d2']:''?>" size="12" maxlength="10" /></td>
+    <input name="d2" type="text" value="<?php echo isset($_POST['d2'])?$_POST['d2']:''?>" size="12" maxlength="10" /></td>
 
 
   <td valign="middle" class='rowhead'>Uploaded:</td>
 
-  <td<?php echo (isset($_GET['ult'])&&!empty($_GET['ult']))?$highlight:""?>><select name="ult" id="ult">
+  <td<?php echo (isset($_POST['ult'])&&!empty($_POST['ult']))?$highlight:""?>><select name="ult" id="ult">
     <?php
     $options = array("equal","above","below","between");
     for ($i = 0; $i < count($options); $i++){
-  	  echo "<option value='$i' ".(((isset($_GET['ult'])?$_GET['ult']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+  	  echo "<option value='$i' ".(((isset($_POST['ult'])?$_POST['ult']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
     }
     ?>
     </select>
 
-    <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?php echo isset($_GET['ul'])?$_GET['ul']:''?>" />
+    <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?php echo isset($_POST['ul'])?$_POST['ul']:''?>" />
 
-    <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?php echo isset($_GET['ul2'])?$_GET['ul2']:''?>" /></td>
+    <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?php echo isset($_POST['ul2'])?$_POST['ul2']:''?>" /></td>
   <td valign="middle" class="rowhead">Donor:</td>
 
-  <td<?php echo (isset($_GET['do'])&&!empty($_GET['do']))?$highlight:""?>><select name="do">
+  <td<?php echo (isset($_POST['do'])&&!empty($_POST['do']))?$highlight:""?>><select name="do">
     <?php
     $options = array("(any)","Yes","No");
 	for ($i = 0; $i < count($options); $i++){
-	  echo "<option value='$i' ".(((isset($_GET['do'])?$_GET['do']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	  echo "<option value='$i' ".(((isset($_POST['do'])?$_POST['do']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
     }
     ?>
 	</select></td></tr>
@@ -186,49 +187,49 @@ $highlight = " bgcolor='lightgrey'";
 
 <td valign="middle" class='rowhead'>Last seen:</td>
 
-  <td <?php echo (isset($_GET['ls'])&&!empty($_GET['ls']))?$highlight:""?>><select name="lst">
+  <td <?php echo (isset($_POST['ls'])&&!empty($_POST['ls']))?$highlight:""?>><select name="lst">
   <?php
   $options = array("on","before","after","between");
   for ($i = 0; $i < count($options); $i++){
-    echo "<option value='$i' ".(((isset($_GET['lst'])?$_GET['lst']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+    echo "<option value='$i' ".(((isset($_POST['lst'])?$_POST['lst']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
   }
   ?>
   </select>
 
-  <input name="ls" type="text" value="<?php echo isset($_GET['ls'])?$_GET['ls']:''?>" size="12" maxlength="10" />
+  <input name="ls" type="text" value="<?php echo isset($_POST['ls'])?$_POST['ls']:''?>" size="12" maxlength="10" />
 
-  <input name="ls2" type="text" value="<?php echo isset($_GET['ls2'])?$_GET['ls2']:''?>" size="12" maxlength="10" /></td>
+  <input name="ls2" type="text" value="<?php echo isset($_POST['ls2'])?$_POST['ls2']:''?>" size="12" maxlength="10" /></td>
 	  <td valign="middle" class='rowhead'>Downloaded:</td>
 
-  <td<?php echo (isset($_GET['dl'])&&!empty($_GET['dl']))?$highlight:""?>><select name="dlt" id="dlt">
+  <td<?php echo (isset($_POST['dl'])&&!empty($_POST['dl']))?$highlight:""?>><select name="dlt" id="dlt">
   <?php
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
-	  echo "<option value='$i' ".(((isset($_GET['dlt'])?$_GET['dlt']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	  echo "<option value='$i' ".(((isset($_POST['dlt'])?$_POST['dlt']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
 	?>
     </select>
 
-    <input name="dl" type="text" id="dl" size="8" maxlength="7" value="<?php echo isset($_GET['dl'])?$_GET['dl']:''?>" />
+    <input name="dl" type="text" id="dl" size="8" maxlength="7" value="<?php echo isset($_POST['dl'])?$_POST['dl']:''?>" />
 
-    <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?php echo isset($_GET['dl2'])?$_GET['dl2']:''?>" /></td>
+    <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?php echo isset($_POST['dl2'])?$_POST['dl2']:''?>" /></td>
 
 	<td valign="middle" class='rowhead'>Warned:</td>
 
-	<td<?php echo (isset($_GET['w'])&&!empty($_GET['w']))?$highlight:""?>><select name="w">
+	<td<?php echo (isset($_POST['w'])&&!empty($_POST['w']))?$highlight:""?>><select name="w">
   <?php
   $options = array("(any)","Yes","No");
 	for ($i = 0; $i < count($options); $i++){
-		echo "<option value='$i' ".(((isset($_GET['w'])?$_GET['w']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+		echo "<option value='$i' ".(((isset($_POST['w'])?$_POST['w']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
   }
   ?>
 	</select></td></tr>
 
 <tr><td class="rowhead"></td><td></td>
   <td valign="middle" class='rowhead'>Active only:</td>
-	<td<?php echo (isset($_GET['ac'])&&!empty($_GET['ac']))?$highlight:""?>><input name="ac" type="checkbox" value="1" <?php echo (isset($_GET['ac']))?"checked='checked'":"" ?> /></td>
+	<td<?php echo (isset($_POST['ac'])&&!empty($_POST['ac']))?$highlight:""?>><input name="ac" type="checkbox" value="1" <?php echo (isset($_POST['ac']))?"checked='checked'":"" ?> /></td>
   <td valign="middle" class='rowhead'>Disabled IP: </td>
-  <td<?php echo (isset($_GET['dip'])&&!empty($_GET['dip']))?$highlight:""?>><input name="dip" type="checkbox" value="1" <?php echo (isset($_GET['dip']))?"checked='checked'":"" ?> /></td>
+  <td<?php echo (isset($_POST['dip'])&&!empty($_POST['dip']))?$highlight:""?>><input name="dip" type="checkbox" value="1" <?php echo (isset($_POST['dip']))?"checked='checked'":"" ?> /></td>
   </tr>
 <tr><td colspan="6" align='center'><input name="submit" type='submit' class='btn' /></td></tr>
 </table>
@@ -283,10 +284,10 @@ function haswildcard($text){
 
 ///////////////////////////////////////////////////////////////////////////////
 
-if (count($_GET) > 0 && !isset($_GET['h']))
+if (count($_POST) > 0 && !isset($_POST['h']))
 {
 	// name
-  $names = isset($_GET['h']) ? explode(' ',trim($_GET['n'])) : array(0=>'');
+  $names = isset($_POST['h']) ? explode(' ',trim($_POST['n'])) : array(0=>'');
   if ($names[0] !== "")
   {
 		foreach($names as $name)
@@ -332,12 +333,12 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 	    }
       $where_is .= $name_is.")";
 	  }
-	  $q .= ($q ? "&amp;" : "") . "n=".urlencode(trim($_GET['n']));
+	  $q .= ($q ? "&amp;" : "") . "n=".urlencode(trim($_POST['n']));
   }
 
   // email
   if(is_set_not_empty('em')) {
-  $emaila = explode(' ', trim($_GET['em']));
+  $emaila = explode(' ', trim($_POST['em']));
   if ($emaila[0] !== "")
   {
   	$where_is .= !empty($where_is)?" AND (":"(";
@@ -361,12 +362,12 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 	    }
     }
 		$where_is .= $email_is.")";
-    $q .= ($q ? "&amp;" : "") . "em=".urlencode(trim($_GET['em']));
+    $q .= ($q ? "&amp;" : "") . "em=".urlencode(trim($_POST['em']));
   }
 }
   //class
   // NB: the c parameter is passed as two units above the real one
-  $class = is_set_not_empty('c') ? $_GET['c'] - 2 : -2;
+  $class = is_set_not_empty('c') ? $_POST['c'] - 2 : -2;
 	if (is_valid_id($class + 1))
 	{
   	$where_is .= (!empty($where_is)?" AND ":"")."u.class=$class";
@@ -377,7 +378,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('ip'))
   {
-  	$ip = trim($_GET['ip']);
+  	$ip = trim($_POST['ip']);
   	$regex = "/^(((1?\d{1,2})|(2[0-4]\d)|(25[0-5]))(\.\b|$)){4}$/";
     if (!preg_match($regex, $ip))
     {
@@ -386,7 +387,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     	die();
     }
 
-    $mask = trim($_GET['ma']);
+    $mask = trim($_POST['ma']);
     if ($mask == "" || $mask == "255.255.255.255")
     	$where_is .= (!empty($where_is)?" AND ":"")."u.ip = '$ip'";
     else
@@ -419,7 +420,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('r'))
   {
-  	$ratio = trim($_GET['r']);
+  	$ratio = trim($_POST['r']);
   	if ($ratio == '---')
   	{
     	$ratio2 = "";
@@ -442,11 +443,11 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       }
       $where_is .= !empty($where_is)?" AND ":"";
       $where_is .= " (u.uploaded/u.downloaded)";
-      $ratiotype = $_GET['rt'];
+      $ratiotype = $_POST['rt'];
       $q .= ($q ? "&amp;" : "") . "rt=$ratiotype";
       if ($ratiotype == "3")
       {
-      	$ratio2 = trim($_GET['r2']);
+      	$ratio2 = trim($_POST['r2']);
         if(!$ratio2)
         {
         	stdmsg("Error", "Two ratios needed for this type of search.");
@@ -474,7 +475,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 
   // comment
   if(is_set_not_empty('co')) {
-  $comments = explode(' ',trim($_GET['co']));
+  $comments = explode(' ',trim($_POST['co']));
   if ($comments[0] !== "")
   {
 		foreach($comments as $comment)
@@ -520,7 +521,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       }
       $where_is .= $comment_is.")";
 	  }
-    $q .= ($q ? "&amp;" : "") . "co=".urlencode(trim($_GET['co']));
+    $q .= ($q ? "&amp;" : "") . "co=".urlencode(trim($_POST['co']));
   }
 }
   $unit = 1073741824;		// 1GB
@@ -529,7 +530,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('ul'))
   {
-  	$ul = trim($_GET['ul']);
+  	$ul = trim($_POST['ul']);
   	if (!is_numeric($ul) || $ul < 0)
   	{
     	stdmsg("Error", "Bad uploaded amount.");
@@ -538,11 +539,11 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     }
     $where_is .= !empty($where_is)?" AND ":"";
     $where_is .= " u.uploaded ";
-    $ultype = $_GET['ult'];
+    $ultype = $_POST['ult'];
     $q .= ($q ? "&amp;" : "") . "ult=$ultype";
     if ($ultype == "3")
     {
-	    $ul2 = trim($_GET['ul2']);
+	    $ul2 = trim($_POST['ul2']);
     	if(!$ul2)
     	{
       	stdmsg("Error", "Two uploaded amounts needed for this type of search.");
@@ -571,7 +572,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('dl'))
   {
-  	$dl = trim($_GET['dl']);
+  	$dl = trim($_POST['dl']);
   	if (!is_numeric($dl) || $dl < 0)
   	{
     	stdmsg("Error", "Bad downloaded amount.");
@@ -580,11 +581,11 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     }
     $where_is .= !empty($where_is)?" AND ":"";
     $where_is .= " u.downloaded ";
-    $dltype = $_GET['dlt'];
+    $dltype = $_POST['dlt'];
     $q .= ($q ? "&amp;" : "") . "dlt=$dltype";
     if ($dltype == "3")
     {
-    	$dl2 = trim($_GET['dl2']);
+    	$dl2 = trim($_POST['dl2']);
       if(!$dl2)
       {
       	stdmsg("Error", "Two downloaded amounts needed for this type of search.");
@@ -613,7 +614,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('d'))
   {
-  	$date = trim($_GET['d']);
+  	$date = trim($_POST['d']);
   	if (!$date = mkdate($date))
   	{
     	stdmsg("Error", "Invalid date.");
@@ -621,7 +622,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       die();
     }
     $q .= ($q ? "&amp;" : "") . "d=$date";
-    $datetype = $_GET['dt'];
+    $datetype = $_POST['dt'];
 		$q .= ($q ? "&amp;" : "") . "dt=$datetype";
     if ($datetype == "0")
     // For mySQL 4.1.1 or above use instead
@@ -633,7 +634,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       $where_is .= (!empty($where_is)?" AND ":"")."u.added ";
       if ($datetype == "3")
       {
-        $date2 = mkdate(trim($_GET['d2']));
+        $date2 = mkdate(trim($_POST['d2']));
         if ($date2)
         {
           if (!$date = mkdate($date))
@@ -663,7 +664,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('ls'))
   {
-  	$last = trim($_GET['ls']);
+  	$last = trim($_POST['ls']);
   	if (!$last = mkdate($last))
   	{
     	stdmsg("Error", "Invalid date.");
@@ -671,7 +672,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
       die();
     }
     $q .= ($q ? "&amp;" : "") . "ls=$last";
-    $lasttype = $_GET['lst'];
+    $lasttype = $_POST['lst'];
     $q .= ($q ? "&amp;" : "") . "lst=$lasttype";
     if ($lasttype == "0")
     // For mySQL 4.1.1 or above use instead
@@ -683,7 +684,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
     	$where_is .= (!empty($where_is)?" AND ":"")."u.last_access ";
       if ($lasttype == "3")
       {
-      	$last2 = mkdate(trim($_GET['ls2']));
+      	$last2 = mkdate(trim($_POST['ls2']));
         if ($last2)
         {
         	$where_is .= " BETWEEN '$last' and '$last2'";
@@ -707,7 +708,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('st'))
   {
-  	$status = $_GET['st'];
+  	$status = $_POST['st'];
   	$where_is .= ((!empty($where_is))?" AND ":"");
     if ($status == "1")
     	$where_is .= "u.status = 'confirmed'";
@@ -720,7 +721,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   
   if (is_set_not_empty('as'))
   {
-  	$accountstatus = $_GET['as'];
+  	$accountstatus = $_POST['as'];
   	$where_is .= (!empty($where_is))?" AND ":"";
     if ($accountstatus == "1")
     	$where_is .= " u.enabled = 'yes'";
@@ -733,7 +734,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 	
   if (is_set_not_empty('do'))
   {
-		$donor = $_GET['do'];
+		$donor = $_POST['do'];
 		$where_is .= (!empty($where_is))?" AND ":"";
     if ($donor == 1)
     	$where_is .= " u.donor = 'yes'";
@@ -746,7 +747,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 	
   if (is_set_not_empty('w'))
   {
-		$warned = $_GET['w'];
+		$warned = $_POST['w'];
 		$where_is .= (!empty($where_is))?" AND ":"";
     if ($warned == 1)
     	$where_is .= " u.warned = 'yes'";
@@ -756,7 +757,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // disabled IP
-  $disabled = isset($_GET['dip']) ? (int)$_GET['dip'] : '';
+  $disabled = isset($_POST['dip']) ? (int)$_POST['dip'] : '';
   if (!empty($disabled))
   {
   	$distinct = "DISTINCT ";
@@ -766,7 +767,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
   }
 
   // active
-  $active = isset($_GET['ac']) ? $_GET['ac'] : '';
+  $active = isset($_POST['ac']) ? $_POST['ac'] : '';
   if ($active == "1")
   {
   	$distinct = "DISTINCT ";
@@ -810,7 +811,7 @@ if (count($_GET) > 0 && !isset($_GET['h']))
 
   $perpage = 30;
 
-  $pager = pager($perpage, $count, "usersearch.php?".$q);
+  $pager = pager($perpage, $count, "admin.php?action=usersearch&".$q);
 
   $query .= $pager['limit'];
 

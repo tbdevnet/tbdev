@@ -1,4 +1,5 @@
 <?php
+
 /*
 +------------------------------------------------
 |   TBDev.net BitTorrent Tracker PHP
@@ -16,17 +17,25 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
 	exit();
 }
 
+require_once "include/user_functions.php";
+
 if( get_user_class() != UC_SYSOP )
-	exit();
+	stderr('MOD ERROR', 'Permission denied!');
 	
-docleanup();
+//docleanup();
+register_shutdown_function("autoclean");
+
+stdhead("Cleanup");
 
 print("Done");
+
+stdfoot();
 
 ?>

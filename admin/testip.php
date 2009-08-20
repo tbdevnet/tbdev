@@ -16,6 +16,7 @@
 |   $URL$
 +------------------------------------------------
 */
+
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
 	print "<h1>Incorrect access</h1>You cannot access this file directly.";
@@ -56,7 +57,7 @@ stdhead();
 
 ?>
 <h1>Test IP address</h1>
-<form method='post' action='testip.php'>
+<form method='post' action='admin.php?action=testip'>
 <table border='1' cellspacing='0' cellpadding='5'>
 <tr><td class='rowhead'>IP address</td><td><input type='text' name='ip' /></td></tr>
 <tr><td colspan='2' align='center'><input type='submit' class='btn' value='OK' /></td></tr>
