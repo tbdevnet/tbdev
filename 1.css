@@ -1,10 +1,15 @@
 body {
-	font-family: "tahoma", "arial", "helvetica", "sans-serif";
+	font-family: Verdana, Tahoma, Arial, "Trebuchet MS", Sans-Serif, Georgia, Courier, "Times New Roman", Serif;
 	font-size: 8pt;
-background-color: #004E98;
+  background-color: #004E98;
   color: #000000;
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+img{
+	border: 0; /* makes sure linked images do not have a border */
+	vertical-align: middle;
 }
 
 #logostrip{ 
@@ -37,6 +42,18 @@ background-color: #004E98;
 
 .tb-top-left-link {
 	float: left;
+}
+
+#forumtable
+{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+/*  font-family: Verdana, Arial, sans-serif; */
+  font-size: 8pt;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  background-color: white;
 }
 
 #submenu a:link, 
@@ -184,8 +201,10 @@ td.clear {
 }
 
 form {
+	display: inline;
 	margin-top: 0;
 	margin-bottom: 0;
+	padding: 0;
 }
 
 .sublink {
@@ -194,11 +213,67 @@ form {
 	font-weight: normal;
 }
 
+/*
+pagination links start
+*/
 font.gray
 {
   color: #ACA899;
   text-decoration: underline;
 }
+
+.pagelink,
+.pagelinklast,
+.pagecurrent,
+.minipagecurrent,
+.minipagelink,
+.minipagelinklast{
+	background: #F0F5FA;
+	border: 1px solid #072A66;
+	padding: 1px 3px 1px 3px;
+}
+
+.pagelinklast,
+.minipagelinklast{
+	background: #DFE6EF;
+}
+
+.pagecurrent{
+	background: #FFC9A5;
+}
+
+.minipagecurrent{
+	background: #F0F5FA;
+	font-size: 10px;
+}
+
+.minipagelink,
+.minipagelinklast{
+	border: 1px solid #C2CFDF;
+	font-size: 10px;
+	margin: 0 1px 0 0;
+}
+
+.pagelink a:active,
+.pagelink a:visited,
+.pagelink a:link,
+.pagelinklast a:active,
+.pagelinklast a:visited,
+.pagelinklast a:link,
+.pagecurrent a:active,
+.pagecurrent a:visited,
+.pagecurrent a:link,
+.minipagelink a:active,
+.minipagelink a:visited,
+.minipagelink a:link,
+.minipagelinklast a:active,
+.minipagelinklast a:visited,
+.minipagelinklast a:link{
+	text-decoration: none;
+}
+/*
+pagination links end
+*/
 
 a:link, a:visited {
   text-decoration: none;
@@ -277,8 +352,19 @@ a.colheadlink:hover {
 }
 
 input, select, textarea {
-	font-family: "tahoma", "arial", "helvetica", "sans-serif";
-	font-size: 8pt;
+	background: #FFF;
+	border: 1px solid #00326A;
+	color: #000;
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 11px;
+	margin: 5px;
+	padding: 2px;
+	vertical-align: middle;
+}
+
+select
+{
+	margin: 0px;
 }
 
 .btn
@@ -312,12 +398,6 @@ ul {
   margin-bottom: 0px;
 }
 
-img.border  
-{  
-  border-style: solid;  
-  border-color: #000000; 
-  border-width: 1px; 
-}
 
 /*
 Cpatcha/pin stuff
@@ -349,3 +429,135 @@ font-family: verdana;
 }
 .tag_cloud:active { color: #0000FF; background: #FFFFFF; 
 }
+
+.forumrules_title
+{
+  background-color: #7192b2;
+	font-size: 14px;
+	color: #fff;
+	padding: 7px;
+  margin-bottom: 4px;
+}
+
+.forumrules_border
+{
+  border:1px solid #e2e2e0;
+  padding:4px;
+}
+
+.forumrules_text_border
+{
+  border:1px solid #e2e2e0;
+  padding:4px;
+}
+
+.forumrules_text
+{
+  background-color: #FFFF99;
+	font-size: 14px;
+	color: #000;
+
+}
+
+
+.popupmenu
+{
+   background: #C2CFDF;
+   color: #3A4F6C;
+   border: 1px solid #3A4F6C;
+   text-align:left;
+   font-size:11px;
+   font-weight:bold;
+   white-space:nowrap;
+   /*padding:3px 5px 3px 3px;*/
+   /* width:120px; */
+}
+
+.popupmenu-item
+{
+	padding: 5px;
+	/*margin-top:4px;*/
+	white-space: nowrap;
+	border-bottom: 1px solid #C2CFDF;
+	color:  #000000;
+	font-weight: normal;
+}
+
+.popupmenu-item-last
+{
+	padding: 5px;
+	/*margin-top:4px;*/
+	white-space: nowrap;
+	color:  #000000;
+	font-weight: normal;
+}
+
+.popupmenubutton
+{
+   background: #C2CFDF;
+   color: #3A4F6C;
+   border: 1px solid #3A4F6C;
+   text-align:center;
+   font-size:11px;
+   font-weight:bold;
+   white-space:nowrap;
+   /*padding:3px 5px 3px 3px;*/
+   height:18px;
+   width:120px;
+}
+
+.popupmenu-item a:link, 
+.popupmenu-item a:visited,
+.popupmenu-item-last a:link, 
+.popupmenu-item-last a:visited
+{ 
+	color: #000; 
+	text-decoration: none;
+}
+
+.popupmenu-item a:hover, 
+.popupmenu-item-last a:hover
+{ 
+	color: #EA5F00; 
+	text-decoration: none;
+}
+
+
+
+.tbi
+{
+	vertical-align:middle;
+	border:0px;
+	padding:0px;
+	margin:0px;
+	float:none;
+}
+
+.menusep
+{
+	white-space: nowrap;  /* stop menu collapsing in IE */
+	padding-top:4px;
+	padding-bottom:3px;
+	border-bottom:1px solid #DDD;
+}
+
+.menuseplast
+{
+	white-space: nowrap; /* stop menu collapsing in IE */
+	padding-top:4px;
+	padding-bottom:3px;
+	color: #000;
+}
+
+.menusep a:link, 
+.menusep a:visited, 
+.menusep a:active,
+.menuseplast a:link, 
+.menuseplast a:visited, 
+.menuseplast a:active
+{
+	text-decoration:none;
+	font-weight:bold;
+	color: #000000;
+}
+

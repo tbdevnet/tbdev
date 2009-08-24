@@ -890,29 +890,21 @@ function StatusBar() {
 		"<td colspan='2' style='padding: 2px;'>".
 
 		"<div id='statusbar'>".
-		"<p class='home' style='color:black;'>Welcome back, <a href='userdetails.php?id=".$CURUSER['id']."'>".$CURUSER['username']."</a>".
+		"<div style='float:left;color:black;'>Welcome back, <a href='userdetails.php?id=".$CURUSER['id']."'>".$CURUSER['username']."</a>".
 		  
-		"$IsDonor$warn&nbsp; [<a href='logout.php'>logout</a>]&nbsp;$member_reputation</p>".
-    
-		"<p>".date(DATE_RFC822)."</p>";
-
-
-
-		$StatusBar .= "".
-		"<p class='home' style='color:black;'>Ratio:$ratio".
+		"$IsDonor$warn&nbsp; [<a href='logout.php'>logout</a>]&nbsp;$member_reputation
+		<br />Ratio:$ratio".
 		"&nbsp;&nbsp;Uploaded:$upped".
 		"&nbsp;&nbsp;Downloaded:$downed".
 		
 		"&nbsp;&nbsp;Active Torrents:&nbsp;<img alt='Torrents seeding' title='Torrents seeding' src='pic/arrowup.gif' />&nbsp;{$seedleech['yes']}".
 		
-		"&nbsp;&nbsp;<img alt='Torrents leeching' title='Torrents leeching' src='pic/arrowdown.gif' />&nbsp;{$seedleech['no']}</p>";
-		
+		"&nbsp;&nbsp;<img alt='Torrents leeching' title='Torrents leeching' src='pic/arrowdown.gif' />&nbsp;{$seedleech['no']}</div>".
+    
+		"<div><p style'text-align:right;'>".date(DATE_RFC822)."<br />".
 
-	$StatusBar .= "<p>".
-
-
-	"<a href='messages.php'>$inbox</a>".
-	"</p></div></td></tr>";
+    "<a href='messages.php'>$inbox</a></p></div>".
+    "</div></td></tr>";
 	
 	return $StatusBar;
 

@@ -75,18 +75,45 @@ for ($i = 0; $i < $rows; ++$i)
 	if (isset($_POST["cat{$a['id']}"]) && $_POST["cat{$a['id']}"] == 'yes')
 	  $notifs .= "[cat{$a['id']}]";
 }
-$avatar = $_POST["avatar"];
+
+/////// do the avatar stuff
 $avatars = ($_POST["avatars"] != "" ? "yes" : "no");
-$avatar = trim( urldecode( $avatar ) );
-if ( preg_match( "/^http:\/\/$/i", $avatar ) or
-preg_match( "/[?&;]/",
-$avatar ) or preg_match( "#javascript:#is", $avatar )
-or !preg_match(
-"#^https?://(?:[^<>*\"]+|[a-z0-9/\._\-
-!]+)$#iU", $avatar ) )
-{
-$avatar='';
+$avatar = trim( urldecode( $_POST["avatar"] ) );
+  
+  if ( preg_match( "/^http:\/\/$/i", $avatar ) 
+      or preg_match( "/[?&;]/", $avatar ) 
+      or preg_match("#javascript:#is", $avatar ) 
+      or !preg_match("#^https?://(?:[^<>*\"]+|[a-z0-9/\._\-!]+)$#iU", $avatar ) 
+      )
+  {
+    $avatar='';
+  }
+  
+  if( !empty($avatar) ) 
+  {
+    $img_size = @GetImageSize( $avatar );
+
+    if($img_size == FALSE || !in_array($img_size['mime'], $allowed_ext))
+      stderr('USER ERROR', 'Not an image or unsupported image!');
+
+    if($img_size[0] < 5 || $img_size[1] < 5)
+      stderr('USER ERROR', 'Image is too small');
+  
+    if ( ( $img_size[0] > $av_img_width ) OR ( $img_size[1] > $av_img_height ) )
+    { 
+				$image = resize_image( array(
+												 'max_width'  => $av_img_width,
+												 'max_height' => $av_img_height,
+												 'cur_width'  => $img_size[0],
+												 'cur_height' => $img_size[1]
+										)      );
+										
+      }
+      
+$updateset[] = "av_w = " . $image['img_width'];
+$updateset[] = "av_h = " . $image['img_height'];
 }
+/////////////// avatar end /////////////////
 
 // $ircnick = $_POST["ircnick"];
 // $ircpass = $_POST["ircpass"];

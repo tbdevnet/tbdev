@@ -92,6 +92,10 @@ $sql_error_log = './logs/sql_err_'.date("M_D_Y").'.log';
 $pic_base_url = "./pic/";
 $stylesheet = "./1.css";
 $READPOST_EXPIRY = 14*86400; // 14 days
+//set this to size of user avatars
+$av_img_height = 100;
+$av_img_width = 100;
+$allowed_ext = array('image/gif', 'image/png', 'image/jpeg');
 // Set this to the line break character sequence of your system
 $linebreak = "\r\n";
 

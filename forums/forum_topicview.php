@@ -211,7 +211,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
 
       if ($CURUSER["avatars"] == "yes")
           {
-            $avatar = $arr['avatar'] ? "<img width={$arr['av_w']} height={$arr['av_h']} src='".htmlentities($arr['avatar'], ENT_QUOTES)."' />" : "<img width=100 src='{$forum_pic_url}default_avatar.gif' />";
+            $avatar = $arr['avatar'] ? "<div style='text-align:center;padding:5px;'><img width={$arr['av_w']} height={$arr['av_h']} src='".htmlentities($arr['avatar'], ENT_QUOTES)."' /></div>" : "<img width=100 src='{$forum_pic_url}default_avatar.gif' />";
           }
       else
             $avatar = "<img width=100 src='{$forum_pic_url}default_avatar.gif' />";
