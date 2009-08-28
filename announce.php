@@ -16,6 +16,18 @@
 |   $URL$
 +------------------------------------------------
 */
+////////////////// GLOBAL VARIABLES ////////////////////////////	
+$BASEURL = 'http://localhost/TB/';
+$announce_interval = 60 * 30;
+define ('UC_VIP', 2);
+// DB setup
+$mysql_host = "localhost";
+$mysql_user = "root";
+$mysql_pass = "blank";
+$mysql_db   = "mytbdev";
+////////////////// GLOBAL VARIABLES ////////////////////////////
+
+// DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING!!
 
 $agent = $_SERVER["HTTP_USER_AGENT"];
 
@@ -33,13 +45,6 @@ if (
 
 if(!isset($_SERVER['PATH_INFO']) || empty($_SERVER['PATH_INFO']))
 	err('PATH_INFO Failure');
-	
-require_once "include/secrets.php";
-//require_once "include/benc.php";
-
-$BASEURL = 'http://localhost/TB/';
-$announce_interval = 60 * 30;
-define ('UC_VIP', 2);
 
 /////////////////////// FUNCTION DEFS ///////////////////////////////////
 function dbconn()

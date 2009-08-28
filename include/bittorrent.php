@@ -355,9 +355,8 @@ print StatusBar();
 <a href='upload.php'>Upload</a>
 <a href='chat.php'>Chat</a>
 <a href='forums.php'>Forums</a>
-<a href='misc/dox.php'>DOX</a>
+<!--<a href='misc/dox.php'>DOX</a>-->
 <a href='topten.php'>Top 10</a>
-<a href='log.php'>Log</a>
 <a href='rules.php'>Rules</a>
 <a href='faq.php'>FAQ</a>
 <a href='links.php'>Links</a>
@@ -901,7 +900,7 @@ function StatusBar() {
 		
 		"&nbsp;&nbsp;<img alt='Torrents leeching' title='Torrents leeching' src='pic/arrowdown.gif' />&nbsp;{$seedleech['no']}</div>".
     
-		"<div><p style'text-align:right;'>".date(DATE_RFC822)."<br />".
+		"<div><p style='text-align:right;'>".date(DATE_RFC822)."<br />".
 
     "<a href='messages.php'>$inbox</a></p></div>".
     "</div></td></tr>";
