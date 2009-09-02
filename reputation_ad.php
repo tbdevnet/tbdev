@@ -124,8 +124,8 @@ function show_level()
 		}
 
 		$html .= "<tr><td colspan='3' align='center'>
-					<input type='submit' value='Update' accesskey='s' id='button' /> 
-					<input type='reset' value='Reset' accesskey='r' id='button' /></td>
+					<input type='submit' value='Update' accesskey='s' class='btn' /> 
+					<input type='reset' value='Reset' accesskey='r' class='btn' /></td>
 					<td align='center'><span class='btn'><a href='reputation_ad.php?mode=add'>Add New</a></span>
 					</td></tr>";
 		$html .= "</table>";
@@ -155,7 +155,7 @@ function show_form($type='edit')
 			$title  = "Edit Reputation Level";
 			$html .= "<br /><span style='font-weight:normal;'>{$res['level']} (ID:#{$res['reputationlevelid']})</span><br />";
 			$button = "Update";
-			$extra  = "<input type='button' class='button' value='Back' accesskey='b' id='button' onclick='javascript:history.back(1)' />";
+			$extra  = "<input type='button' class='button' value='Back' accesskey='b' class='btn' onclick='javascript:history.back(1)' />";
 			$mode   = 'doedit';
 		}
 		else
@@ -163,7 +163,7 @@ function show_form($type='edit')
 			$title  = "Add New Reputation Level";
 			$button = "Save";
 			$mode   = 'doadd';
-			$extra  = "<input type='button' value='Back' accesskey='b' id='button' onclick='javascript:history.back(1)' />";
+			$extra  = "<input type='button' value='Back' accesskey='b' class='btn' onclick='javascript:history.back(1)' />";
 		}
 		
 		$css = "style='font-weight: bold;color: #ffffff;background-color: #0055A4;padding: 5px;'";
@@ -183,7 +183,7 @@ function show_form($type='edit')
 		$html .= "<tr><td>Minimum amount of reputation points required for this level<div>This can be a positive or a negative amount. When the user's reputation points reaches this amount, the above description will be displayed.</div></td>";
 		$html .= "<td><input type='text' name='minimumreputation' value=\"{$minrep}\" size='35' maxlength='10' /></td></tr>";
 
-		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='$button' accesskey='s' id='button' /> <input type='reset' value='Reset' accesskey='r' id='button' /> $extra</td></tr>";
+		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='$button' accesskey='s' class='btn' /> <input type='reset' value='Reset' accesskey='r' class='btn' /> $extra</td></tr>";
 		$html .= "</table>";
 
 		$html .= "</form>";
@@ -338,11 +338,11 @@ function show_form_rep()
 
 		$html .= "<tr><td width='37%'>Topic</td><td width='63%'><a href='forums.php?action=viewtopic&amp;topicid={$res['topicid']}&amp;page=p{$res['postid']}#{$res['postid']}' target='_blank'>{$res['subject']}</a></td></tr>";
 		$html .= "<tr><td>Left By</td><td>{$res['leftby_name']}</td></tr>";
-		$html .= "<tr><td>Left For</td><td width='63%>{$res['leftfor_name']}</td></tr>";
-		$html .= "<tr><td>Comment</td><td width='63%><input type='text' name='reason' value='{$res['reason']}' size='35' maxlength='250' /></td></tr>";
+		$html .= "<tr><td>Left For</td><td width='63%'>{$res['leftfor_name']}</td></tr>";
+		$html .= "<tr><td>Comment</td><td width='63%'><input type='text' name='reason' value='{$res['reason']}' size='35' maxlength='250' /></td></tr>";
 		$html .= "<tr><td>Reputation</td><td><input type='text' name='reputation' value='{$res['reputation']}' size='35' maxlength='10' /></td></tr>";
 
-		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Save' accesskey='s' id='button' /> <input type='reset' tabindex='1' value='Reset' accesskey='r' id='button' /></td></tr>";
+		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Save' accesskey='s' class='btn' /> <input type='reset' tabindex='1' value='Reset' accesskey='r' class='btn' /></td></tr>";
 		$html .= "</table></form>";
 
 		html_out( $html, $title );
@@ -392,7 +392,7 @@ function view_list()
 		
 		$html .= "<tr><td class='tdrow2' colspan='2'><div class='desctext'>Select an end date for this report. Select a month, day, and year. The selected statistic must not be newer than this date for it to be included in the report. You can use this setting in conjunction with the 'Start Date' setting to create a window of time for this report.</div></td></tr>";
 
-		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Search' accesskey='s' id='button' tabindex='5' /> <input type='reset' value='Reset' accesskey='r' id='button' tabindex='6' /></td></tr>";
+		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Search' accesskey='s' class='btn' tabindex='5' /> <input type='reset' value='Reset' accesskey='r' class='btn' tabindex='6' /></td></tr>";
 		$html .= "</table></form>";
 //print $html; exit;
 		
@@ -482,7 +482,7 @@ function view_list()
 			$html = "<h2>Reputation Comments</h2>";
 			$table_header = "<table width='80%' cellpadding='5' border='1'><tr $css>";
 			$table_header .= "<td width='5%'>ID</td>";
-			$table_header .= "<td width='20%><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftbyuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left By</a></td>";
+			$table_header .= "<td width='20%'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftbyuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left By</a></td>";
 			$table_header .= "<td width='20%'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftforuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left For</a></td>";
 			$table_header .= "<td width='17%'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=date&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Date</a></td>";
 			$table_header .= "<td width='5%'>Point</td>";
@@ -541,7 +541,7 @@ function view_list()
 				$html .= "<td>{$r['dateadd']}</td>";
 				$html .= "<td align='right'>{$r['reputation']}</td>";
 				$html .= "<td><a href='forums.php?action=viewtopic&amp;topicid={$r['topicid']}&amp;page=p{$r['postid']}#{$r['postid']}' target='_blank'>{$r['reason']}</a></td>";
-				$html .= "<td><span class='btn'><a href='reputation_ad.php?mode=editrep&amp;reputationid={$r['reputationid']}'>Edit</a></span>&nbsp;<span class='btn'><a href='reputation_ad.php?mode=dodelrep&amp;reputationid={$r['reputationid']}'>Delete</a></span></td>";
+				$html .= "<td><a href='reputation_ad.php?mode=editrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Edit</span></a>&nbsp;<a href='reputation_ad.php?mode=dodelrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Delete</span></a></td></tr>";
 				
 			}
 

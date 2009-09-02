@@ -189,4 +189,32 @@ EOD;
 
 header("Location: $BASEURL/my.php?edited=1" . $urladd);
 
+/////////////////////////////////
+//worker function
+/////////////////////////////////
+function resize_image($in){
+
+		$out = array(
+					  'img_width'  => $in['cur_width'],
+					  'img_height' => $in['cur_height']
+					);
+		
+		if ( $in['cur_width'] > $in['max_width'] )
+		{
+			$out['img_width']  = $in['max_width'];
+			$out['img_height'] = ceil( ( $in['cur_height'] * ( ( $in['max_width'] * 100 ) / $in['cur_width'] ) ) / 100 );
+			$in['cur_height'] = $out['img_height'];
+			$in['cur_width']  = $out['img_width'];
+		}
+		
+		if ( $in['cur_height'] > $in['max_height'] )
+		{
+			$out['img_height']  = $in['max_height'];
+			$out['img_width']   = ceil( ( $in['cur_width'] * ( ( $in['max_height'] * 100 ) / $in['cur_height'] ) ) / 100 );
+		}
+		
+	
+		return $out;
+}
+
 ?>
