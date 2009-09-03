@@ -20,6 +20,11 @@ error_reporting(E_ALL);
 
 define('SQL_DEBUG', 2);
 
+/* Compare php version for date/time stuff etc! */
+	if (version_compare(PHP_VERSION, "5.1.0RC1", ">="))
+		date_default_timezone_set('Europe/London');
+
+
 define('TIME_NOW', time());
 
 $CONFIG_INFO = array( 'time_adjust' =>  0, 
@@ -33,8 +38,19 @@ $CONFIG_INFO = array( 'time_adjust' =>  0,
                       'time_date' => '');
 
 
-$SITE_ONLINE = true;
+// DB setup
+$mysql_host = "localhost";
+$mysql_user = "root";
+$mysql_pass = "blank";
+$mysql_db   = "mytbdev";
 
+// Cookie setup
+$TBDEV['cookie_prefix']  = 'tbdev_'; // This allows you to have multiple trackers, eg for demos, testing etc.
+$TBDEV['cookie_path']    = '/test'; // ATTENTION: You should never need this unless the above applies eg: /tbdev
+$TBDEV['cookie_domain']  = ''; // set to eg: .somedomain.com or is subdomain set to: .sub.somedomain.com
+                              
+$SITE_ONLINE = true;
+$GLOBALS['tracker_post_key'] = 'changethisorelse';
 $max_torrent_size = 1000000;
 $announce_interval = 60 * 30;
 $signup_timeout = 86400 * 3;
@@ -42,10 +58,8 @@ $minvotes = 1;
 $max_dead_torrent_time = 6 * 3600;
 
 // Max users on site
-$maxusers = 75000; // LoL Who we kiddin' here?
+$maxusers = 5000; // LoL Who we kiddin' here?
 
-// Max users on site
-$maxusers = 5000;
 
 if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'WIN' )
   {

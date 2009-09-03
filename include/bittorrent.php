@@ -17,12 +17,8 @@
 +------------------------------------------------
 */
 require_once("include/config.php");
-require_once("secrets.php");
 require_once("cleanup.php");
 
-/* Compare php version for date/time stuff etc! */
-	if (version_compare(PHP_VERSION, "5.1.0RC1", ">="))
-		date_default_timezone_set('Europe/London');
 
 /**** validip/getip courtesy of manolete <manolete@myway.com> ****/
 
@@ -445,17 +441,64 @@ function logincookie($id, $password, $secret, $updatedb = 1, $expires = 0x7fffff
 
 function logincookie($id, $passhash, $updatedb = 1, $expires = 0x7fffffff)
 {
-	setcookie("uid", $id, $expires, "/");
-	setcookie("pass", $passhash, $expires, "/");
-
-  if ($updatedb)
-  	mysql_query("UPDATE users SET last_login = ".TIME_NOW." WHERE id = $id");
+    //setcookie("uid", $id, $expires, "/");
+    //setcookie("pass", $passhash, $expires, "/");
+    set_mycookie( "uid", $id, $expires );
+    set_mycookie( "pass", $passhash, $expires );
+    
+    if ($updatedb)
+      @mysql_query("UPDATE users SET last_login = ".TIME_NOW." WHERE id = $id");
 }
 
-
-function logoutcookie() {
-    setcookie("uid", "", 0x7fffffff, "/");
-    setcookie("pass", "", 0x7fffffff, "/");
+function set_mycookie( $name, $value="", $expires_in=0, $sticky=1 )
+    {
+		global $TBDEV;
+		
+		if ( $sticky == 1 )
+    {
+      $expires = time() + 60*60*24*365;
+    }
+		else if ( $expires_in )
+		{
+			$expires = time() + ( $expires_in * 86400 );
+		}
+		else
+		{
+			$expires = FALSE;
+		}
+		
+		$TBDEV['cookie_domain'] = $TBDEV['cookie_domain'] == "" ? ""  : $TBDEV['cookie_domain'];
+    $TBDEV['cookie_path']   = $TBDEV['cookie_path']   == "" ? "/" : $TBDEV['cookie_path'];
+      	
+		if ( PHP_VERSION < 5.2 )
+		{
+      if ( $TBDEV['cookie_domain'] )
+      {
+        @setcookie( $TBDEV['cookie_prefix'].$name, $value, $expires, $TBDEV['cookie_path'], $TBDEV['cookie_domain'] . '; HttpOnly' );
+      }
+      else
+      {
+        @setcookie( $TBDEV['cookie_prefix'].$name, $value, $expires, $TBDEV['cookie_path'] );
+      }
+    }
+    else
+    {
+      @setcookie( $TBDEV['cookie_prefix'].$name, $value, $expires, $TBDEV['cookie_path'], $TBDEV['cookie_domain'], NULL, TRUE );
+    }
+			
+}
+function get_mycookie($name) 
+    {
+      global $TBDEV;
+      
+    	if (isset($_COOKIE[$TBDEV['cookie_prefix'].$name]))
+    	{
+    		return urldecode($_COOKIE[$TBDEV['cookie_prefix'].$name]);
+    	}
+    	else
+    	{
+    		return FALSE;
+    	}
 }
 
 function loggedinorreturn() {
