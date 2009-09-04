@@ -501,6 +501,13 @@ function get_mycookie($name)
     	}
 }
 
+function logoutcookie() {
+    //setcookie("uid", "", 0x7fffffff, "/");
+    //setcookie("pass", "", 0x7fffffff, "/");
+    set_mycookie('uid', '-1');
+    set_mycookie('pass', '-1');
+}
+
 function loggedinorreturn() {
     global $CURUSER, $BASEURL;
     if (!$CURUSER) {
@@ -508,39 +515,6 @@ function loggedinorreturn() {
         exit();
     }
 }
-
-
-/*
-function downloaderdata($res) {
-    $rows = array();
-    $ids = array();
-    $peerdata = array();
-    while ($row = mysql_fetch_assoc($res)) {
-        $rows[] = $row;
-        $id = $row["id"];
-        $ids[] = $id;
-        $peerdata[$id] = array(downloaders => 0, seeders => 0, comments => 0);
-    }
-
-    if (count($ids)) {
-        $allids = implode(",", $ids);
-        $res = mysql_query("SELECT COUNT(*) AS c, torrent, seeder FROM peers WHERE torrent IN ($allids) GROUP BY torrent, seeder");
-        while ($row = mysql_fetch_assoc($res)) {
-            if ($row["seeder"] == "yes")
-                $key = "seeders";
-            else
-                $key = "downloaders";
-            $peerdata[$row["torrent"]][$key] = $row["c"];
-        }
-        $res = mysql_query("SELECT COUNT(*) AS c, torrent FROM comments WHERE torrent IN ($allids) GROUP BY torrent");
-        while ($row = mysql_fetch_assoc($res)) {
-            $peerdata[$row["torrent"]]["comments"] = $row["c"];
-        }
-    }
-
-    return array($rows, $peerdata);
-}
-*/
 
 
 function searchfield($s) {
@@ -582,15 +556,6 @@ function stderr($heading, $text)
   stdfoot();
   die;
 }
-/*
-function sqlerr($file = '', $line = '')
-{
-  print("<table border=0 bgcolor=blue align=left cellspacing=0 cellpadding=10 style='background: blue'>" .
-    "<tr><td class=embedded><font color=white><h1>SQL Error</h1>\n" .
-  "<b>" . mysql_error() . ($file != '' && $line != '' ? "<p>in $file, line $line</p>" : "") . "</b></font></td></tr></table>");
-  die;
-}
-*/
 	
 // Basic MySQL error handler
 
