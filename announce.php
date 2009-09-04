@@ -43,9 +43,6 @@ if (
     )
     err("torrent not registered with this tracker CODE 1");
 
-if(!isset($_SERVER['PATH_INFO']) || empty($_SERVER['PATH_INFO']))
-	err('PATH_INFO Failure');
-
 /////////////////////// FUNCTION DEFS ///////////////////////////////////
 function dbconn()
 {
@@ -167,23 +164,20 @@ function portblacklisted($port)
 
 $parts = array();
 $pattern = '[0-9a-fA-F]{32}';
-if(!ereg($pattern, $_SERVER['PATH_INFO'], $parts)) 
+if( !isset($_GET['passkey']) OR !ereg($pattern, $_GET['passkey'], $parts) ) 
 		err("Invalid Passkey");
 	else
 		$GLOBALS['passkey'] = $parts[0];
-//if(!isset($_GET["event"])) $_GET["event"] = "vapourware";
-//$ipcheck = isset( $_GET['ip'] ) ? "ip" : "localip";
+		
 foreach (array("info_hash","peer_id","event","ip","localip") as $x) 
 {
 if(isset($_GET["$x"]))
 $GLOBALS[$x] = "" . $_GET[$x];
-//echo $GLOBALS[$x] . "---------" . $_GET[$x] . "<br>";
 }
 
 foreach (array("port","downloaded","uploaded","left") as $x)
 {
 $GLOBALS[$x] = 0 + $_GET[$x];
-//echo $GLOBALS[$x] . "---------" . $_GET[$x] . "<br>";
 }
 
 
@@ -201,7 +195,6 @@ unset($x);
 
 
 
-//$ip = getip();
 $ip = $_SERVER['REMOTE_ADDR'];
 
 $port = 0 + $port;
@@ -229,10 +222,6 @@ if (!isset($event))
 $seeder = ($left == 0) ? "yes" : "no";
 
 dbconn();
-
-//$valid = @mysql_fetch_row(@mysql_query("SELECT COUNT(*) FROM users WHERE passkey=" . sqlesc($passkey)));
-
-//if ($valid[0] != 1) err("Invalid passkey! Re-download the .torrent from $BASEURL");
 
 
 $user_query = mysql_query("SELECT id, uploaded, downloaded, class, enabled FROM users WHERE passkey=".sqlesc($passkey)) or err("Tracker error 2");
