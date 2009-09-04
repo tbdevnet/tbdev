@@ -59,7 +59,7 @@ stdhead();
 print("<table width='737' class='main' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>");
 print("<h2>Recent news");
 if (get_user_class() >= UC_ADMINISTRATOR)
-	print(" - <font class='small'>[<a class='altlink' href='news.php'><b>News page</b></a>]</font>");
+	print(" - <font class='small'>[<a class='altlink' href='admin.php?action=news'><b>News page</b></a>]</font>");
 print("</h2>\n");
 $res = mysql_query("SELECT * FROM news
 					WHERE added + ( 3600 *24 *45 ) >
@@ -74,8 +74,8 @@ if (mysql_num_rows($res) > 0)
 	  print("<li>" . get_date( $array['added'],'DATE') . "<br />" . format_comment($array['body']));
     if (get_user_class() >= UC_ADMINISTRATOR)
     {
-    	print(" <br /><font size=\"-2\">[<a class='altlink' href='news.php?action=edit&amp;newsid=" . $array['id'] . "&amp;returnto=index.php'><b>E</b></a>]</font>");
-    	print(" <font size=\"-2\">[<a class='altlink' href='news.php?action=delete&amp;newsid=" . $array['id'] . "&amp;returnto=index.php'><b>D</b></a>]</font>");
+    	print(" <br /><font size=\"-2\">[<a class='altlink' href='admin.php?action=news&amp;mode=edit&amp;newsid={$array['id']}&amp;returnto=index.php'><b>E</b></a>]</font>");
+    	print(" <font size=\"-2\">[<a class='altlink' href='admin.php?action=news&amp;mode=delete&amp;newsid={$array['id']}&amp;returnto=index.php'><b>D</b></a>]</font>");
     }
     print("</li>");
   }

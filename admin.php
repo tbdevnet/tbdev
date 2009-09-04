@@ -34,19 +34,20 @@
     define( 'F_IMAGES', $pic_base_url . 'forumicons');
     define( 'POST_ICONS', F_IMAGES.'/post_icons');
     
-    $ad_actions = array('bans' => 'bans', 
-                        'adduser' => 'adduser', 
-                        'stats' => 'stats', 
-                        'delacct' => 'delacct', 
-                        'testip' => 'testip', 
-                        'usersearch' => 'usersearch', 
-                        'mysql_overview' => 'mysql_overview', 
-                        'mysql_stats' => 'mysql_stats', 
-                        'categories' => 'categories', 
-                        'newusers' => 'newusers', 
-                        'resetpassword' => 'resetpassword',
-                        'docleanup' => 'docleanup',
-                        'log' => 'log'
+    $ad_actions = array('bans'            => 'bans', 
+                        'adduser'         => 'adduser', 
+                        'stats'           => 'stats', 
+                        'delacct'         => 'delacct', 
+                        'testip'          => 'testip', 
+                        'usersearch'      => 'usersearch', 
+                        'mysql_overview'  => 'mysql_overview', 
+                        'mysql_stats'     => 'mysql_stats', 
+                        'categories'      => 'categories', 
+                        'newusers'        => 'newusers', 
+                        'resetpassword'   => 'resetpassword',
+                        'docleanup'       => 'docleanup',
+                        'log'             => 'log',
+                        'news'            => 'news'
                         );
     
     if( in_array($action, $ad_actions) AND file_exists( "admin/{$ad_actions[ $action ]}.php" ) )
