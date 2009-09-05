@@ -36,7 +36,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     mysql_query("UPDATE topics SET locked='yes' WHERE id=$topicid") or sqlerr(__FILE__, __LINE__);
 
-    header("Location: $BASEURL/forums.php?action=viewforum&forumid=$forumid&page=$page");
+    header("Location: {$TBDEV['baseurl']}/forums.php?action=viewforum&forumid=$forumid&page=$page");
 
     die;
   }
@@ -56,7 +56,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     mysql_query("UPDATE topics SET locked='no' WHERE id=$topicid") or sqlerr(__FILE__, __LINE__);
 
-    header("Location: $BASEURL/forums.php?action=viewforum&forumid=$forumid&page=$page");
+    header("Location: {$TBDEV['baseurl']}/forums.php?action=viewforum&forumid=$forumid&page=$page");
 
     die;
   }
@@ -73,7 +73,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 	$locked = sqlesc($_POST["locked"]);
     @mysql_query("UPDATE topics SET locked=$locked WHERE id=$topicid") or sqlerr(__FILE__, __LINE__);
 
-    header("Location: $BASEURL/forums.php?action=viewtopic&topicid=$topicid");
+    header("Location: {$TBDEV['baseurl']}/forums.php?action=viewtopic&topicid=$topicid");
 
     die;
   }
@@ -90,7 +90,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 	$sticky = sqlesc($_POST["sticky"]);
     @mysql_query("UPDATE topics SET sticky=$sticky WHERE id=$topicid") or sqlerr(__FILE__, __LINE__);
 
-    header("Location: $BASEURL/forums.php?action=viewtopic&topicid=$topicid");
+    header("Location: {$TBDEV['baseurl']}/forums.php?action=viewtopic&topicid=$topicid");
 
     die;
   }
@@ -119,7 +119,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
   	$returnto = $_POST['returnto'];
 
   	if ($returnto)
-  	  header("Location: $BASEURL/forums.php?action=viewtopic&topicid=$topicid");
+  	  header("Location: {$TBDEV['baseurl']}/forums.php?action=viewtopic&topicid=$topicid");
 
   	die;
   }

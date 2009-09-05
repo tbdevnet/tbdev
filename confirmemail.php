@@ -48,7 +48,7 @@ mysql_query("UPDATE users SET editsecret='', email=" . sqlesc($email) . " WHERE 
 if (!mysql_affected_rows())
 	httperr();
 
-header("Refresh: 0; url=$BASEURL/my.php?emailch=1");
+header("Refresh: 0; url={$TBDEV['baseurl']}/my.php?emailch=1");
 
 
 ?>

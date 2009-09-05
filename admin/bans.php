@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $CURUSER['class'] >= UC_ADMINISTRATO
 	mysql_query("INSERT INTO bans (added, addedby, first, last, comment) 
                 VALUES($added, {$CURUSER['id']}, $first, $last, $comment)") or sqlerr(__FILE__, __LINE__);
 	$doUpdate = true;
-	//header("Location: $BASEURL/bans.php");
+	//header("Location: {$TBDEV['baseurl']}/bans.php");
 	//die;
 	}
 }

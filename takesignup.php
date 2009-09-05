@@ -22,7 +22,7 @@ dbconn();
 
 $res = mysql_query("SELECT COUNT(*) FROM users") or sqlerr(__FILE__, __LINE__);
 $arr = mysql_fetch_row($res);
-if ($arr[0] >= $maxusers)
+if ($arr[0] >= $TBDEV['maxusers'])
 	stderr("Error", "Sorry, user limit reached. Please try again later.");
 
 if (!mkglobal("wantusername:wantpassword:passagain:email:captcha"))
@@ -115,7 +115,7 @@ if ($a[0] != 0)
       $time_offset = sqlesc($_POST['user_timezone']);
       }
       else
-      { $time_offset = isset($CONFIG_INFO['time_offse']) ? sqlesc($CONFIG_INFO['time_offse']) : '0'; }
+      { $time_offset = isset($TBDEV['time_offset']) ? sqlesc($TBDEV['time_offset']) : '0'; }
       // have a stab at getting dst parameter?
       $dst_in_use = localtime(time() + ($time_offset * 3600), true);
       // TIMEZONE STUFF END
@@ -141,7 +141,7 @@ $id = mysql_insert_id();
 $psecret = md5($editsecret);
 
 $body = <<<EOD
-You have requested a new user account on $SITENAME and you have
+You have requested a new user account on {$TBDEV['site_name']} and you have
 specified this address ($email) as user contact.
 
 If you did not do this, please ignore this email. The person who entered your
@@ -149,15 +149,15 @@ email address had the IP address {$_SERVER["REMOTE_ADDR"]}. Please do not reply.
 
 To confirm your user registration, you have to follow this link:
 
-$DEFAULTBASEURL/confirm.php?id=$id&secret=$psecret
+{$TBDEV['baseurl']}/confirm.php?id=$id&secret=$psecret
 
 After you do this, you will be able to use your new account. If you fail to
 do this, you account will be deleted within a few days. We urge you to read
-the RULES and FAQ before you start using $SITENAME.
+the RULES and FAQ before you start using {$TBDEV['site_name']}.
 EOD;
 
 if($arr[0])
-  mail($email, "$SITENAME user registration confirmation", $body, "From: $SITEEMAIL", "-f$SITEEMAIL");
+  mail($email, "{$TBDEV['site_name']} user registration confirmation", $body, "From: {$TBDEV['site_email']}");
 else 
   logincookie($id, $wantpasshash);
 

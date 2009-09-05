@@ -36,7 +36,7 @@ if (!$row)
 	httperr();
 
 if ($row["status"] != "pending") {
-	header("Refresh: 0; url=$BASEURL/ok.php?type=confirmed");
+	header("Refresh: 0; url={$TBDEV['baseurl']}/ok.php?type=confirmed");
 	exit();
 }
 
@@ -51,6 +51,6 @@ if (!mysql_affected_rows())
 
 logincookie($id, $row["passhash"]);
 
-header("Refresh: 0; url=$BASEURL/ok.php?type=confirm");
+header("Refresh: 0; url={$TBDEV['baseurl']}/ok.php?type=confirm");
 
 ?>

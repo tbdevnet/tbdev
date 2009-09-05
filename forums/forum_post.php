@@ -104,7 +104,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     //------ All done, redirect user to the post
 
-    $headerstr = "Location: $BASEURL/forums.php?action=viewtopic&topicid=$topicid&page=last";
+    $headerstr = "Location: {$TBDEV['baseurl']}/forums.php?action=viewtopic&topicid=$topicid&page=last";
 
     if ($newtopic)
       header($headerstr);

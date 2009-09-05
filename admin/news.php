@@ -52,7 +52,7 @@ if ($mode == 'delete')
   mysql_query("DELETE FROM news WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
 	if ($returnto != "")
-		header("Location: $BASEURL/admin.php?action=news");
+		header("Location: {$TBDEV['baseurl']}/admin.php?action=news");
 	else
 		$warning = "News item was deleted successfully.";
 }
@@ -113,13 +113,13 @@ if ($mode == 'edit')
     $returnto = isset($_POST['returnto']) ? htmlentities($_POST['returnto']) : '';
 
 		if ($returnto != "")
-			header("Location: $BASEURL/admin.php?action=news");
+			header("Location: {$TBDEV['baseurl']}/admin.php?action=news");
 		else
 			$warning = "News item was edited successfully.";
   }
   else
   {
- 	 	//$returnto = isset($_POST['returnto']) ? htmlentities($_POST['returnto']) : $BASEURL.'/news.php';
+ 	 	//$returnto = isset($_POST['returnto']) ? htmlentities($_POST['returnto']) : $TBDEV['baseurl'].'/news.php';
 	  $htmlout = "<h1>Edit News Item</h1>\n";
 	  
 	  $htmlout .= "<form method='post' action='admin.php?action=news'>\n";
@@ -185,7 +185,7 @@ if (mysql_num_rows($res) > 0)
     	$by = "unknown[$userid]";
     else
     	$by = "<a href='userdetails.php?id=$userid'><b>$postername</b></a>" .
-    		($arr2["donor"] == "yes" ? "<img src=\"{$pic_base_url}star.gif\" alt='Donor' />" : "");
+    		($arr2["donor"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}star.gif\" alt='Donor' />" : "");
     		
     begin_table(true);
 	  print("<tr><td class='embedded'>");

@@ -90,7 +90,7 @@
 
 function insert_smilies_frame()
   {
-    global $smilies, $BASEURL, $pic_base_url;
+    global $smilies, $TBDEV;
 
     begin_frame("Smilies", true);
 
@@ -99,7 +99,7 @@ function insert_smilies_frame()
     print("<tr><td class='colhead'>Type...</td><td class='colhead'>To make a...</td></tr>\n");
 
     while (list($code, $url) = each($smilies))
-      print("<tr><td>$code</td><td><img src=\"{$pic_base_url}smilies/{$url}\" alt='' /></td></tr>\n");
+      print("<tr><td>$code</td><td><img src=\"{$TBDEV['pic_base_url']}smilies/{$url}\" alt='' /></td></tr>\n");
 
     end_table();
 

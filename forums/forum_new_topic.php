@@ -27,7 +27,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $forumid = (int)$_GET["forumid"];
 
     if (!is_valid_id($forumid))
-      header("Location: $BASEURL/forums.php");
+      header("Location: {$TBDEV['baseurl']}/forums.php");
 
 	
 

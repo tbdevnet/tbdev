@@ -20,7 +20,7 @@ require_once("include/benc.php");
 require_once("include/bittorrent.php");
 require_once "include/user_functions.php";
 
-ini_set("upload_max_filesize",$max_torrent_size);
+ini_set("upload_max_filesize",$TBDEV['max_torrent_size']);
 
 function bark($msg) {
 	genbark($msg, "Upload failed!");
@@ -90,7 +90,7 @@ if (!is_uploaded_file($tmpname))
 if (!filesize($tmpname))
 	bark("Empty file!");
 
-$dict = bdec_file($tmpname, $max_torrent_size);
+$dict = bdec_file($tmpname, $TBDEV['max_torrent_size']);
 if (!isset($dict))
 	bark("What the hell did you upload? This is not a bencoded file!");
 
@@ -141,8 +141,8 @@ unset($dict);
 
 list($dname, $plen, $pieces) = dict_check($info, "name(string):piece length(integer):pieces(string)");
 
-if (!in_array($ann, $announce_urls, 1))
-	bark("invalid announce url! must be <b>" . $announce_urls[0] . "</b>");
+if (!in_array($ann, $TBDEV['announce_urls'], 1))
+	bark("invalid announce url! must be <b>" . $TBDEV['announce_urls'][0] . "</b>");
 
 if (strlen($pieces) % 20 != 0)
 	bark("invalid pieces");
@@ -207,7 +207,7 @@ function file_list($arr,$id)
 
 mysql_query("INSERT INTO files (torrent, filename, size) VALUES ".file_list($filelist,$id));
 
-move_uploaded_file($tmpname, "$torrent_dir/$id.torrent");
+move_uploaded_file($tmpname, "{$TBDEV['torrent_dir']}/$id.torrent");
 
 write_log("Torrent $id ($torrent) was uploaded by " . $CURUSER["username"]);
 
@@ -222,7 +222,7 @@ if (($fd1 = @fopen("rss.xml", "w")) && ($fd2 = fopen("rssdd.xml", "w")))
 	while ($arr = mysql_fetch_assoc($res))
 		$cats[$arr["id"]] = $arr["name"];
 	$s = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n<rss version=\"0.91\">\n<channel>\n" .
-		"<title>$SITENAME</title>\n<description>TBDev is the best!</description>\n<link>$BASEURL/</link>\n";
+		"<title>$SITENAME</title>\n<description>TBDev is the best!</description>\n<link>{$TBDEV['baseurl']}/</link>\n";
 	@fwrite($fd1, $s);
 	@fwrite($fd2, $s);
 	$r = mysql_query("SELECT id,name,descr,filename,category FROM torrents ORDER BY added DESC LIMIT 15") or sqlerr(__FILE__, __LINE__);
@@ -233,9 +233,9 @@ if (($fd1 = @fopen("rss.xml", "w")) && ($fd2 = fopen("rssdd.xml", "w")))
 			"<description>" . htmlspecialchars($a["descr"]) . "</description>\n";
 		@fwrite($fd1, $s);
 		@fwrite($fd2, $s);
-		@fwrite($fd1, "<link>$BASEURL/details.php?id=$a[id]&amp;hit=1</link>\n</item>\n");
+		@fwrite($fd1, "<link>{$TBDEV['baseurl']}/details.php?id=$a[id]&amp;hit=1</link>\n</item>\n");
 		$filename = htmlspecialchars($a["filename"]);
-		@fwrite($fd2, "<link>$BASEURL/download.php/$a[id]/$filename</link>\n</item>\n");
+		@fwrite($fd2, "<link>{$TBDEV['baseurl']}/download.php/$a[id]/$filename</link>\n</item>\n");
 	}
 	$s = "</channel>\n</rss>\n";
 	@fwrite($fd1, $s);
@@ -271,7 +271,7 @@ $description
 
 You can use the URL below to download the torrent (you may have to login).
 
-$DEFAULTBASEURL/details.php?id=$id&hit=1
+{$TBDEV['baseurl']}/details.php?id=$id&hit=1
 
 -- 
 $SITENAME
@@ -291,8 +291,8 @@ while ($arr = mysql_fetch_row($res))
   ++$ntotal;
   if ($nthis == $nmax || $ntotal == $total)
   {
-    if (!mail("Multiple recipients <$SITEEMAIL>", "New torrent - $torrent", $body,
-    "From: $SITEEMAIL\r\nBcc: $to", "-f$SITEEMAIL"))
+    if (!mail("Multiple recipients <{$TBDEV['site_email']}>", "New torrent - $torrent", $body,
+    "From: {$TBDEV['site_email']}\r\nBcc: $to"))
 	  stderr("Error", "Your torrent has been been uploaded. DO NOT RELOAD THE PAGE!\n" .
 	    "There was however a problem delivering the e-mail notifcations.\n" .
 	    "Please let an administrator know about this error!\n");
@@ -301,6 +301,6 @@ while ($arr = mysql_fetch_row($res))
 }
 *******************/
 
-header("Location: $BASEURL/details.php?id=$id&uploaded=1");
+header("Location: {$TBDEV['baseurl']}/details.php?id=$id&uploaded=1");
 
 ?>

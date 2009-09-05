@@ -25,7 +25,7 @@ function linkcolor($num) {
 }
 
 function torrenttable($res, $variant = "index") {
-	global $pic_base_url, $CURUSER;
+	global $TBDEV, $CURUSER;
 
 $wait = 0;
 	if ($CURUSER["class"] < UC_VIP)
@@ -86,7 +86,7 @@ $wait = 0;
         if (isset($row["cat_name"])) {
             print("<a href=\"browse.php?cat=" . $row["category"] . "\">");
             if (isset($row["cat_pic"]) && $row["cat_pic"] != "")
-                print("<img border=\"0\" src=\"{$pic_base_url}caticons/{$row['cat_pic']}\" alt=\"{$row['cat_name']}\" />");
+                print("<img border=\"0\" src=\"{$TBDEV['pic_base_url']}caticons/{$row['cat_pic']}\" alt=\"{$row['cat_name']}\" />");
             else
                 print($row["cat_name"]);
             print("</a>");
@@ -118,9 +118,9 @@ $wait = 0;
 
 /*
         if ($row["nfoav"] && get_user_class() >= UC_POWER_USER)
-          print("<a href='viewnfo.php?id=$row[id]''><img src=\"{$pic_base_url}viewnfo.gif" border='0' alt='View NFO' /></a>\n");
+          print("<a href='viewnfo.php?id=$row[id]''><img src=\"{$TBDEV['pic_base_url']}viewnfo.gif" border='0' alt='View NFO' /></a>\n");
         if ($variant == "index")
-            print("<a href=\"download.php/$id/" . rawurlencode($row["filename"]) . "\"><img src=\"{$pic_base_url}download.gif\" border='0' alt='Download' /></a>\n");
+            print("<a href=\"download.php/$id/" . rawurlencode($row["filename"]) . "\"><img src=\"{$TBDEV['pic_base_url']}download.gif\" border='0' alt='Download' /></a>\n");
 
         else */ if ($variant == "mytorrents")
             print("</td><td align=\"center\"><a href=\"edit.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;id=" . $row["id"] . "\">edit</a>\n");
@@ -216,7 +216,7 @@ print("</td>\n");
 
 function commenttable($rows)
 {
-	global $CURUSER, $pic_base_url;
+	global $CURUSER, $TBDEV;
 	begin_main_frame();
 	begin_frame();
 	$count = 0;
@@ -232,8 +232,8 @@ function commenttable($rows)
 				$title = htmlspecialchars($title);
         print("<a name='comm". $row["id"] .
         	"' href='userdetails.php?id=" . $row["user"] . "'><b>" .
-        	htmlspecialchars($row["username"]) . "</b></a>" . ($row["donor"] == "yes" ? "<img src=\"{$pic_base_url}star.gif\" alt='Donor' />" : "") . ($row["warned"] == "yes" ? "<img src=".
-    			"\"{$pic_base_url}warned.gif\" alt=\"Warned\" />" : "") . " ($title)\n");
+        	htmlspecialchars($row["username"]) . "</b></a>" . ($row["donor"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}star.gif\" alt='Donor' />" : "") . ($row["warned"] == "yes" ? "<img src=".
+    			"\"{$TBDEV['pic_base_url']}warned.gif\" alt=\"Warned\" />" : "") . " ($title)\n");
 		}
 		else
    		print("<a name=\"comm" . $row["id"] . "\"><i>(orphaned)</i></a>\n");
@@ -244,7 +244,7 @@ function commenttable($rows)
 			($row["editedby"] && get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=vieworiginal&amp;cid=$row[id]'>View original</a>]" : "") . "</p>\n");
 		$avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($row["avatar"]) : "");
 		if (!$avatar)
-			$avatar = "{$pic_base_url}default_avatar.gif";
+			$avatar = "{$TBDEV['pic_base_url']}default_avatar.gif";
 		$text = format_comment($row["text"]);
     if ($row["editedby"])
     	$text .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id={$row['editedby']}'><b>{$row['username']}</b></a> at ".get_date($row['editedat'],'DATE')."</font></p>\n";

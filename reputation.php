@@ -216,7 +216,7 @@ require_once "cache/rep_settings_cache.php";
 			//print( join(',', array_keys($save)));
 			@mysql_query( "INSERT INTO reputation (".join(',', array_keys($save)).") VALUES (".join( ',', $save).")" );
 
-			header( "Location: $BASEURL/reputation.php?pid={$input['pid']}&done=1" );
+			header( "Location: {$TBDEV['baseurl']}/reputation.php?pid={$input['pid']}&done=1" );
 		} // Move along, nothing to see here!
 		else
 		{
@@ -254,7 +254,7 @@ require_once "cache/rep_settings_cache.php";
 
 						if( $GVARS['g_rep_seeown'] )
 						{
-							$postrep['reason'] = $postrep['reason']." <span class='desc'>Leftby <a href=\"$BASEURL/userdetails.php?id={$postrep['leftby_id']}\" target='_blank'>{$postrep['leftby_name']}</a></span>";
+							$postrep['reason'] = $postrep['reason']." <span class='desc'>Leftby <a href=\"{$TBDEV['baseurl']}/userdetails.php?id={$postrep['leftby_id']}\" target='_blank'>{$postrep['leftby_name']}</a></span>";
 						}
 
 						$reasonbits .= "<tr>
@@ -284,7 +284,7 @@ require_once "cache/rep_settings_cache.php";
 //	Compile some HTML for the 'own post'/ 'user view' reputation
 //	Feel free to do ya own html/css here
 ///////////////////////////////////////////////
-				$rep_info = sprintf("Your reputation on <a href='$BASEURL/forums.php?action=viewtopic&amp;topicid=%d&amp;page=p%d#%d' target='_blank'>this post</a> is %s.", $res['topicid'], $input['pid'], $input['pid'], $rep );
+				$rep_info = sprintf("Your reputation on <a href='{$TBDEV['baseurl']}/forums.php?action=viewtopic&amp;topicid=%d&amp;page=p%d#%d' target='_blank'>this post</a> is %s.", $res['topicid'], $input['pid'], $input['pid'], $rep );
 				$rep_points = sprintf("You have %d Reputation point(s).", $CURUSER['reputation'] );
 
 				$html = "<tr><td class='darkrow1'>{$rep_info}</td></tr>

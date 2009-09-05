@@ -23,6 +23,6 @@ dbconn();
 logoutcookie();
 
 //header("Refresh: 0; url=./");
-Header("Location: $BASEURL/");
+Header("Location: {$TBDEV['baseurl']}/");
 
 ?>

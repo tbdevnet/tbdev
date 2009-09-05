@@ -22,7 +22,7 @@
 
 function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
 	{
-	global $BASEURL;
+	global $TBDEV;
 	
 	
 	
@@ -111,7 +111,7 @@ function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
 			
 			// now decide if we in a forum or statusbar?
 			if( $mode === 0 )
-			return "Rep: ".$posneg . "<br /><a href='javascript:;' onclick=\"PopUp('$BASEURL/reputation.php?pid={$user['id']}','Reputation',400,241,1,1);\"><img src='./pic/plus.gif' border='0' alt='Add reputation:: {$user['username']}' title='Add reputation:: {$user['username']}' /></a>";
+			return "Rep: ".$posneg . "<br /><a href='javascript:;' onclick=\"PopUp('{$TBDEV['baseurl']}/reputation.php?pid={$user['id']}','Reputation',400,241,1,1);\"><img src='./pic/plus.gif' border='0' alt='Add reputation:: {$user['username']}' title='Add reputation:: {$user['username']}' /></a>";
 			else
 			return "Rep: ".$posneg;
 			
@@ -124,7 +124,7 @@ function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
 
 function get_user_icons($arr, $big = false)
 {
-	global $pic_base_url;
+	global $TBDEV;
 	if ($big)
 	{
 		$donorpic = "starbig.gif";
@@ -139,11 +139,11 @@ function get_user_icons($arr, $big = false)
 		$disabledpic = "disabled.gif";
 		$style = "style=\"margin-left: 2pt\"";
 	}
-	$pics = $arr["donor"] == "yes" ? "<img src=\"{$pic_base_url}{$donorpic}\" alt='Donor' border='0' $style />" : "";
+	$pics = $arr["donor"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}{$donorpic}\" alt='Donor' border='0' $style />" : "";
 	if ($arr["enabled"] == "yes")
-		$pics .= $arr["warned"] == "yes" ? "<img src=\"{$pic_base_url}{$warnedpic}\" alt=\"Warned\" border='0' $style />" : "";
+		$pics .= $arr["warned"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}{$warnedpic}\" alt=\"Warned\" border='0' $style />" : "";
 	else
-		$pics .= "<img src=\"{$pic_base_url}{$disabledpic}\" alt=\"Disabled\" border='0' $style />\n";
+		$pics .= "<img src=\"{$TBDEV['pic_base_url']}{$disabledpic}\" alt=\"Disabled\" border='0' $style />\n";
 	return $pics;
 }
 

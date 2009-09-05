@@ -92,7 +92,7 @@ function format_quotes($s)
 
 function format_comment($text, $strip_html = true)
 {
-	global $smilies, $pic_base_url;
+	global $smilies, $TBDEV;
 
 	$s = $text;
   unset($text);
@@ -189,7 +189,7 @@ function format_comment($text, $strip_html = true)
 	$s = str_replace("  ", " &nbsp;", $s);
 
 	foreach($smilies as $code => $url) {
-		$s = str_replace($code, "<img border='0' src=\"{$pic_base_url}smilies/{$url}\" alt=\"" . htmlspecialchars($code) . "\" />", $s);
+		$s = str_replace($code, "<img border='0' src=\"{$TBDEV['pic_base_url']}smilies/{$url}\" alt=\"" . htmlspecialchars($code) . "\" />", $s);
 }
 	return $s;
 }

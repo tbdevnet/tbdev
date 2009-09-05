@@ -27,11 +27,11 @@ require_once "include/html_functions.php";
 
 
 function ratingpic($num) {
-    global $pic_base_url;
+    global $TBDEV;
     $r = round($num * 2) / 2;
     if ($r < 1 || $r > 5)
         return;
-    return "<img src=\"{$pic_base_url}{$r}.gif\" border=\"0\" alt=\"rating: $num / 5\" />";
+    return "<img src=\"{$TBDEV['pic_base_url']}{$r}.gif\" border=\"0\" alt=\"rating: $num / 5\" />";
 }
 
 
@@ -48,19 +48,19 @@ if (!isset($id) || !is_valid_id($id))
 	if (isset($_GET["hit"])) {
 		mysql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
 		if ($_GET["tocomm"])
-			header("Location: $BASEURL/details.php?id=$id&page=0#startcomments");
+			header("Location: {$TBDEV['baseurl']}/details.php?id=$id&page=0#startcomments");
 		elseif ($_GET["filelist"])
-			header("Location: $BASEURL/details.php?id=$id&filelist=1#filelist");
+			header("Location: {$TBDEV['baseurl']}/details.php?id=$id&filelist=1#filelist");
 		elseif ($_GET["toseeders"])
-			header("Location: $BASEURL/peerlist.php?id=$id#seeders");
+			header("Location: {$TBDEV['baseurl']}/peerlist.php?id=$id#seeders");
 		elseif ($_GET["todlers"])
-			header("Location: $BASEURL/peerlist.php?id=$id#leechers");
+			header("Location: {$TBDEV['baseurl']}/peerlist.php?id=$id#leechers");
 		else
-			header("Location: $BASEURL/details.php?id=$id");
+			header("Location: {$TBDEV['baseurl']}/details.php?id=$id");
 		exit();
 	}
 	
-$res = mysql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, LENGTH(torrents.nfo) AS nfosz, torrents.last_action AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < $minvotes, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.comments, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
+$res = mysql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, LENGTH(torrents.nfo) AS nfosz, torrents.last_action AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < {$TBDEV['minvotes']}, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.comments, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
 	or sqlerr();
 $row = mysql_fetch_assoc($res);
 
@@ -147,8 +147,8 @@ if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
 		$s = "";
 		$s .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=embedded>";
 		if (!isset($row["rating"])) {
-			if ($minvotes > 1) {
-				$s .= "none yet (needs at least $minvotes votes and has got ";
+			if ($TBDEV['minvotes'] > 1) {
+				$s .= "none yet (needs at least {$TBDEV['minvotes']} votes and has got ";
 				if ($row["numratings"])
 					$s .= "only " . $row["numratings"];
 				else

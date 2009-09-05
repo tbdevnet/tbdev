@@ -29,7 +29,7 @@
   loggedinorreturn();
 
   $action = isset($_GET["action"]) ? $_GET["action"] : '';
-  $forum_pic_url = $pic_base_url . 'forumicons/';
+  $forum_pic_url = $TBDEV['pic_base_url'] . 'forumicons/';
     //-------- Global variables
 
   $maxsubjectlength = 40;
@@ -99,7 +99,7 @@
 
 function std_view() {
 
-  global $READPOST_EXPIRY, $CURUSER, $forum_pic_url;
+  global $TBDEV, $CURUSER, $forum_pic_url;
   
   $forums_res = mysql_query("SELECT * FROM forums ORDER BY sort, name") or sqlerr(__FILE__, __LINE__);
 
@@ -171,7 +171,7 @@ function std_view() {
       $a = mysql_fetch_row($r);
 
 	//..rp..
-	$npostcheck = ($post_arr['added'] > (time() - $READPOST_EXPIRY)) ? (!$a OR $lastpostid > $a[0]) : 0;
+	$npostcheck = ($post_arr['added'] > (time() - $TBDEV['readpost_expiry'])) ? (!$a OR $lastpostid > $a[0]) : 0;
 	
 	/* if ($a && $a[0] >= $lastpostid)
 	$img = "unlocked";

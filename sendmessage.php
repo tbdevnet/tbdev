@@ -23,7 +23,7 @@ dbconn(false);
 loggedinorreturn();
 
 // Standard Administrative PM Replies
-$pm_std_reply[1] = "Read the bloody [url=".$BASEURL."/faq.php]FAQ[/url] and stop bothering me!";
+$pm_std_reply[1] = "Read the bloody [url={$TBDEV['baseurl']}/faq.php]FAQ[/url] and stop bothering me!";
 $pm_std_reply[2] = "Die! Die! Die!";
 
 // Standard Administrative PMs
@@ -35,7 +35,7 @@ I am sure that you will appreciate the importance of sharing your downloads.
 You may PM any Moderator, if you believe that you are being treated unfairly.\n
 Thank you for your cooperation.");
 $pm_template['2'] = array("Avatar warning", "Hi,\n
-You may not be aware that there are new guidelines on avatar sizes in the [url=".$BASEURL."/rules.php]rules[/url], in particular \"Resize
+You may not be aware that there are new guidelines on avatar sizes in the [url={$TBDEV['baseurl']}/rules.php]rules[/url], in particular \"Resize
 your images to a width of 150 px and a size of [b]no more than 150 KB[/b].\"\n
 I'm sorry to say your avatar doesn't conform to them. Please change it as soon as possible.\n
 We understand this may be an inconvenience to some users but feel it is in the community's best interest.\n

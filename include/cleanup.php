@@ -19,12 +19,12 @@
 require_once("bittorrent.php");
 
 function deadtime() {
-    global $announce_interval;
-    return time() - floor($announce_interval * 1.3);
+    global $TBDEV;
+    return time() - floor($TBDEV['announce_interval'] * 1.3);
 }
 
 function docleanup() {
-	global $torrent_dir, $signup_timeout, $max_dead_torrent_time, $autoclean_interval, $READPOST_EXPIRY;
+	global $TBDEV;
 
 	set_time_limit(0);
 	ignore_user_abort(1);
@@ -40,7 +40,7 @@ function docleanup() {
 		if (!count($ar))
 			break;
 
-		$dp = @opendir($torrent_dir);
+		$dp = @opendir($TBDEV['torrent_dir']);
 		if (!$dp)
 			break;
 
@@ -52,7 +52,7 @@ function docleanup() {
 			$ar2[$id] = 1;
 			if (isset($ar[$id]) && $ar[$id])
 				continue;
-			$ff = $torrent_dir . "/$file";
+			$ff = $TBDEV['torrent_dir'] . "/$file";
 			unlink($ff);
 		}
 		closedir($dp);
@@ -96,10 +96,10 @@ function docleanup() {
 	$deadtime = deadtime();
 	@mysql_query("DELETE FROM peers WHERE last_action < $deadtime");
 
-	$deadtime -= $max_dead_torrent_time;
+	$deadtime -= $TBDEV['max_dead_torrent_time'];
 	@mysql_query("UPDATE torrents SET visible='no' WHERE visible='yes' AND last_action < $deadtime");
 
-	$deadtime = time() - $signup_timeout;
+	$deadtime = time() - $TBDEV['signup_timeout'];
 	@mysql_query("DELETE FROM users WHERE status = 'pending' AND added < $deadtime AND last_login < $deadtime AND last_access < $deadtime");
 
 	$torrents = array();
@@ -224,7 +224,7 @@ function docleanup() {
 	$res = mysql_query("SELECT id, name FROM torrents WHERE added < $dt");
 	while ($arr = mysql_fetch_assoc($res))
 	{
-		@unlink("$torrent_dir/$arr[id].torrent");
+		@unlink("{$TBDEV['torrent_dir']}/{$arr['id']}.torrent");
 		@mysql_query("DELETE FROM torrents WHERE id={$arr['id']}");
 		@mysql_query("DELETE FROM peers WHERE torrent={$arr['id']}");
 		@mysql_query("DELETE FROM comments WHERE torrent={$arr['id']}");
@@ -233,7 +233,7 @@ function docleanup() {
 	}
 
     // Remove expired readposts...
-    $dt = (time() - $READPOST_EXPIRY);
+    $dt = (time() - $TBDEV['readpost_expiry']);
 
     @mysql_query("DELETE readposts FROM readposts ".
         "LEFT JOIN posts ON readposts.lastpostread = posts.id ".

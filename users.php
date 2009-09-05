@@ -153,7 +153,7 @@ print("<tr><td class='colhead' align='left'>User name</td><td class='colhead'>Re
 while($row = mysql_fetch_assoc($res))
 {
   
-      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align='center'><img src=\"{$pic_base_url}flag/{$row['flagpic']}\" alt=\"". htmlspecialchars($row['name']) ."\" /></td>" : "<td align='center'>---</td>";
+      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align='center'><img src=\"{$TBDEV['pic_base_url']}flag/{$row['flagpic']}\" alt=\"". htmlspecialchars($row['name']) ."\" /></td>" : "<td align='center'>---</td>";
 /*    
   if ($row['added'] == '0000-00-00 00:00:00')
     $row['added'] = '-';
@@ -161,7 +161,7 @@ while($row = mysql_fetch_assoc($res))
     $row['last_access'] = '-';
 */    
   $out .= "<tr><td align='left'><a href='userdetails.php?id={$row['id']}'><b>{$row['username']}</b></a>" .
-  ($row["donor"] > 0 ? "<img src=\"{$pic_base_url}star.gif\" border='0' alt='Donor' />" : "")."</td>" .
+  ($row["donor"] > 0 ? "<img src=\"{$TBDEV['pic_base_url']}star.gif\" border='0' alt='Donor' />" : "")."</td>" .
   "<td>".get_date( $row['added'],'' )."</td><td>".get_date( $row['last_access'], '')."</td>".
     "<td align='left'>" . get_user_class_name($row["class"]) . "</td>$country</tr>\n";
 }

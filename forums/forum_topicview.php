@@ -197,7 +197,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
 //		if ($arr2["enabled"] == "yes")
 	        //$avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($arr2["avatar"]) : "");
 //	    else
-//			$avatar = "{$pic_base_url}disabled_avatar.gif";
+//			$avatar = "{$TBDEV['pic_base_url']}disabled_avatar.gif";
 
         $title = $arr["title"];
 
@@ -205,8 +205,8 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
           $title = get_user_class_name($arr["class"]);
 
         $by = "<a href=userdetails.php?id=$posterid><b>$postername</b></a>" . ($arr["donor"] == "yes" ? "<img src=".
-        "\"{$pic_base_url}star.gif\" alt='Donor'>" : "") . ($arr["enabled"] == "no" ? "<img src=\"".
-        "\"{$pic_base_url}disabled.gif\" alt=\"This account is disabled\" style='margin-left: 2px'>" : ($arr["warned"] == "yes" ? "<a href=rules.php#warning class=altlink><img src=\"{$pic_base_url}warned.gif\" alt=\"Warned\" border=0></a>" : "")) . " ($title)";
+        "\"{$TBDEV['pic_base_url']}star.gif\" alt='Donor'>" : "") . ($arr["enabled"] == "no" ? "<img src=\"".
+        "\"{$TBDEV['pic_base_url']}disabled.gif\" alt=\"This account is disabled\" style='margin-left: 2px'>" : ($arr["warned"] == "yes" ? "<a href=rules.php#warning class=altlink><img src=\"{$pic_base_url}warned.gif\" alt=\"Warned\" border=0></a>" : "")) . " ($title)";
       }
 
       if ($CURUSER["avatars"] == "yes")
@@ -265,7 +265,7 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
     
     $postadd = $arr['added'];
 	//..rp..
-	if (($postid > $lpr) AND ($postadd > (time() - $READPOST_EXPIRY))) {
+	if (($postid > $lpr) AND ($postadd > (time() - $TBDEV['readpost_expiry']))) {
 	
 	if ($lpr)
 	mysql_query("UPDATE readposts SET lastpostread=$postid ".

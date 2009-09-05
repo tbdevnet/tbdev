@@ -24,7 +24,7 @@ dbconn( false );
 loggedinorreturn();
 
 	if ( get_user_class() < UC_ADMINISTRATOR )
-		header( "Location: $BASEURL/index.php" );
+		header( "Location: {$TBDEV['baseurl']}/index.php" );
 
 	$input = array_merge($_GET, $_POST);
 	$input['mode'] = isset( $input['mode'] ) ? $input['mode'] : '';
@@ -653,19 +653,19 @@ function html_out( $html="", $title="" )
 
 function redirect($url, $text, $time=2)
 	{
-		global $BASEURL;
+		global $TBDEV;
 		
 		$page_title  = "Admin Rep Redirection";
 		$page_detail = "<em>Redirecting...</em>";
 		
-		$html = "<meta http-equiv='refresh' content=\"{$time}; url={$BASEURL}/{$url}\">
+		$html = "<meta http-equiv='refresh' content=\"{$time}; url={$TBDEV['baseurl']}/{$url}\">
 						    <div>
 							<div>Redirecting</div>
 							<div style='padding:8px'>
 							 <div style='font-size:12px'>$text
 							 <br />
 							 <br />
-							 <center><a href='{$BASEURL}/{$url}'>Click here if not redirected...</a></center>
+							 <center><a href='{$TBDEV['baseurl']}/{$url}'>Click here if not redirected...</a></center>
 							 </div>
 							</div>
 						   </div>";

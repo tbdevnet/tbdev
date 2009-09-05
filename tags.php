@@ -115,7 +115,7 @@ insert_tag(
 	"Hyperlink (alt. 1)",
 	"Inserts a hyperlink.",
 	"[url]<i>URL</i>[/url]",
-	"[url]".$BASEURL."/[/url]",
+	"[url]".$TBDEV['baseurl']."/[/url]",
 	"This tag is superfluous; all URLs are automatically hyperlinked."
 );
 
@@ -123,7 +123,7 @@ insert_tag(
 	"Hyperlink (alt. 2)",
 	"Inserts a hyperlink.",
 	"[url=<i>URL</i>]<i>Link text</i>[/url]",
-	"[url=".$BASEURL."/]".$SITENAME."[/url]",
+	"[url=".$TBDEV['baseurl']."/]".$SITENAME."[/url]",
 	"You do not have to use this tag unless you want to set the link text; all URLs are automatically hyperlinked."
 );
 
@@ -131,7 +131,7 @@ insert_tag(
 	"Image (alt. 1)",
 	"Inserts a picture.",
 	"[img=<i>URL</i>]",
-	"[img=".$BASEURL."/pic/logo.gif]",
+	"[img=".$TBDEV['baseurl']."/pic/logo.gif]",
 	"The URL must end with <b>.gif</b>, <b>.jpg</b> or <b>.png</b>."
 );
 
@@ -139,7 +139,7 @@ insert_tag(
 	"Image (alt. 2)",
 	"Inserts a picture.",
 	"[img]<i>URL</i>[/img]",
-	"[img]".$BASEURL."/pic/logo.gif[/img]",
+	"[img]".$TBDEV['baseurl']."/pic/logo.gif[/img]",
 	"The URL must end with <b>.gif</b>, <b>.jpg</b> or <b>.png</b>."
 );
 

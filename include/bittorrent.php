@@ -76,9 +76,9 @@ function getip() {
 
 function dbconn($autoclean = false)
 {
-    global $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
+    global $TBDEV;
 
-    if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
+    if (!@mysql_connect($TBDEV['mysql_host'], $TBDEV['mysql_user'], $TBDEV['mysql_pass']))
     {
 	  switch (mysql_errno())
 	  {
@@ -92,7 +92,7 @@ function dbconn($autoclean = false)
     	    die("[" . mysql_errno() . "] dbconn: mysql_connect: " . mysql_error());
       }
     }
-    mysql_select_db($mysql_db)
+    mysql_select_db($TBDEV['mysql_db'])
         or die('dbconn: mysql_select_db: ' . mysql_error());
 
     userlogin();
@@ -103,7 +103,7 @@ function dbconn($autoclean = false)
 
 
 function userlogin() {
-    global $SITE_ONLINE;
+    global $TBDEV;
     unset($GLOBALS["CURUSER"]);
 
     $ip = getip();
@@ -128,7 +128,7 @@ function userlogin() {
       }
       unset($bans);
     }
-    if (!$SITE_ONLINE || empty($_COOKIE["uid"]) || empty($_COOKIE["pass"]))
+    if (!$TBDEV['site_online'] || empty($_COOKIE["uid"]) || empty($_COOKIE["pass"]))
         return;
     $id = 0 + $_COOKIE["uid"];
     if (!$id || strlen($_COOKIE["pass"]) != 32)
@@ -146,7 +146,7 @@ function userlogin() {
 }
 
 function autoclean() {
-    global $autoclean_interval;
+    global $TBDEV;
 
     $now = time();
     //$docleanup = 0;
@@ -158,7 +158,7 @@ function autoclean() {
         return;
     }
     $ts = $row[0];
-    if ($ts + $autoclean_interval > $now)
+    if ($ts + $TBDEV['autoclean_interval'] > $now)
         return;
     mysql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
     if (!mysql_affected_rows())
@@ -274,17 +274,17 @@ function parsedescr($d, $html) {
 }
 */
 function stdhead($title = "", $msgalert = true) {
-    global $CURUSER, $SITE_ONLINE, $SITENAME, $pic_base_url, $stylesheet;
+    global $CURUSER, $TBDEV, $SITENAME;
 
-  if (!$SITE_ONLINE)
+  if (!$TBDEV['site_online'])
     die("Site is down for maintenance, please check back again later... thanks<br>");
 
     //header("Content-Type: text/html; charset=iso-8859-1");
     //header("Pragma: No-cache");
     if ($title == "")
-        $title = $SITENAME .(isset($_GET['tbv'])?" (".TBVERSION.")":'');
+        $title = $TBDEV['site_name'] .(isset($_GET['tbv'])?" (".TBVERSION.")":'');
     else
-        $title = $SITENAME .(isset($_GET['tbv'])?" (".TBVERSION.")":''). " :: " . htmlspecialchars($title);
+        $title = $TBDEV['site_name'].(isset($_GET['tbv'])?" (".TBVERSION.")":''). " :: " . htmlspecialchars($title);
         
   if ($CURUSER)
   {
@@ -293,7 +293,7 @@ function stdhead($title = "", $msgalert = true) {
 
     if ($ss_a) $ss_uri = $ss_a["uri"];
     */
-	$stylesheet = "{$CURUSER['stylesheet']}.css";
+	$stylesheet = isset($CURUSER['stylesheet']) ? "{$CURUSER['stylesheet']}.css" : {$TBDEV['stylesheet']};
   }
   
   if ($msgalert && $CURUSER)
@@ -324,7 +324,7 @@ function stdhead($title = "", $msgalert = true) {
 
 <td class='clear'>
 <div id="logostrip">
-<img src="<?php echo $pic_base_url?>logo.jpg" alt='' />
+<img src="<?php echo $TBDEV['pic_base_url']?>logo.jpg" alt='' />
 
 <a href='donate.php'><img src="./pic/x-click-but04.gif" border="0" alt="Make a donation" style='margin-top: 5px' /></a>
 </div>
@@ -392,10 +392,10 @@ if (isset($unread) && !empty($unread))
 } // stdhead
 
 function stdfoot() {
-  global $pic_base_url;
+  global $TBDEV;
   
   print "<p align='center'>
-<a href='http://www.tbdev.net'><img src='{$pic_base_url}tbdev_btn_red.png' border='0' alt='Powered By TBDev &copy;2009' title='Powered By TBDev &copy;2009' /></a></p>";
+<a href='http://www.tbdev.net'><img src='{$TBDEV['pic_base_url']}tbdev_btn_red.png' border='0' alt='Powered By TBDev &copy;2009' title='Powered By TBDev &copy;2009' /></a></p>";
 
   print "</td></tr></table>\n";
   print "</body></html>\n";
@@ -509,9 +509,9 @@ function logoutcookie() {
 }
 
 function loggedinorreturn() {
-    global $CURUSER, $BASEURL;
+    global $CURUSER, $TBDEV;
     if (!$CURUSER) {
-        header("Location: $BASEURL/login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]));
+        header("Location: {$TBDEV['baseurl']}/login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]));
         exit();
     }
 }
@@ -560,7 +560,7 @@ function stderr($heading, $text)
 // Basic MySQL error handler
 
 function sqlerr($file = '', $line = '') {
-    global $sql_error_log, $CURUSER;
+    global $TBDEV, $CURUSER;
     
 		$the_error    = mysql_error();
 		$the_error_no = mysql_errno();
@@ -569,7 +569,7 @@ function sqlerr($file = '', $line = '') {
     	{
 			exit();
     	}
-     	else if ( $sql_error_log AND SQL_DEBUG == 1 )
+     	else if ( $TBDEV['sql_error_log'] AND SQL_DEBUG == 1 )
 		{
 			$_error_string  = "\n===================================================";
 			$_error_string .= "\n Date: ". date( 'r' );
@@ -580,7 +580,7 @@ function sqlerr($file = '', $line = '') {
 			$_error_string .= "\n URL:".$_SERVER['REQUEST_URI'];
 			$_error_string .= "\n Username: {$CURUSER['username']}[{$CURUSER['id']}]";
 			
-			if ( $FH = @fopen( $sql_error_log, 'a' ) )
+			if ( $FH = @fopen( $TBDEV['sql_error_log'], 'a' ) )
 			{
 				@fwrite( $FH, $_error_string );
 				@fclose( $FH );
@@ -685,14 +685,14 @@ function unixstamp_to_human( $unix=0 )
 
 function get_time_offset() {
     
-    	global $CURUSER, $CONFIG_INFO;
+    	global $CURUSER, $TBDEV;
     	$r = 0;
     	
-    	$r = ( ($CURUSER['time_offset'] != "") ? $CURUSER['time_offset'] : $CONFIG_INFO['time_offset'] ) * 3600;
+    	$r = ( ($CURUSER['time_offset'] != "") ? $CURUSER['time_offset'] : $TBDEV['time_offset'] ) * 3600;
 			
-      if ( $CONFIG_INFO['time_adjust'] )
+      if ( $TBDEV['time_adjust'] )
       {
-        $r += ($CONFIG_INFO['time_adjust'] * 60);
+        $r += ($TBDEV['time_adjust'] * 60);
       }
       
       if ( $CURUSER['dst_in_use'] )
@@ -706,17 +706,17 @@ function get_time_offset() {
 
 function get_date($date, $method, $norelative=0, $full_relative=0)
     {
-        global $CONFIG_INFO;
+        global $TBDEV;
         
         static $offset_set = 0;
         static $today_time = 0;
         static $yesterday_time = 0;
         $time_options = array( 
-        'JOINED' => $CONFIG_INFO['time_joined'],
-        'SHORT'  => $CONFIG_INFO['time_short'],
-				'LONG'   => $CONFIG_INFO['time_long'],
-				'TINY'   => $CONFIG_INFO['time_tiny'] ? $CONFIG_INFO['time_tiny'] : 'j M Y - G:i',
-				'DATE'   => $CONFIG_INFO['time_date'] ? $CONFIG_INFO['time_date'] : 'j M Y'
+        'JOINED' => $TBDEV['time_joined'],
+        'SHORT'  => $TBDEV['time_short'],
+				'LONG'   => $TBDEV['time_long'],
+				'TINY'   => $TBDEV['time_tiny'] ? $TBDEV['time_tiny'] : 'j M Y - G:i',
+				'DATE'   => $TBDEV['time_date'] ? $TBDEV['time_date'] : 'j M Y'
 				);
         
         if ( ! $date )
@@ -733,7 +733,7 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
         {
         	$GLOBALS['offset'] = get_time_offset();
 			
-          if ( $CONFIG_INFO['time_use_relative'] )
+          if ( $TBDEV['time_use_relative'] )
           {
             $today_time     = gmdate('d,m,Y', ( time() + $GLOBALS['offset']) );
             $yesterday_time = gmdate('d,m,Y', ( (time() - 86400) + $GLOBALS['offset']) );
@@ -742,7 +742,7 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
           $offset_set = 1;
         }
         
-        if ( $CONFIG_INFO['time_use_relative'] == 3 )
+        if ( $TBDEV['time_use_relative'] == 3 )
         {
         	$full_relative = 1;
         }
@@ -791,11 +791,11 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
             return gmdate($time_options[$method], ($date + $GLOBALS['offset']) );
           }
         }
-        else if ( $CONFIG_INFO['time_use_relative'] and ( $norelative != 1 ) )
+        else if ( $TBDEV['time_use_relative'] and ( $norelative != 1 ) )
         {
           $this_time = gmdate('d,m,Y', ($date + $GLOBALS['offset']) );
           
-          if ( $CONFIG_INFO['time_use_relative'] == 2 )
+          if ( $TBDEV['time_use_relative'] == 2 )
           {
             $diff = time() - $date;
           
@@ -814,11 +814,11 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
           
             if ( $this_time == $today_time )
             {
-              return str_replace( '{--}', 'Today', gmdate($CONFIG_INFO['time_use_relative_format'], ($date + $GLOBALS['offset']) ) );
+              return str_replace( '{--}', 'Today', gmdate($TBDEV['time_use_relative_format'], ($date + $GLOBALS['offset']) ) );
             }
             else if  ( $this_time == $yesterday_time )
             {
-              return str_replace( '{--}', 'Yesterday', gmdate($CONFIG_INFO['time_use_relative_format'], ($date + $GLOBALS['offset']) ) );
+              return str_replace( '{--}', 'Yesterday', gmdate($TBDEV['time_use_relative_format'], ($date + $GLOBALS['offset']) ) );
             }
             else
             {

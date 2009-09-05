@@ -33,7 +33,7 @@ loggedinorreturn();
   $res = mysql_query("SELECT name, filename FROM torrents WHERE id = $id") or sqlerr(__FILE__, __LINE__);
   $row = mysql_fetch_assoc($res);
 
-  $fn = "$torrent_dir/$id.torrent";
+  $fn = "{$TBDEV['torrent_dir']}/$id.torrent";
 
   if (!$row || !is_file($fn) || !is_readable($fn))
     httperr();
@@ -58,7 +58,7 @@ loggedinorreturn();
 
   $dict = bdec_file($fn, filesize($fn));
 
-  $dict['value']['announce']['value'] = "{$announce_urls[0]}?passkey={$CURUSER['passkey']}";
+  $dict['value']['announce']['value'] = "{$TBDEV['announce_urls'][0]}?passkey={$CURUSER['passkey']}";
 
   $dict['value']['announce']['string'] = strlen($dict['value']['announce']['value']).":".$dict['value']['announce']['value'];
 

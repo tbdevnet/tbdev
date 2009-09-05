@@ -288,7 +288,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     mysql_query("UPDATE users SET " . implode(", ", $updateset) . " WHERE id=".sqlesc($userid)) or sqlerr(__FILE__, __LINE__);
 
     $returnto = $_POST["returnto"];
-    header("Location: $BASEURL/$returnto");
+    header("Location: {$TBDEV['baseurl']}/$returnto");
 
     die();
     }

@@ -28,7 +28,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $maxresults = 25;
 
     // ..rp..
-	$dt = (time() - $READPOST_EXPIRY);
+	$dt = (time() - $TBDEV['readpost_expiry']);
 	
 	$res = mysql_query("SELECT st.id, st.forumid, st.subject, st.lastpost ".
 	"FROM topics AS st ".

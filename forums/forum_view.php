@@ -29,7 +29,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $forumid = (int)$_GET["forumid"];
 
     if (!is_valid_id($forumid))
-      header("Location: $BASEURL/forum.php");
+      header("Location: {$TBDEV['baseurl']}/forum.php");
 
     $page = isset($_GET["page"]) ? (int)$_GET["page"] : 0;
 
@@ -44,7 +44,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $forumname = $arr["name"];
 
     if (get_user_class() < $arr["minclassread"])
-      header("Location: $BASEURL/forum.php");
+      header("Location: {$TBDEV['baseurl']}/forum.php");
       //die("Not permitted");
 
     //------ Page links
@@ -240,7 +240,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
         $new = !$a || $lppostid > $a[0];
 
 		// ..rp..
-		$new = ($lppostadd > (time() - $READPOST_EXPIRY)) ? (!$a || $lppostid > $a[0]) : 0;
+		$new = ($lppostadd > (time() - $TBDEV['readpost_expiry'])) ? (!$a || $lppostid > $a[0]) : 0;
 		//..rp..
 
         $topicpic = ($locked ? ($new ? "lockednew" : "locked") : ($new ? "unlockednew" : "unlocked"));

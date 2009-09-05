@@ -26,12 +26,12 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
   function catch_up()
   {
 	//die("This feature is currently unavailable.");
-    global $CURUSER, $READPOST_EXPIRY;
+    global $CURUSER, $TBDEV;
 
     $userid = $CURUSER["id"];
 
     //..rp..
-$dt = (time() - $READPOST_EXPIRY);
+$dt = (time() - $TBDEV['readpost_expiry']);
 
 $res = mysql_query(
 "SELECT t.id, t.lastpost FROM topics AS t ".
@@ -193,7 +193,7 @@ $res = mysql_query(
     {
        $postid = (int)$_GET["postid"];
        if (!is_valid_id($postid))
-         header("Location: $BASEURL/forums.php");
+         header("Location: {$TBDEV['baseurl']}/forums.php");
 
 	   $res = mysql_query("SELECT posts.*, users.username FROM posts LEFT JOIN users ON posts.userid = users.id WHERE posts.id=$postid") or sqlerr(__FILE__, __LINE__);
 

@@ -52,7 +52,7 @@ print("<br />");
 print(count($mods));
 */
 function DoStaff($staff, $staffclass, $cols = 2) {
-	global $pic_base_url;
+	global $TBDEV;
 	
 	$dt = time() - 180;
 	
@@ -77,13 +77,13 @@ function DoStaff($staff, $staffclass, $cols = 2) {
         for($i = 0; $i < $cols; $i++){
 			if( isset($staff[$r]) )  {
 			echo "<td><a href='userdetails.php?id={$staff[$r]['id']}'>".$staff[$r]["username"]."</a>".
-			"   <img style='vertical-align: middle;' src='{$pic_base_url}staff".
+			"   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}staff".
 			($staff[$r]['last_access']>$dt?"/online.gif":"/offline.gif" )."' border='0' alt='' />".
 			"<a href='sendmessage.php?receiver={$staff[$r]['id']}'>".
-			"   <img style='vertical-align: middle;' src='{$pic_base_url}staff/users.png' border='0' title=\"Personal Message\" alt='' /></a>".
+			"   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}staff/users.png' border='0' title=\"Personal Message\" alt='' /></a>".
 			"<a href='email-gateway.php?id={$staff[$r]['id']}'>".
-			"   <img style='vertical-align: middle;' src='{$pic_base_url}staff/mail.png' border='0' alt='{$staff[$r]['username']}' title=\"Send Mail\" /></a>".
-			"   <img style='vertical-align: middle;' src='{$pic_base_url}flag/{$staff[$r]['flagpic']}' border='0' alt='{$staff[$r]['name']}' /></td>";
+			"   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}staff/mail.png' border='0' alt='{$staff[$r]['username']}' title=\"Send Mail\" /></a>".
+			"   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}flag/{$staff[$r]['flagpic']}' border='0' alt='{$staff[$r]['name']}' /></td>";
 			$r++;
         }else{
 			echo "<td>&nbsp;</td>";

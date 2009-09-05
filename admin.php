@@ -29,9 +29,9 @@
   
   
     $action = isset($_GET["action"]) ? $_GET["action"] : '';
-    $forum_pic_url = $pic_base_url . 'forumicons/';
+    $forum_pic_url = $TBDEV['pic_base_url'] . 'forumicons/';
   
-    define( 'F_IMAGES', $pic_base_url . 'forumicons');
+    define( 'F_IMAGES', $TBDEV['pic_base_url'] . 'forumicons');
     define( 'POST_ICONS', F_IMAGES.'/post_icons');
     
     $ad_actions = array('bans'            => 'bans', 

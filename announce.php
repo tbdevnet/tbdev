@@ -17,14 +17,14 @@
 +------------------------------------------------
 */
 ////////////////// GLOBAL VARIABLES ////////////////////////////	
-$BASEURL = 'http://localhost/TB/';
-$announce_interval = 60 * 30;
+$TBDEV['baseurl'] = 'http://localhost/TB/';
+$TBDEV['announce_interval'] = 60 * 30;
 define ('UC_VIP', 2);
 // DB setup
-$mysql_host = "localhost";
-$mysql_user = "root";
-$mysql_pass = "blank";
-$mysql_db   = "mytbdev";
+$TBDEV['mysql_host'] = "localhost";
+$TBDEV['mysql_user'] = "root";
+$TBDEV['mysql_pass'] = "blank";
+$TBDEV['mysql_db']   = "mytbdev";
 ////////////////// GLOBAL VARIABLES ////////////////////////////
 
 // DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING!!
@@ -46,13 +46,13 @@ if (
 /////////////////////// FUNCTION DEFS ///////////////////////////////////
 function dbconn()
 {
-    global $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
+    global $TBDEV;
 
-    if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
+    if (!@mysql_connect($TBDEV['mysql_host'], $TBDEV['mysql_user'], $TBDEV['mysql_pass']))
     {
 	  err('Please call back later');
     }
-    mysql_select_db($mysql_db) or err('Please call back later');
+    mysql_select_db($TBDEV['mysql_db']) or err('Please call back later');
 }
 
 function err($msg)
@@ -228,7 +228,7 @@ $user_query = mysql_query("SELECT id, uploaded, downloaded, class, enabled FROM 
 
 if ( mysql_num_rows($user_query) != 1 )
 
- err("Unknown passkey. Please redownload the torrent from $BASEURL.");
+ err("Unknown passkey. Please redownload the torrent from {$TBDEV['baseurl']}.");
  
 	$user = mysql_fetch_assoc($user_query);
 	if( $user['enabled'] == 'no' ) err('Permission denied, you\'re not enabled');
@@ -256,7 +256,7 @@ if($_GET['compact'] != 1)
 
 {
 
-$resp = "d" . benc_str("interval") . "i" . $announce_interval . "e" . benc_str("peers") . "l";
+$resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] . "e" . benc_str("peers") . "l";
 
 }
 
@@ -264,7 +264,7 @@ else
 
 {
 
-$resp = "d" . benc_str("interval") . "i" . $announce_interval ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
+$resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
 
 }
 

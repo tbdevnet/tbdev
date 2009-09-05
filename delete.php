@@ -39,11 +39,11 @@ dbconn();
 loggedinorreturn();
 
 function deletetorrent($id) {
-    global $torrent_dir;
+    global $TBDEV;
     mysql_query("DELETE FROM torrents WHERE id = $id");
     foreach(explode(".","peers.files.comments.ratings") as $x)
         mysql_query("DELETE FROM $x WHERE torrent = $id");
-    unlink("$torrent_dir/$id.torrent");
+    unlink("{$TBDEV['torrent_dir']}/$id.torrent");
 }
 
 $res = mysql_query("SELECT name,owner,seeders FROM torrents WHERE id = $id");

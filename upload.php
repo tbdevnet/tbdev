@@ -36,8 +36,8 @@ if ($CURUSER['class'] < UC_UPLOADER)
 ?>
 <div align='center'>
 <form enctype="multipart/form-data" action="takeupload.php" method="post">
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_torrent_size?>" />
-<p>The tracker's announce url is <b><?php echo  $announce_urls[0] ?></b></p>
+<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $TBDEV['max_torrent_size']?>" />
+<p>The tracker's announce url is <b><?php echo  $TBDEV['announce_urls'][0] ?></b></p>
 <table border="1" cellspacing="0" cellpadding="10">
 <?php
 

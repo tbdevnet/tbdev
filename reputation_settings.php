@@ -25,7 +25,7 @@ dbconn( false );
 loggedinorreturn();
 
 	if ( get_user_class() < UC_ADMINISTRATOR )
-		header( "Location: $BASEURL/index.php" );
+		header( "Location: {$TBDEV['baseurl']}/index.php" );
 		
 		
 $rep_set_cache = "cache/rep_settings_cache.php";
@@ -274,19 +274,19 @@ function template_out($matches)
 
 function redirect($url, $text, $time=2)
 	{
-		global $BASEURL;
+		global $TBDEV;
 		
 		$page_title  = "Admin Rep Redirection";
 		$page_detail = "<em>Redirecting...</em>";
 		
-		$html = "<meta http-equiv='refresh' content=\"{$time}; url={$BASEURL}/{$url}\">
+		$html = "<meta http-equiv='refresh' content=\"{$time}; url={$TBDEV['baseurl']}/{$url}\">
 						    <div>
 							<div>Redirecting</div>
 							<div style='padding:8px'>
 							 <div style='font-size:12px'>$text
 							 <br />
 							 <br />
-							 <center><a href='{$BASEURL}/{$url}'>Click here if not redirected...</a></center>
+							 <center><a href='{$TBDEV['baseurl']}/{$url}'>Click here if not redirected...</a></center>
 							 </div>
 							</div>
 						   </div>";

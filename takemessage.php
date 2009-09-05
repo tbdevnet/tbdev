@@ -159,13 +159,13 @@ You have received a PM from $username!
 
 You can use the URL below to view the message (you may have to login).
 
-$DEFAULTBASEURL/messages.php
+{$TBDEV['baseurl']}/messages.php
 
 --
-$SITENAME
+{$TBDEV['site_name']}
 EOD;
 	    @mail($user["email"], "You have received a PM from " . $username . "!",
-	    	$body, "From: $SITEEMAIL", "-f$SITEEMAIL");
+	    	$body, "From: {$TBDEV['site_email']}");
 	    }
 	  }
 	  $delete = isset($_POST["delete"]) ? $_POST["delete"] : '';

@@ -39,7 +39,7 @@ stdhead("Filelist");
 			while ($subrow = mysql_fetch_assoc($subres)) {
 				
 				if($counter !== 0 && $counter % 10 == 0)
-					$s .= "<tr><td colspan='2' align='right'><a href='#top'><img src='$pic_base_url/top.gif' alt='' /></a></td></tr>";
+					$s .= "<tr><td colspan='2' align='right'><a href='#top'><img src='{$TBDEV['pic_base_url']}/top.gif' alt='' /></a></td></tr>";
 				$s .= "<tr><td>" . htmlentities($subrow["filename"]) .
 					"</td><td align=\"right\">" . htmlentities(mksize($subrow["size"])) . "</td></tr>\n";
 				

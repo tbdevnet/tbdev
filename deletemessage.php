@@ -55,5 +55,5 @@
   }
   else
   	die('Unknown PM type.');
-  header("Location: $BASEURL/inbox.php".($type == 'out'?"?out=1":""));
+  header("Location: {$TBDEV['baseurl']}/inbox.php".($type == 'out'?"?out=1":""));
 ?>

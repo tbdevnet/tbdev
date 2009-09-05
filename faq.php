@@ -58,18 +58,18 @@ Before you go any further you should read the TorrentBits.org <a class='altlink'
 	  <li><a href="#user2" class="altlink">I've lost my user name or password! Can you send it to me?</a></li>
 	  <li><a href="#user3" class="altlink">Can you rename my account?</a></li>
 	  <li><a href="#user4" class="altlink">Can you delete my (confirmed) account?</a>
-		<img src="<?php echo $pic_base_url?>updated.png" alt="Updated" width="46" height="11" /></li>
+		<img src="<?php echo $TBDEV['pic_base_url']?>updated.png" alt="Updated" width="46" height="11" /></li>
 	  <li><a href="#userb" class="altlink">So, what's MY ratio?</a></li>
 	  <li><a href="#user5" class="altlink">Why is my IP displayed on my details page?</a></li>
 	  <li><a href="#user6" class="altlink">Help! I cannot login!? (a.k.a. Login of Death)</a></li>
 	  <li><a href="#user7" class="altlink">My IP address is dynamic. How do I stay logged in?</a>
-	  <img src="<?php echo $pic_base_url?>updated.png" alt="Updated" width="46" height="11" /></li>
+	  <img src="<?php echo $TBDEV['pic_base_url']?>updated.png" alt="Updated" width="46" height="11" /></li>
 	  <li><a href="#user8" class="altlink">Why am I listed as not connectable? (And why should I care?)</a></li>
 	  <li><a href="#user9" class="altlink">What are the different user classes?</a></li>
 	  <li><a href="#usera" class="altlink">How does this promotion thing work anyway?</a></li>
 	  <li><a href="#usere" class="altlink">Hey! I've seen Power Users with less than 25GB uploaded!</a></li>
 	  <li><a href="#userc" class="altlink">Why can't my friend become a member?</a>
-		<img src="<?php echo $pic_base_url?>updated.png" alt="Updated" width="46" height="11" /></li>
+		<img src="<?php echo $TBDEV['pic_base_url']?>updated.png" alt="Updated" width="46" height="11" /></li>
 	  <li><a href="#userd" class="altlink">How do I add an avatar to my profile?</a></li>
   </ul>
 <br />
@@ -81,9 +81,9 @@ Before you go any further you should read the TorrentBits.org <a class='altlink'
     <li><a href="#stats4" class="altlink">Why is a torrent I'm leeching/seeding listed several times in my profile?</a></li>
     <li><a href="#stats5" class="altlink">I've finished or cancelled a torrent. Why is it still listed in my profile?</a></li>
     <li><a href="#stats6" class="altlink">Why do I sometimes see torrents I'm not leeching in my profile!?</a>
-		<img src="<?php echo $pic_base_url?>/updated.png" alt="Updated" width="46" height="11" /></li>
+		<img src="<?php echo $TBDEV['pic_base_url']?>/updated.png" alt="Updated" width="46" height="11" /></li>
     <li><a href="#stats7" class="altlink">Multiple IPs (Can I login from different computers?)</a>
-		<img src="<?php echo $pic_base_url?>updated.png" alt="Updated" width="46" height="11" /></li>
+		<img src="<?php echo $TBDEV['pic_base_url']?>updated.png" alt="Updated" width="46" height="11" /></li>
     <li><a href="#stats8" class="altlink">How does NAT/ICS change the picture?</a></li>
     <li><a href="#stats9" class="altlink">For those of you who are interested (Anatomy of a torrent session)</a></li>
   </ul>
@@ -93,7 +93,7 @@ Before you go any further you should read the TorrentBits.org <a class='altlink'
     <li><a href="#up1" class="altlink">Why can't I upload torrents?</a> </li>
 	<li><a href="#up2" class="altlink">What criteria must I meet before I can join the Uploader team?</a></li>
 	<li><a href="#up3" class="altlink">Can I upload your torrents to other trackers?</a>
-	<img src="<?php echo $pic_base_url?>new.png" alt="New" width="27" height="11" /></li>
+	<img src="<?php echo $TBDEV['pic_base_url']?>new.png" alt="New" width="27" height="11" /></li>
   </ul>
 <br />
 <a href="#dl"><b>Downloading</b></a>
@@ -101,19 +101,19 @@ Before you go any further you should read the TorrentBits.org <a class='altlink'
     <li><a href="#dl1" class="altlink">How do I use the files I've downloaded?</a></li>
     <li><a href="#dl2" class="altlink">Downloaded a movie and don't know what CAM/TS/TC/SCR means?</a></li>
     <li><a href="#dl3" class="altlink">Why did an active torrent suddenly disappear?</a>
-		<img src="<?php echo $pic_base_url?>updated.png" alt="Updated" width="46" height="11" /></li>
+		<img src="<?php echo $TBDEV['pic_base_url']?>updated.png" alt="Updated" width="46" height="11" /></li>
     <li><a href="#dl4" class="altlink">How do I resume a broken download or reseed something?</a></li>
     <li><a href="#dl5" class="altlink">Why do my downloads sometimes stall at 99%?</a></li>
 		<li><a href="#dl6" class="altlink">What are these &quot;a piece has failed an hash check&quot; messages?</a></li>
 		<li><a href="#dl7" class="altlink">The torrent is supposed to be 100MB. How come I downloaded 120MB?</a></li>
 		<li><a href="#dl8" class="altlink">Why do I get a &quot;Not authorized (xx h) - READ THE FAQ!&quot; error?</a>
-		<img src="<?php echo $pic_base_url?>new.png" alt="New" width="27" height="11" /></li>
+		<img src="<?php echo $TBDEV['pic_base_url']?>new.png" alt="New" width="27" height="11" /></li>
 		<li><a href="#dl9" class="altlink">Why do I get a &quot;rejected by tracker - Port xxxx is blacklisted&quot; error?</a>
- 	  <img src="<?php echo $pic_base_url?>new.png" alt="New" width="27" height="11" /></li>
+ 	  <img src="<?php echo $TBDEV['pic_base_url']?>new.png" alt="New" width="27" height="11" /></li>
 	  <li><a href="#dla" class="altlink">What's this "IOError - [Errno13] Permission denied" error?</a>
-	  <img src="<?php echo $pic_base_url?>new.png" alt="New" width="27" height="11" /></li>
+	  <img src="<?php echo $TBDEV['pic_base_url']?>new.png" alt="New" width="27" height="11" /></li>
 	  <li><a href="#dlb" class="altlink">What's this &quot;TTL&quot; in the browse page?</a>
-	  <img src="<?php echo $pic_base_url?>new.png" alt="New" width="27" height="11" /></li>
+	  <img src="<?php echo $TBDEV['pic_base_url']?>new.png" alt="New" width="27" height="11" /></li>
   </ul>
 <br />
 <a href="#dlsp"><b>How can I improve my download speed?</b></a>
@@ -144,7 +144,7 @@ Before you go any further you should read the TorrentBits.org <a class='altlink'
     <li><a href="#conn2" class="altlink">Maybe my address is blacklisted?</a></li>
     <li><a href="#conn3" class="altlink">Your ISP blocks the site's address</a></li>
 	<li><a href="#conn4" class="altlink">Alternate port (81)</a>
-	<img src="<?php echo $pic_base_url?>updated.png" alt="Updated" width="46" height="11" /></li>
+	<img src="<?php echo $TBDEV['pic_base_url']?>updated.png" alt="Updated" width="46" height="11" /></li>
   </ul>
 <br />
 <a href="#other"><b>What if I can't find the answer to my problem here?</b></a>
@@ -267,7 +267,7 @@ subject at <a class='altlink' href="redir.php?url=http://portforward.com/">PortF
 	<td class='embedded'>Can download DOX over 1MB and view NFO files.</td>
 </tr>
 <tr>
-	<td class='embedded' bgcolor="#F5F4EA">&nbsp;  <img src="<?php echo $pic_base_url?>star.gif" alt="Star" /></td>
+	<td class='embedded' bgcolor="#F5F4EA">&nbsp;  <img src="<?php echo $TBDEV['pic_base_url']?>star.gif" alt="Star" /></td>
 	<td class='embedded' width='5'>&nbsp;</td>
 	<td class='embedded'>Has donated money to TorrentBits.org . </td>
 </tr>
@@ -316,7 +316,7 @@ subject at <a class='altlink' href="redir.php?url=http://portforward.com/">PortF
 	this status if your ratio drops below 0.95 at any time.</td>
 </tr>
 <tr>
-	<td class='embedded' bgcolor="#F5F4EA">&nbsp; <img src="<?php echo $pic_base_url?>star.gif" alt="Star" /></td>
+	<td class='embedded' bgcolor="#F5F4EA">&nbsp; <img src="<?php echo $TBDEV['pic_base_url']?>star.gif" alt="Star" /></td>
 	<td class='embedded' width='5'>&nbsp;</td>
 	<td class='embedded'>Just donate, and send <a class='altlink' href='sendmessage.php?receiver=2'>Redbeard</a> - and only
 	Redbeard - the details.</td>

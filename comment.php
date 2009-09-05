@@ -120,7 +120,7 @@ elseif ($action == "edit")
 		if ($returnto)
 	  	header("Location: $returnto");
 		else
-		  header("Location: $BASEURL/");      // change later ----------------------
+		  header("Location: {$TBDEV['baseurl']}/");      // change later ----------------------
 		die;
 	}
 
@@ -172,7 +172,7 @@ elseif ($action == "delete")
 	if ($returnto)
 	  header("Location: $returnto");
 	else
-	  header("Location: $BASEURL/");      // change later ----------------------
+	  header("Location: {$TBDEV['baseurl']}/");      // change later ----------------------
 	die;
 }
 elseif ($action == "vieworiginal")

@@ -93,17 +93,17 @@ $avatar = trim( urldecode( $_POST["avatar"] ) );
   {
     $img_size = @GetImageSize( $avatar );
 
-    if($img_size == FALSE || !in_array($img_size['mime'], $allowed_ext))
+    if($img_size == FALSE || !in_array($img_size['mime'], $TBDEV['allowed_ext']))
       stderr('USER ERROR', 'Not an image or unsupported image!');
 
     if($img_size[0] < 5 || $img_size[1] < 5)
       stderr('USER ERROR', 'Image is too small');
   
-    if ( ( $img_size[0] > $av_img_width ) OR ( $img_size[1] > $av_img_height ) )
+    if ( ( $img_size[0] > $TBDEV['av_img_width'] ) OR ( $img_size[1] > $TBDEV['av_img_height'] ) )
     { 
 				$image = resize_image( array(
-												 'max_width'  => $av_img_width,
-												 'max_height' => $av_img_height,
+												 'max_width'  => $TBDEV['av_img_width'],
+												 'max_height' => $TBDEV['av_img_height'],
 												 'cur_width'  => $img_size[0],
 												 'cur_height' => $img_size[1]
 										)      );
@@ -174,20 +174,20 @@ email address had the IP address {$_SERVER["REMOTE_ADDR"]}. Please do not reply.
 
 To complete the update of your user profile, please follow this link:
 
-$BASEURL/confirmemail.php/{$CURUSER["id"]}/$hash/$obemail
+{$TBDEV['baseurl']}/confirmemail.php/{$CURUSER["id"]}/$hash/$obemail
 
 Your new email address will appear in your profile after you do this. Otherwise
 your profile will remain unchanged.
 EOD;
 
-	mail($email, "$thisdomain profile change confirmation", $body, "From: $SITEEMAIL", "-f$SITEEMAIL");
+	mail($email, "$thisdomain profile change confirmation", $body, "From: {$TBDEV['site_email']}");
 
 	$urladd .= "&mailsent=1";
 }
 
 @mysql_query("UPDATE users SET " . implode(", ", $updateset) . " WHERE id = " . $CURUSER["id"]) or sqlerr(__FILE__,__LINE__);
 
-header("Location: $BASEURL/my.php?edited=1" . $urladd);
+header("Location: {$TBDEV['baseurl']}/my.php?edited=1" . $urladd);
 
 /////////////////////////////////
 //worker function

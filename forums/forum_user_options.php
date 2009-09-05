@@ -154,7 +154,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     update_topic_last_post($topicid);
 
-    header("Location: $BASEURL/forums.php?action=viewtopic&topicid=$topicid$redirtopost");
+    header("Location: {$TBDEV['baseurl']}/forums.php?action=viewtopic&topicid=$topicid$redirtopost");
 
     die;
   }

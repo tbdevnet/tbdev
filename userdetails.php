@@ -32,7 +32,7 @@ function bark($msg)
 
 function maketable($res)
 {
-	global $pic_base_url;
+	global $TBDEV;
 	
   $ret = "<table class='main' border='1' cellspacing='0' cellpadding='5'>" .
     "<tr><td class='colhead' align='center'>Type</td><td class='colhead'>Name</td><td class='colhead' align='center'>TTL</td><td class='colhead' align='center'>Size</td><td class='colhead' align='right'>Se.</td><td class='colhead' align='right'>Le.</td><td class='colhead' align='center'>Upl.</td>\n" .
@@ -49,7 +49,7 @@ function maketable($res)
         $ratio = "Inf.";
       else
         $ratio = "---";
-	$catimage = "{$pic_base_url}caticons/{$arr['image']}";
+	$catimage = "{$TBDEV['pic_base_url']}caticons/{$arr['image']}";
 	$catname = htmlspecialchars($arr["catname"]);
 	$catimage = "<img src=\"".htmlspecialchars($catimage) ."\" title=\"$catname\" alt=\"$catname\" width='42' height='42' />";
 	$ttl = (28*24) - floor((time() - $arr["added"]) / 3600);
@@ -85,7 +85,7 @@ if (mysql_num_rows($r) > 0)
   {
 		//$r2 = mysql_query("SELECT name, image FROM categories WHERE id=$a[category]") or sqlerr(__FILE__, __LINE__);
 		//$a2 = mysql_fetch_assoc($r2);
-		$cat = "<img src=\"". htmlspecialchars("{$pic_base_url}caticons/{$a['image']}") ."\" title=\"{$a['cname']}\" alt=\"{$a['cname']}\" />";
+		$cat = "<img src=\"". htmlspecialchars("{$TBDEV['pic_base_url']}caticons/{$a['image']}") ."\" title=\"{$a['cname']}\" alt=\"{$a['cname']}\" />";
       $torrents .= "<tr><td style='padding: 0px'>$cat</td><td><a href='details.php?id=" . $a['id'] . "&amp;hit=1'><b>" . htmlspecialchars($a["name"]) . "</b></a></td>" .
         "<td align='right'>{$a['seeders']}</td><td align='right'>{$a['leechers']}</td></tr>\n";
   }
@@ -120,17 +120,17 @@ else
   $forumposts = $arr3[0];
 
 //if ($user['donated'] > 0)
-//  $don = "<img src='{$pic_base_url}starbig.gif' alt='' />";
+//  $don = "<img src='{$TBDEV['pic_base_url']}starbig.gif' alt='' />";
 $country = '';
 $res = mysql_query("SELECT name,flagpic FROM countries WHERE id=".$user['country']." LIMIT 1") or sqlerr();
 if (mysql_num_rows($res) == 1)
 {
   $arr = mysql_fetch_assoc($res);
-	$country = "<td class='embedded'><img src=\"{$pic_base_url}flag/{$arr['flagpic']}\" alt=\"". htmlspecialchars($arr['name']) ."\" style='margin-left: 8pt' /></td>";
+	$country = "<td class='embedded'><img src=\"{$TBDEV['pic_base_url']}flag/{$arr['flagpic']}\" alt=\"". htmlspecialchars($arr['name']) ."\" style='margin-left: 8pt' /></td>";
 }
 
-//if ($user["donor"] == "yes") $donor = "<td class='embedded'><img src='{$pic_base_url}starbig.gif' alt='Donor' style='margin-left: 4pt' /></td>";
-//if ($user["warned"] == "yes") $warned = "<td class='embedded'><img src=\"{$pic_base_url}warnedbig.gif\" alt='Warned' style='margin-left: 4pt' /></td>";
+//if ($user["donor"] == "yes") $donor = "<td class='embedded'><img src='{$TBDEV['pic_base_url']}starbig.gif' alt='Donor' style='margin-left: 4pt' /></td>";
+//if ($user["warned"] == "yes") $warned = "<td class='embedded'><img src=\"{$TBDEV['pic_base_url']}warnedbig.gif\" alt='Warned' style='margin-left: 4pt' /></td>";
 
 $res = mysql_query("SELECT p.torrent, p.uploaded, p.downloaded, p.seeder, t.added, t.name as torrentname, t.size, t.category, t.seeders, t.leechers, c.name as catname, c.image FROM peers p LEFT JOIN torrents t ON p.torrent = t.id LEFT JOIN categories c ON t.category = c.id WHERE p.userid=$id") or sqlerr();
 
@@ -174,7 +174,7 @@ begin_main_frame();
 <tr><td class='rowhead'>Last&nbsp;seen</td><td align='left'><?php echo $lastseen?></td></tr>
 <?php
 if ($CURUSER['class'] >= UC_MODERATOR)
-  print "<tr><td class='rowhead'>Email</td><td align='left'><a href='{$BASEURL}/email-gateway.php?id={$user['id']}'>{$user['email']}</a></td></tr>\n";
+  print "<tr><td class='rowhead'>Email</td><td align='left'><a href='{$TBDEV['baseurl']}/email-gateway.php?id={$user['id']}'>{$user['email']}</a></td></tr>\n";
 if (isset($addr))
   print("<tr><td class='rowhead'>Address</td><td align='left'>$addr</td></tr>\n");
 
@@ -200,7 +200,7 @@ if ($user["downloaded"] > 0)
   else
     $s = "cry";
   $sr = floor($sr * 1000) / 1000;
-	$sr = "<table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'><font color='" . get_ratio_color($sr) . "'>" . number_format($sr, 3) . "</font></td><td class='embedded'>&nbsp;&nbsp;<img src=\"{$pic_base_url}smilies/{$s}.gif\" alt='' /></td></tr></table>";
+	$sr = "<table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'><font color='" . get_ratio_color($sr) . "'>" . number_format($sr, 3) . "</font></td><td class='embedded'>&nbsp;&nbsp;<img src=\"{$TBDEV['pic_base_url']}smilies/{$s}.gif\" alt='' /></td></tr></table>";
   print("<tr><td class='rowhead' style='vertical-align: middle'>Share ratio</td><td align='left' valign='center' style='padding-top: 1px; padding-bottom: 0px'>$sr</td></tr>\n");
 }
 //}

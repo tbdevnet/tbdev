@@ -29,7 +29,7 @@ if ($action == "reply")
     $topicid = (int)$_GET["topicid"];
 
     if (!is_valid_id($topicid))
-      header("Location: $BASEURL/forums.php");
+      header("Location: {$TBDEV['baseurl']}/forums.php");
 
     stdhead("Post reply");
 
@@ -51,7 +51,7 @@ if ($action == "quotepost")
 		$topicid = (int)$_GET["topicid"];
 
 		if (!is_valid_id($topicid))
-			header("Location: $BASEURL/forums.php");
+			header("Location: {$TBDEV['baseurl']}/forums.php");
 
     stdhead("Post reply");
 

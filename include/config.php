@@ -27,38 +27,38 @@ define('SQL_DEBUG', 2);
 
 define('TIME_NOW', time());
 
-$CONFIG_INFO = array( 'time_adjust' =>  0, 
-                      'time_offset' => '0', 
-                      'time_use_relative' => 1,
-                      'time_use_relative_format' => '{--}, h:i A',
-                      'time_joined' => 'j-F y',
-                      'time_short' => 'jS F Y - h:i A',
-                      'time_long' => 'M j Y, h:i A',
-                      'time_tiny' => '',
-                      'time_date' => '');
+$TBDEV['time_adjust'] =  0;
+$TBDEV['time_offset'] = '0'; 
+$TBDEV['time_use_relative'] = 1;
+$TBDEV['time_use_relative_format'] = '{--}, h:i A';
+$TBDEV['time_joined'] = 'j-F y';
+$TBDEV['time_short'] = 'jS F Y - h:i A';
+$TBDEV['time_long'] = 'M j Y, h:i A';
+$TBDEV['time_tiny'] = '';
+$TBDEV['time_date'] = '';
 
 
 // DB setup
-$mysql_host = "localhost";
-$mysql_user = "root";
-$mysql_pass = "blank";
-$mysql_db   = "mytbdev";
+$TBDEV['mysql_host'] = "localhost";
+$TBDEV['mysql_user'] = "root";
+$TBDEV['mysql_pass'] = "blank";
+$TBDEV['mysql_db']   = "mytbdev";
 
 // Cookie setup
 $TBDEV['cookie_prefix']  = 'tbdev_'; // This allows you to have multiple trackers, eg for demos, testing etc.
 $TBDEV['cookie_path']    = '/test'; // ATTENTION: You should never need this unless the above applies eg: /tbdev
 $TBDEV['cookie_domain']  = ''; // set to eg: .somedomain.com or is subdomain set to: .sub.somedomain.com
                               
-$SITE_ONLINE = true;
-$GLOBALS['tracker_post_key'] = 'changethisorelse';
-$max_torrent_size = 1000000;
-$announce_interval = 60 * 30;
-$signup_timeout = 86400 * 3;
-$minvotes = 1;
-$max_dead_torrent_time = 6 * 3600;
+$TBDEV['site_online'] = 1;
+$TBDEV['tracker_post_key'] = 'changethisorelse';
+$TBDEV['max_torrent_size'] = 1000000;
+$TBDEV['announce_interval'] = 60 * 30;
+$TBDEV['signup_timeout'] = 86400 * 3;
+$TBDEV['minvotes'] = 1;
+$TBDEV['max_dead_torrent_time'] = 6 * 3600;
 
 // Max users on site
-$maxusers = 5000; // LoL Who we kiddin' here?
+$TBDEV['maxusers'] = 5000; // LoL Who we kiddin' here?
 
 
 if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'WIN' )
@@ -73,45 +73,41 @@ if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'WIN' )
   }
   
 define('ROOT_PATH', $file_path);
-$torrent_dir = ROOT_PATH . '/torrents';
-//$torrent_dir = "F:/web/xampp/htdocs/tb/torrents";    # FOR WINDOWS ONLY - must be writable for httpd user
+$TBDEV['torrent_dir'] = ROOT_PATH . '/torrents'; # must be writable for httpd user   
 
 # the first one will be displayed on the pages
-$announce_urls = array();
-$announce_urls[] = "http://localhost/test/announce.php";
-//$announce_urls[] = "http://localhost:2710/announce";
-//$announce_urls[] = "http://domain.com:83/announce.php";
+$TBDEV['announce_urls'] = array();
+$TBDEV['announce_urls'][] = "http://localhost/test/announce.php";
+//$TBDEV['announce_urls'] = "http://localhost:2710/announce";
+//$TBDEV['announce_urls'] = "http://domain.com:83/announce.php";
 
 if ($_SERVER["HTTP_HOST"] == "")
   $_SERVER["HTTP_HOST"] = $_SERVER["SERVER_NAME"];
-$BASEURL = "http://" . $_SERVER["HTTP_HOST"]."/test";
-
-// Set this to your site URL... No ending slash!
-$DEFAULTBASEURL = "http://localhost/test";
+$TBDEV['baseurl'] = "http://" . $_SERVER["HTTP_HOST"]."/test";
 
 //set this to true to make this a tracker that only registered users may use
-$MEMBERSONLY = true;
+//$TBDEV['membersonly'] = 1; //deprecated no longer needed
 
 //maximum number of peers (seeders+leechers) allowed before torrents starts to be deleted to make room...
 //set this to something high if you don't require this feature
-$PEERLIMIT = 50000;
+//$TBDEV['peerlimit'] = 50000; //deprecated. no longer used.
 
 // Email for sender/return path.
-$SITEEMAIL = "coldfusion@localhost";
+$TBDEV['site_email'] = "coldfusion@localhost";
 
-$SITENAME = "TBDEV.NET";
+$TBDEV['site_name'] = "TBDEV.NET";
 
-$autoclean_interval = 900;
-$sql_error_log = './logs/sql_err_'.date("M_D_Y").'.log';
-$pic_base_url = "./pic/";
-$stylesheet = "./1.css";
-$READPOST_EXPIRY = 14*86400; // 14 days
+$TBDEV['autoclean_interval'] = 900;
+$TBDEV['sql_error_log'] = ROOT_PATH.'/logs/sql_err_'.date("M_D_Y").'.log';
+$TBDEV['pic_base_url'] = "./pic/";
+$TBDEV['stylesheet'] = "./1.css";
+$TBDEV['readpost_expiry'] = 14*86400; // 14 days
 //set this to size of user avatars
-$av_img_height = 100;
-$av_img_width = 100;
-$allowed_ext = array('image/gif', 'image/png', 'image/jpeg');
+$TBDEV['av_img_height'] = 100;
+$TBDEV['av_img_width'] = 100;
+$TBDEV['allowed_ext'] = array('image/gif', 'image/png', 'image/jpeg');
 // Set this to the line break character sequence of your system
-$linebreak = "\r\n";
+//$TBDEV['linebreak'] = "\r\n"; // not used at present.
 
 define ('UC_USER', 0);
 define ('UC_POWER_USER', 1);

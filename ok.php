@@ -49,7 +49,7 @@ elseif ($type == "confirm") {
 	if (isset($CURUSER)) {
 		stdhead("Signup confirmation");
 		print("<h1>Account successfully confirmed!</h1>\n");
-		print("<p>Your account has been activated! You have been automatically logged in. You can now continue to the <a href=\"$BASEURL/index.php\"><b>main page</b></a> and start using your account.</p>\n");
+		print("<p>Your account has been activated! You have been automatically logged in. You can now continue to the <a href=\"{$TBDEV['baseurl']}/index.php\"><b>main page</b></a> and start using your account.</p>\n");
 		print("<p>Before you start using ".$SITENAME." we urge you to read the <a href=\"rules.php\"><b>RULES</b></a> and the <a href=\"faq.php\"><b>FAQ</b></a>.</p>\n");
 		stdfoot();
 	}

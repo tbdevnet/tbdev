@@ -58,17 +58,17 @@ If you did not do this ignore this email. Please do not reply.
 
 Should you wish to confirm this request, please follow this link:
 
-$DEFAULTBASEURL/recover.php?id={$arr["id"]}&secret=$hash
+{$TBDEV['baseurl']}/recover.php?id={$arr["id"]}&secret=$hash
 
 
 After you do this, your password will be reset and emailed back
 to you.
 
 --
-$SITENAME
+$TBDEV['site_name']
 EOD;
 
-  @mail($arr["email"], "$SITENAME password reset confirmation", $body, "From: $SITEEMAIL", "-f$SITEEMAIL")
+  @mail($arr["email"], "{$TBDEV['site_name']} password reset confirmation", $body, "From: {$TBDEV['site_email']}")
     or stderr("Error", "Unable to send mail. Please contact an administrator about this error.");
   stderr("Success", "A confirmation email has been mailed.\n" .
     " Please allow a few minutes for the mail to arrive.");
@@ -122,12 +122,12 @@ Here is the information we now have on file for this account:
     User name: {$arr["username"]}
     Password:  $newpassword
 
-You may login at $DEFAULTBASEURL/login.php
+You may login at {$TBDEV['baseurl']}/login.php
 
 --
-$SITENAME
+{$TBDEV['site_name']}
 EOD;
-  @mail($email, "$SITENAME account details", $body, "From: $SITEEMAIL", "-f$SITEEMAIL")
+  @mail($email, "{$TBDEV['site_name']} account details", $body, "From: {$TBDEV['site_email']}")
     or stderr("Error", "Unable to send mail. Please contact an administrator about this error.");
   stderr("Success", "The new account details have been mailed to <b>$email</b>.\n" .
     "Please allow a few minutes for the mail to arrive.");

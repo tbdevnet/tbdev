@@ -103,13 +103,13 @@ if (mysql_num_rows($res) > 0)
 <?php /*
 <h2>Server load</h2>
 <table width='100%' border='1' cellspacing='0' cellpadding='1'0><tr><td align=center>
-<table class=main border='0' width=402><tr><td style='padding: 0px; background-image: url("<?php echo $pic_base_url?>loadbarbg.gif"); background-repeat: repeat-x'>
+<table class=main border='0' width=402><tr><td style='padding: 0px; background-image: url("<?php echo $TBDEV['pic_base_url']?>loadbarbg.gif"); background-repeat: repeat-x'>
 <?php $percent = min(100, round(exec('ps ax | grep -c apache') / 256 * 100));
 if ($percent <= 70) $pic = "loadbargreen.gif";
 elseif ($percent <= 90) $pic = "loadbaryellow.gif";
 else $pic = "loadbarred.gif";
 $width = $percent * 4;
-print("<img height='1'5 width=$width src=\"{$pic_base_url}{$pic}\" alt='$percent%'>"); ?>
+print("<img height='1'5 width=$width src=\"{$TBDEV['pic_base_url']}{$pic}\" alt='$percent%'>"); ?>
 </td></tr></table>
 </td></tr></table>
 */ ?>

@@ -30,11 +30,11 @@ if (isset($_SESSION['captcha_time']))
 
 $res = mysql_query("SELECT COUNT(*) FROM users") or sqlerr(__FILE__, __LINE__);
 $arr = mysql_fetch_row($res);
-if ($arr[0] >= $maxusers)
-	stderr("Sorry", "The current user account limit (" . number_format($maxusers) . ") has been reached. Inactive accounts are pruned all the time, please check back again later...");
+if ($arr[0] >= $TBDEV['maxusers'])
+	stderr("Sorry", "The current user account limit (" . number_format($TBDEV['maxusers']) . ") has been reached. Inactive accounts are pruned all the time, please check back again later...");
 
 // TIMEZONE STUFF
- 		$offset = (string)$CONFIG_INFO['time_offset'];
+ 		$offset = (string)$TBDEV['time_offset'];
  		
  		$time_select = "<select name='user_timezone'>";
  		

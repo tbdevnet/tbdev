@@ -28,7 +28,7 @@ loggedinorreturn();
 $id = (int)$_GET["id"];
 
 if (!isset($id) || !is_valid_id($id))
-	die();
+	stderr( 'USER ERROR', 'You fool, ID don\'t exist' );
 
 
 function dltable($name, $arr, $torrent)
@@ -150,7 +150,7 @@ WHERE p.torrent = $id") or sqlerr();
 
 stdhead('Details');
 
-	print "<h1>Peerlist for <a href='$BASEURL/details.php?id=$id'>".htmlentities($row['name'])."</a></h1>";
+	print "<h1>Peerlist for <a href='{$TBDEV['baseurl']}/details.php?id=$id'>".htmlentities($row['name'])."</a></h1>";
 	print dltable("Seeder(s)<a name='seeders'></a>", $seeders, $row);
 	print '<br />' . dltable("Leecher(s)<a name='leechers'></a>", $downloaders, $row);
 	

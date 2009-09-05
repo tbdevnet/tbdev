@@ -63,7 +63,7 @@ if ($action == 'add')
 		stderr("Error", "User ID is already in your ".htmlentities($table_is)." list.");
 
 	mysql_query("INSERT INTO $table_is VALUES (0,$userid, $targetid)") or sqlerr(__FILE__, __LINE__);
-  header("Location: $BASEURL/friends.php?id=$userid#$frag");
+  header("Location: {$TBDEV['baseurl']}/friends.php?id=$userid#$frag");
   die;
 }
 
@@ -99,7 +99,7 @@ if ($action == 'delete')
   else
     stderr("Error", "Unknown type.");
 
-  header("Location: $BASEURL/friends.php?id=$userid#$frag");
+  header("Location: {$TBDEV['baseurl']}/friends.php?id=$userid#$frag");
   die;
 }
 
@@ -108,8 +108,8 @@ if ($action == 'delete')
 $res = mysql_query("SELECT * FROM users WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
 $user = mysql_fetch_assoc($res) or stderr("Error", "No user with ID.");
 
-$donor = ($user["donor"] == "yes") ? "<img src='{$pic_base_url}starbig.gif' alt='Donor' style='margin-left: 4pt' />" : '';
-$warned = ($user["warned"] == "yes") ? "<img src='{$pic_base_url}warnedbig.gif' alt='Warned' style='margin-left: 4pt' />" : '';
+$donor = ($user["donor"] == "yes") ? "<img src='{$TBDEV['pic_base_url']}starbig.gif' alt='Donor' style='margin-left: 4pt' />" : '';
+$warned = ($user["warned"] == "yes") ? "<img src='{$TBDEV['pic_base_url']}warnedbig.gif' alt='Warned' style='margin-left: 4pt' />" : '';
 
 
 stdhead("Personal lists for " . htmlentities($user['username'], ENT_QUOTES));
@@ -143,7 +143,7 @@ else
 			"<br /><br /><a href='sendmessage.php?receiver=" . $friend['id'] . "'>Send PM</a>";
     $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($friend["avatar"]) : "");
 		if (!$avatar)
-			$avatar = "{$pic_base_url}default_avatar.gif";
+			$avatar = "{$TBDEV['pic_base_url']}default_avatar.gif";
     if ($i % 2 == 0)
     	print("<table width='100%' style='padding: 0px'><tr><td class='bottom' style='padding: 5px' width='50%' align='center'>");
     else

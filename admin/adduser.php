@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$arr = mysql_fetch_row($res);
 	if (!$arr)
 		stderr("Error", "Unable to create the account. The user name is possibly already taken.");
-	header("Location: $BASEURL/userdetails.php?id=$arr[0]");
+	header("Location: {$TBDEV['baseurl']}/userdetails.php?id=$arr[0]");
 	die;
 }
 stdhead("Add user");

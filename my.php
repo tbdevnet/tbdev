@@ -51,7 +51,7 @@ $user_header = "<span style='font-size: 20px;'><a href='userdetails.php?id={$CUR
 if(!empty($CURUSER['avatar']) && $CURUSER['av_w'] > 5 && $CURUSER['av_h'] > 5)
 $avatar = "<img src='{$CURUSER['avatar']}' width='{$CURUSER['av_w']}' height='{$CURUSER['av_h']}' alt='' />";
 else
-$avatar = "<img src='{$pic_base_url}forumicons/default_avatar.gif' alt='' />";
+$avatar = "<img src='{$TBDEV['pic_base_url']}forumicons/default_avatar.gif' alt='' />";
 ?>
 
 <script type="text/javascript">
@@ -126,7 +126,7 @@ while ($ct_a = mysql_fetch_assoc($ct_r))
  		//-----------------------------------------
  		// Work out the timezone selection
  		//-----------------------------------------
-		$offset = ($CURUSER['time_offset'] != "") ? (string)$CURUSER['time_offset'] : (string)$CONFIG_INFO['time_offset'];
+		$offset = ($CURUSER['time_offset'] != "") ? (string)$CURUSER['time_offset'] : (string)$TBDEV['time_offset'];
  		
  		$time_select = "<select name='user_timezone'>";
  		

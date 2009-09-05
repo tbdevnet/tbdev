@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	else
 		stderr("Error", "File name needs an extension.");
 	move_uploaded_file($file["tmp_name"], $tgtfile) or stderr("Error", "Internal error 2.");
-	$url = str_replace(" ", "%20", htmlspecialchars("$BASEURL/bitbucket/$filename"));
+	$url = str_replace(" ", "%20", htmlspecialchars("{$TBDEV['baseurl']}/bitbucket/$filename"));
 	stderr("Success", "Use the following URL to access the file: <b><a href=\"$url\">$url</a></b><p><a href='bitbucket-upload.php'>Upload another file</a>.");
 }
 
