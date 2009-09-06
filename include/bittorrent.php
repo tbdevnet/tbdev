@@ -108,14 +108,7 @@ function userlogin() {
 
     $ip = getip();
 	$nip = ip2long($ip);
-/*    $res = mysql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
-    if (mysql_num_rows($res) > 0)
-    {
-      header("HTTP/1.0 403 Forbidden");
-      print("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
-      die;
-    }
-*/
+
     require_once "cache/bans_cache.php";
     if(count($bans) > 0)
     {
@@ -128,17 +121,17 @@ function userlogin() {
       }
       unset($bans);
     }
-    if (!$TBDEV['site_online'] || empty($_COOKIE["uid"]) || empty($_COOKIE["pass"]))
+    if ( !$TBDEV['site_online'] || !get_mycookie('uid') || !get_mycookie('pass') )
         return;
-    $id = 0 + $_COOKIE["uid"];
-    if (!$id || strlen($_COOKIE["pass"]) != 32)
+    $id = 0 + get_mycookie('uid');
+    if (!$id || strlen( get_mycookie('pass') ) != 32)
         return;
     $res = mysql_query("SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die(mysql_error());
     $row = mysql_fetch_assoc($res);
     if (!$row)
         return;
     //$sec = hash_pad($row["secret"]);
-    if ($_COOKIE["pass"] !== $row["passhash"])
+    if (get_mycookie('pass') !== $row["passhash"])
         return;
     mysql_query("UPDATE users SET last_access='" . TIME_NOW . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
     $row['ip'] = $ip;
@@ -274,7 +267,7 @@ function parsedescr($d, $html) {
 }
 */
 function stdhead($title = "", $msgalert = true) {
-    global $CURUSER, $TBDEV, $SITENAME;
+    global $CURUSER, $TBDEV;
 
   if (!$TBDEV['site_online'])
     die("Site is down for maintenance, please check back again later... thanks<br>");
@@ -293,7 +286,7 @@ function stdhead($title = "", $msgalert = true) {
 
     if ($ss_a) $ss_uri = $ss_a["uri"];
     */
-	$stylesheet = isset($CURUSER['stylesheet']) ? "{$CURUSER['stylesheet']}.css" : {$TBDEV['stylesheet']};
+	$TBDEV['stylesheet'] = isset($CURUSER['stylesheet']) ? "{$CURUSER['stylesheet']}.css" : $TBDEV['stylesheet'];
   }
   
   if ($msgalert && $CURUSER)
@@ -315,7 +308,7 @@ function stdhead($title = "", $msgalert = true) {
 			<meta name="MSSmartTagsPreventParsing" content="TRUE" />
 			
 			<title><?php echo  $title ?></title>
-			<link rel="stylesheet" href="<?php echo $stylesheet?>" type="text/css" />
+			<link rel="stylesheet" href="<?php echo $TBDEV['stylesheet'] ?>" type="text/css" />
 		</head>
 <body>
 
@@ -491,7 +484,7 @@ function get_mycookie($name)
     {
       global $TBDEV;
       
-    	if (isset($_COOKIE[$TBDEV['cookie_prefix'].$name]))
+    	if ( isset($_COOKIE[$TBDEV['cookie_prefix'].$name]) AND !empty($_COOKIE[$TBDEV['cookie_prefix'].$name]) )
     	{
     		return urldecode($_COOKIE[$TBDEV['cookie_prefix'].$name]);
     	}

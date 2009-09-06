@@ -249,11 +249,11 @@ mysql_query("UPDATE readposts SET lastpostread=$postid WHERE userid=$userid AND 
 
       if (is_valid_id($arr['editedby']))
       {
-        $res2 = mysql_query("SELECT username FROM users WHERE id=$arr[editedby]");
+        $res2 = mysql_query("SELECT username FROM users WHERE id={$arr['editedby']}");
         if (mysql_num_rows($res2) == 1)
         {
           $arr2 = mysql_fetch_assoc($res2);
-          $body .= "<p><font size=1 class=small>Last edited by <a href=userdetails.php?id={$arr['editedby']}><b>{$arr2['username']}</b></a> on ".get_date( $arr['editedat'],'')."</font></p>\n";
+          $body .= "<p><font size='1' class='small'>Last edited by <a href='userdetails.php?id={$arr['editedby']}'><b>{$arr2['username']}</b></a> on ".get_date( $arr['editedat'],'')."</font></p>\n";
         }
       }
 
