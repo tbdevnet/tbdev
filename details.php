@@ -39,26 +39,28 @@ dbconn(false);
 
 loggedinorreturn();
 
-$id = 0 + $_GET["id"];
+    $lang = array_merge( load_language('global'), load_language('details') );
 
-if (!isset($id) || !is_valid_id($id))
-	die();
-	
-	
-	if (isset($_GET["hit"])) {
-		mysql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
-		if ($_GET["tocomm"])
-			header("Location: {$TBDEV['baseurl']}/details.php?id=$id&page=0#startcomments");
-		elseif ($_GET["filelist"])
-			header("Location: {$TBDEV['baseurl']}/details.php?id=$id&filelist=1#filelist");
-		elseif ($_GET["toseeders"])
-			header("Location: {$TBDEV['baseurl']}/peerlist.php?id=$id#seeders");
-		elseif ($_GET["todlers"])
-			header("Location: {$TBDEV['baseurl']}/peerlist.php?id=$id#leechers");
-		else
-			header("Location: {$TBDEV['baseurl']}/details.php?id=$id");
-		exit();
-	}
+    if (!isset($_GET['id']) || !is_valid_id($_GET['id']))
+      stderr("{$lang['details_user_error']}", "{$lang['details_bad_id']}"); 
+      
+    $id = (int)$_GET["id"];
+    
+    if (isset($_GET["hit"])) 
+    {
+      mysql_query("UPDATE torrents SET views = views + 1 WHERE id = $id");
+      /* if ($_GET["tocomm"])
+        header("Location: {$TBDEV['baseurl']}/details.php?id=$id&page=0#startcomments");
+      elseif ($_GET["filelist"])
+        header("Location: {$TBDEV['baseurl']}/details.php?id=$id&filelist=1#filelist");
+      elseif ($_GET["toseeders"])
+        header("Location: {$TBDEV['baseurl']}/peerlist.php?id=$id#seeders");
+      elseif ($_GET["todlers"])
+        header("Location: {$TBDEV['baseurl']}/peerlist.php?id=$id#leechers");
+      else */
+        header("Location: {$TBDEV['baseurl']}/details.php?id=$id");
+      exit();
+    }
 	
 $res = mysql_query("SELECT torrents.seeders, torrents.banned, torrents.leechers, torrents.info_hash, torrents.filename, LENGTH(torrents.nfo) AS nfosz, torrents.last_action AS lastseed, torrents.numratings, torrents.name, IF(torrents.numratings < {$TBDEV['minvotes']}, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.comments, torrents.owner, torrents.save_as, torrents.descr, torrents.visible, torrents.size, torrents.added, torrents.views, torrents.hits, torrents.times_completed, torrents.id, torrents.type, torrents.numfiles, categories.name AS cat_name, users.username FROM torrents LEFT JOIN categories ON torrents.category = categories.id LEFT JOIN users ON torrents.owner = users.id WHERE torrents.id = $id")
 	or sqlerr();
@@ -72,12 +74,12 @@ $owned = $moderator = 0;
 //}
 
 if (!$row || ($row["banned"] == "yes" && !$moderator))
-	stderr("Error", "No torrent with ID.");
+	stderr("{$lang['details_error']}", "{$lang['details_torrent_id']}");
 
 
 
-
-		stdhead("Details for torrent \"" . htmlentities($row["name"], ENT_QUOTES) . "\"");
+    $HTMLOUT = '';
+		
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 			$owned = 1;
@@ -87,29 +89,29 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 		$spacer = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 		if (isset($_GET["uploaded"])) {
-			print("<h2>Successfully uploaded!</h2>\n");
-			print("<p>You can start seeding now. <b>Note</b> that the torrent won't be visible until you do that!</p>\n");
+			$HTMLOUT .= "<h2>{$lang['details_success']}</h2>\n";
+			$HTMLOUT .= "<p>{$lang['details_start_seeding']}</p>\n";
 		}
 		elseif (isset($_GET["edited"])) {
-			print("<h2>Successfully edited!</h2>\n");
+			$HTMLOUT .= "<h2>{$lang['details_success_edit']}</h2>\n";
 			if (isset($_GET["returnto"]))
-				print("<p><b>Go back to <a href=\"" . htmlspecialchars($_GET["returnto"]) . "\">whence you came</a>.</b></p>\n");
+				$HTMLOUT .= "<p><b>{$lang['details_go_back']}<a href='" . htmlspecialchars($_GET["returnto"]) . "'>{$lang['details_whence']}</a>.</b></p>\n";
 		}
 		/* elseif (isset($_GET["searched"])) {
 			print("<h2>Your search for \"" . htmlspecialchars($_GET["searched"]) . "\" gave a single result:</h2>\n");
 		} */
 		elseif (isset($_GET["rated"]))
-			print("<h2>Rating added!</h2>\n");
+			$HTMLOUT .= "<h2>{$lang['details_rating_added']}</h2>\n";
 
     $s = htmlentities( $row["name"], ENT_QUOTES );
-		print("<h1>$s</h1>\n");
-                print("<table width='750' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
+		$HTMLOUT .= "<h1>$s</h1>\n";
+    $HTMLOUT .= "<table width='750' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
 
 		$url = "edit.php?id=" . $row["id"];
 		if (isset($_GET["returnto"])) {
 			$addthis = "&amp;returnto=" . urlencode($_GET["returnto"]);
 			$url .= $addthis;
-			$keepget .= $addthis;
+			$keepget = $addthis;
 		}
 		$editlink = "a href=\"$url\" class=\"sublink\"";
 
@@ -118,31 +120,33 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 //			$s .= " $spacer<$editlink>[Edit torrent]</a>";
 //		tr("Name", $s, 1);
 
-		print "<tr><td class='rowhead' width='1%'>Download</td><td width='99%' align='left'><a class='index' href='download.php?torrent=$id'>" . htmlspecialchars($row["filename"]) . "</a></td></tr>";
-
+		$HTMLOUT .= "<tr><td class='rowhead' width='1%'>{$lang['details_download']}</td><td width='99%' align='left'><a class='index' href='download.php?torrent=$id'>" . htmlspecialchars($row["filename"]) . "</a></td></tr>";
+/*
 		function hex_esc($matches) {
 			return sprintf("%02x", ord($matches[0]));
 		}
-		tr("Info hash", preg_replace_callback('/./s', "hex_esc", hash_pad($row["info_hash"])));
+		$HTMLOUT .= tr("{$lang['details_info_hash']}", preg_replace_callback('/./s', "hex_esc", hash_pad($row["info_hash"])));
+*/
+		$HTMLOUT .= tr("{$lang['details_info_hash']}", $row["info_hash"]);
 
 		if (!empty($row["descr"]))
-			print("<tr><td style='vertical-align:top'>Description</td><td><div style='background-color:#d9e2ff;width:100%;height:150px;overflow: auto'>". str_replace(array("\n", "  "), array("<br>\n", "&nbsp; "), format_comment( $row["descr"] ))."</div></td></tr>");
+			$HTMLOUT .= "<tr><td style='vertical-align:top'>{$lang['details_description']}</td><td><div style='background-color:#d9e2ff;width:100%;height:150px;overflow: auto'>". str_replace(array("\n", "  "), array("<br />\n", "&nbsp; "), format_comment( $row["descr"] ))."</div></td></tr>";
 			
-if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
-  print("<tr><td class='rowhead'>NFO</td><td align='left'><a href='viewnfo.php?id=$row[id]'><b>View NFO</b></a> (" .
-     mksize($row["nfosz"]) . ")</td></tr>\n");
+    if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
+      $HTMLOUT .= "<tr><td class='rowhead'>{$lang['details_nfo']}</td><td align='left'><a href='viewnfo.php?id=$row[id]'><b>{$lang['details_view_nfo']}</b></a> (" .mksize($row["nfosz"]) . ")</td></tr>\n";
+      
 		if ($row["visible"] == "no")
-			tr("Visible", "<b>no</b> (dead)", 1);
+			$HTMLOUT .= tr("{$lang['details_visible']}", "<b>{$lang['details_no']}</b>{$lang['details_dead']}", 1);
 		if ($moderator)
-			tr("Banned", $row["banned"]);
+			$HTMLOUT .= tr("{$lang['details_banned']}", $row["banned"]);
 
 		if (isset($row["cat_name"]))
-			tr("Type", $row["cat_name"]);
+			$HTMLOUT .= tr("{$lang['details_type']}", $row["cat_name"]);
 		else
-			tr("Type", "(none selected)");
+			$HTMLOUT .= tr("{$lang['details_type']}", "{$lang['details_none']}");
 
-		tr("Last&nbsp;seeder", "Last activity " .get_date( $row['lastseed'],'',0,1));
-		tr("Size",mksize($row["size"]) . " (" . number_format($row["size"]) . " bytes)");
+		$HTMLOUT .= tr("{$lang['details_last_seeder']}", "{$lang['details_last_activity']}" .get_date( $row['lastseed'],'',0,1));
+		$HTMLOUT .= tr("{$lang['details_size']}",mksize($row["size"]) . " (" . number_format($row["size"]) . "{$lang['details_bytes']})");
 /*
 		$s = "";
 		$s .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" class=embedded>";
@@ -202,64 +206,65 @@ if (!empty($xrow))
 
 */
 
-		tr("Added", get_date( $row['added'],'LONG'));
-		tr("Views", $row["views"]);
-		tr("Hits", $row["hits"]);
-		tr("Snatched", $row["times_completed"] . " time(s)");
+		$HTMLOUT .= tr("{$lang['details_added']}", get_date( $row['added'],"{$lang['details_long']}"));
+		$HTMLOUT .= tr("{$lang['details_views']}", $row["views"]);
+		$HTMLOUT .= tr("{$lang['details_hits']}", $row["hits"]);
+		$HTMLOUT .= tr("{$lang['details_snatched']}", $row["times_completed"] . "{$lang['details_times']}");
 
-		$keepget = "";
-		$uprow = (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlspecialchars($row["username"]) . "</b></a>") : "<i>unknown</i>");
+		//$keepget = "";
+		$uprow = (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlspecialchars($row["username"]) . "</b></a>") : "<i>{$lang['details_unknown']}</i>");
 		if ($owned)
-			$uprow .= " $spacer<$editlink><b>[Edit this torrent]</b></a>";
-		tr("Upped by", $uprow, 1);
+			$uprow .= " $spacer<$editlink><b>{$lang['details_edit']}</b></a>";
+		$HTMLOUT .= tr("Upped by", $uprow, 1);
 
 		if ($row["type"] == "multi") {
 			if (!isset($_GET["filelist"]))
-				tr("Num files<br /><a href=\"filelist.php?id=$id\" class=\"sublink\">[See full list]</a>", $row["numfiles"] . " files", 1);
+				$HTMLOUT .= tr("{$lang['details_num_files']}<br /><a href=\"filelist.php?id=$id\" class=\"sublink\">{$lang['details_list']}</a>", $row["numfiles"] . " files", 1);
 			else {
-				tr("Num files", $row["numfiles"] . " files", 1);
+				$HTMLOUT .= tr("{$lang['details_num-files']}", $row["numfiles"] . "{$lang['details_files']}", 1);
 
 				
 			}
 		}
 
-		tr("Peers<br /><a href=\"peerlist.php?id=$id#seeders\" class=\"sublink\">[See full list]</a>", $row["seeders"] . " seeder(s), " . $row["leechers"] . " leecher(s) = " . ($row["seeders"] + $row["leechers"]) . " peer(s) total", 1);
-		print "</table>";
+		$HTMLOUT .= tr("{$lang['details_peers']}<br /><a href=\"peerlist.php?id=$id#seeders\" class=\"sublink\">{$lang['details_list']}</a>", $row["seeders"] . " seeder(s), " . $row["leechers"] . " leecher(s) = " . ($row["seeders"] + $row["leechers"]) . "{$lang['details_peer_total']}", 1);
+		$HTMLOUT .= "</table>";
 
 		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
-		print("<h1>Comments for <a href='details.php?id=$id'>" . htmlentities( $row["name"], ENT_QUOTES ) . "</a></h1>\n");
+		$HTMLOUT .= "<h1>{$lang['details_comments']}<a href='details.php?id=$id'>" . htmlentities( $row["name"], ENT_QUOTES ) . "</a></h1>\n";
 
 
-	print("<p><a name=\"startcomments\"></a></p>\n");
+    $HTMLOUT .= "<p><a name=\"startcomments\"></a></p>\n";
 
-	$commentbar = "<p align='center'><a class='index' href='comment.php?action=add&amp;tid=$id'>Add a comment</a></p>\n";
+    $commentbar = "<p align='center'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></p>\n";
 
-	$count = $row['comments'];
+    $count = $row['comments'];
 
-	if (!$count) {
-		print("<h2>No comments yet</h2>\n");
-	}
-	else {
+    if (!$count) 
+    {
+      $HTMLOUT .= "<h2>{$lang['details_no_comment']}</h2>\n";
+    }
+    else 
+    {
 		$pager = pager(20, $count, "details.php?id=$id&amp;", array('lastpagedefault' => 1));
 
-		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, warned, ".
-                  "username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = " .
-                  "$id ORDER BY comments.id ".$pager['limit']) or sqlerr(__FILE__, __LINE__);
+		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, av_w, av_h, warned, username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $id ORDER BY comments.id ".$pager['limit']) or sqlerr(__FILE__, __LINE__);
+		
 		$allrows = array();
 		while ($subrow = mysql_fetch_assoc($subres))
 			$allrows[] = $subrow;
 
-		print($commentbar);
-		print($pager['pagertop']);
+		$HTMLOUT .= $commentbar;
+		$HTMLOUT .= $pager['pagertop'];
 
-		commenttable($allrows);
+		$HTMLOUT .= commenttable($allrows);
 
-		print($pager['pagerbottom']);
+		$HTMLOUT .= $pager['pagerbottom'];
 	}
 
-	print($commentbar);
+    $HTMLOUT .= $commentbar;
 
-
-stdfoot();
+///////////////////////// HTML OUTPUT ////////////////////////////
+    print stdhead("{$lang['details_details']}\"" . htmlentities($row["name"], ENT_QUOTES) . "\"") . $HTMLOUT . stdfoot();
 
 ?>

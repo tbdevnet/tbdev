@@ -15,16 +15,18 @@
 |   $Author$
 |   $URL$
 +------------------------------------------------
-*/
+*/error_reporting(0);
 ////////////////// GLOBAL VARIABLES ////////////////////////////	
-$TBDEV['baseurl'] = 'http://localhost/TB/';
+$TBDEV['baseurl'] = 'http://localhost/TB_ALPHA/';
 $TBDEV['announce_interval'] = 60 * 30;
+$TBDEV['user_ratios'] = 0;
+$TBDEV['connectable_check'] = 0;
 define ('UC_VIP', 2);
 // DB setup
 $TBDEV['mysql_host'] = "localhost";
 $TBDEV['mysql_user'] = "root";
 $TBDEV['mysql_pass'] = "blank";
-$TBDEV['mysql_db']   = "mytbdev";
+$TBDEV['mysql_db']   = "tb";
 ////////////////// GLOBAL VARIABLES ////////////////////////////
 
 // DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING!!
@@ -193,7 +195,7 @@ if (strlen($GLOBALS[$x]) != 20) err("Invalid $x (" . strlen($GLOBALS[$x]) . " - 
 
 unset($x);
 
-
+$info_hash = bin2hex($info_hash);
 
 $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -400,10 +402,7 @@ if ($valid[0] >= 1 && $seeder == 'no') err("Connection limit exceeded! You may o
 if ($valid[0] >= 3 && $seeder == 'yes') err("Connection limit exceeded!");
 
 
-	//$user['id'] = $az["id"];
-
-	if ($left > 0 && $user['class'] < UC_VIP)
-//	if ($az["class"] < UC_VIP)
+	if ($left > 0 && $user['class'] < UC_VIP && $TBDEV['user_ratios'])
 	{
 		$gigs = $user["uploaded"] / (1024*1024*1024);
 		$elapsed = floor((time() - $torrent["ts"]) / 3600);
@@ -474,8 +473,10 @@ else
 			err("Peer not found. ".$passkey." Restart the torrent.");
 
 		if (portblacklisted($port))
+		{
 			err("Port $port is blacklisted.");
-		else
+		}
+		elseif ( $TBDEV['connectable_check'] )
 		{
 			$sockres = @fsockopen($ip, $port, $errno, $errstr, 5);
 			if (!$sockres)
@@ -485,6 +486,10 @@ else
 				$connectable = "yes";
 				@fclose($sockres);
 			}
+		}
+		else
+		{
+      $connectable = 'yes';
 		}
 
 		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, ".time().", ".time().", '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");

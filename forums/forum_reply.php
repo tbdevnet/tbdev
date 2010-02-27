@@ -18,7 +18,7 @@
 */
 if ( ! defined( 'IN_TBDEV_FORUM' ) )
 {
-	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	print "{$lang['forum_reply_access']}";
 	exit();
 }
 
@@ -26,20 +26,33 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
   //-------- Action: Reply
 if ($action == "reply")
   {
-    $topicid = (int)$_GET["topicid"];
+    $topicid = isset($_GET["topicid"]) ? (int)$_GET["topicid"] : 0;
 
     if (!is_valid_id($topicid))
       header("Location: {$TBDEV['baseurl']}/forums.php");
+    
+    $q = @mysql_query( "SELECT t.id, f.minclassread, f.minclasswrite 
+                        FROM topics t
+                        LEFT JOIN forums f ON t.forumid = f.id
+                        WHERE t.id = $topicid");
 
-    stdhead("Post reply");
+    if( mysql_num_rows($q) != 1 )
+      stderr("{$lang['forum_reply_user_error']}", "{$lang['forum_reply_select_topic']}");
+    
+    $check = @mysql_fetch_assoc($q);
+    
+    if( $CURUSER['class'] < $check['minclassread'] OR $CURUSER['class'] < $check['minclasswrite'] )
+      stderr("{$lang['forum_reply_user_error']}", "{$lang['forum_reply_permission']}");
+    
+    $HTMLOUT = '';
 
-    begin_main_frame();
+    $HTMLOUT .= begin_main_frame();
 
-    insert_compose_frame($topicid, false);
+    $HTMLOUT .= insert_compose_frame($topicid, false);
 
-    end_main_frame();
+    $HTMLOUT .= end_main_frame();
 
-    stdfoot();
+    print stdhead("{$lang['forum_reply_reply']}") . $HTMLOUT . stdfoot();
 
     die;
 }
@@ -48,22 +61,35 @@ if ($action == "reply")
 
 if ($action == "quotepost")
 	{
-		$topicid = (int)$_GET["topicid"];
+		$topicid = isset($_GET["topicid"]) ? (int)$_GET["topicid"] : 0;
 
 		if (!is_valid_id($topicid))
 			header("Location: {$TBDEV['baseurl']}/forums.php");
 
-    stdhead("Post reply");
+    $q = @mysql_query( "SELECT t.id, f.minclassread, f.minclasswrite 
+                        FROM topics t
+                        LEFT JOIN forums f ON t.forumid = f.id
+                        WHERE t.id = $topicid");
 
-    begin_main_frame();
+    if( mysql_num_rows($q) != 1 )
+      stderr("{$lang['forum_reply_user_error']}", "{$lang['forum_reply_select_topic']}");
+    
+    $check = @mysql_fetch_assoc($q);
+    
+    if( $CURUSER['class'] < $check['minclassread'] OR $CURUSER['class'] < $check['minclasswrite'] )
+      stderr("{$lang['forum_reply_user_error']}", "{$lang['forum_reply_permission']}");
+    
+    $HTMLOUT = '';
 
-    insert_compose_frame($topicid, false, true);
+    $HTMLOUT .= begin_main_frame();
 
-    end_main_frame();
+    $HTMLOUT .= insert_compose_frame($topicid, false, true);
 
-    stdfoot();
+    $HTMLOUT .= end_main_frame();
+
+    print stdhead("{$lang['forum_reply_reply']}") . $HTMLOUT . stdfoot();
 
     die;
-  }
+}
 
 ?>

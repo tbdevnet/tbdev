@@ -24,9 +24,12 @@ require_once "include/emoticons.php";
 dbconn(false);
 loggedinorreturn();
 
-stdhead();
-begin_main_frame();
-insert_smilies_frame();
-end_main_frame();
-stdfoot();
+    $lang = load_language('global');
+    
+    $HTMLOUT = stdhead();
+    $HTMLOUT .= begin_main_frame();
+    $HTMLOUT .= insert_smilies_frame();
+    $HTMLOUT .= end_main_frame();
+    $HTMLOUT .= stdfoot();
+    print $HTMLOUT ;
 ?>

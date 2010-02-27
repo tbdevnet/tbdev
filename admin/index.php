@@ -26,87 +26,82 @@ require_once "include/html_functions.php";
 require_once "include/user_functions.php";
 
 
-stdhead("Staff");
+    $lang = array_merge( $lang, load_language('ad_index') );
 
+    $HTMLOUT = '';
 
-?>
+    $HTMLOUT .= "<br />
 
-<br />
-
-<br />
-		<table width="75%" cellpadding="10px">
+    <br />
+		<table width='75%' cellpadding='10px'>
 		<tr><td class='colhead'>Staff Tools</td></tr>
 		<!-- row 1 -->
 		<tr><td>
 		
 			
-			<span class="btn"><a href="admin.php?action=bans">Bans</a></span>
+			<span class='btn'><a href='admin.php?action=bans'>{$lang['index_bans']}</a></span>
 			
-			<span class="btn"><a href="admin.php?action=adduser">Add New User</a></span>
+			<span class='btn'><a href='admin.php?action=adduser'>{$lang['index_new_user']}</a></span>
 			
-			<span class="btn"><a href="admin.php?action=log">View Log</a></span>
+			<span class='btn'><a href='admin.php?action=log'>{$lang['index_log']}</a></span>
 			
-			<span class="btn"><a href="admin.php?action=docleanup">Manual CleanUp</a></span>
+			<span class='btn'><a href='admin.php?action=docleanup'>{$lang['index_mcleanup']}</a></span>
 			
-			<span class="btn"><a href="users.php">Users List</a></span>
+			<span class='btn'><a href='users.php'>{$lang['index_user_list']}</a></span>
 			
 			</td></tr>
 			<!-- row 2 -->
 			<tr><td>
 			
-			<span class="btn"><a href="tags.php">BBCode Tags</a></span>
+			<span class='btn'><a href='tags.php'>{$lang['index_tags']}</a></span>
 			
 
-			<span class="btn"><a href="smilies.php">Smilies/Emoticons</a></span>
+			<span class='btn'><a href='smilies.php'>{$lang['index_emoticons']}</a></span>
 			
-			<span class="btn"><a href="admin.php?action=delacct">Delete Account</a></span>
+			<span class='btn'><a href='admin.php?action=delacct'>{$lang['index_delacct']}</a></span>
 			
 
-			<span class="btn"><a href="admin.php?action=stats">Tracker Statistics</a></span>
+			<span class='btn'><a href='admin.php?action=stats'>{$lang['index_stats']}</a></span>
 			
 			</td></tr>
 			<!-- roow 3 -->
 			<tr><td>
 			
-			<span class="btn"><a href="admin.php?action=testip">Test IP</a></span>
+			<span class='btn'><a href='admin.php?action=testip'>{$lang['index_testip']}</a></span>
 			
 
-			<span class="btn"><a href="admin.php?action=usersearch">User Search</a></span>
+			<span class='btn'><a href='admin.php?action=usersearch'>{$lang['index_user_search']}</a></span>
 			
 
-			<span class="btn"><a href="admin.php?action=mysql_overview">MySQL Overview</a></span>
+			<span class='btn'><a href='admin.php?action=mysql_overview'>{$lang['index_mysql_overview']}</a></span>
 			
 
-			<span class="btn"><a href="admin.php?action=mysql_stats">MySQL Statistics</a></span>
+			<span class='btn'><a href='admin.php?action=mysql_stats'>{$lang['index_mysql_stats']}</a></span>
 			
 			
 			</td></tr>
 			<!-- row 4 -->
 			<tr><td>
 			
-			<span class="btn"><a href="forummanage.php">Manage Forum</a></span>
+			<span class='btn'><a href='admin.php?action=forummanage'>{$lang['index_forummanage']}</a></span>
 			
 
-			<span class="btn"><a href="admin.php?action=categories">Categories</a></span>
-			
-			<span class="btn"><a href="admin.php?action=newusers">Newest Users</a></span>
-			
-			<span class="btn"><a href="admin.php?action=resetpassword">Reset Password </a></span>
+			<span class='btn'><a href='admin.php?action=categories'>{$lang['index_categories']}</a></span>
 			
 			</td></tr>
 			<!-- row 5 -->
 			<tr><td>
 			
-			<span class="btn"><a href="reputation_ad.php">Rep System</a></span>
+			<span class='btn'><a href='reputation_ad.php'>{$lang['index_rep_system']}</a></span>
 			
-			<span class="btn"><a href="reputation_settings.php">Rep Settings</a></span>
+			<span class='btn'><a href='reputation_settings.php'>{$lang['index_rep_settings']}</a></span>
 			
-			<span class="btn"><a href="admin.php?action=news">Add/Edit News</a></span>
+			<span class='btn'><a href='admin.php?action=news'>{$lang['index_news']}</a></span>
 			
 			
-		</td></tr></table>
-<?php 
+		</td></tr></table>";
+ 
 
-stdfoot();
+    print stdhead("Staff") . $HTMLOUT . stdfoot();
 
 ?>

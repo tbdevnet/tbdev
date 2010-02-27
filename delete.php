@@ -19,84 +19,80 @@
 require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
 
-
-function bark($msg) {
-  stdhead();
-  stdmsg("Delete failed!", $msg);
-  stdfoot();
-  exit;
-}
-
-if (!mkglobal("id"))
-	bark("missing form data");
-
-$id = 0 + $id;
-if (!is_valid_id($id))
-	die();
-
 dbconn();
 
 loggedinorreturn();
+
+    $lang = array_merge( load_language('global'), load_language('delete') );
+
+    if (!mkglobal("id"))
+      stderr("{$lang['delete_failed']}", "{$lang['delete_missing_data']}");
+
+    $id = 0 + $id;
+    if (!is_valid_id($id))
+      stderr("{$lang['delete_failed']}", "{$lang['delete_missing_data']}");
+      
+
 
 function deletetorrent($id) {
     global $TBDEV;
     mysql_query("DELETE FROM torrents WHERE id = $id");
     foreach(explode(".","peers.files.comments.ratings") as $x)
-        mysql_query("DELETE FROM $x WHERE torrent = $id");
+        @mysql_query("DELETE FROM $x WHERE torrent = $id");
     unlink("{$TBDEV['torrent_dir']}/$id.torrent");
 }
 
 $res = mysql_query("SELECT name,owner,seeders FROM torrents WHERE id = $id");
 $row = mysql_fetch_assoc($res);
 if (!$row)
-	die();
+	stderr("{$lang['delete_failed']}", "{$lang['delete_not_exist']}");
 
 if ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)
-	bark("You're not the owner! How did that happen?\n");
+	stderr("{$lang['delete_failed']}", "{$lang['delete_not_owner']}\n");
 
 $rt = 0 + $_POST["reasontype"];
 
 if (!is_int($rt) || $rt < 1 || $rt > 5)
-	bark("Invalid reason");
+	bark("{$lang['delete_invalid']}");
 
 //$r = $_POST["r"]; // whats this
 $reason = $_POST["reason"];
 
 if ($rt == 1)
-	$reasonstr = "Dead: 0 seeders, 0 leechers = 0 peers total";
+	$reasonstr = "{$lang['delete_dead']}";
 elseif ($rt == 2)
-	$reasonstr = "Dupe" . ($reason[0] ? (": " . trim($reason[0])) : "!");
+	$reasonstr = "{$lang['delete_dupe']}" . ($reason[0] ? (": " . trim($reason[0])) : "!");
 elseif ($rt == 3)
-	$reasonstr = "Nuked" . ($reason[1] ? (": " . trim($reason[1])) : "!");
+	$reasonstr = "{$lang['delete_nuked']}" . ($reason[1] ? (": " . trim($reason[1])) : "!");
 elseif ($rt == 4)
 {
 	if (!$reason[2])
-		bark("Please describe the violated rule.");
-  $reasonstr = $SITENAME." rules broken: " . trim($reason[2]);
+		stderr("{$lang['delete_failed']}", "{$lang['delete_violated']}");
+  $reasonstr = $TBDEV['site_name']."{$lang['delete_rules']}" . trim($reason[2]);
 }
 else
 {
 	if (!$reason[3])
-		bark("Please enter the reason for deleting this torrent.");
+		stderr("{$lang['delete_failed']}", "{$lang['delete_reason']}");
   $reasonstr = trim($reason[3]);
 }
 
-deletetorrent($id);
+    deletetorrent($id);
 
-write_log("Torrent $id ($row[name]) was deleted by $CURUSER[username] ($reasonstr)\n");
+    write_log("{$lang['delete_torrent']} $id ({$row['name']}){$lang['delete_deleted_by']}{$CURUSER['username']} ($reasonstr)\n");
 
-stdhead("Torrent deleted!");
 
-if (isset($_POST["returnto"]))
-	$ret = "<a href=\"" . htmlspecialchars($_POST["returnto"]) . "\">Go back to whence you came</a>";
-else
-	$ret = "<a href=\"./\">Back to index</a>";
 
-?>
-<h2>Torrent deleted!</h2>
-<p><?php echo $ret ?></p>
-<?php
+    if (isset($_POST["returnto"]))
+      $ret = "<a href='" . htmlspecialchars($_POST["returnto"]) . "'>{$lang['delete_go_back']}</a>";
+    else
+      $ret = "<a href='{$TBDEV['baseurl']}/index.php'>{$lang['delete_back_index']}</a>";
 
-stdfoot();
+    $HTMLOUT = '';
+    $HTMLOUT .= "<h2>{$lang['delete_deleted']}</h2>
+    <p><$ret</p>";
+
+
+    print stdhead("{$lang['delete_deleted']}") . $HTMLOUT . stdfoot();
 
 ?>

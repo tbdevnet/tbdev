@@ -20,22 +20,20 @@
 
 if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 {
-	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	print "<h1>{$lang['text_incorrect']}</h1>{$lang['text_cannot']}";
 	exit();
 }
 
 require_once "include/user_functions.php";
 
-if( get_user_class() != UC_SYSOP )
-	stderr('MOD ERROR', 'Permission denied!');
-	
-//docleanup();
-register_shutdown_function("autoclean");
+    $lang = array_merge( $lang, load_language('ad_docleanup') );
+    
+    if( get_user_class() != UC_SYSOP )
+      stderr("{$lang['stderr_error']}", "{$lang['text_denied']}");
+      
+    //docleanup();
+    register_shutdown_function("docleanup");
 
-stdhead("Cleanup");
-
-print("Done");
-
-stdfoot();
+    stderr("{$lang['text_done']}", "{$lang['text_done']}");
 
 ?>

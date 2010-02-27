@@ -23,6 +23,8 @@ dbconn( false );
 
 loggedinorreturn();
 
+	$lang = load_language('global');
+	
 	if ( get_user_class() < UC_ADMINISTRATOR )
 		header( "Location: {$TBDEV['baseurl']}/index.php" );
 
@@ -642,9 +644,9 @@ function html_out( $html="", $title="" )
 			stderr( "Error", "Nothing to output" );
 		}
 
-		stdhead( $title );
-		print $html;
-		stdfoot();
+		
+		print stdhead( $title ) . $html . stdfoot();
+		
 		exit();
 		
 	}

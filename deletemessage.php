@@ -24,36 +24,40 @@
   $type = $_GET["type"];
 
   dbconn(false);
+  
   loggedinorreturn();
+  
+  $lang = array_merge( load_language('global'), load_language('deletemessage') );
+  
   if ($type == 'in')
   {
   	// make sure message is in CURUSER's Inbox
 	  $res = mysql_query("SELECT receiver, location FROM messages WHERE id=" . sqlesc($id)) or die("barf");
-	  $arr = mysql_fetch_assoc($res) or die("Bad message ID");
+	  $arr = mysql_fetch_assoc($res) or die("{$lang['deletemessage_bad_id']}");
 	  if ($arr["receiver"] != $CURUSER["id"])
-	    die("I wouldn't do that if i were you...");
+	    die("{$lang['deletemessage_dont_do']}");
     if ($arr["location"] == 'in')
-	  	mysql_query("DELETE FROM messages WHERE id=" . sqlesc($id)) or die('delete failed (error code 1).. this should never happen, contact an admin.');
+	  	mysql_query("DELETE FROM messages WHERE id=" . sqlesc($id)) or die("{$lang['deletemessage_code1']}");
     else if ($arr["location"] == 'both')
-			mysql_query("UPDATE messages SET location = 'out' WHERE id=" . sqlesc($id)) or die('delete failed (error code 2).. this should never happen, contact an admin.');
+			mysql_query("UPDATE messages SET location = 'out' WHERE id=" . sqlesc($id)) or die("{$lang['deletemessage_code2']}");
     else
-    	die('The message is not in your Inbox.');
+    	die("{$lang['deletemessage_not_inbox']}");
   }
 	elseif ($type == 'out')
   {
    	// make sure message is in CURUSER's Sentbox
 	  $res = mysql_query("SELECT sender, location FROM messages WHERE id=" . sqlesc($id)) or die("barf");
-	  $arr = mysql_fetch_assoc($res) or die("Bad message ID");
+	  $arr = mysql_fetch_assoc($res) or die("{$lang['deletemessage_bad_id']}");
 	  if ($arr["sender"] != $CURUSER["id"])
-	    die("I wouldn't do that if i were you...");
+	    die("{$lang['deletemessage_dont_do']}");
     if ($arr["location"] == 'out')
-	  	mysql_query("DELETE FROM messages WHERE id=" . sqlesc($id)) or die('delete failed (error code 3).. this should never happen, contact an admin.');
+	  	mysql_query("DELETE FROM messages WHERE id=" . sqlesc($id)) or die("{$lang['deletemessage_code3']}");
     else if ($arr["location"] == 'both')
-			mysql_query("UPDATE messages SET location = 'in' WHERE id=" . sqlesc($id)) or die('delete failed (error code 4).. this should never happen, contact an admin.');
+			mysql_query("UPDATE messages SET location = 'in' WHERE id=" . sqlesc($id)) or die("{$lang['deletemessage_code4']}");
     else
-    	die('The message is not in your Sentbox.');
+    	die("{$lang['deletemessage_sentbox']}");
   }
   else
-  	die('Unknown PM type.');
+  	die("{$lang['deletemessage_unknown']}");
   header("Location: {$TBDEV['baseurl']}/inbox.php".($type == 'out'?"?out=1":""));
 ?>

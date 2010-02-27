@@ -39,14 +39,15 @@ $TBDEV['time_date'] = '';
 
 
 // DB setup
+// FYNNON FUCKWIT FRENCH RETARD
 $TBDEV['mysql_host'] = "localhost";
 $TBDEV['mysql_user'] = "root";
 $TBDEV['mysql_pass'] = "blank";
-$TBDEV['mysql_db']   = "mytbdev";
+$TBDEV['mysql_db']   = "tb";
 
 // Cookie setup
-$TBDEV['cookie_prefix']  = 'tbdev_'; // This allows you to have multiple trackers, eg for demos, testing etc.
-$TBDEV['cookie_path']    = '/test'; // ATTENTION: You should never need this unless the above applies eg: /tbdev
+$TBDEV['cookie_prefix']  = 'tbalpha_'; // This allows you to have multiple trackers, eg for demos, testing etc.
+$TBDEV['cookie_path']    = ''; // ATTENTION: You should never need this unless the above applies eg: /tbdev
 $TBDEV['cookie_domain']  = ''; // set to eg: .somedomain.com or is subdomain set to: .sub.somedomain.com
                               
 $TBDEV['site_online'] = 1;
@@ -77,13 +78,28 @@ $TBDEV['torrent_dir'] = ROOT_PATH . '/torrents'; # must be writable for httpd us
 
 # the first one will be displayed on the pages
 $TBDEV['announce_urls'] = array();
-$TBDEV['announce_urls'][] = "http://localhost/test/announce.php";
+$TBDEV['announce_urls'][] = "http://localhost/TB_ALPHA/announce.php";
 //$TBDEV['announce_urls'] = "http://localhost:2710/announce";
 //$TBDEV['announce_urls'] = "http://domain.com:83/announce.php";
 
 if ($_SERVER["HTTP_HOST"] == "")
   $_SERVER["HTTP_HOST"] = $_SERVER["SERVER_NAME"];
-$TBDEV['baseurl'] = "http://" . $_SERVER["HTTP_HOST"]."/test";
+  
+$TBDEV['baseurl'] = "http://" . $_SERVER["HTTP_HOST"]."/TB_ALPHA";
+
+/*
+## DO NOT UNCOMMENT THIS: IT'S FOR LATER USE!
+$host = getenv( 'SERVER_NAME' );
+$script = getenv( 'SCRIPT_NAME' );
+$script = str_replace( "\\", "/", $script );
+
+  if( $host AND $script )
+  {
+    $script = str_replace( '/index.php', '', $script );
+
+    $TBDEV['baseurl'] = "http://{$host}{$script}";
+  }
+*/
 
 //set this to true to make this a tracker that only registered users may use
 //$TBDEV['membersonly'] = 1; //deprecated no longer needed
@@ -96,6 +112,9 @@ $TBDEV['baseurl'] = "http://" . $_SERVER["HTTP_HOST"]."/test";
 $TBDEV['site_email'] = "coldfusion@localhost";
 
 $TBDEV['site_name'] = "TBDEV.NET";
+
+$TBDEV['language'] = 'en';
+$TBDEV['msg_alert'] = 0; // saves a query when off
 
 $TBDEV['autoclean_interval'] = 900;
 $TBDEV['sql_error_log'] = ROOT_PATH.'/logs/sql_err_'.date("M_D_Y").'.log';

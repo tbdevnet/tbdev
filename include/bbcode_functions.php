@@ -107,6 +107,18 @@ function format_comment($text, $strip_html = true)
 	if ($strip_html)
 		$s = htmlentities($s, ENT_QUOTES);
 
+  if( preg_match( "#function\s*\((.*?)\|\|#is", $s ) )
+  {
+    $s = str_replace( ":"     , "&#58;", $s );
+		$s = str_replace( "["     , "&#91;", $s );
+		$s = str_replace( "]"     , "&#93;", $s );
+		$s = str_replace( ")"     , "&#41;", $s );
+		$s = str_replace( "("     , "&#40;", $s );
+		$s = str_replace( "{"	 , "&#123;", $s );
+		$s = str_replace( "}"	 , "&#125;", $s );
+		$s = str_replace( "$"	 , "&#36;", $s );   
+  }
+  
 	// [*]
 	$s = preg_replace("/\[\*\]/", "<li>", $s);
 	

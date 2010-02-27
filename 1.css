@@ -362,6 +362,14 @@ input, select, textarea {
 	vertical-align: middle;
 }
 
+input:focus { 
+  background-color: #FFFF99; 
+}
+
+textarea:focus {
+  background-color: #FFFF99; 
+}
+
 select
 {
 	margin: 0px;
@@ -561,3 +569,8 @@ font-family: verdana;
 	color: #000000;
 }
 
+.roundedCorners {
+	border: 1px solid #000;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}

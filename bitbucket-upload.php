@@ -16,60 +16,66 @@
 |   $URL$
 +------------------------------------------------
 */
-require "include/bittorrent.php";
+require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
 dbconn();
 loggedinorreturn();
 
-$maxfilesize = 256 * 1024;
+$lang = array_merge( load_language('global'), load_language('bitbucket') );
+
+$TBDEV['bb_upload_size'] = 256 * 1024;
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-	$file = $_POST["file"];
+	$file = $_FILES["file"];
 	if (!isset($file) || $file["size"] < 1)
-		stderr("Upload failed", "Nothing received!");
-	if ($file["size"] > $maxfilesize)
-		stderr("Upload failed", "Sorry, that file is too large for the bit-bucket.");
+		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_not_received']}");
+	if ($file["size"] > $TBDEV['bb_upload_size'])
+		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_too_large']}");
 	$filename = $file["name"];
 	if (strpos($filename, "..") !== false || strpos($filename, "/") !== false)
-		stderr("Upload failed", "Bad file name.");
+		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_bad_name']}");
 	$tgtfile = "bitbucket/$filename";
 	if (file_exists($tgtfile))
-		stderr("Upload failed", "Sorry, a file with the name <b>" . htmlspecialchars($filename) . "</b> already exists in the bit-bucket.");
+		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_no_name']}<b>" . htmlspecialchars($filename) . "</b> {$lang['bitbucket_exists']}");
 
 	$it = @exif_imagetype($file["tmp_name"]);
 	if ($it != IMAGETYPE_GIF && $it != IMAGETYPE_JPEG && $it != IMAGETYPE_PNG)
-		stderr("Upload failed", "Sorry, the file you uploaded was not recognized as a valid image file.");
+		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_not_recognized']}");
 
 	$i = strrpos($filename, ".");
 	if ($i !== false)
 	{
 		$ext = strtolower(substr($filename, $i));
 		if (($it == IMAGETYPE_GIF && $ext != ".gif") || ($it == IMAGETYPE_JPEG && $ext != ".jpg") || ($it == IMAGETYPE_PNG && $ext != ".png"))
-			stderr("Error", "Invalid file name extension: <b>GIF, JPG or PNG only!</b>");
+			stderr("{$lang['bitbucket_error']}", "{$lang['bitbucket_invalid_extension']}");
 	}
 	else
-		stderr("Error", "File name needs an extension.");
-	move_uploaded_file($file["tmp_name"], $tgtfile) or stderr("Error", "Internal error 2.");
+		stderr("{$lang['bitbucket_error']}", "{$lang['bitbucket_need_extension']}");
+	move_uploaded_file($file["tmp_name"], $tgtfile) or stderr("{$lang['bitbucket_error']}", "{$lang['bitbucket_internal_error2']}");
 	$url = str_replace(" ", "%20", htmlspecialchars("{$TBDEV['baseurl']}/bitbucket/$filename"));
-	stderr("Success", "Use the following URL to access the file: <b><a href=\"$url\">$url</a></b><p><a href='bitbucket-upload.php'>Upload another file</a>.");
+	stderr("{$lang['bitbucket_success']}", "{$lang['bitbucket_url']}<b><a href=\"$url\">$url</a></b><p><a href='bitbucket-upload.php'>{$lang['bitbucket_upload_another']}</a>.");
 }
 
-stdhead("Bit-bucket upload");
-?>
-<h1>Bit-bucket upload</h1>
-<form method='post' action="bitbucket-upload" enctype="multipart/form-data">
-<p><b>Maximum file size: <?=number_format($maxfilesize); ?> bytes.</b></p>
-<table border='1' cellspacing='0' cellpadding='5'>
-<tr><td class='rowhead'>Upload file</td><td><input type='file' name='file' size='60' /></td></tr>
-<tr><td colspan='2' align='center'><input type='submit' value="Upload" class='btn' /></td></tr>
-</table>
-</form>
-<br />
-<table class='main' width='410' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
-<font class='small'><b>Disclaimer:</b> Do not upload unauthorized or illegal pictures. Uploaded pictures should be considered "public domain"; do not upload pictures you wouldn't want a stranger to have access to.</font>
-</td></tr></table>
-<?php
-stdfoot();
+
+
+    $HTMLOUT = "<h1>{$lang['bitbucket_bbupload']}</h1>
+    <form method='post' action='{$TBDEV['baseurl']}/bitbucket-upload.php' enctype='multipart/form-data'>
+    <p><b>{$lang['bitbucket_maximum']}".number_format($TBDEV['bb_upload_size'])."{$lang['bitbucket_bytes']}</b></p>
+    <table border='1' cellspacing='0' cellpadding='5'>
+    <tr><td class='rowhead'>{$lang['bitbucket_upload_file']}</td><td><input type='file' name='file' size='60' /></td></tr>
+    <tr><td colspan='2' align='center'><input type='submit' value='{$lang['bitbucket_upload']}' class='btn' /></td></tr>
+    </table>
+    </form>
+    
+    <br />
+    <table class='main' width='410' border='0' cellspacing='0' cellpadding='0'>
+    <tr><td class='embedded'>
+    <font class='small'>{$lang['bitbucket_disclaimer']}</font>
+    </td></tr></table>";
+
+
+    print stdhead("{$lang['bitbucket_bbupload']}") . $HTMLOUT .stdfoot();
 
 ?>

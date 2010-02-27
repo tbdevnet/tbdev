@@ -16,41 +16,48 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once("include/bittorrent.php");
+require_once 'include/bittorrent.php';
+require_once "include/password_functions.php";
 
-if (!mkglobal("username:password:captcha"))
-	die();
-	
-session_start();
-  if(empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha)){
-      header('Location: login.php');
-      exit();
-}
+    if (!mkglobal('username:password:captcha'))
+      die();
+      
+    session_start();
+      if(empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha)){
+          header('Location: login.php');
+          exit();
+    }
 
-dbconn();
+    dbconn();
+    
+    $lang = array_merge( load_language('global'), load_language('takelogin') );
+    
+    function bark($text = 'Username or password incorrect')
+    {
+      global $lang;
+      stderr($lang['tlogin_failed'], $text);
+    }
 
-function bark($text = "Username or password incorrect")
-{
-  stderr("Login failed!", $text);
-}
+    $res = mysql_query("SELECT id, passhash, secret, enabled FROM users WHERE username = " . sqlesc($username) . " AND status = 'confirmed'");
+    $row = mysql_fetch_assoc($res);
 
-$res = mysql_query("SELECT id, passhash, secret, enabled FROM users WHERE username = " . sqlesc($username) . " AND status = 'confirmed'");
-$row = mysql_fetch_assoc($res);
+    if (!$row)
+      bark();
+    
+    if ($row['passhash'] != make_passhash( $row['secret'], md5($password) ) )
+    //if ($row['passhash'] != md5($row['secret'] . $password))
+      bark();
 
-if (!$row)
-	bark();
+    if ($row['enabled'] == 'no')
+      bark($lang['tlogin_disabled']);
 
-if ($row["passhash"] != md5($row["secret"] . $password . $row["secret"]))
-	bark();
+    logincookie($row['id'], $row['passhash']);
 
-if ($row["enabled"] == "no")
-	bark("This account has been disabled.");
-
-logincookie($row["id"], $row["passhash"]);
-
-if (!empty($_POST["returnto"]))
-	header("Location: $_POST[returnto]");
-else
-	header("Location: my.php");
+//$returnto = str_replace('&amp;', '&', htmlspecialchars($_POST['returnto']));
+//$returnto = $_POST['returnto'];
+    //if (!empty($returnto))
+      //header("Location: ".$returnto);
+    //else
+      header("Location: {$TBDEV['baseurl']}/my.php");
 
 ?>

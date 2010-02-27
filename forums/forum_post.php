@@ -18,7 +18,7 @@
 */
 if ( ! defined( 'IN_TBDEV_FORUM' ) )
 {
-	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	print "{$lang['forum_post_access']}";
 	exit();
 }
 
@@ -28,7 +28,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $topicid = isset($_POST["topicid"]) ? (int)$_POST["topicid"] : 0;
 
     if (!is_valid_id($forumid) && !is_valid_id($topicid))
-      stderr("Error", "Bad forum or topic ID.");
+      stderr("{$lang['forum_post_error']}", "{$lang['forum_post_bad_id']}");
 
     $newtopic = $forumid > 0;
 
@@ -39,25 +39,25 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
       $subject = trim(strip_tags($_POST["subject"]));
 
       if (!$subject)
-        stderr("Error", "You must enter a subject.");
+        stderr("{$lang['forum_post_error']}", "{$lang['forum_post_subject']}");
 
       if (strlen($subject) > $maxsubjectlength)
-        stderr("Error", "Subject is limited to $maxsubjectlength characters.");
+        stderr("{$lang['forum_post_error']}", "{$lang['forum_post_subject_limit']}");
     }
     else
-      $forumid = get_topic_forum($topicid) or die("Bad topic ID");
+      $forumid = get_topic_forum($topicid) or die("{$lang['forum_post_bad_topic']}");
 
     //------ Make sure sure user has write access in forum
 
-    $arr = get_forum_access_levels($forumid) or die("Bad forum ID");
+    $arr = get_forum_access_levels($forumid) or die("{$lang['forum_post_bad_forum']}");
 
     if (get_user_class() < $arr["write"] || ($newtopic && get_user_class() < $arr["create"]))
-      stderr("Error", "Permission denied.");
+      stderr("{$lang['forum_post_error']}", "{$lang['forum_post_denied']}");
 
     $body = trim($_POST["body"]);
 
     if ($body == "")
-      stderr("Error", "No body text.");
+      stderr("{$lang['forum_post_error']}", "{$lang['forum_post_body']}");
 
     $userid = $CURUSER["id"];
 
@@ -67,9 +67,9 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $subject = sqlesc($subject);
 
-      mysql_query("INSERT INTO topics (userid, forumid, subject) VALUES($userid, $forumid, $subject)") or sqlerr(__FILE__, __LINE__);
+      @mysql_query("INSERT INTO topics (userid, forumid, subject) VALUES($userid, $forumid, $subject)") or sqlerr(__FILE__, __LINE__);
 
-      $topicid = mysql_insert_id() or stderr("Error", "No topic ID returned");
+      $topicid = mysql_insert_id() or stderr("{$lang['forum_post_error']}", "{$lang['forum_post_topic_id']}");
     }
     else
     {
@@ -77,10 +77,10 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $res = mysql_query("SELECT * FROM topics WHERE id=$topicid") or sqlerr(__FILE__, __LINE__);
 
-      $arr = mysql_fetch_assoc($res) or die("Topic id n/a");
+      $arr = mysql_fetch_assoc($res) or die("{$lang['forum_post_topic_na']}");
 
       if ($arr["locked"] == 'yes' && get_user_class() < UC_MODERATOR)
-        stderr("Error", "This topic is locked.");
+        stderr("{$lang['forum_post_error']}", "{$lang['forum_post_locked']}");
 
       //---- Get forum ID
 
@@ -93,10 +93,10 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     $body = sqlesc($body);
 
-    mysql_query("INSERT INTO posts (topicid, userid, added, body) " .
+    @mysql_query("INSERT INTO posts (topicid, userid, added, body) " .
     "VALUES($topicid, $userid, $added, $body)") or sqlerr(__FILE__, __LINE__);
 
-    $postid = mysql_insert_id() or die("Post id n/a");
+    $postid = mysql_insert_id() or die("{$lang['forum_post_post_na']}");
 
     //------ Update topic last post
 

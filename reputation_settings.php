@@ -24,6 +24,8 @@ dbconn( false );
 
 loggedinorreturn();
 
+	$lang = load_language('global');
+	
 	if ( get_user_class() < UC_ADMINISTRATOR )
 		header( "Location: {$TBDEV['baseurl']}/index.php" );
 		
@@ -111,7 +113,7 @@ function get_cache_array()
 
 
 
-$HTML_OUT = '<div>
+$HTMLOUT = '<div>
 				<table width="100%" border="0" cellpadding="5" cellspacing="0">
 				   <tr>
 					<td style="font-size: 12px; vertical-align: middle; font-weight: bold; color: rgb(0, 0, 0);" align="center">Reputation System Settings</td></tr>
@@ -241,18 +243,18 @@ $HTML_OUT = '<div>
 				  </table>
 				  </div></div>
 
-<input type="submit" name="submit" value="Add Reply" class="btn" tabindex="2" accesskey="s" />
+<input type="submit" name="submit" value="Submit" class="btn" tabindex="2" accesskey="s" />
 </form>
 </div>';
 
 
-$HTML_OUT = preg_replace_callback( "|<#(.*?)#>|", "template_out", $HTML_OUT);
+$HTMLOUT = preg_replace_callback( "|<#(.*?)#>|", "template_out", $HTMLOUT);
 
-stdhead("Reputation Settings");
 
-echo $HTML_OUT;
 
-stdfoot();
+echo stdhead("Reputation Settings") . $HTMLOUT . stdfoot();
+
+
 
 
 

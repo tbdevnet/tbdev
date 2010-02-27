@@ -24,158 +24,167 @@ require_once "include/bbcode_functions.php";
 dbconn();
 loggedinorreturn();
 
+$lang = array_merge( load_language('global'), load_language('tags') );
 
 function insert_tag($name, $description, $syntax, $example, $remarks)
 {
-	$result = format_comment($example);
-	print("<div class='sub'><b>$name</b></div>\n");
-	print("<table class='main' width='100%' border='1' cellspacing='0' cellpadding='5'>\n");
-	print("<tr valign='top'><td width='25%'>Description:</td><td>$description</td></tr>\n");
-	print("<tr valign='top'><td>Syntax:</td><td><tt>$syntax</tt></td></tr>\n");
-	print("<tr valign='top'><td>Example:</td><td><tt>$example</tt></td></tr>\n");
-	print("<tr valign='top'><td>Result:</td><td>$result</td></tr>\n");
-	if ($remarks != "")
-		print("<tr><td>Remarks:</td><td>$remarks</td></tr>\n");
-	print("</table>\n");
+    global $lang;
+    
+    $result = format_comment($example);
+    $htmlout = '';
+
+    $htmlout .= "<div class='sub'><b>$name</b></div>\n";
+    $htmlout .= "<table class='main' width='100%' border='1' cellspacing='0' cellpadding='5'>\n";
+    $htmlout .= "<tr valign='top'><td width='25%'>{$lang['tags_description']}</td><td>$description</td></tr>\n";
+    $htmlout .= "<tr valign='top'><td>{$lang['tags_systax']}</td><td><tt>$syntax</tt></td></tr>\n";
+    $htmlout .= "<tr valign='top'><td>{$lang['tags_example']}</td><td><tt>$example</tt></td></tr>\n";
+    $htmlout .= "<tr valign='top'><td>{$lang['tags_result']}</td><td>$result</td></tr>\n";
+    if ($remarks != "")
+      $htmlout .= "<tr><td>{$lang['tags_remarks']}</td><td>$remarks</td></tr>\n";
+    $htmlout .= "</table>\n";
+    
+    return $htmlout;
 }
 
-stdhead("Tags");
-begin_main_frame();
-begin_frame("Tags");
-$test = isset($_POST["test"]) ? $_POST["test"] : '';
-?>
-<p>The <?php echo $SITENAME?> forums supports a number of <i>BB tags</i> which you can embed to modify how your posts are displayed.</p>
+    $HTMLOUT = '';
+    
+    $HTMLOUT .= begin_main_frame();
+    $HTMLOUT .= begin_frame("Tags");
+    $test = isset($_POST["test"]) ? $_POST["test"] : '';
 
-<form method='post' action='?'>
-<textarea name='test' cols='60' rows='3'><?php print($test ? htmlspecialchars($test) : "")?></textarea>
-<input type='submit' value="Test this code!" style='height: 23px; margin-left: 5px' />
-</form>
-<?php
+    $HTMLOUT .= "{$lang['tags_title']}
 
-if ($test != "")
-  print("<p><hr>" . format_comment($test) . "<hr></p>\n");
+    <form method='post' action='?'>
+    <textarea name='test' cols='60' rows='3'>".($test ? htmlspecialchars($test) : "")."</textarea>
+    <input type='submit' value='{$lang['tags_test']}' style='height: 23px; margin-left: 5px' />
+    </form>";
 
-insert_tag(
-	"Bold",
-	"Makes the enclosed text bold.",
-	"[b]<i>Text</i>[/b]",
-	"[b]This is bold text.[/b]",
-	""
-);
 
-insert_tag(
-	"Italic",
-	"Makes the enclosed text italic.",
-	"[i]<i>Text</i>[/i]",
-	"[i]This is italic text.[/i]",
-	""
-);
+    if ($test != "")
+      $HTMLOUT .= "<p><hr>" . format_comment($test) . "<hr></p>\n";
 
-insert_tag(
-	"Underline",
-	"Makes the enclosed text underlined.",
-	"[u]<i>Text</i>[/u]",
-	"[u]This is underlined text.[/u]",
-	""
-);
+    $HTMLOUT .= insert_tag(
+      $lang['tags_bold1'],
+      $lang['tags_bold2'],
+      $lang['tags_bold3'],
+      $lang['tags_bold4'],
+      ""
+    );
 
-insert_tag(
-	"Color (alt. 1)",
-	"Changes the color of the enclosed text.",
-	"[color=<i>Color</i>]<i>Text</i>[/color]",
-	"[color=blue]This is blue text.[/color]",
-	"What colors are valid depends on the browser. If you use the basic colors (red, green, blue, yellow, pink etc) you should be safe."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_italic1'],
+    $lang['tags_italic2'],
+    $lang['tags_italic3'],
+    $lang['tags_italic4'],
+      ""
+    );
 
-insert_tag(
-	"Color (alt. 2)",
-	"Changes the color of the enclosed text.",
-	"[color=#<i>RGB</i>]<i>Text</i>[/color]",
-	"[color=#0000ff]This is blue text.[/color]",
-	"<i>RGB</i> must be a six digit hexadecimal number."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_underline1'],
+    $lang['tags_underline2'],
+    $lang['tags_underline3'],
+    $lang['tags_underline4'],
+      ""
+    );
 
-insert_tag(
-	"Size",
-	"Sets the size of the enclosed text.",
-	"[size=<i>n</i>]<i>text</i>[/size]",
-	"[size=4]This is size 4.[/size]",
-	"<i>n</i> must be an integer in the range 1 (smallest) to 7 (biggest). The default size is 2."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_color1'],
+    $lang['tags_color2'],
+    $lang['tags_color3'],
+    $lang['tags_color4'],
+    $lang['tags_color5']
+    );
 
-insert_tag(
-	"Font",
-	"Sets the type-face (font) for the enclosed text.",
-	"[font=<i>Font</i>]<i>Text</i>[/font]",
-	"[font=Impact]Hello world![/font]",
-	"You specify alternative fonts by separating them with a comma."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_color6'],
+    $lang['tags_color7'],
+    $lang['tags_color8'],
+    $lang['tags_color9'],
+    $lang['tags_color10']
+    );
 
-insert_tag(
-	"Hyperlink (alt. 1)",
-	"Inserts a hyperlink.",
-	"[url]<i>URL</i>[/url]",
-	"[url]".$TBDEV['baseurl']."/[/url]",
-	"This tag is superfluous; all URLs are automatically hyperlinked."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_size1'],
+    $lang['tags_size2'],
+    $lang['tags_size3'],
+    $lang['tags_size4'],
+    $lang['tags_size5']
+    );
 
-insert_tag(
-	"Hyperlink (alt. 2)",
-	"Inserts a hyperlink.",
-	"[url=<i>URL</i>]<i>Link text</i>[/url]",
-	"[url=".$TBDEV['baseurl']."/]".$SITENAME."[/url]",
-	"You do not have to use this tag unless you want to set the link text; all URLs are automatically hyperlinked."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_fonts1'],
+    $lang['tags_fonts2'],
+    $lang['tags_fonts3'],
+    $lang['tags_fonts4'],
+    $lang['tags_fonts5']
+    );
 
-insert_tag(
-	"Image (alt. 1)",
-	"Inserts a picture.",
-	"[img=<i>URL</i>]",
-	"[img=".$TBDEV['baseurl']."/pic/logo.gif]",
-	"The URL must end with <b>.gif</b>, <b>.jpg</b> or <b>.png</b>."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_hyper1'],
+    $lang['tags_hyper2'],
+    $lang['tags_hyper3'],
+    $lang['tags_hyper4'],
+    $lang['tags_hyper5']
+    );
 
-insert_tag(
-	"Image (alt. 2)",
-	"Inserts a picture.",
-	"[img]<i>URL</i>[/img]",
-	"[img]".$TBDEV['baseurl']."/pic/logo.gif[/img]",
-	"The URL must end with <b>.gif</b>, <b>.jpg</b> or <b>.png</b>."
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_hyper6'],
+    $lang['tags_hyper7'],
+    $lang['tags_hyper8'],
+    $lang['tags_hyper9'],
+    $lang['tags_hyper10']
+    );
 
-insert_tag(
-	"Quote (alt. 1)",
-	"Inserts a quote.",
-	"[quote]<i>Quoted text</i>[/quote]",
-	"[quote]The quick brown fox jumps over the lazy dog.[/quote]",
-	""
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_image1'],
+    $lang['tags_image2'],
+    $lang['tags_image3'],
+    $lang['tags_image4'],
+    $lang['tags_image5']
+    );
 
-insert_tag(
-	"Quote (alt. 2)",
-	"Inserts a quote.",
-	"[quote=<i>Author</i>]<i>Quoted text</i>[/quote]",
-	"[quote=John Doe]The quick brown fox jumps over the lazy dog.[/quote]",
-	""
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_image6'],
+    $lang['tags_image7'],
+    $lang['tags_image8'],
+    $lang['tags_image9'],
+    $lang['tags_image10']
+    );
 
-insert_tag(
-	"List",
-	"Inserts a list item.",
-	"[*]<i>Text</i>",
-	"[*] This is item 1\n[*] This is item 2",
-	""
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_quote1'],
+    $lang['tags_quote2'],
+    $lang['tags_quote3'],
+    $lang['tags_quote4'],
+      ""
+    );
 
-insert_tag(
-	"Preformat",
-	"Preformatted (monospace) text. Does not wrap automatically.",
-	"[pre]<i>Text</i>[/pre]",
-	"[pre]This is preformatted text.[/pre]",
-	""
-);
+    $HTMLOUT .= insert_tag(
+    $lang['tags_quote5'],
+    $lang['tags_quote6'],
+    $lang['tags_quote7'],
+    $lang['tags_quote8'],
+      ""
+    );
 
-end_frame();
-end_main_frame();
-stdfoot();
+    $HTMLOUT .= insert_tag(
+    $lang['tags_list1'],
+    $lang['tags_list2'],
+    $lang['tags_list3'],
+    $lang['tags_list4'],
+      ""
+    );
+
+    $HTMLOUT .= insert_tag(
+    $lang['tags_preformat1'],
+    $lang['tags_preformat2'],
+    $lang['tags_preformat3'],
+    $lang['tags_preformat4'],
+      ""
+    );
+
+    $HTMLOUT .= end_frame();
+    $HTMLOUT .= end_main_frame();
+    
+    print stdhead("{$lang['tags_tags']}") . $HTMLOUT . stdfoot();
 ?>

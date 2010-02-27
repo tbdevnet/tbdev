@@ -31,70 +31,102 @@ dbconn();
 
 loggedinorreturn();
 
-$res = mysql_query("SELECT * FROM torrents WHERE id = $id");
-$row = mysql_fetch_assoc($res);
-if (!$row)
-	die();
+    $lang = array_merge( load_language('global'), load_language('edit') );
+    
+    $res = mysql_query("SELECT * FROM torrents WHERE id = $id");
+    $row = mysql_fetch_assoc($res);
+    if (!$row)
+      stderr($lang['edit_user_error'], $lang['edit_no_torrent']);
 
-stdhead("Edit torrent \"" . $row["name"] . "\"");
 
-if (!isset($CURUSER) || ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)) {
-	print("<h1>Can't edit this torrent</h1>\n");
-	print("<p>You're not the rightful owner, or you're not <a href=\"login.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;nowarn=1\">logged in</a> properly.</p>\n");
-}
-else {
-	print("<form method='post' action='takeedit.php' enctype='multipart/form-data'>\n");
-	print("<input type=\"hidden\" name=\"id\" value=\"$id\" />\n");
-	if (isset($_GET["returnto"]))
-		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars($_GET["returnto"]) . "\" />\n");
-	print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"10\">\n");
-	tr("Torrent name", "<input type=\"text\" name=\"name\" value=\"" . htmlspecialchars($row["name"]) . "\" size=\"80\" />", 1);
-	tr("NFO file", "<input type='radio' name='nfoaction' value='keep' checked='checked' />Keep current<br />".
-	"<input type='radio' name='nfoaction' value='update' />Update:<br /><input type='file' name='nfo' size='80' />", 1);
-if ((strpos($row["ori_descr"], "<") === false) || (strpos($row["ori_descr"], "&lt;") !== false))
-  $c = "";
-else
-  $c = " checked";
-	tr("Description", "<textarea name=\"descr\" rows=\"10\" cols=\"80\">" . htmlspecialchars($row["ori_descr"]) . "</textarea><br />(HTML is not allowed. <a href='tags.php'>Click here</a> for information on available tags.)", 1);
+    
+    if (!isset($CURUSER) || ($CURUSER["id"] != $row["owner"] && get_user_class() < UC_MODERATOR)) 
+    {
+      stderr($lang['edit_user_error'], sprintf($lang['edit_no_permission'], urlencode($_SERVER['REQUEST_URI'])));
+    }
 
-	$s = "<select name=\"type\">\n";
 
-	$cats = genrelist();
-	foreach ($cats as $subrow) {
-		$s .= "<option value=\"" . $subrow["id"] . "\"";
-		if ($subrow["id"] == $row["category"])
-			$s .= " selected=\"selected\"";
-		$s .= ">" . htmlspecialchars($subrow["name"]) . "</option>\n";
-	}
+    $HTMLOUT = '';
+    
+    $HTMLOUT  .= "<form method='post' action='takeedit.php' enctype='multipart/form-data'>
+    <input type='hidden' name='id' value='$id' />";
+    
+    if (isset($_GET["returnto"]))
+      $HTMLOUT  .= "<input type='hidden' name='returnto' value='" . htmlspecialchars($_GET["returnto"]) . "' />\n";
+    $HTMLOUT  .=  "<table border='1' cellspacing='0' cellpadding='10'>\n";
+    
+    $HTMLOUT  .= tr($lang['edit_torrent_name'], "<input type='text' name='name' value='" . htmlspecialchars($row["name"]) . "' size='80' />", 1);
+    $HTMLOUT  .= tr($lang['edit_nfo'], "<input type='radio' name='nfoaction' value='keep' checked='checked' />{$lang['edit_keep_current']}<br />".
+	"<input type='radio' name='nfoaction' value='update' />{$lang['edit_update']}<br /><input type='file' name='nfo' size='80' />", 1);
+    if ((strpos($row["ori_descr"], "<") === false) || (strpos($row["ori_descr"], "&lt;") !== false))
+    {
+      $c = "";
+    }
+    else
+    {
+      $c = " checked";
+    }
+    
+    $HTMLOUT  .= tr($lang['edit_description'], "<textarea name='descr' rows='10' cols='80'>" . htmlspecialchars($row["ori_descr"]) . "</textarea><br />({$lang['edit_tags']})", 1);
 
-	$s .= "</select>\n";
-	tr("Type", $s, 1);
-	tr("Visible", "<input type=\"checkbox\" name=\"visible\"" . (($row["visible"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Visible on main page<br /><table border='0' cellspacing='0' cellpadding='0' width='420'><tr><td class='embedded'>Note that the torrent will automatically become visible when there's a seeder, and will become automatically invisible (dead) when there has been no seeder for a while. Use this switch to speed the process up manually. Also note that invisible (dead) torrents can still be viewed or searched for, it's just not the default.</td></tr></table>", 1);
+    $s = "<select name='type'>\n";
 
-	if (get_user_class() >= UC_MODERATOR) //($CURUSER["admin"] == "yes")
-		tr("Banned", "<input type=\"checkbox\" name=\"banned\"" . (($row["banned"] == "yes") ? " checked=\"checked\"" : "" ) . " value=\"1\" /> Banned", 1);
+    $cats = genrelist();
+    
+    foreach ($cats as $subrow) 
+    {
+      $s .= "<option value='" . $subrow["id"] . "'";
+      if ($subrow["id"] == $row["category"])
+        $s .= " selected='selected'";
+      $s .= ">" . htmlspecialchars($subrow["name"]) . "</option>\n";
+    }
 
-	print("<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value='Edit it!' class='btn' /> <input type='reset' value='Revert changes' class='btn' /></td></tr>\n");
-	print("</table>\n");
-	print("</form>\n");
-	print("<br />\n");
-	print("<form method=\"post\" action=\"delete.php\">\n");
-  print("<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n");
-  print("<tr><td class='embedded' style='background-color: #F5F4EA;padding-bottom: 5px' colspan=\"2\"><b>Delete torrent.</b> Reason:</td></tr>");
-  print("<tr><td><input name=\"reasontype\" type=\"radio\" value=\"1\" />&nbsp;Dead </td><td> 0 seeders, 0 leechers = 0 peers total</td></tr>\n");
-  print("<tr><td><input name=\"reasontype\" type=\"radio\" value=\"2\" />&nbsp;Dupe</td><td><input type=\"text\" size=\"40\" name=\"reason[]\" /></td></tr>\n");
-  print("<tr><td><input name=\"reasontype\" type=\"radio\" value=\"3\" />&nbsp;Nuked</td><td><input type=\"text\" size=\"40\" name=\"reason[]\" /></td></tr>\n");
-  print("<tr><td><input name=\"reasontype\" type=\"radio\" value=\"4\" />&nbsp;TB rules</td><td><input type=\"text\" size=\"40\" name=\"reason[]\" />(req)</td></tr>");
-  print("<tr><td><input name=\"reasontype\" type=\"radio\" value=\"5\" checked='checked' />&nbsp;Other:</td><td><input type=\"text\" size=\"40\" name=\"reason[]\" />(req)".
- "<input type=\"hidden\" name=\"id\" value=\"$id\" /></td></tr>\n");
-	if (isset($_GET["returnto"]))
-		print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlspecialchars($_GET["returnto"]) . "\" />\n");
-  print("<tr><td colspan=\"2\" align=\"center\"><input type='submit' value='Delete it!' class='btn' /></td></tr>\n");
-  print("</table>");
-	print("</form>\n");
-	print("\n");
-}
+    $s .= "</select>\n";
+    $HTMLOUT  .= tr($lang['edit_type'], $s, 1);
+    $HTMLOUT  .= tr($lang['edit_visible'], "<input type='checkbox' name='visible'" . (($row["visible"] == "yes") ? " checked='checked'" : "" ) . " value='1' /> {$lang['edit_visible_mainpage']}<br /><table border='0' cellspacing='0' cellpadding='0' width='420'><tr><td class='embedded'>{$lang['edit_visible_info']}</td></tr></table>", 1);
 
-stdfoot();
+    if (get_user_class() >= UC_MODERATOR) //($CURUSER["admin"] == "yes")
+    {
+      $HTMLOUT  .= tr($lang['edit_banned'], "<input type='checkbox' name='banned'" . (($row["banned"] == "yes") ? " checked='checked'" : "" ) . " value='1' /> {$lang['edit_banned']}", 1);
+    }
+
+    $HTMLOUT  .= "<tr><td colspan='2' align='center'><input type='submit' value='{$lang['edit_submit']}' class='btn' /> <input type='reset' value='{$lang['edit_revert']}' class='btn' /></td></tr>
+    </table>
+    </form>
+    <br />
+    <form method='post' action='delete.php'>
+    <table border='1' cellspacing='0' cellpadding='5'>
+    <tr>
+      <td class='embedded' style='background-color: #F5F4EA;padding-bottom: 5px' colspan='2'><b>{$lang['edit_delete_torrent']}.</b> {$lang['edit_reason']}</td>
+    </tr>
+    <tr>
+      <td><input name='reasontype' type='radio' value='1' />&nbsp;{$lang['edit_dead']} </td><td> {$lang['edit_peers']}</td>
+    </tr>
+    <tr>
+      <td><input name='reasontype' type='radio' value='2' />&nbsp;{$lang['edit_dupe']}</td><td><input type='text' size='40' name='reason[]' /></td>
+    </tr>
+    <tr>
+      <td><input name='reasontype' type='radio' value='3' />&nbsp;{$lang['edit_nuked']}</td><td><input type='text' size='40' name='reason[]' /></td>
+    </tr>
+    <tr>
+      <td><input name='reasontype' type='radio' value='4' />&nbsp;{$lang['edit_rules']}</td><td><input type='text' size='40' name='reason[]' />({$lang['edit_req']})</td>
+    </tr>
+    <tr>
+      <td><input name='reasontype' type='radio' value='5' checked='checked' />&nbsp;{$lang['edit_other']}</td><td><input type='text' size='40' name='reason[]' />({$lang['edit_req']})<input type='hidden' name='id' value='$id' /></td>
+    </tr>";
+    
+    if (isset($_GET["returnto"]))
+    {
+      $HTMLOUT  .= "<input type='hidden' name='returnto' value='" . htmlspecialchars($_GET["returnto"]) . "' />\n";
+		}
+    
+    $HTMLOUT  .= "<tr><td colspan='2' align='center'><input type='submit' value='{$lang['edit_delete']}' class='btn' /></td>
+    </tr>
+    </table>
+    </form>";
+
+
+//////////////////////////// HTML OUTPIT ////////////////////////////////
+    print stdhead("{$lang['edit_stdhead']} '{$row["name"]}'") . $HTMLOUT . stdfoot();
 
 ?>

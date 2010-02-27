@@ -18,71 +18,74 @@
 */
 require_once "include/bittorrent.php" ;
 
-ini_set('session.use_trans_sid', '0');
+    ini_set('session.use_trans_sid', '0');
 
-// Begin the session
-session_start();
-if (isset($_SESSION['captcha_time']))
-(time() - $_SESSION['captcha_time'] < 10) ? exit('NO SPAM! Wait 10 seconds and then refresh page') : NULL;
+    $lang = array_merge( load_language('global'), load_language('login') );
+    
+    // Begin the session
+    session_start();
+    if (isset($_SESSION['captcha_time']))
+    (time() - $_SESSION['captcha_time'] < 10) ? exit("{$lang['login_spam']}") : NULL;
 
-stdhead("Login");
+    $HTMLOUT = '';
 
-unset($returnto);
-if (!empty($_GET["returnto"])) {
-	$returnto = $_GET["returnto"];
-	if (!isset($_GET["nowarn"])) {
-		print("<h1>Not logged in!</h1>\n");
-		print("<p><b>Error:</b> The page you tried to view can only be used when you're logged in.</p>\n");
-	}
-}
+    unset($returnto);
+    if (!empty($_GET["returnto"])) {
+      $returnto = $_GET["returnto"];
+      if (!isset($_GET["nowarn"])) 
+      {
+        $HTMLOUT .= "<h1>{$lang['login_not_logged_in']}</h1>\n";
+        $HTMLOUT .= "{$lang['login_error']}";
+      }
+    }
 
-?>
-<script type="text/javascript" src="captcha/captcha.js"></script>
 
-<form method="post" action="takelogin.php">
-<p>Note: You need cookies enabled to log in.</p>
-<table border="0" cellpadding="5">
-  <tr>
-    <td class="rowhead">Username:</td>
-    <td align="left"><input type="text" size="40" name="username" /></td>
-  </tr>
-  <tr>
-    <td class="rowhead">Password:</td>
-    <td align="left"><input type="password" size="40" name="password" /></td>
-  </tr>
-<!--<tr><td class='rowhead'>Duration:</td><td align='left'><input type='checkbox' name='logout' value='yes' checked='checked' />Log me out after 15 minutes inactivity</td></tr>-->
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <div id="captchaimage">
-      <a href="login.php" onclick="refreshimg(); return false;" title="Click to refresh image">
-      <img class="cimage" src="captcha/GD_Security_image.php?<?php echo time(); ?>" alt="Captcha image" />
-      </a>
-      </div>
-     </td>
-  </tr>
-  <tr>
-      <td class="rowhead">PIN:</td>
-      <td>
-        <input type="text" maxlength="6" name="captcha" id="captcha" onblur="check(); return false;"/>
-      </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <input type="submit" value="Log in!" class='btn' />
-    </td>
-  </tr>
-</table>
-<?php
+    $HTMLOUT .= "<script type='text/javascript' src='captcha/captcha.js'></script>
 
-if (isset($returnto))
-	print("<input type=\"hidden\" name=\"returnto\" value=\"" . htmlentities($returnto) . "\" />\n");
+    <form method='post' action='takelogin.php'>
+    <p>Note: You need cookies enabled to log in.</p>
+    <table border='0' cellpadding='5'>
+      <tr>
+        <td class='rowhead'>{$lang['login_username']}</td>
+        <td align='left'><input type='text' size='40' name='username' /></td>
+      </tr>
+      <tr>
+        <td class='rowhead'>{$lang['login_password']}</td>
+        <td align='left'><input type='password' size='40' name='password' /></td>
+      </tr>
+    <!--<tr><td class='rowhead'>{$lang['login_duration']}</td><td align='left'><input type='checkbox' name='logout' value='yes' checked='checked' />{$lang['login_15mins']}</td></tr>-->
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <div id='captchaimage'>
+          <a href='login.php' onclick=\"refreshimg(); return false;\" title='{$lang['login_refresh']}'>
+          <img class='cimage' src='captcha/GD_Security_image.php?".TIME_NOW."' alt='{$lang['login_captcha']}' />
+          </a>
+          </div>
+         </td>
+      </tr>
+      <tr>
+          <td class='rowhead'>{$lang['login_pin']}</td>
+          <td>
+            <input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/>
+          </td>
+      </tr>
+      <tr>
+        <td colspan='2' align='center'>
+          <input type='submit' value='{$lang['login_login']}' class='btn' />
+        </td>
+      </tr>
+    </table>";
 
-?>
-</form>
-<p>Don't have an account? <a href="signup.php">Sign up</a> right now!</p>
-<?php
 
-stdfoot();
+    if (isset($returnto))
+      $HTMLOUT .= "<input type='hidden' name='returnto' value='" . htmlentities($returnto) . "' />\n";
+
+
+    $HTMLOUT .= "</form>
+    {$lang['login_signup']}";
+
+
+    print stdhead("{$lang['login_login_btn']}") . $HTMLOUT . stdfoot();
 
 ?>

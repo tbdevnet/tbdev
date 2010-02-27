@@ -29,6 +29,8 @@ require_once "include/pager_functions.php";
 // 0 - No debug; 1 - Show and run SQL query; 2 - Show SQL query only
 $DEBUG_MODE = 0;
 
+$lang = array_merge( $lang, load_language('ad_usersearch') );
+
 
 function is_set_not_empty($param) {
   if(isset($_POST[$param]) && !empty($_POST[$param]))
@@ -37,10 +39,9 @@ function is_set_not_empty($param) {
     return FALSE;
 }
 
-stdhead("Administrative User Search");
+print stdhead($lang['usersearch_window_title']);
+echo "<h1>{$lang['usersearch_title']}</h1>\n";
 
-
-echo "<h1>Administrative User Search</h1>\n";
 $where_is = '';
 $join_is = '';
 $q = '';
@@ -49,31 +50,12 @@ $comments_exc = '';
 $email_is = '';
 if (isset($_GET['h']))
 {
-	echo "<table border='0' align='center'><tr><td class='embedded' bgcolor='#F5F4EA'><div align='left'>\n
-	Fields left blank will be ignored;\n
-	Wildcards * and ? may be used in Name, Email and Comments, as well as multiple values\n
-	separated by spaces (e.g. 'wyz Max*' in Name will list both users named\n
-	'wyz' and those whose names start by 'Max'. Similarly  '~' can be used for\n
-	negation, e.g. '~alfiest' in comments will restrict the search to users\n
-	that do not have 'alfiest' in their comments).<br /><br />\n
-    The Ratio field accepts 'Inf' and '---' besides the usual numeric values.<br /><br />\n
-	The subnet mask may be entered either in dotted decimal or CIDR notation\n
-	(e.g. 255.255.255.0 is the same as /24).<br /><br />\n
-    Uploaded and Downloaded should be entered in GB.<br /><br />\n
-	For search parameters with multiple text fields the second will be\n
-	ignored unless relevant for the type of search chosen. <br /><br />\n
-	'Active only' restricts the search to users currently leeching or seeding,\n
-	'Disabled IPs' to those whose IPs also show up in disabled accounts.<br /><br />\n
-	The 'p' columns in the results show partial stats, that is, those\n
-	of the torrents in progress. <br /><br />\n
-	The History column lists the number of forum posts and torrent comments,\n
-	respectively, as well as linking to the history page.\n
-	</div></td></tr></table><br /><br />\n";
+	echo $lang['usersearch_instructions'];
 }
 else
 {
-	echo "<p align='center'>(<a href='admin.php?action=usersearch&h=1'>Instructions</a>)";
-	echo "&nbsp;-&nbsp;(<a href='admin.php?action=usersearch'>Reset</a>)</p>\n";
+	echo "<p align='center'>(<a href='admin.php?action=usersearch&amp;h=1'>{$lang['usersearch_inlink']}</a>)";
+	echo "&nbsp;-&nbsp;(<a href='admin.php?action=usersearch'>{$lang['usersearch_reset']}</a>)</p>\n";
 }
 
 $highlight = " bgcolor='lightgrey'";
@@ -84,11 +66,11 @@ $highlight = " bgcolor='lightgrey'";
 <table border="1" cellspacing="0" cellpadding="5">
 <tr>
 
-  <td valign="middle" class='rowhead'>Name:</td>
-  <td<?php echo (isset($_POST['n'])&&!empty($_POST['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_POST['n'])?htmlentities($_POST['n']):""?>" size='25' /></td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_name'] ?></td>
+  <td <?php echo (isset($_POST['n'])&&!empty($_POST['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_POST['n'])?htmlentities($_POST['n']):""?>" size='25' /></td>
 
-  <td valign="middle" class='rowhead'>Ratio:</td>
-  <td<?php echo (isset($_POST['r'])&&!empty($_POST['r']))?$highlight:""?>><select name="rt">
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_ratio'] ?></td>
+  <td <?php echo (isset($_POST['r'])&&!empty($_POST['r']))?$highlight:""?>><select name="rt">
     <?php
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
@@ -96,11 +78,11 @@ $highlight = " bgcolor='lightgrey'";
 	}
 	?>
     </select>
-    <input name="r" type="text" value="<?php echo isset($_POST['r'])?$_POST['r']:''?>" size="5" maxlength="4" />
+    <input name="r" type="text" value="<?php echo isset($_POST['r'])? $_POST['r']:''?>" size="5" maxlength="4" />
     <input name="r2" type="text" value="<?php echo isset($_POST['r2'])?$_POST['r2']:''?>" size="5" maxlength="4" /></td>
 
-  <td valign="middle" class='rowhead'>Member status:</td>
-  <td<?php echo (isset($_POST['st'])&&!empty($_POST['st']))?$highlight:""?>><select name="st">
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_status'] ?></td>
+  <td <?php echo (isset($_POST['st'])&&!empty($_POST['st']))?$highlight:""?>><select name="st">
     <?
 	$options = array("(any)","confirmed","pending");
 	for ($i = 0; $i < count($options); $i++){
@@ -108,13 +90,13 @@ $highlight = " bgcolor='lightgrey'";
 	}
     ?>
     </select></td></tr>
-<tr><td valign="middle" class='rowhead'>Email:</td>
-  <td<?php echo (isset($_POST['em'])&&!empty($_POST['em']))?$highlight:""?>><input name="em" type="text" value="<?php echo isset($_POST['em'])?$_POST['em']:''?>" size="25" /></td>
-  <td valign="middle" class='rowhead'>IP:</td>
-  <td<?php echo (isset($_POST['ip'])&&!empty($_POST['ip']))?$highlight:""?>><input name="ip" type="text" value="<?php echo isset($_POST['ip'])?$_POST['ip']:''?>" maxlength="17" /></td>
+<tr><td valign="middle" class='rowhead'><?php echo $lang['usersearch_email'] ?></td>
+  <td <?php echo (isset($_POST['em'])&&!empty($_POST['em']))?$highlight:""?>><input name="em" type="text" value="<?php echo isset($_POST['em'])?$_POST['em']:''?>" size="25" /></td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_ip'] ?></td>
+  <td <?php echo (isset($_POST['ip'])&&!empty($_POST['ip']))?$highlight:""?>><input name="ip" type="text" value="<?php echo isset($_POST['ip'])?$_POST['ip']:''?>" maxlength="17" /></td>
 
-  <td valign="middle" class='rowhead'>Account status:</td>
-  <td<?php echo (isset($_POST['as'])&&!empty($_POST['as']))?$highlight:""?>><select name="as">
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_acstatus'] ?></td>
+  <td <?php echo (isset($_POST['as'])&&!empty($_POST['as']))?$highlight:""?>><select name="as">
     <?php
     $options = array("(any)","enabled","disabled");
     for ($i = 0; $i < count($options); $i++){
@@ -123,12 +105,12 @@ $highlight = " bgcolor='lightgrey'";
     ?>
     </select></td></tr>
 <tr>
-  <td valign="middle" class='rowhead'>Comment:</td>
-  <td<?php echo (isset($_POST['co'])&&!empty($_POST['co']))?$highlight:""?>><input name="co" type="text" value="<?php echo isset($_POST['co'])?$_POST['co']:""?>" size="25" /></td>
-  <td valign="middle" class='rowhead'>Mask:</td>
-  <td<?php echo (isset($_POST['ma'])&&!empty($_POST['ma']))?$highlight:""?>><input name="ma" type="text" value="<?php echo isset($_POST['ma'])?$_POST['ma']:""?>" maxlength="17" /></td>
-  <td valign="middle" class='rowhead'>Class:</td>
-  <td<?php echo (isset($_POST['c']) && !empty($_POST['c']))?$highlight:""?>><select name="c"><option value='1'>(any)</option>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_comments'] ?></td>
+  <td <?php echo (isset($_POST['co'])&&!empty($_POST['co']))?$highlight:""?>><input name="co" type="text" value="<?php echo isset($_POST['co'])?$_POST['co']:""?>" size="25" /></td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_mask'] ?></td>
+  <td <?php echo (isset($_POST['ma'])&&!empty($_POST['ma']))?$highlight:""?>><input name="ma" type="text" value="<?php echo isset($_POST['ma'])?$_POST['ma']:""?>" maxlength="17" /></td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_class'] ?></td>
+  <td <?php echo (isset($_POST['c']) && !empty($_POST['c']))?$highlight:""?>><select name="c"><option value=''>(any)</option>
   <?php
   $class = isset($_POST['c']) ? (int)$_POST['c'] : '';
   if (!is_valid_id($class))
@@ -143,9 +125,9 @@ $highlight = " bgcolor='lightgrey'";
     </select></td></tr>
 <tr>
 
-    <td valign="middle" class='rowhead'>Joined:</td>
+    <td valign="middle" class='rowhead'><?php echo $lang['usersearch_joined'] ?></td>
 
-  <td<?php echo (isset($_POST['d'])&&!empty($_POST['d']))?$highlight:""?>><select name="dt">
+  <td <?php echo (isset($_POST['d'])&&!empty($_POST['d']))?$highlight:""?>><select name="dt">
     <?php
 	$options = array("on","before","after","between");
 	for ($i = 0; $i < count($options); $i++){
@@ -159,9 +141,9 @@ $highlight = " bgcolor='lightgrey'";
     <input name="d2" type="text" value="<?php echo isset($_POST['d2'])?$_POST['d2']:''?>" size="12" maxlength="10" /></td>
 
 
-  <td valign="middle" class='rowhead'>Uploaded:</td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_uploaded'] ?></td>
 
-  <td<?php echo (isset($_POST['ult'])&&!empty($_POST['ult']))?$highlight:""?>><select name="ult" id="ult">
+  <td <?php echo (isset($_POST['ult'])&&!empty($_POST['ult']))?$highlight:""?>><select name="ult" id="ult">
     <?php
     $options = array("equal","above","below","between");
     for ($i = 0; $i < count($options); $i++){
@@ -173,9 +155,9 @@ $highlight = " bgcolor='lightgrey'";
     <input name="ul" type="text" id="ul" size="8" maxlength="7" value="<?php echo isset($_POST['ul'])?$_POST['ul']:''?>" />
 
     <input name="ul2" type="text" id="ul2" size="8" maxlength="7" value="<?php echo isset($_POST['ul2'])?$_POST['ul2']:''?>" /></td>
-  <td valign="middle" class="rowhead">Donor:</td>
+  <td valign="middle" class="rowhead"><?php echo $lang['usersearch_donor'] ?></td>
 
-  <td<?php echo (isset($_POST['do'])&&!empty($_POST['do']))?$highlight:""?>><select name="do">
+  <td <?php echo (isset($_POST['do'])&&!empty($_POST['do']))?$highlight:""?>><select name="do">
     <?php
     $options = array("(any)","Yes","No");
 	for ($i = 0; $i < count($options); $i++){
@@ -185,7 +167,7 @@ $highlight = " bgcolor='lightgrey'";
 	</select></td></tr>
 <tr>
 
-<td valign="middle" class='rowhead'>Last seen:</td>
+<td valign="middle" class='rowhead'><?php echo $lang['usersearch_lastseen'] ?></td>
 
   <td <?php echo (isset($_POST['ls'])&&!empty($_POST['ls']))?$highlight:""?>><select name="lst">
   <?php
@@ -199,9 +181,9 @@ $highlight = " bgcolor='lightgrey'";
   <input name="ls" type="text" value="<?php echo isset($_POST['ls'])?$_POST['ls']:''?>" size="12" maxlength="10" />
 
   <input name="ls2" type="text" value="<?php echo isset($_POST['ls2'])?$_POST['ls2']:''?>" size="12" maxlength="10" /></td>
-	  <td valign="middle" class='rowhead'>Downloaded:</td>
+	  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_downloaded'] ?></td>
 
-  <td<?php echo (isset($_POST['dl'])&&!empty($_POST['dl']))?$highlight:""?>><select name="dlt" id="dlt">
+  <td <?php echo (isset($_POST['dl'])&&!empty($_POST['dl']))?$highlight:""?>><select name="dlt" id="dlt">
   <?php
 	$options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
@@ -214,9 +196,9 @@ $highlight = " bgcolor='lightgrey'";
 
     <input name="dl2" type="text" id="dl2" size="8" maxlength="7" value="<?php echo isset($_POST['dl2'])?$_POST['dl2']:''?>" /></td>
 
-	<td valign="middle" class='rowhead'>Warned:</td>
+	<td valign="middle" class='rowhead'><?php echo $lang['usersearch_warned'] ?></td>
 
-	<td<?php echo (isset($_POST['w'])&&!empty($_POST['w']))?$highlight:""?>><select name="w">
+	<td <?php echo (isset($_POST['w'])&&!empty($_POST['w']))?$highlight:""?>><select name="w">
   <?php
   $options = array("(any)","Yes","No");
 	for ($i = 0; $i < count($options); $i++){
@@ -226,10 +208,10 @@ $highlight = " bgcolor='lightgrey'";
 	</select></td></tr>
 
 <tr><td class="rowhead"></td><td></td>
-  <td valign="middle" class='rowhead'>Active only:</td>
-	<td<?php echo (isset($_POST['ac'])&&!empty($_POST['ac']))?$highlight:""?>><input name="ac" type="checkbox" value="1" <?php echo (isset($_POST['ac']))?"checked='checked'":"" ?> /></td>
-  <td valign="middle" class='rowhead'>Disabled IP: </td>
-  <td<?php echo (isset($_POST['dip'])&&!empty($_POST['dip']))?$highlight:""?>><input name="dip" type="checkbox" value="1" <?php echo (isset($_POST['dip']))?"checked='checked'":"" ?> /></td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_active'] ?></td>
+	<td <?php echo (isset($_POST['ac'])&&!empty($_POST['ac']))?$highlight:""?>><input name="ac" type="checkbox" value="1" <?php echo (isset($_POST['ac']))?"checked='checked'":"" ?> /></td>
+  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_banned'] ?></td>
+  <td <?php echo (isset($_POST['dip'])&&!empty($_POST['dip']))?$highlight:""?>><input name="dip" type="checkbox" value="1" <?php echo (isset($_POST['dip']))?"checked='checked'":"" ?> /></td>
   </tr>
 <tr><td colspan="6" align='center'><input name="submit" type='submit' class='btn' /></td></tr>
 </table>
@@ -284,10 +266,12 @@ function haswildcard($text){
 
 ///////////////////////////////////////////////////////////////////////////////
 
-if (count($_POST) > 0 && !isset($_POST['h']))
+if (count($_POST) > 0 );//&& isset($_POST['n']))
 {
 	// name
-  $names = isset($_POST['h']) ? explode(' ',trim($_POST['n'])) : array(0=>'');
+	$name_is = '';
+	$names_exc = 0;
+  $names = isset($_POST['n']) ? explode(' ',trim($_POST['n'])) : array(0=>'');
   if ($names[0] !== "")
   {
 		foreach($names as $name)
@@ -307,11 +291,11 @@ if (count($_POST) > 0 && !isset($_POST['h']))
 	    foreach($names_inc as $name)
 	    {
       	if (!haswildcard($name))
-	        $name_is .= (isset($name_is)?" OR ":"")."u.username = ".sqlesc($name);
+	        $name_is .= (!empty($name_is)?" OR ":"")."u.username = ".sqlesc($name);
 	      else
 	      {
 	        $name = str_replace(array('?','*'), array('_','%'), $name);
-	        $name_is .= (isset($name_is)?" OR ":"")."u.username LIKE ".sqlesc($name);
+	        $name_is .= (!empty($name_is)?" OR ":"")."u.username LIKE ".sqlesc($name);
 	      }
 	    }
       $where_is .= $name_is.")";
@@ -349,7 +333,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
 	    {
       	if (validemail($email) !== 1)
       	{
-	        stdmsg("Error", "Bad email.");
+	        stdmsg($lang['usersearch_error'], $lang['usersearch_bademail']);
 	        stdfoot();
 	      	die();
 	      }
@@ -382,7 +366,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
   	$regex = "/^(((1?\d{1,2})|(2[0-4]\d)|(25[0-5]))(\.\b|$)){4}$/";
     if (!preg_match($regex, $ip))
     {
-    	stdmsg("Error", "Bad IP.");
+    	stdmsg($lang['usersearch_error'], $lang['usersearch_badip']);
     	stdfoot();
     	die();
     }
@@ -397,7 +381,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
       	$n = substr($mask, 1, strlen($mask) - 1);
         if (!is_numeric($n) or $n < 0 or $n > 32)
         {
-        	stdmsg("Error", "Bad subnet mask.");
+        	stdmsg($lang['usersearch_error'], $lang['usersearch_badmask']);
         	stdfoot();
           die();
         }
@@ -437,7 +421,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
     {
     	if (!is_numeric($ratio) || $ratio < 0)
     	{
-      	stdmsg("Error", "Bad ratio.");
+      	stdmsg($lang['usersearch_error'], $lang['usersearch_badratio']);
       	stdfoot();
         die();
       }
@@ -450,13 +434,13 @@ if (count($_POST) > 0 && !isset($_POST['h']))
       	$ratio2 = trim($_POST['r2']);
         if(!$ratio2)
         {
-        	stdmsg("Error", "Two ratios needed for this type of search.");
+        	stdmsg($lang['usersearch_error'], $lang['usersearch_badratio2']);
         	stdfoot();
           die();
         }
         if (!is_numeric($ratio2) or $ratio2 < $ratio)
         {
-        	stdmsg("Error", "Bad second ratio.");
+        	stdmsg($lang['usersearch_error'], $lang['usersearch_badratio3']);
         	stdfoot();
         	die();
         }
@@ -533,7 +517,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
   	$ul = trim($_POST['ul']);
   	if (!is_numeric($ul) || $ul < 0)
   	{
-    	stdmsg("Error", "Bad uploaded amount.");
+    	stdmsg($lang['usersearch_error'], $lang['usersearch_badup']);
     	stdfoot();
       die();
     }
@@ -546,13 +530,13 @@ if (count($_POST) > 0 && !isset($_POST['h']))
 	    $ul2 = trim($_POST['ul2']);
     	if(!$ul2)
     	{
-      	stdmsg("Error", "Two uploaded amounts needed for this type of search.");
+      	stdmsg($lang['usersearch_error'], $lang['usersearch_badup2']);
       	stdfoot();
         die();
       }
       if (!is_numeric($ul2) or $ul2 < $ul)
       {
-      	stdmsg("Error", "Bad second uploaded amount.");
+      	stdmsg($lang['usersearch_error'], $lang['usersearch_badup3']);
       	stdfoot();
         die();
       }
@@ -575,7 +559,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
   	$dl = trim($_POST['dl']);
   	if (!is_numeric($dl) || $dl < 0)
   	{
-    	stdmsg("Error", "Bad downloaded amount.");
+    	stdmsg($lang['usersearch_error'], $lang['usersearch_baddl']);
     	stdfoot();
       die();
     }
@@ -588,13 +572,13 @@ if (count($_POST) > 0 && !isset($_POST['h']))
     	$dl2 = trim($_POST['dl2']);
       if(!$dl2)
       {
-      	stdmsg("Error", "Two downloaded amounts needed for this type of search.");
+      	stdmsg($lang['usersearch_error'], $lang['usersearch_baddl2']);
       	stdfoot();
         die();
       }
       if (!is_numeric($dl2) or $dl2 < $dl)
       {
-      	stdmsg("Error", "Bad second downloaded amount.");
+      stdmsg($lang['usersearch_error'], $lang['usersearch_baddl3']);
       	stdfoot();
         die();
       }
@@ -615,29 +599,29 @@ if (count($_POST) > 0 && !isset($_POST['h']))
   if (is_set_not_empty('d'))
   {
   	$date = trim($_POST['d']);
-  	if (!$date = mkdate($date))
+  	if (!$date = strtotime($date))
   	{
-    	stdmsg("Error", "Invalid date.");
+    	stdmsg($lang['usersearch_error'], $lang['usersearch_baddate']);
     	stdfoot();
       die();
     }
+    
     $q .= ($q ? "&amp;" : "") . "d=$date";
     $datetype = $_POST['dt'];
 		$q .= ($q ? "&amp;" : "") . "dt=$datetype";
     if ($datetype == "0")
     // For mySQL 4.1.1 or above use instead
     // $where_is .= (isset($where_is)?" AND ":"")."DATE(added) = DATE('$date')";
-    $where_is .= (!empty($where_is)?" AND ":"").
-    		"(added - UNIX_TIMESTAMP('$date')) BETWEEN 0 and 86400";
+    $where_is .= (!empty($where_is)?" AND ":"")."(added - $date) BETWEEN 0 and 86400";
     else
     {
       $where_is .= (!empty($where_is)?" AND ":"")."u.added ";
       if ($datetype == "3")
       {
-        $date2 = mkdate(trim($_POST['d2']));
+        $date2 = strtotime(trim($_POST['d2']));
         if ($date2)
         {
-          if (!$date = mkdate($date))
+          if (!$date = strtotime($date))
           {
             stdmsg("Error", "Invalid date.");
             stdfoot();
@@ -648,7 +632,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
         }
         else
         {
-          stdmsg("Error", "Two dates needed for this type of search.");
+          stdmsg($lang['usersearch_error'], $lang['usersearch_baddate']);
           stdfoot();
           die();
         }
@@ -665,9 +649,9 @@ if (count($_POST) > 0 && !isset($_POST['h']))
   if (is_set_not_empty('ls'))
   {
   	$last = trim($_POST['ls']);
-  	if (!$last = mkdate($last))
+  	if (!$last = strtotime($last))
   	{
-    	stdmsg("Error", "Invalid date.");
+    	stdmsg($lang['usersearch_error'], $lang['usersearch_baddate']);
     	stdfoot();
       die();
     }
@@ -678,13 +662,13 @@ if (count($_POST) > 0 && !isset($_POST['h']))
     // For mySQL 4.1.1 or above use instead
     // $where_is .= (isset($where_is)?" AND ":"")."DATE(added) = DATE('$date')";
     	$where_is .= (!empty($where_is)?" AND ":"").
-      		"(last_access - UNIX_TIMESTAMP('$last')) BETWEEN 0 and 86400";
+      		"(last_access - $last) BETWEEN 0 and 86400";
     else
     {
     	$where_is .= (!empty($where_is)?" AND ":"")."u.last_access ";
       if ($lasttype == "3")
       {
-      	$last2 = mkdate(trim($_POST['ls2']));
+      	$last2 = strtotime(trim($_POST['ls2']));
         if ($last2)
         {
         	$where_is .= " BETWEEN '$last' and '$last2'";
@@ -692,7 +676,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
         }
         else
         {
-        	stdmsg("Error", "The second date is not valid.");
+        	stdmsg($lang['usersearch_error'], $lang['usersearch_baddate2']);
         	stdfoot();
         	die();
         }
@@ -792,14 +776,14 @@ if (count($_POST) > 0 && !isset($_POST['h']))
 //    <temporary>    /////////////////////////////////////////////////////
   if ($DEBUG_MODE > 0)
   {
-  	stdmsg("Count Query",$queryc);
+  	stdmsg($lang['usersearch_count'],$queryc);
     echo "<br /><br />";
-    stdmsg("Search Query",$query);
+    stdmsg($lang['usersearch_query'],$query);
     echo "<br /><br />";
-    stdmsg("URL Parameters 'Actually' Used",$q);
+    stdmsg($lang['usersearch_url'],$q);
     if ($DEBUG_MODE == 2)
     	stdfoot();
-    	exit();
+    exit();
   }
 //    </temporary>   /////////////////////////////////////////////////////
 
@@ -818,31 +802,31 @@ if (count($_POST) > 0 && !isset($_POST['h']))
   $res = mysql_query($query) or sqlerr();
 
   if (mysql_num_rows($res) == 0)
-  	stdmsg("Warning","No user was found.");
+  	stdmsg($lang['usersearch_warn'],$lang['usersearch_nouser']);
   else
   {
   	if ($count > $perpage)
   		echo $pager['pagertop'];
     echo "<table border='1' cellspacing='0' cellpadding='5'>\n";
-    echo "<tr class='rowhead'><td align='left'>Name</td>
-    		<td align='left'>Ratio</td>
-        <td align='left'>IP</td>
-        <td align='left'>Email</td>".
-        "<td align='left'>Joined:</td>".
-        "<td align='left'>Last seen:</td>".
-        "<td align='left'>Status</td>".
-        "<td align='left'>Enabled</td>".
-        "<td>pR</td>".
-        "<td>pUL (MB)</td>".
-        "<td>pDL (MB)</td>".
-        "<td>History</td></tr>";
+    echo "<tr><td class='colhead' align='left'>{$lang['usersearch_name']}</td>
+    		<td class='colhead' align='left'>{$lang['usersearch_ratio']}</td>
+        <td class='colhead' align='left'>{$lang['usersearch_ip']}</td>
+        <td class='colhead' align='left'>{$lang['usersearch_email']}</td>".
+        "<td class='colhead' align='left'>{$lang['usersearch_joined']}</td>".
+        "<td class='colhead' align='left'>{$lang['usersearch_lastseen']}</td>".
+        "<td class='colhead' align='left'>{$lang['usersearch_asts']}</td>".
+        "<td class='colhead' align='left'>{$lang['usersearch_enabled']}</td>".
+        "<td class='colhead'>{$lang['usersearch_pR']}</td>".
+        "<td class='colhead'>{$lang['usersearch_pUL']}</td>".
+        "<td class='colhead'>{$lang['usersearch_pDL']}</td>".
+        "<td class='colhead'>{$lang['usersearch_history']}</td></tr>";
         $ids = '';
     while ($user = mysql_fetch_array($res))
     {
-    	if ($user['added'] == '0000-00-00 00:00:00')
-      	$user['added'] = '---';
-      if ($user['last_access'] == '0000-00-00 00:00:00')
-      	$user['last_access'] = '---';
+    	//if ($user['added'] == '0000-00-00 00:00:00')
+      	//$user['added'] = '---';
+      //if ($user['last_access'] == '0000-00-00 00:00:00')
+      	//$user['last_access'] = '---';
 
       if ($user['ip'])
       {
@@ -852,7 +836,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
     	  if ($array[0] == 0)
       		$ipstr = $user['ip'];
 	  	  else
-	      	$ipstr = "<a href='testip.php?ip=".$user['ip']."'><font color='#FF0000'><b>".$user['ip']."</b></font></a>";
+	      	$ipstr = "<a href='admin.php?action=testip&amp;ip={$user['ip']}'><font color='#FF0000'><b>{$user['ip']}</b></font></a>";
 			}
 			else
       	$ipstr = "---";
@@ -863,10 +847,10 @@ if (count($_POST) > 0 && !isset($_POST['h']))
       $pul = $array['pul'];
       $pdl = $array['pdl'];
       if ($pdl > 0)
-      	$partial = ratios($pul,$pdl)." (".mksizemb($pul)."/".mksizemb($pdl).")";
+      	$partial = ratios($pul,$pdl)." (".mksize($pul)."/".mksize($pdl).")";
       else
       	if ($pul > 0)
-      		$partial = "Inf. ".mksizemb($pul)."/".mksizemb($pdl).")";
+      		$partial = "Inf. ".mksize($pul)."/".mksize($pdl).")";
       	else
       		$partial = "---";
 
@@ -893,8 +877,8 @@ if (count($_POST) > 0 && !isset($_POST['h']))
 					($user["warned"] == "yes" ? "<img src=\"pic/warned.gif\" alt=\"Warned\" />" : "") . "</td>
           <td>" . ratios($user['uploaded'], $user['downloaded']) . "</td>
           <td>" . $ipstr . "</td><td>" . $user['email'] . "</td>
-          <td><div align='center'>" . $user['added'] . "</div></td>
-          <td><div align='center'>" . $user['last_access'] . "</div></td>
+          <td><div align='center'>" . get_date($user['added'], '') . "</div></td>
+          <td><div align='center'>" . get_date($user['last_access'], '',0,1) . "</div></td>
           <td><div align='center'>" . $user['status'] . "</div></td>
           <td><div align='center'>" . $user['enabled']."</div></td>
           <td><div align='center'>" . ratios($pul,$pdl) . "</div></td>
@@ -930,7 +914,7 @@ if (count($_POST) > 0 && !isset($_POST['h']))
 }
 if(isset($pagemenu))
 print("<p>$pagemenu<br />$browsemenu</p>");
-stdfoot();
+print stdfoot();
 die;
 
 ?>

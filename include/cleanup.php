@@ -85,7 +85,7 @@ function docleanup() {
 		$delids = array();
 		while ($row = mysql_fetch_array($res,MYSQL_NUM)) {
 			$id = $row[0];
-			if ($ar[$id])
+			if (isset($ar[$id]) && $ar[$id])
 				continue;
 			$delids[] = $id;
 		}
@@ -202,7 +202,12 @@ function docleanup() {
 	@mysql_query("UPDATE avps SET value_u=$leechers WHERE arg='leechers'") or sqlerr(__FILE__, __LINE__);
 
 	// update forum post/topic count
-	$forums = @mysql_query("SELECT t.forumid, count( DISTINCT p.topicid ) AS topics, count( * ) AS posts FROM posts p LEFT JOIN topics t ON t.id = p.topicid LEFT JOIN forums f ON f.id = t.forumid GROUP BY t.forumid");
+	//$forums = @mysql_query("SELECT t.forumid, count( DISTINCT p.topicid ) AS topics, count( * ) AS posts FROM posts p LEFT JOIN topics t ON t.id = p.topicid LEFT JOIN forums f ON f.id = t.forumid GROUP BY t.forumid");
+	$forums = @mysql_query("SELECT f.id, count( DISTINCT t.id ) AS topics, count( * ) AS posts
+                          FROM forums f
+                          LEFT JOIN topics t ON f.id = t.forumid
+                          LEFT JOIN posts p ON t.id = p.topicid
+                          GROUP BY f.id");
 	while ($forum = mysql_fetch_assoc($forums))
 	{/*
 		$postcount = 0;
@@ -215,7 +220,8 @@ function docleanup() {
 			$postcount += $arr[0];
 			++$topiccount;
 		} */
-		@mysql_query("update forums set postcount={$forum['posts']}, topiccount={$forum['topics']} where id={$forum['forumid']}");
+		$forum['posts'] = $forum['topics'] > 0 ? $forum['posts'] : 0;
+		@mysql_query("update forums set postcount={$forum['posts']}, topiccount={$forum['topics']} where id={$forum['id']}");
 	}
 
 	// delete old torrents

@@ -14,5 +14,5 @@
 -- Dumping data for table `stylesheets`
 -- 
 
-INSERT INTO `stylesheets` VALUES (1, 'default.css', '(default)');
-INSERT INTO `stylesheets` VALUES (2, 'large.css', 'Large text');
+INSERT INTO `stylesheets` VALUES (1, '1.css', '(default)');
+INSERT INTO `stylesheets` VALUES (2, '2.css', 'Large text');

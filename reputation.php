@@ -18,13 +18,13 @@
 */
 require_once("include/bittorrent.php");
 require_once "include/user_functions.php";
-
-
+ 
 dbconn(false);
 
 
 loggedinorreturn();
 
+$lang = load_language('reputation');
 
 define( 'TIMENOW', time() ) ;
 
@@ -42,7 +42,7 @@ require_once "cache/rep_settings_cache.php";
 
 		if( ! $GVARS['rep_is_online'] )
 		{
-			exit( 'Reputation system offline, sorry!' );
+			exit($lang["info_reputation_offline"]);
 		}
 
 ///////////////////////////////////////////////
@@ -63,7 +63,7 @@ require_once "cache/rep_settings_cache.php";
 ///////////////////////////////////////////////
 		if( isset( $input['done'] ) )
 		{
-			rep_output( 'Reputation Added!' );
+			rep_output($lang["info_reputation_added"]);
 		}
 
 ///////////////////////////////////////////////
@@ -73,7 +73,7 @@ require_once "cache/rep_settings_cache.php";
 
 		if( ! $check )
 		{
-			rep_output( 'Incorrect Access' );
+			rep_output($lang["info_incorrect_access"]);
 		}
 		
 ///////////////////////////////////////////////
@@ -90,7 +90,7 @@ require_once "cache/rep_settings_cache.php";
 		// does it or don't it?
 		if( ! mysql_num_rows( $forum ) )
         {
-        	rep_output( 'Post Does Not Exist - Incorrect Access' );
+        	rep_output($lang["info_invalid_post"]);
         }
 ///////////////////////////////////////////////
 //	ok, lets proceed
@@ -99,7 +99,7 @@ require_once "cache/rep_settings_cache.php";
 		
 		if( $CURUSER['class'] < $res['minclassread'] ) // check permissions! Dun want sneaky pests lookin!
 		{
-			rep_output( 'Wrong Permissions' );
+			rep_output($lang["info_wrong_permissions"]);
 		}
 		
 ///////////////////////////////////////////////
@@ -113,7 +113,7 @@ require_once "cache/rep_settings_cache.php";
 
 		if( mysql_num_rows( $repeat) > 0 ) // blOOdy eedjit check!
 		{
-			rep_output( 'You have already added Rep to this entry!' ); // Is insane!
+			rep_output($lang["info_already_added"]); // Is insane!
 		}
 		
 ///////////////////////////////////////////////
@@ -146,11 +146,11 @@ require_once "cache/rep_settings_cache.php";
 				{
 					if( ( $i < $GVARS['rep_repeat'] ) && ( $check['userid'] == $CURUSER['id'] ) )//$res['userid'] ) )
 					{
-						rep_output( 'You cannot rep your own stuffs!' );
+						rep_output($lang["info_cannot_rate_own"]);
 					}
 					if( ( ( $i + 1 ) == $GVARS['rep_maxperday'] ) && ( ( $check['dateadd'] + 86400 ) > TIMENOW ) )
 					{
-						rep_output( 'The game is up, you rep spammer!' );
+						rep_output($lang["info_daily_rep_limit_expired"]);
 					}
 					$i++;
 				}
@@ -178,12 +178,12 @@ require_once "cache/rep_settings_cache.php";
 			$temp = stripslashes( $input['reason'] );
 			if( ( strlen(trim($temp)) < 2 ) || ( $reason == "" ) )
 			{
-				rep_output( 'Reason is too short!' );
+				rep_output($lang["info_reason_too_short"]);
 			}
 
 			if( strlen( preg_replace("/&#([0-9]+);/", "-", stripslashes( $input['reason'] ) ) ) > 250 )
 			{
-				rep_output( 'Reputation reason too long!' );
+				rep_output( $lang["info_reason_too_long"]);
 			}
 		}
 		
@@ -196,7 +196,7 @@ require_once "cache/rep_settings_cache.php";
 		{
 			if( $res['userid'] == $CURUSER['id'] ) // sneaky bastiges!
 			{
-				rep_output( 'You cannot rep your own post!' );
+				rep_output($lang["info_cannot_rate_own"]);
 			}
 
 			$score = fetch_reppower( $CURUSER, $input['reputation'] );
@@ -254,7 +254,7 @@ require_once "cache/rep_settings_cache.php";
 
 						if( $GVARS['g_rep_seeown'] )
 						{
-							$postrep['reason'] = $postrep['reason']." <span class='desc'>Leftby <a href=\"{$TBDEV['baseurl']}/userdetails.php?id={$postrep['leftby_id']}\" target='_blank'>{$postrep['leftby_name']}</a></span>";
+							$postrep['reason'] = $postrep['reason']." <span class='desc'>{$lang["rep_let_by"]} <a href=\"{$TBDEV['baseurl']}/userdetails.php?id={$postrep['leftby_id']}\" target='_blank'>{$postrep['leftby_name']}</a></span>";
 						}
 
 						$reasonbits .= "<tr>
@@ -265,27 +265,27 @@ require_once "cache/rep_settings_cache.php";
 ///////////////////////////////////////////////
 //	The negativity...oh such negativity
 ///////////////////////////////////////////////
-					if( $total == 0 ){ $rep = 'Even'; }
-					elseif( $total > 0 && $total <= 5 ){ $rep = 'Somewhat Positive'; }
-					elseif( $total > 5 && $total <= 15 ){ $rep = 'Positive'; }
-					elseif( $total > 15 && $total <= 25 ){ $rep = 'Very Positive'; }
-					elseif( $total > 25 ){ $rep = 'Extremely Positive'; }
-					elseif( $total < 0 && $total >= -5 ){ $rep = 'Somewhat Negative'; }
-					elseif( $total < -5 && $total >= -15 ){ $rep = 'Negative'; }
-					elseif( $total < -15 && $total >= -25){ $rep = 'Very Negative'; }
-					elseif( $total < -25 ){ $rep = 'Extremely Negative'; }
+					if( $total == 0 ){ $rep = $lang["rep_even"]; }
+					elseif( $total > 0 && $total <= 5 ){ $rep = $lang["rep_somewhat_positive"]; }
+					elseif( $total > 5 && $total <= 15 ){ $rep = $lang["rep_positive"]; }
+					elseif( $total > 15 && $total <= 25 ){ $rep = $lang["rep_very_positive"]; }
+					elseif( $total > 25 ){ $rep = $lang["rep_extremely_positive"]; }
+					elseif( $total < 0 && $total >= -5 ){ $rep = $lang["rep_somewhat_negative"]; }
+					elseif( $total < -5 && $total >= -15 ){ $rep = $lang["rep_negative"]; }
+					elseif( $total < -15 && $total >= -25){ $rep = $lang["rep_very_negative"]; }
+					elseif( $total < -25 ){ $rep = $lang["rep_extremely_negative"]; }
 				}
 				else
 				{
-					$rep = 'Even'; //Ok, dunno what to do, so just make it quits!
+					$rep = $lang["rep_even"]; //Ok, dunno what to do, so just make it quits!
 				}
 				
 ///////////////////////////////////////////////
 //	Compile some HTML for the 'own post'/ 'user view' reputation
 //	Feel free to do ya own html/css here
 ///////////////////////////////////////////////
-				$rep_info = sprintf("Your reputation on <a href='{$TBDEV['baseurl']}/forums.php?action=viewtopic&amp;topicid=%d&amp;page=p%d#%d' target='_blank'>this post</a> is %s.", $res['topicid'], $input['pid'], $input['pid'], $rep );
-				$rep_points = sprintf("You have %d Reputation point(s).", $CURUSER['reputation'] );
+				$rep_info = sprintf("".$lang["info_your_rep_on"]." <a href='{$TBDEV['baseurl']}/forums.php?action=viewtopic&amp;topicid=%d&amp;page=p%d#%d' target='_blank'>".$lang["info_this_post"]."</a> ".$lang["info_is"]." %s.", $res['topicid'], $input['pid'], $input['pid'], $rep );
+				$rep_points = sprintf("".$lang["info_you_have"]." %d ".$lang["info_reputation_points"]."", $CURUSER['reputation'] );
 
 				$html = "<tr><td class='darkrow1'>{$rep_info}</td></tr>
 						<tr>
@@ -296,7 +296,7 @@ require_once "cache/rep_settings_cache.php";
 					{
 					
 					$html .= "<fieldset class='fieldset'>
-								<legend>Reputation Comments</legend>
+								<legend>{$lang["rep_comments"]}</legend>
 								<table class='ipbtable' cellpadding='0'>
 								$reasonbits
 								</table>
@@ -319,7 +319,7 @@ require_once "cache/rep_settings_cache.php";
 				$negativerep = ( $is_mod || $GVARS['g_rep_negative'] ) ? TRUE : FALSE;
 				$closewindow = FALSE;
 
-				$html = "<tr><td class='darkrow1'>Add to reputation: <b>{$res['username']}</b></td></tr>
+				$html = "<tr><td class='darkrow1'>{$lang["info_add_rep"]} <b>{$res['username']}</b></td></tr>
 						<tr>
 							<td class='row2'>
 							<form action='reputation.php' method='post'>	
@@ -330,16 +330,16 @@ require_once "cache/rep_settings_cache.php";
 									<tr>
 										<td>
 											<div><label for='rb_reputation_pos'>
-											<input type='radio' name='reputation' value='pos' id='rb_reputation_pos' checked='checked' class='radiobutton' style='margin:0px;' /> &nbsp;I Approve</label></div>";
+											<input type='radio' name='reputation' value='pos' id='rb_reputation_pos' checked='checked' class='radiobutton' style='margin:0px;' /> &nbsp;{$lang["rep_i_approve"]}</label></div>";
 					if ( $negativerep )
 					{
-					$html .= "<div><label for='rb_reputation_neg'><input type='radio' name='reputation' value='neg' id='rb_reputation_neg' class='radiobutton' style='margin:0px;' /> &nbsp;I Disapprove</label></div>";
+					$html .= "<div><label for='rb_reputation_neg'><input type='radio' name='reputation' value='neg' id='rb_reputation_neg' class='radiobutton' style='margin:0px;' /> &nbsp;{$lang["rep_i_disapprove"]}</label></div>";
 					}
 				$html .= "</td>
 							</tr>
 							<tr>
 								<td>
-									Your comments on this post:<br />
+									{$lang["rep_your_comm_on_this_post"]}<br />
 									<input type='text' size='40' maxlength='250' name='reason' style='margin:0px;' />
 								</td>
 							</tr>
@@ -350,7 +350,7 @@ require_once "cache/rep_settings_cache.php";
 						<input type='hidden' name='act' value='reputation' />
 						<input type='hidden' name='do' value='addrep' />
 						<input type='hidden' name='pid' value='{$input['pid']}' />
-						<input type='submit' value='Add To Reputation' class='button' accesskey='s' />
+						<input type='submit' value='".$lang["info_add_rep"]."' class='button' accesskey='s' />
 						<input type='button' value='Close Window' class='button' accesskey='c' onclick='self.close()' />
 					</div>	
 					</form>	
@@ -370,7 +370,7 @@ require_once "cache/rep_settings_cache.php";
 
 	function rep_output($msg="", $html="")
 	{
-		global $closewindow;
+		global $closewindow, $lang;
 		
 		if( $msg && empty($html) )
 		{
@@ -383,7 +383,7 @@ require_once "cache/rep_settings_cache.php";
 		$html";
 		if ( $closewindow )
 		{
-		$html .= "<tr><td class='darkrow1' align='center'><a href='javascript:self.close();'><b>Close Rep</b></a></td></tr>";
+		$html .= "<tr><td class='darkrow1' align='center'><a href='javascript:self.close();'><b>{$lang["info_close_rep"]}</b></a></td></tr>";
 		}
 		$html .= "</table></div></body>";
 		print $html;

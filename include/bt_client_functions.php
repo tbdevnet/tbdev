@@ -49,7 +49,7 @@ return "$id_name $version_str";
 function MainlineDecodePeerId($id_data, $id_name){
 $version_str = "";
 for ($i=0; $i<=strlen($id_data); $i++){
-$c = $id_data[$i];
+$c = isset($id_data[$i]) ? $id_data[$i] : '-';
 if ($c != '-' && ctype_alnum($c)) $version_str .= "$c.";
 }
 $version_str = substr($version_str,0,strlen($version_str)-1);
@@ -109,7 +109,7 @@ if(substr($peer_id,0,8 )=='S587Plus') return "BitTorrent Plus!"; # BitTorrent Pl
 if(substr($peer_id,0,7)=='martini') return "Martini Man"; # Martini Man
 if(substr($peer_id,4,6)=='btfans') return "SimpleBT"; # SimpleBT
 if(substr($peer_id,3,9)=='SimpleBT?') return "SimpleBT"; # SimpleBT
-if(ereg("MFC_Tear_Sample", $httpagent)) return "SimpleBT";
+if(preg_match("/MFC_Tear_Sample/", preg_quote($httpagent))) return "SimpleBT";
 if(substr($peer_id,0,5)=='btuga') return "BTugaXP"; # BTugaXP
 if(substr($peer_id,0,5)=='BTuga') return "BTuga"; # BTugaXP
 if(substr($peer_id,0,5)=='oernu') return "BTugaXP"; # BTugaXP

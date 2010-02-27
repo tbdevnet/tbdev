@@ -23,11 +23,12 @@ dbconn();
 
 loggedinorreturn();
 
-
+  $lang = load_language('download');
+  
   $id = isset($_GET['torrent']) ? intval($_GET['torrent']) : 0;
 
   if ( !is_valid_id($id) )
-    stderr('USER ERROR', 'No torrent with that ID exists');
+    stderr("{$lang['download_user_error']}", "{$lang['download_no_id']}");
 
 
   $res = mysql_query("SELECT name, filename FROM torrents WHERE id = $id") or sqlerr(__FILE__, __LINE__);

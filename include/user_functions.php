@@ -123,28 +123,29 @@ function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
 ////////////// REP SYSTEM END //////////
 
 function get_user_icons($arr, $big = false)
-{
-	global $TBDEV;
-	if ($big)
-	{
-		$donorpic = "starbig.gif";
-		$warnedpic = "warnedbig.gif";
-		$disabledpic = "disabledbig.gif";
-		$style = "style='margin-left: 4pt'";
-	}
-	else
-	{
-		$donorpic = "star.gif";
-		$warnedpic = "warned.gif";
-		$disabledpic = "disabled.gif";
-		$style = "style=\"margin-left: 2pt\"";
-	}
-	$pics = $arr["donor"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}{$donorpic}\" alt='Donor' border='0' $style />" : "";
-	if ($arr["enabled"] == "yes")
-		$pics .= $arr["warned"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}{$warnedpic}\" alt=\"Warned\" border='0' $style />" : "";
-	else
-		$pics .= "<img src=\"{$TBDEV['pic_base_url']}{$disabledpic}\" alt=\"Disabled\" border='0' $style />\n";
-	return $pics;
+  {
+    global $TBDEV;
+    
+    if ($big)
+    {
+      $donorpic = "starbig.gif";
+      $warnedpic = "warnedbig.gif";
+      $disabledpic = "disabledbig.gif";
+      $style = "style='margin-left: 4pt'";
+    }
+    else
+    {
+      $donorpic = "star.gif";
+      $warnedpic = "warned.gif";
+      $disabledpic = "disabled.gif";
+      $style = "style=\"margin-left: 2pt\"";
+    }
+    $pics = $arr["donor"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}{$donorpic}\" alt='Donor' border='0' $style />" : "";
+    if ($arr["enabled"] == "yes")
+      $pics .= $arr["warned"] == "yes" ? "<img src=\"{$TBDEV['pic_base_url']}{$warnedpic}\" alt=\"Warned\" border='0' $style />" : "";
+    else
+      $pics .= "<img src=\"{$TBDEV['pic_base_url']}{$disabledpic}\" alt=\"Disabled\" border='0' $style />\n";
+    return $pics;
 }
 
 function get_ratio_color($ratio)
@@ -185,8 +186,8 @@ function get_slr_color($ratio)
 
 function get_user_class()
 {
-  global $CURUSER;
-  return $CURUSER["class"];
+    global $CURUSER;
+    return $CURUSER["class"];
 }
 
 function get_user_class_name($class)

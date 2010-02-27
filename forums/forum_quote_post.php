@@ -18,27 +18,29 @@
 */
 if ( ! defined( 'IN_TBDEV_FORUM' ) )
 {
-	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	print "{$lang['forum_quote_post_access']}";
 	exit();
 }
 
-
+    
   //-------- Action: Quote
 
 		$topicid = (int)$_GET["topicid"];
 
 		if (!is_valid_id($topicid))
-			stderr("Error", "Invalid topic ID.");
+			stderr("{$lang['forum_quote_post_error']}", "{$lang['forum_quote_post_invalid']}");
 
-    stdhead("Post reply");
+    $HTMLOUT = stdhead("{$lang['forum_quote_post_reply']}");
 
-    begin_main_frame();
+    $HTMLOUT .= begin_main_frame();
 
-    insert_compose_frame($topicid, false, true);
+    $HTMLOUT .= insert_compose_frame($topicid, false, true);
 
-    end_main_frame();
+    $HTMLOUT .= end_main_frame();
 
-    stdfoot();
+    $HTMLOUT .= stdfoot();
+    
+    print $HTMLOUT;
 
     die;
 

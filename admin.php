@@ -19,13 +19,16 @@
     define('IN_TBDEV_ADMIN', TRUE);
 
     require_once "include/bittorrent.php";
+    require_once "include/user_functions.php";
 
     dbconn(false);
 
     loggedinorreturn();
+    
+    $lang = array_merge( load_language('global'), load_language('admin') );
   
     if ($CURUSER['class'] < UC_MODERATOR)
-      stderr('USER ERROR', 'You got here unexpectedly!');
+      stderr("{$lang['admin_user_error']}", "{$lang['admin_unexpected']}");
   
   
     $action = isset($_GET["action"]) ? $_GET["action"] : '';
@@ -47,7 +50,8 @@
                         'resetpassword'   => 'resetpassword',
                         'docleanup'       => 'docleanup',
                         'log'             => 'log',
-                        'news'            => 'news'
+                        'news'            => 'news',
+                        'forummanage'     => 'forummanage'
                         );
     
     if( in_array($action, $ad_actions) AND file_exists( "admin/{$ad_actions[ $action ]}.php" ) )

@@ -27,269 +27,295 @@ dbconn(false);
 
 loggedinorreturn();
 
+    $lang = array_merge( load_language('global'), load_language('browse'), load_language('torrenttable_functions') );
+    
+    $HTMLOUT = '';
+    
+    $cats = genrelist();
 
-$cats = genrelist();
+    if(isset($_GET["search"])) 
+    {
+      $searchstr = unesc($_GET["search"]);
+      $cleansearchstr = searchfield($searchstr);
+      if (empty($cleansearchstr))
+        unset($cleansearchstr);
+    }
 
-if(isset($_GET["search"])) {
-$searchstr = unesc($_GET["search"]);
-$cleansearchstr = searchfield($searchstr);
-if (empty($cleansearchstr))
-	unset($cleansearchstr);
-}
+    $orderby = "ORDER BY torrents.id DESC";
 
-$orderby = "ORDER BY torrents.id DESC";
+    $addparam = "";
+    $wherea = array();
+    $wherecatina = array();
 
-$addparam = "";
-$wherea = array();
-$wherecatina = array();
+    if (isset($_GET["incldead"]) &&  $_GET["incldead"] == 1)
+    {
+      $addparam .= "incldead=1&amp;";
+      if (!isset($CURUSER) || get_user_class() < UC_ADMINISTRATOR)
+        $wherea[] = "banned != 'yes'";
+    }
+    else
+    {
+      if (isset($_GET["incldead"]) && $_GET["incldead"] == 2)
+      {
+      $addparam .= "incldead=2&amp;";
+        $wherea[] = "visible = 'no'";
+      }
+      else
+        $wherea[] = "visible = 'yes'";
+    }
+    
+    $category = (isset($_GET["cat"])) ? (int)$_GET["cat"] : false;
 
-if (isset($_GET["incldead"]) &&  $_GET["incldead"] == 1)
-{
-	$addparam .= "incldead=1&amp;";
-	if (!isset($CURUSER) || get_user_class() < UC_ADMINISTRATOR)
-		$wherea[] = "banned != 'yes'";
-}
-else
-	if (isset($_GET["incldead"]) && $_GET["incldead"] == 2)
-{
-	$addparam .= "incldead=2&amp;";
-		$wherea[] = "visible = 'no'";
-}
-	else
-		$wherea[] = "visible = 'yes'";
+    $all = isset($_GET["all"]) ? $_GET["all"] : false;
 
-$category = (isset($_GET["cat"])) ? (int)$_GET["cat"] : false;
+    if (!$all)
+    {
+      if (!$_GET && $CURUSER["notifs"])
+      {
+        $all = True;
+        foreach ($cats as $cat)
+        {
+          $all &= $cat['id'];
+          if (strpos($CURUSER["notifs"], "[cat" . $cat['id'] . "]") !== False)
+          {
+            $wherecatina[] = $cat['id'];
+            $addparam .= "c{$cat['id']}=1&amp;";
+          }
+        }
+      }
+      elseif ($category)
+      {
+        if (!is_valid_id($category))
+          stderr("{$lang['browse_error']}", "{$lang['browse_invalid_cat']}");
+        $wherecatina[] = $category;
+        $addparam .= "cat=$category&amp;";
+      }
+      else
+      {
+        $all = True;
+        foreach ($cats as $cat)
+        {
+          $all &= isset($_GET["c{$cat['id']}"]);
+          if (isset($_GET["c{$cat['id']}"]))
+          {
+            $wherecatina[] = $cat['id'];
+            $addparam .= "c{$cat['id']}=1&amp;";
+          }
+        }
+      }
+    }
+    
+    if ($all)
+    {
+      $wherecatina = array();
+      $addparam = "";
+    }
 
-$all = isset($_GET["all"]) ? $_GET["all"] : false;
+    if (count($wherecatina) > 1)
+      $wherecatin = implode(",",$wherecatina);
+    elseif (count($wherecatina) == 1)
+      $wherea[] = "category = $wherecatina[0]";
 
-if (!$all)
-	if (!$_GET && $CURUSER["notifs"])
-	{
-	  $all = True;
-	  foreach ($cats as $cat)
-	  {
-	    $all &= $cat['id'];
-	    if (strpos($CURUSER["notifs"], "[cat" . $cat['id'] . "]") !== False)
-	    {
-	      $wherecatina[] = $cat['id'];
-	      $addparam .= "c{$cat['id']}=1&amp;";
-	    }
-	  }
-	}
-	elseif ($category)
-	{
-	  if (!is_valid_id($category))
-	    stderr("Error", "Invalid category ID.");
-	  $wherecatina[] = $category;
-	  $addparam .= "cat=$category&amp;";
-	}
-	else
-	{
-	  $all = True;
-	  foreach ($cats as $cat)
-	  {
-	    $all &= isset($_GET["c{$cat['id']}"]);
-	    if (isset($_GET["c{$cat['id']}"]))
-	    {
-	      $wherecatina[] = $cat['id'];
-	      $addparam .= "c{$cat['id']}=1&amp;";
-	    }
-	  }
-	}
+    $wherebase = $wherea;
 
-if ($all)
-{
-	$wherecatina = array();
-  $addparam = "";
-}
+    if (isset($cleansearchstr))
+    {
+      $wherea[] = "MATCH (search_text, ori_descr) AGAINST (" . sqlesc($searchstr) . ")";
+      //$wherea[] = "0";
+      $addparam .= "search=" . urlencode($searchstr) . "&amp;";
+      $orderby = "";
+      
+      /////////////// SEARCH CLOUD MALARKY //////////////////////
 
-if (count($wherecatina) > 1)
-	$wherecatin = implode(",",$wherecatina);
-elseif (count($wherecatina) == 1)
-	$wherea[] = "category = $wherecatina[0]";
+        $searchcloud = sqlesc($cleansearchstr);
+       // $r = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM searchcloud WHERE searchedfor = $searchcloud"), MYSQL_NUM);
+        //$a = $r[0];
+        //if ($a)
+           // mysql_query("UPDATE searchcloud SET howmuch = howmuch + 1 WHERE searchedfor = $searchcloud");
+        //else
+           // mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)");
+        @mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)
+                    ON DUPLICATE KEY UPDATE howmuch=howmuch+1");
+      /////////////// SEARCH CLOUD MALARKY END ///////////////////
+    }
 
-$wherebase = $wherea;
+    $where = implode(" AND ", $wherea);
+    
+    if (isset($wherecatin))
+      $where .= ($where ? " AND " : "") . "category IN(" . $wherecatin . ")";
 
-if (isset($cleansearchstr))
-{
-	$wherea[] = "MATCH (search_text, ori_descr) AGAINST (" . sqlesc($searchstr) . ")";
-	//$wherea[] = "0";
-	$addparam .= "search=" . urlencode($searchstr) . "&amp;";
-	$orderby = "";
-	
-	/////////////// SEARCH CLOUD MALARKY //////////////////////
+    if ($where != "")
+      $where = "WHERE $where";
 
-    $searchcloud = sqlesc($cleansearchstr);
-   // $r = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM searchcloud WHERE searchedfor = $searchcloud"), MYSQL_NUM);
-    //$a = $r[0];
-    //if ($a)
-       // mysql_query("UPDATE searchcloud SET howmuch = howmuch + 1 WHERE searchedfor = $searchcloud");
-    //else
-       // mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)");
-    mysql_query("INSERT INTO searchcloud (searchedfor, howmuch) VALUES ($searchcloud, 1)
-                ON DUPLICATE KEY UPDATE howmuch=howmuch+1");
-	/////////////// SEARCH CLOUD MALARKY END ///////////////////
-}
+    $res = mysql_query("SELECT COUNT(*) FROM torrents $where") or die(mysql_error());
+    $row = mysql_fetch_array($res,MYSQL_NUM);
+    $count = $row[0];
 
-$where = implode(" AND ", $wherea);
-if (isset($wherecatin))
-	$where .= ($where ? " AND " : "") . "category IN(" . $wherecatin . ")";
+    if (!$count && isset($cleansearchstr)) 
+    {
+      $wherea = $wherebase;
+      $orderby = "ORDER BY id DESC";
+      $searcha = explode(" ", $cleansearchstr);
+      $sc = 0;
+      foreach ($searcha as $searchss) 
+      {
+        if (strlen($searchss) <= 1)
+          continue;
+        $sc++;
+        if ($sc > 5)
+          break;
+        $ssa = array();
+        foreach (array("search_text", "ori_descr") as $sss)
+          $ssa[] = "$sss LIKE '%" . sqlwildcardesc($searchss) . "%'";
+        $wherea[] = "(" . implode(" OR ", $ssa) . ")";
+      }
+    
+      if ($sc) 
+      {
+        $where = implode(" AND ", $wherea);
+        if ($where != "")
+          $where = "WHERE $where";
+        $res = mysql_query("SELECT COUNT(*) FROM torrents $where");
+        $row = mysql_fetch_array($res,MYSQL_NUM);
+        $count = $row[0];
+      }
+    }
 
-if ($where != "")
-	$where = "WHERE $where";
+    $torrentsperpage = $CURUSER["torrentsperpage"];
+    if (!$torrentsperpage)
+      $torrentsperpage = 15;
 
-$res = mysql_query("SELECT COUNT(*) FROM torrents $where") or die(mysql_error());
-$row = mysql_fetch_array($res,MYSQL_NUM);
-$count = $row[0];
+    if ($count)
+    {
+      //list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
+      $pager = pager($torrentsperpage, $count, "browse.php?" . $addparam);
 
-if (!$count && isset($cleansearchstr)) {
-	$wherea = $wherebase;
-	$orderby = "ORDER BY id DESC";
-	$searcha = explode(" ", $cleansearchstr);
-	$sc = 0;
-	foreach ($searcha as $searchss) {
-		if (strlen($searchss) <= 1)
-			continue;
-		$sc++;
-		if ($sc > 5)
-			break;
-		$ssa = array();
-		foreach (array("search_text", "ori_descr") as $sss)
-			$ssa[] = "$sss LIKE '%" . sqlwildcardesc($searchss) . "%'";
-		$wherea[] = "(" . implode(" OR ", $ssa) . ")";
-	}
-	if ($sc) {
-		$where = implode(" AND ", $wherea);
-		if ($where != "")
-			$where = "WHERE $where";
-		$res = mysql_query("SELECT COUNT(*) FROM torrents $where");
-		$row = mysql_fetch_array($res,MYSQL_NUM);
-		$count = $row[0];
-	}
-}
-
-$torrentsperpage = $CURUSER["torrentsperpage"];
-if (!$torrentsperpage)
-	$torrentsperpage = 15;
-
-if ($count)
-{
-	//list($pagertop, $pagerbottom, $limit) = pager($torrentsperpage, $count, "browse.php?" . $addparam);
-	$pager = pager($torrentsperpage, $count, "browse.php?" . $addparam);
-
-	$query = "SELECT torrents.id, torrents.category, torrents.leechers, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.type,  torrents.comments,torrents.numfiles,torrents.filename,torrents.owner,IF(torrents.nfo <> '', 1, 0) as nfoav," .
-//	"IF(torrents.numratings < {$TBDEV['minvotes']}, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby $limit";
-	"categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby {$pager['limit']}";
-	$res = mysql_query($query) or die(mysql_error());
-}
-else
-	unset($res);
-if (isset($cleansearchstr))
-	stdhead("Search results for \"$searchstr\"");
-else
-	stdhead();
-
-?>
+      $query = "SELECT torrents.id, torrents.category, torrents.leechers, torrents.seeders, torrents.name, torrents.times_completed, torrents.size, torrents.added, torrents.type,  torrents.comments,torrents.numfiles,torrents.filename,torrents.owner,IF(torrents.nfo <> '', 1, 0) as nfoav," .
+    //	"IF(torrents.numratings < {$TBDEV['minvotes']}, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby $limit";
+      "categories.name AS cat_name, categories.image AS cat_pic, users.username FROM torrents LEFT JOIN categories ON category = categories.id LEFT JOIN users ON torrents.owner = users.id $where $orderby {$pager['limit']}";
+      $res = mysql_query($query) or die(mysql_error());
+    }
+    else
+    {
+      unset($res);
+    }
+    
+    if (isset($cleansearchstr))
+      $title = "{$lang['browse_search']}\"$searchstr\"";
+    else
+      $title = '';
 
 
-<div id="wrapper" style="width:90%;border:1px solid black;background-color:pink;">
 
-<?php
-//print out the tag cloud
-require_once "include/searchcloud_functions.php";
-print cloud();
-?>
-</div><br /><br />
-<form method="get" action="browse.php">
-<table class='bottom'>
-<tr>
-<td class='bottom'>
-	<table class='bottom'>
-	<tr>
 
-<?php
-$i = 0;
-foreach ($cats as $cat)
-{
-	$catsperrow = 7;
-	print(($i && $i % $catsperrow == 0) ? "</tr><tr>" : "");
-	print("<td class='bottom' style=\"padding-bottom: 2px;padding-left: 7px\"><input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat=$cat[id]'>" . htmlspecialchars($cat['name']) . "</a></td>\n");
-	$i++;
-}
+    $HTMLOUT .= "<div id='wrapper' style='width:90%;border:1px solid black;background-color:pink;'>";
 
-$alllink = "<div align='left'>(<a href='browse.php?all=1'><b>Show all</b></a>)</div>";
 
-$ncats = count($cats);
-$nrows = ceil($ncats/$catsperrow);
-$lastrowcols = $ncats % $catsperrow;
+    //print out the tag cloud
+    require_once "include/searchcloud_functions.php";
+    $HTMLOUT .= cloud() . "</div><br /><br />";
 
-if ($lastrowcols != 0)
-{
-	if ($catsperrow - $lastrowcols != 1)
-		{
-			print("<td class='bottom' rowspan='" . ($catsperrow  - $lastrowcols - 1) . "'>&nbsp;</td>");
-		}
-	print("<td class='bottom' style=\"padding-left: 5px\">$alllink</td>\n");
-}
+    $HTMLOUT .= "<form method='get' action='browse.php'>
+    <table class='bottom'>
+    <tr>
+    <td class='bottom'>
+      <table class='bottom'>
+      <tr>";
 
-$selected = (isset($_GET["incldead"])) ? (int)$_GET["incldead"] : "";
-?>
-	</tr>
-	</table>
-</td>
 
-<td class='bottom'>
-<table class='main'>
-	<tr>
-		<td class='bottom' style="padding: 1px;padding-left: 10px">
-			<select name='incldead'>
-<option value="0">active</option>
-<option value="1"<?php print($selected == 1 ? " selected='selected'" : ""); ?>>including dead</option>
-<option value="2"<?php print($selected == 2 ? " selected='selected'" : ""); ?>>only dead</option>
-			</select>
-  	</td>
-<?php
-if ($ncats % $catsperrow == 0)
-	print("<td class='bottom' style=\"padding-left: 15px\" rowspan='$nrows' valign='center' align='right'>$alllink</td>\n");
-?>
+    $i = 0;
+    $catsperrow = 7;
+    foreach ($cats as $cat)
+    {
+      $HTMLOUT .= ($i && $i % $catsperrow == 0) ? "</tr><tr>" : "";
+      $HTMLOUT .= "<td class='bottom' style='padding-bottom: 2px;padding-left: 7px;align:left;border:1px solid;'>
+      <input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat={$cat['id']}'>" . htmlspecialchars($cat['name']) . "</a></td>\n";
+      $i++;
+    }
 
-  </tr>
-  <tr>
-  	<td class='bottom' style="padding: 1px;padding-left: 10px">
-  	<div align='center'>
-  		<input type="submit" class='btn' value="Go!"/>
-  	</div>
-  	</td>
-  </tr>
-  </table>
-</td>
-</tr>
-</table>
-</form>
+    $alllink = "<div align='left'>(<a href='browse.php?all=1'><b>{$lang['browse_show_all']}</b></a>)</div>";
 
-<?php
+    $ncats = count($cats);
+    $nrows = ceil($ncats/$catsperrow);
+    $lastrowcols = $ncats % $catsperrow;
 
-if (isset($cleansearchstr))
-print("<h2>Search results for \"" . htmlentities($searchstr, ENT_QUOTES) . "\"</h2>\n");
+    if ($lastrowcols != 0)
+    {
+      if ($catsperrow - $lastrowcols != 1)
+        {
+          $HTMLOUT .= "<td class='bottom' rowspan='" . ($catsperrow  - $lastrowcols - 1) . "'>&nbsp;</td>";
+        }
+      $HTMLOUT .= "<td class='bottom' style=\"padding-left: 5px\">$alllink</td>\n";
+    }
 
-if ($count) {
-	print($pager['pagertop']);
+    $selected = (isset($_GET["incldead"])) ? (int)$_GET["incldead"] : "";
 
-	torrenttable($res);
+    $HTMLOUT .= "</tr>
+    </table>
+    </td>
 
-	print($pager['pagerbottom']);
-}
-else {
-	if (isset($cleansearchstr)) {
-		print("<h2>Nothing found!</h2>\n");
-		print("<p>Try again with a refined search string.</p>\n");
-	}
-	else {
-		print("<h2>Nothing here!</h2>\n");
-		print("<p>Sorry pal :(</p>\n");
-	}
-}
+    <td class='bottom'>
+    <table class='main'>
+      <tr>
+        <td class='bottom' style='padding: 1px;padding-left: 10px'>
+          <select name='incldead'>
+    <option value='0'>{$lang['browse_active']}</option>
+    <option value='1'".($selected == 1 ? " selected='selected'" : "").">{$lang['browse_inc_dead']}</option>
+    <option value='2'".($selected == 2 ? " selected='selected'" : "").">{$lang['browse_dead']}</option>
+          </select>
+        </td>";
+        
 
-stdfoot();
+    if ($ncats % $catsperrow == 0)
+    {
+      $HTMLOUT .= "<td class='bottom' style='padding-left: 15px' rowspan='$nrows' valign='middle' align='right'>$alllink</td>\n";
+    }
+
+    $HTMLOUT .= "</tr>
+      <tr>
+        <td class='bottom' style='padding: 1px;padding-left: 10px'>
+        <div align='center'>
+          <input type='submit' class='btn' value='{$lang['browse_go']}' />
+        </div>
+        </td>
+      </tr>
+      </table>
+    </td>
+    </tr>
+    </table>
+    </form>";
+
+
+
+    if (isset($cleansearchstr))
+    {
+      $HTMLOUT .= "<h2>{$lang['browse_search']}\"" . htmlentities($searchstr, ENT_QUOTES) . "\"</h2>\n";
+    }
+    
+    if ($count) 
+    {
+      $HTMLOUT .= $pager['pagertop'];
+
+      $HTMLOUT .= torrenttable($res);
+
+      $HTMLOUT .= $pager['pagerbottom'];
+    }
+    else 
+    {
+      if (isset($cleansearchstr)) 
+      {
+        $HTMLOUT .= "<h2>{$lang['browse_not_found']}</h2>\n";
+        $HTMLOUT .= "<p>{$lang['browse_tryagain']}</p>\n";
+      }
+      else 
+      {
+        $HTMLOUT .= "<h2>{$lang['browse_nothing']}</h2>\n";
+        $HTMLOUT .= "<p>{$lang['browse_sorry']}(</p>\n";
+      }
+    }
+
+/////////////////////// HTML OUTPUT //////////////////////////////
+
+    print stdhead($title) . $HTMLOUT . stdfoot();
 
 ?>
