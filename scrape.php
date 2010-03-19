@@ -4,11 +4,11 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2010 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
-|   Licence Info: Creative Commons 2
+|   Licence Info: GPL
 +------------------------------------------------
 |   $Date: 2009-09-05 18:48:06 +0100 (Sat, 05 Sep 2009) $
 |   $Revision: 199 $
