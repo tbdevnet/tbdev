@@ -136,6 +136,9 @@ function userlogin() {
     mysql_query("UPDATE users SET last_access='" . TIME_NOW . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
     $row['ip'] = $ip;
     $GLOBALS["CURUSER"] = $row;
+    
+    $GLOBALS['CURUSER']['group'] = $TBDEV['groups'][$row['class']];
+    $GLOBALS['CURUSER']['ismod'] = ( $GLOBALS['CURUSER']['group']['g_is_mod'] OR $GLOBALS['CURUSER']['group']['g_is_supmod'] ) ? 1:0;
 }
 
 function autoclean() {
@@ -251,7 +254,7 @@ function sqlwildcardesc($x) {
 }
 
 
-function stdhead($title = "", $msgalert = true) {
+function stdhead( $title = "", $js='', $css='' ) {
     global $CURUSER, $TBDEV, $lang;
 
     if (!$TBDEV['site_online'])
@@ -266,21 +269,17 @@ function stdhead($title = "", $msgalert = true) {
         
     if ($CURUSER)
     {
-    /*
-    $ss_a = @mysql_fetch_array(@sql_query("select uri from stylesheets where id=" . $CURUSER["stylesheet"]));
-
-    if ($ss_a) $ss_uri = $ss_a["uri"];
-    */
       $TBDEV['stylesheet'] = isset($CURUSER['stylesheet']) ? "{$CURUSER['stylesheet']}.css" : $TBDEV['stylesheet'];
     }
-  
+    
+  /* Deprecate this.
     if ($TBDEV['msg_alert'] && $msgalert && $CURUSER)
     {
       $res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " && unread='yes'") or sqlerr(__FILE__,__LINE__);
       $arr = mysql_fetch_row($res);
       $unread = $arr[0];
     }
-
+  */
     $htmlout = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
 		\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
 		
@@ -290,10 +289,11 @@ function stdhead($title = "", $msgalert = true) {
 			<meta name='generator' content='TBDev.net' />
 			<meta http-equiv='Content-Language' content='en-us' />
 			<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-			<meta name='MSSmartTagsPreventParsing' content='TRUE' />
 			
 			<title>{$title}</title>
 			<link rel='stylesheet' href='{$TBDEV['stylesheet']}' type='text/css' />
+			{$css}\n
+			{$js}\n
 		</head>
     
     <body>
@@ -377,26 +377,12 @@ function stdhead($title = "", $msgalert = true) {
 function stdfoot() {
   global $TBDEV;
   
-    return "<p align='center'>Remember, if you see any specific instance of this software running publicly, it's within your rights under gpl to garner a copy of that derivative from the person responsible for that webserver.
+    return "<p align='center'>Remember, if you see any specific instance of this software running publicly, it's within your rights under gpl to garner a copy of that derivative from the person responsible for that webserver.<br />
     <a href='http://www.tbdev.net'><img src='{$TBDEV['pic_base_url']}tbdev_btn_red.png' border='0' alt='Powered By TBDev &copy;2010' title='Powered By TBDev &copy;2010' /></a></p>
     </td></tr></table>\n
     </body></html>\n";
 }
 
-function genbark($x,$y) {
-    stdhead($y);
-    print("<h2>" . htmlspecialchars($y) . "</h2>\n");
-    print("<p>" . htmlspecialchars($x) . "</p>\n");
-    stdfoot();
-    exit();
-}
-/*
-function mksecret()
-{
-   $ret = substr(md5(uniqid(mt_rand())), 0, 20);
-   return $ret;
-}
-*/
 
 function httperr($code = 404) {
     header("HTTP/1.0 404 Not found");

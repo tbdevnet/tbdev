@@ -27,10 +27,6 @@ loggedinorreturn();
 
 $lang = array_merge( load_language('global'), load_language('userdetails') );
 
-function bark($msg)
-{
-  stderr("{$lang['userdetails_error']}", $msg);
-}
 
 function maketable($res)
     {
@@ -75,12 +71,12 @@ function maketable($res)
     $id = 0 + $_GET["id"];
 
     if (!is_valid_id($id))
-      bark("{$lang['userdetails_bad_id']}");
+      stderr("{$lang['userdetails_error']}", "{$lang['userdetails_bad_id']}");
     
     
     
     $r = @mysql_query("SELECT * FROM users WHERE id=$id") or sqlerr();
-    $user = mysql_fetch_assoc($r) or bark("{$lang['userdetails_no_user']}");
+    $user = mysql_fetch_assoc($r) or stderr("{$lang['userdetails_error']}", "{$lang['userdetails_no_user']}");
     if ($user["status"] == "pending") die;
     $r = mysql_query("SELECT t.id, t.name, t.seeders, t.leechers, c.name AS cname, c.image FROM torrents t LEFT JOIN categories c ON t.category = c.id WHERE t.owner = $id ORDER BY t.name") or sqlerr(__FILE__,__LINE__);
     if (mysql_num_rows($r) > 0)

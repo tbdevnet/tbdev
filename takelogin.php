@@ -31,25 +31,20 @@ require_once "include/password_functions.php";
     dbconn();
     
     $lang = array_merge( load_language('global'), load_language('takelogin') );
-    
-    function bark($text = 'Username or password incorrect')
-    {
-      global $lang;
-      stderr($lang['tlogin_failed'], $text);
-    }
+
 
     $res = mysql_query("SELECT id, passhash, secret, enabled FROM users WHERE username = " . sqlesc($username) . " AND status = 'confirmed'");
     $row = mysql_fetch_assoc($res);
 
     if (!$row)
-      bark();
+      stderr($lang['tlogin_failed'], 'Username or password incorrect');
     
     if ($row['passhash'] != make_passhash( $row['secret'], md5($password) ) )
     //if ($row['passhash'] != md5($row['secret'] . $password))
-      bark();
+      stderr($lang['tlogin_failed'], 'Username or password incorrect');
 
     if ($row['enabled'] == 'no')
-      bark($lang['tlogin_disabled']);
+      stderr($lang['tlogin_failed'], $lang['tlogin_disabled']);
 
     logincookie($row['id'], $row['passhash']);
 

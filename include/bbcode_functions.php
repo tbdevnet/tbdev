@@ -105,7 +105,7 @@ function format_comment($text, $strip_html = true)
 	$s = str_replace(";)", ":wink:", $s);
 
 	if ($strip_html)
-		$s = htmlentities($s, ENT_QUOTES);
+		$s = htmlentities($s, ENT_QUOTES, 'UTF-8');
 
   if( preg_match( "#function\s*\((.*?)\|\|#is", $s ) )
   {

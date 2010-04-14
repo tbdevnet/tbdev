@@ -20,9 +20,6 @@ require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
 require_once "include/password_functions.php";
 
-function bark($msg) {
-	genbark($msg, "Update failed!");
-}
 
 dbconn();
 
@@ -31,7 +28,7 @@ loggedinorreturn();
     $lang = array_merge( load_language('global'), load_language('takeprofedit') );
     
     if (!mkglobal("email:chpassword:passagain:chmailpass"))
-      bark($lang['takeprofedit_no_data']);
+      stderr("Update failed!", $lang['takeprofedit_no_data']);
 
     // $set = array();
 
@@ -41,9 +38,9 @@ loggedinorreturn();
     if ($chpassword != "") 
     {
       if (strlen($chpassword) > 40)
-        bark($lang['takeprofedit_pass_long']);
+        stderr("Update failed!", $lang['takeprofedit_pass_long']);
       if ($chpassword != $passagain)
-        bark($lang['takeprofedit_pass_not_match']);
+        stderr("Update failed!", $lang['takeprofedit_pass_not_match']);
       
       $secret = mksecret();
 
@@ -57,10 +54,10 @@ loggedinorreturn();
     if ($email != $CURUSER["email"]) 
     {
       if (!validemail($email))
-        bark($lang['takeprofedit_not_valid_email']);
+        stderr("Update failed!", $lang['takeprofedit_not_valid_email']);
       $r = mysql_query("SELECT id FROM users WHERE email=" . sqlesc($email)) or sqlerr();
       if ( mysql_num_rows($r) > 0 || ($CURUSER["passhash"] != make_passhash( $CURUSER['secret'], md5($chmailpass) ) ) )
-        bark($lang['takeprofedit_address_taken']);
+        stderr("Update failed!", $lang['takeprofedit_address_taken']);
       $changedemail = 1;
     }
 
