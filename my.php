@@ -26,17 +26,6 @@ dbconn(false);
 loggedinorreturn();
 
     $lang = array_merge( load_language('global'), load_language('my') );
-/*
-$res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location IN ('in', 'both')") or print(mysql_error());
-$arr = mysql_fetch_row($res);
-$messages = $arr[0];
-$res = mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND location IN ('in', 'both') AND unread='yes'") or print(mysql_error());
-$arr = mysql_fetch_row($res);
-$unread = $arr[0];
-$res = mysql_query("SELECT COUNT(*) FROM messages WHERE sender=" . $CURUSER["id"] . " AND location IN ('out', 'both')") or print(mysql_error());
-$arr = mysql_fetch_row($res);
-$outmessages = $arr[0];
-*/
 
 
     $HTMLOUT = '';
@@ -96,8 +85,7 @@ $outmessages = $arr[0];
       <a href='users.php'>{$lang['my_search']}</a>
       </td>
     <td>
-      <form method='post' action='takeprofedit.php'>
-      <table border='1' cellspacing='0' cellpadding='5' width='100%'>";
+      <form method='post' action='takeprofedit.php'>";
 
 
     /***********************
@@ -191,16 +179,17 @@ $outmessages = $arr[0];
         }
         
         
-    $HTMLOUT .= tr($lang['my_accept_pm'],
-    "<input type='radio' name='acceptpms'" . ($CURUSER["acceptpms"] == "yes" ? " checked='checked'" : "") . " value='yes' />{$lang['my_except_blocks']}
-    <input type='radio' name='acceptpms'" .  ($CURUSER["acceptpms"] == "friends" ? " checked='checked'" : "") . " value='friends' />{$lang['my_only_friends']}
-    <input type='radio' name='acceptpms'" .  ($CURUSER["acceptpms"] == "no" ? " checked='checked'" : "") . " value='no' />{$lang['my_only_staff']}"
-    ,1);
+    $HTMLOUT .= "<fieldset><legend><strong>{$lang['my_accept_pm']}</strong></legend>
+    <label><input type='radio' name='acceptpms'" . ($CURUSER["acceptpms"] == "yes" ? " checked='checked'" : "") . " value='yes' />{$lang['my_except_blocks']}</label>
+    <label><input type='radio' name='acceptpms'" .  ($CURUSER["acceptpms"] == "friends" ? " checked='checked'" : "") . " value='friends' />{$lang['my_only_friends']}</label>
+    <label><input type='radio' name='acceptpms'" .  ($CURUSER["acceptpms"] == "no" ? " checked='checked'" : "") . " value='no' />{$lang['my_only_staff']}</label></fieldset>";
 
 
 
-    $HTMLOUT .= tr($lang['my_delete_pms'], "<input type='checkbox' name='deletepms'" . ($CURUSER["deletepms"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_default_delete']}",1);
-    $HTMLOUT .= tr($lang['my_save_pms'], "<input type='checkbox' name='savepms'" . ($CURUSER["savepms"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_default_save']}",1);
+    $HTMLOUT .= "<fieldset><legend><strong>{$lang['my_delete_pms']}</strong></legend>
+    <label><input type='checkbox' name='deletepms'" . ($CURUSER["deletepms"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_default_delete']}</label></fieldset>";
+    $HTMLOUT .= "<fieldset><legend><strong>{$lang['my_save_pms']}</strong></legend>
+    <label><input type='checkbox' name='savepms'" . ($CURUSER["savepms"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_default_save']}</label></fieldset>";
     
     $categories = '';
     
@@ -213,37 +202,45 @@ $outmessages = $arr[0];
       while ($a = mysql_fetch_assoc($r))
       {
         $categories .=  ($i && $i % 2 == 0) ? "</tr><tr>" : "";
-        $categories .= "<td class='bottom' style='padding-right: 5px'><input name='cat{$a['id']}' type='checkbox' " . (strpos($CURUSER['notifs'], "[cat{$a['id']}]") !== false ? " checked='checked'" : "") . " value='yes' />&nbsp;" . htmlspecialchars($a["name"]) . "</td>\n";
+        $categories .= "<td class='bottom' style='padding-right: 5px'><label><input name='cat{$a['id']}' type='checkbox' " . (strpos($CURUSER['notifs'], "[cat{$a['id']}]") !== false ? " checked='checked'" : "") . " value='yes' />&nbsp;" . htmlspecialchars($a["name"]) . "</label></td>\n";
         ++$i;
       }
       $categories .= "</tr></table>\n";
     }
 
-    $HTMLOUT .= tr($lang['my_email_notif'], "<input type='checkbox' name='pmnotif'" . (strpos($CURUSER['notifs'], "[pm]") !== false ? " checked='checked'" : "") . " value='yes' /> {$lang['my_notify_pm']}<br />\n" .
-       "<input type='checkbox' name='emailnotif'" . (strpos($CURUSER['notifs'], "[email]") !== false ? " checked='checked'" : "") . " value='yes' /> {$lang['my_notify_torrent']}\n"
-       , 1);
-    $HTMLOUT .= tr($lang['my_browse'],$categories,1);
-    $HTMLOUT .= tr($lang['my_stylesheet'], "<select name='stylesheet'>\n$stylesheets\n</select>",1);
-    $HTMLOUT .= tr($lang['my_language'], "Engrish",1);
-    $HTMLOUT .= tr($lang['my_country'], "<select name='country'>\n$countries\n</select>",1);
+    $HTMLOUT .= "<fieldset><legend><strong>{$lang['my_email_notif']}</strong></legend>
+    <label><input type='checkbox' name='pmnotif'" . (strpos($CURUSER['notifs'], "[pm]") !== false ? " checked='checked'" : "") . " value='yes' /> {$lang['my_notify_pm']}</label><br />
+       <label><input type='checkbox' name='emailnotif'" . (strpos($CURUSER['notifs'], "[email]") !== false ? " checked='checked'" : "") . " value='yes' /> {$lang['my_notify_torrent']}</label></fieldset>
+    <fieldset><legend><strong>{$lang['my_browse']}</strong></legend>$categories</fieldset>
+    <fieldset><legend><strong>{$lang['my_stylesheet']}</strong></legend><select name='stylesheet'>\n$stylesheets\n</select></fieldset>
+    <fieldset><legend><strong>{$lang['my_language']}</strong></legend>Engrish</fieldset>
+    <fieldset><legend><strong>{$lang['my_country']}</strong></legend><select name='country'>\n$countries\n</select></fieldset>
 
-    // Timezone stuff //
-    $HTMLOUT .= tr($lang['my_tz'], $time_select ,1);
-    $HTMLOUT .= tr($lang['my_checkdst'], "<input type='checkbox' name='checkdst' id='tz-checkdst' onclick='daylight_show()' value='1' $dst_correction />&nbsp;{$lang['my_auto_dst']}<br />
-    <div id='tz-checkmanual' style='display: none;'><input type='checkbox' name='manualdst' value='1' $dst_check />&nbsp;{$lang['my_is_dst']}</div>",1);
-    // Timezone stuff end //
+    <!-- Timezone stuff -->
+    <fieldset><legend><strong>{$lang['my_tz']}</strong></legend>$time_select</fieldset>
+    <fieldset><legend><strong>{$lang['my_checkdst']}</strong></legend>
+    <label><input type='checkbox' name='checkdst' id='tz-checkdst' onclick='daylight_show()' value='1' $dst_correction />&nbsp;{$lang['my_auto_dst']}</label><br />
+    <div id='tz-checkmanual' style='display: none;'>
+    <label><input type='checkbox' name='manualdst' value='1' $dst_check />&nbsp;{$lang['my_is_dst']}</label>
+    </div></fieldset>
+    <!-- Timezone stuff end -->
 
-    $HTMLOUT .= tr($lang['my_avatar'], "<input name='avatar' size='50' value='" . htmlspecialchars($CURUSER["avatar"]) .
-      "' /><br />\n{$lang['my_avatar_info']}",1);
-    $HTMLOUT .= tr($lang['my_tor_perpage'], "<input type='text' size='10' name='torrentsperpage' value='$CURUSER[torrentsperpage]' /> {$lang['my_default']}",1);
-    $HTMLOUT .= tr($lang['my_top_perpage'], "<input type='text' size='10' name='topicsperpage' value='$CURUSER[topicsperpage]' /> {$lang['my_default']}",1);
-    $HTMLOUT .= tr($lang['my_post_perpage'], "<input type='text' size='10' name='postsperpage' value='$CURUSER[postsperpage]' /> {$lang['my_default']}",1);
-    $HTMLOUT .= tr($lang['my_view_avatars'], "<input type='checkbox' name='avatars'" . ($CURUSER["avatars"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_low_bw']}",1);
-    $HTMLOUT .= tr($lang['my_info'], "<textarea name='info' cols='50' rows='4'>" . htmlentities($CURUSER["info"], ENT_QUOTES) . "</textarea><br />{$lang['my_tags']}", 1);
-    $HTMLOUT .= tr($lang['my_email'], "<input type='text' name='email' size='50' value='" . htmlspecialchars($CURUSER["email"]) . "' /><br />{$lang['my_email_pass']}<br /><input type='password' name='chmailpass' size='50' />", 1);
-    $HTMLOUT .= "<tr><td colspan='2' align='left'>{$lang['my_note']}</td></tr>\n";
-    $HTMLOUT .= tr($lang['my_chpass'], "<input type='password' name='chpassword' size='50' />", 1);
-    $HTMLOUT .= tr($lang['my_pass_again'], "<input type='password' name='passagain' size='50' />", 1);
+    <fieldset><legend><strong>{$lang['my_avatar']}</strong></legend>
+    <input name='avatar' size='50' value='". htmlspecialchars($CURUSER["avatar"])."' /><br />\n{$lang['my_avatar_info']}</fieldset>
+    <fieldset><legend><strong>{$lang['my_tor_perpage']}</strong></legend>
+    <input type='text' size='10' name='torrentsperpage' value='$CURUSER[torrentsperpage]' /> {$lang['my_default']}</fieldset>
+    <fieldset><legend><strong>{$lang['my_top_perpage']}</strong></legend><input type='text' size='10' name='topicsperpage' value='$CURUSER[topicsperpage]' /> {$lang['my_default']}</fieldset>
+    <fieldset><legend><strong>{$lang['my_post_perpage']}</strong></legend><input type='text' size='10' name='postsperpage' value='$CURUSER[postsperpage]' /> {$lang['my_default']}</fieldset>
+    <fieldset><legend><strong>{$lang['my_view_avatars']}</strong></legend>
+    <label><input type='checkbox' name='avatars'" . ($CURUSER["avatars"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_low_bw']}</label></fieldset>
+    <fieldset><legend><strong>{$lang['my_info']}</strong></legend>
+    <textarea name='info' cols='50' rows='4'>" . htmlentities($CURUSER["info"], ENT_QUOTES) . "</textarea><br />{$lang['my_tags']}</fieldset>
+    <fieldset><legend><strong>{$lang['my_email']}</strong></legend>
+    <input type='text' name='email' size='50' value='" . htmlspecialchars($CURUSER["email"]) . "' /><br />{$lang['my_email_pass']}<br /><input type='password' name='chmailpass' size='50' />
+    <br />{$lang['my_note']}</fieldset>
+    <fieldset><legend><strong>{$lang['my_chpass']}</strong></legend><input type='password' name='chpassword' size='50' />
+    <br />{$lang['my_pass_again']}
+    <br /><input type='password' name='passagain' size='50' /></fieldset>";
 
     function priv($name, $descr) {
       global $CURUSER;
@@ -255,11 +252,10 @@ $outmessages = $arr[0];
     /* tr("Privacy level",  priv("normal", "Normal") . " " . priv("low", "Low (email address will be shown)") . " " . priv("strong", "Strong (no info will be made available)"), 1); */
 
 
-    $HTMLOUT .= "<tr><td colspan='2' align='center'>
+    $HTMLOUT .= "<br /><fieldset><div align='center'>
       <input type='submit' value='{$lang['my_submit']}' class='btn' /> 
       <input type='reset' value='{$lang['my_revert']}' class='btn' />
-      </td></tr>
-      </table>
+      </div></fieldset>
       </form>
     </td>
     </tr>

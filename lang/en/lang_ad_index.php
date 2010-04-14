@@ -14,6 +14,7 @@ $lang = array(
 'index_user_search' => 'User search',
 'index_mysql_overview' => 'Mysql Overview',
 'index_mysql_stats' => 'Mysql Stats',
+'index_stats_extra' => 'Stats Extra',
 'index_forummanage' => 'Forum manage',
 'index_categories' => 'Edit categories',
 'index_newusers' => 'New users',
