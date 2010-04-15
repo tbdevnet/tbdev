@@ -137,8 +137,8 @@ function userlogin() {
     $row['ip'] = $ip;
     $GLOBALS["CURUSER"] = $row;
     
-    $GLOBALS['CURUSER']['group'] = $TBDEV['groups'][$row['class']];
-    $GLOBALS['CURUSER']['ismod'] = ( $GLOBALS['CURUSER']['group']['g_is_mod'] OR $GLOBALS['CURUSER']['group']['g_is_supmod'] ) ? 1:0;
+    //$GLOBALS['CURUSER']['group'] = $TBDEV['groups'][$row['class']];
+    //$GLOBALS['CURUSER']['ismod'] = ( $GLOBALS['CURUSER']['group']['g_is_mod'] OR $GLOBALS['CURUSER']['group']['g_is_supmod'] ) ? 1:0;
 }
 
 function autoclean() {
