@@ -163,7 +163,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $arr = mysql_fetch_assoc($res) or die("{$lang['forum_functions_badid']}");
 
-      $forumname = $arr["name"];
+      $forumname = htmlspecialchars($arr["name"], ENT_QUOTES, 'UTF-8');
 
       $htmlout .= "<p style='text-align:center;'>{$lang['forum_functions_newtopic']}<a href='forums.php?action=viewforum&amp;forumid=$id'>$forumname</a>{$lang['forum_functions_forum']}</p>\n";
     }
@@ -173,7 +173,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $arr = mysql_fetch_assoc($res) or stderr("{$lang['forum_functions_error']}", "{$lang['forum_functions_topic']}");
 
-      $subject = htmlentities($arr["subject"], ENT_QUOTES);
+      $subject = htmlspecialchars($arr["subject"], ENT_QUOTES, 'UTF-8');
 
       $htmlout .= "<p style='text-align:center;'>{$lang['forum_functions_reply']}<a href='forums.php?action=viewtopic&amp;topicid=$id'>$subject</a></p>";
     }

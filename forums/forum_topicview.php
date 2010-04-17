@@ -41,7 +41,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $arr = mysql_fetch_assoc($res) or stderr("{$lang['forum_topic_view_forum_error']}", "{$lang['forum_topic_view_notfound']}");
 
     $locked = ($arr["locked"] == 'yes');
-    $subject = htmlentities($arr["subject"], ENT_QUOTES);
+    $subject = htmlspecialchars($arr["subject"], ENT_QUOTES, 'UTF-8');
     $sticky = $arr["sticky"] == "yes";
     $forumid = $arr["forumid"];
     $maypost = false;
