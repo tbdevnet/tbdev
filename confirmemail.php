@@ -17,6 +17,7 @@
 +------------------------------------------------
 */
 require_once "include/bittorrent.php";
+require_once "include/user_functions.php";
 
     $lang = array_merge( load_language('global'), load_language('confirmemail') );
     
@@ -49,8 +50,8 @@ dbconn();
     if (!$row)
       stderr("{$lang['confirmmail_user_error']}", "{$lang['confirmmail_not_complete']}");
 
-    $sec = hash_pad($row["editsecret"]);
-    
+    //$sec = hash_pad($row["editsecret"]);
+    $sec = $row['editsecret'];
     if (preg_match('/^ *$/s', $sec))
       stderr("{$lang['confirmmail_user_error']}", "{$lang['confirmmail_not_complete']}");
       

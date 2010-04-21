@@ -177,7 +177,7 @@ loggedinorreturn();
                         $lang['takeprofedit_email_body']);
       
       
-      mail($email, "$thisdomain {$lang['takeprofedit_confirm']}", $body, "From: {$TBDEV['site_email']}");
+      mail($email, "{$TBDEV['site_name']} {$lang['takeprofedit_confirm']}", $body, "From: {$TBDEV['site_email']}");
 
       $urladd .= "&mailsent=1";
     }
