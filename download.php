@@ -23,7 +23,8 @@ dbconn();
 
 loggedinorreturn();
 
-  $lang = load_language('download');
+  //$lang = load_language('download');
+  $lang = array_merge( load_language('global'), load_language('download') );
   
   $id = isset($_GET['torrent']) ? intval($_GET['torrent']) : 0;
 

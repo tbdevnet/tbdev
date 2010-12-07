@@ -30,7 +30,7 @@ require_once("include/config.php");
 
     $res = @mysql_query( "SELECT info_hash, seeders, leechers, times_completed FROM torrents WHERE " . hash_where( $_GET['info_hash']) );
     
-    if( mysql_num_rows($res) )
+    if( !mysql_num_rows($res) )
       error('No torrent with that hash found');
     
     $benc = 'd5:files';

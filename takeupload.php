@@ -20,7 +20,7 @@ require_once("include/benc.php");
 require_once("include/bittorrent.php");
 require_once "include/user_functions.php";
 
-@ini_set("upload_max_filesize",$TBDEV['max_torrent_size']);
+//@ini_set("upload_max_filesize",$TBDEV['max_torrent_size']);
 
 
 dbconn(); 
@@ -95,6 +95,8 @@ loggedinorreturn();
 
 
     function dict_check($d, $s) {
+      global $lang;
+      
       if ($d["type"] != "dictionary")
         stderr($lang['takeupload_failed'], $lang['takeupload_not_dict']);
       $a = explode(":", $s);
@@ -121,6 +123,8 @@ loggedinorreturn();
     }
 
     function dict_get($d, $k, $t) {
+      global $lang;
+      
       if ($d["type"] != "dictionary")
         stderr($lang['takeupload_failed'], $lang['takeupload_not_dict']);
       $dd = $d["value"];

@@ -43,7 +43,7 @@ $TBDEV['time_date'] = '';
 $TBDEV['mysql_host'] = "localhost";
 $TBDEV['mysql_user'] = "root";
 $TBDEV['mysql_pass'] = "blank";
-$TBDEV['mysql_db']   = "tb";
+$TBDEV['mysql_db']   = "test";
 
 // Cookie setup
 $TBDEV['cookie_prefix']  = 'tbalpha_'; // This allows you to have multiple trackers, eg for demos, testing etc.
@@ -85,7 +85,7 @@ $TBDEV['announce_urls'][] = "http://localhost/TB_ALPHA/announce.php";
 if ($_SERVER["HTTP_HOST"] == "")
   $_SERVER["HTTP_HOST"] = $_SERVER["SERVER_NAME"];
   
-$TBDEV['baseurl'] = "http://" . $_SERVER["HTTP_HOST"]."/TB_ALPHA";
+$TBDEV['baseurl'] = "http://" . $_SERVER["HTTP_HOST"]."/tb_new";
 
 /*
 ## DO NOT UNCOMMENT THIS: IT'S FOR LATER USE!
@@ -114,6 +114,11 @@ $TBDEV['site_email'] = "coldfusion@localhost";
 $TBDEV['site_name'] = "TBDEV.NET";
 
 $TBDEV['language'] = 'en';
+//charset
+$TBDEV['char_set'] = 'UTF-8'; //also to be used site wide in meta tags
+if (ini_get('default_charset') != $TBDEV['char_set']) {
+ini_set('default_charset',$TBDEV['char_set']);
+
 $TBDEV['msg_alert'] = 0; // saves a query when off
 
 $TBDEV['autoclean_interval'] = 900;
