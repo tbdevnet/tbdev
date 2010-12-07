@@ -170,7 +170,7 @@ function show_form($type='edit')
 		
 		$css = "style='font-weight: bold;color: #ffffff;background-color: #0055A4;padding: 5px;'";
 		$replevid = isset($res['reputationlevelid']) ? $res['reputationlevelid'] : '';
-		$replevel = isset($res['level']) ? $res['level'] : '';
+		$replevel = isset($res['level']) ? htmlspecialchars($res['level']) : '';
 		$minrep = isset($res['minimumreputation']) ? $res['minimumreputation'] : '';
 		$html .= "<form action='reputation_ad.php' name='show_rep_form' method='post'>
 				<input name='reputationlevelid' value='{$replevid}' type='hidden' />
@@ -338,10 +338,10 @@ function show_form_rep()
 		$html .= "<h2>Edit Reputation</h2>";
 		$html .= "<table cellpadding='5px'>";
 
-		$html .= "<tr><td width='37%'>Topic</td><td width='63%'><a href='forums.php?action=viewtopic&amp;topicid={$res['topicid']}&amp;page=p{$res['postid']}#{$res['postid']}' target='_blank'>{$res['subject']}</a></td></tr>";
+		$html .= "<tr><td width='37%'>Topic</td><td width='63%'><a href='forums.php?action=viewtopic&amp;topicid={$res['topicid']}&amp;page=p{$res['postid']}#{$res['postid']}' target='_blank'>".htmlspecialchars($res['subject'])."</a></td></tr>";
 		$html .= "<tr><td>Left By</td><td>{$res['leftby_name']}</td></tr>";
 		$html .= "<tr><td>Left For</td><td width='63%'>{$res['leftfor_name']}</td></tr>";
-		$html .= "<tr><td>Comment</td><td width='63%'><input type='text' name='reason' value='{$res['reason']}' size='35' maxlength='250' /></td></tr>";
+		$html .= "<tr><td>Comment</td><td width='63%'><input type='text' name='reason' value='".htmlspecialchars($res['reason'])."' size='35' maxlength='250' /></td></tr>";
 		$html .= "<tr><td>Reputation</td><td><input type='text' name='reputation' value='{$res['reputation']}' size='35' maxlength='10' /></td></tr>";
 
 		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Save' accesskey='s' class='btn' /> <input type='reset' tabindex='1' value='Reset' accesskey='r' class='btn' /></td></tr>";
@@ -543,7 +543,7 @@ function view_list()
 				$html .= "<td>{$r['dateadd']}</td>";
 				$html .= "<td align='right'>{$r['reputation']}</td>";
 				$html .= "<td><a href='forums.php?action=viewtopic&amp;topicid={$r['topicid']}&amp;page=p{$r['postid']}#{$r['postid']}' target='_blank'>{$r['reason']}</a></td>";
-				$html .= "<td><a href='reputation_ad.php?mode=editrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Edit</span></a>&nbsp;<a href='reputation_ad.php?mode=dodelrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Delete</span></a></td></tr>";
+				$html .= "<td><a href='reputation_ad.php?mode=editrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Edit</span></a>&nbsp;<a href='reputation_ad.php?mode=dodelrep&amp;reputationid=".htmlspecialchars($r['reputationid'])."'><span class='btn'>Delete</span></a></td></tr>";
 				
 			}
 
@@ -613,19 +613,34 @@ function do_edit_rep()
 		{
 			stderr( 'INPUT', 'No ID' );
 		}
-
+/*
 		if( $oldrep != $newrep )
 		{
 			if( $r['reason'] != $reason )
 			{
-				@mysql_query( "UPDATE reputation SET reputation = ".intval($newrep).", reason = ".sqlesc($reason).", WHERE reputationid = ".intval($r['reputationid']) );
+				@mysql_query( "UPDATE reputation SET reputation = ".intval($newrep).", reason = ".sqlesc($reason).". WHERE reputationid = ".intval($r['reputationid']) );
 			}
 
 			$diff = $oldrep - $newrep;
 			@mysql_query( "UPDATE users SET reputation = (reputation-{$diff}) WHERE id=".intval($r['userid']) );
 		
 		}
+*/
+    // untested
+    if( $r['reason'] != $reason || $oldrep != $newrep)
+        {
+        @mysql_query( "UPDATE reputation SET reputation = ".intval($newrep).", reason = ".sqlesc($reason)." WHERE reputationid = ".intval($r['reputationid']) );
+        }
+        
 
+         if( $oldrep != $newrep )
+        {
+
+        $diff = $oldrep - $newrep;
+        @mysql_query( "UPDATE users SET reputation = (reputation-{$diff}) WHERE id=".intval($r['userid']) );
+        
+        } 
+    
 		redirect( "reputation_ad.php?mode=list", "Saved Reputation #ID{$r['reputationid']} Successfully.", 5);
 	}
 

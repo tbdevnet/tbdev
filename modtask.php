@@ -40,17 +40,22 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Fetch current user data...
     $res = mysql_query("SELECT * FROM users WHERE id=".sqlesc($userid)) or sqlerr(__FILE__, __LINE__);
     $user = mysql_fetch_assoc($res) or sqlerr(__FILE__, __LINE__);
-
+    
+    //== Check to make sure your not editing someone of the same or higher class
+    if ($CURUSER["class"] <= $user['class'] && ($CURUSER['id']!= $userid && $CURUSER["class"] < UC_ADMINISTRATOR))
+        stderr('Error','You cannot edit someone of the same or higher class.. injecting stuff arent we? Action logged');
+    
     $updateset = array();
 
-    if ((isset($_POST['modcomment'])) && ($modcomment = $_POST['modcomment'])) ;
-    else $modcomment = "";
+    $modcomment = (isset($_POST['modcomment']) && $CURUSER['class'] == UC_SYSOP) ? $_POST['modcomment'] : $user['modcomment'];
 
     // Set class
 
     if ((isset($_POST['class'])) && (($class = $_POST['class']) != $user['class']))
     {
-    if (($CURUSER['class'] < UC_SYSOP) && ($user['class'] >= $CURUSER['class'])) stderr("{$lang['modtask_user_error']}", "{$lang['modtask_try_again']}");
+      if ($class >= UC_SYSOP || ($class >= $CURUSER['class']) || ($user['class'] >= $CURUSER['class']))
+        stderr("{$lang['modtask_user_error']}", "{$lang['modtask_try_again']}");
+      if (!is_valid_user_class($class) || $CURUSER["class"] <= $_POST['class']) stderr( ("Error"), "Bad class :P");
 
     // Notify user
     $what = ($class > $user['class'] ? "{$lang['modtask_promoted']}" : "{$lang['modtask_demoted']}");
@@ -95,7 +100,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     $dur = $warnlength . "{$lang['modtask_week']}" . ($warnlength > 1 ? "s" : "");
     $msg = sqlesc(sprintf($lang['modtask_warning_duration'], $dur).$CURUSER['username'].($warnpm ? "\n\nReason: $warnpm" : ""));
     $modcomment = get_date( time(), 'DATE', 1 ) . sprintf($lang['modtask_warned_for'], $dur) . $CURUSER['username'] . ".\n{$lang['modtask_reason']} $warnpm\n" . $modcomment;
-    $updateset[] = "warneduntil = ".$warneduntil;
+    $updateset[] = "warneduntil = ".sqlesc($warneduntil);
     }
     $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -106,7 +111,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     if (isset($_POST['donor']) && (($donor = $_POST['donor']) != $user['donor']))
     {
     $updateset[] = "donor = " . sqlesc($donor);
-    $updateset[] = "warneduntil = 0";
+    $updateset[] = "donerduntil = 0";
     if ($donor == 'no')
     {
     $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_donor_removed']}".$CURUSER['username'].".\n". $modcomment;
@@ -131,7 +136,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     $dur = $donorlength . "{$lang['modtask_week']}" . ($donorlength > 1 ? "s" : "");
     $msg = sqlesc(sprintf($lang['modtask_donor_duration'], $dur) . $CURUSER['username']);
     $modcomment = get_date( time(), 'DATE', 1 ) . sprintf($lang['modtask_donor_for'], $dur) . $CURUSER['username']."\n".$modcomment;
-    $updateset[] = "donoruntil = ".$donoruntil;
+    $updateset[] = "donoruntil = ".sqlesc($donoruntil);
     }
     $added = time();
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
@@ -290,8 +295,8 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
             $image['img_height'] = $img_size[1];
           }
       
-        $updateset[] = "av_w = " . $image['img_width'];
-        $updateset[] = "av_h = " . $image['img_height'];
+        $updateset[] = "av_w = " . sqlesc($image['img_width']);
+        $updateset[] = "av_h = " . sqlesc($image['img_height']);
       }
       
       $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_avatar_change']}".htmlspecialchars($curavatar)."{$lang['modtask_to']}".htmlspecialchars($avatar)."{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
@@ -322,10 +327,14 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     } */
 
     // Add ModComment to the update set...
+    // Add ModComment... (if we changed something we update otherwise we dont include this..)
+    if (($CURUSER['class'] == UC_SYSOP && ($user['modcomment'] != $_POST['modcomment'] || $modcomment!=$_POST['modcomment'])) || ($CURUSER['class']<UC_SYSOP && $modcomment != $user['modcomment']))
     $updateset[] = "modcomment = " . sqlesc($modcomment);
 
-    mysql_query("UPDATE users SET " . implode(", ", $updateset) . " WHERE id=".sqlesc($userid)) or sqlerr(__FILE__, __LINE__);
-
+    //mysql_query("UPDATE users SET " . implode(", ", $updateset) . " WHERE id=".sqlesc($userid)) or sqlerr(__FILE__, __LINE__);
+    if (sizeof($updateset)>0) 
+      @mysql_query("UPDATE users SET  " . implode(", ", $updateset) . " WHERE id=$userid") or sqlerr(__FILE__, __LINE__);
+   
     $returnto = $_POST["returnto"];
     header("Location: {$TBDEV['baseurl']}/$returnto");
 

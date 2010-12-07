@@ -95,6 +95,8 @@ function dbconn($autoclean = false)
     mysql_select_db($TBDEV['mysql_db'])
         or die('dbconn: mysql_select_db: ' . mysql_error());
     //mysql_query("SET NAMES utf8");
+    mysql_set_charset('utf8');
+    
     userlogin();
 
     if ($autoclean)
