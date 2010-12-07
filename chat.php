@@ -26,7 +26,7 @@ loggedinorreturn();
     $lang = array_merge( load_language('global'), load_language('chat') );
     
     $nick = ($CURUSER ? $CURUSER['username'] : ('Guest' . rand(1000, 9999)));
-    $irc_url = 'apollo.wyldryde.org';
+    $irc_url = 'efnet.port80.se';
     $irc_channel = '#TBDEVNET';
 
 
@@ -38,7 +38,7 @@ loggedinorreturn();
     <div class='borderwrap' align='center'>
     <div class='maintitle'>{$TBDEV['site_name']}</div>
     <div class='row1' align='center'>
-    <applet code='IRCApplet.class' codebase='./javairc/' archive='irc.jar,pixx.jar' width='640' height='400'>
+    <applet code='IRCApplet.class' codebase='./javairc' archive='irc.jar,pixx.jar' width='640' height='400'>
       <param name='CABINETS' value='irc.cab,securedirc.cab,pixx.cab' />
       <param name='nick' value='{$nick}' />
       <param name='alternatenick' value='{$nick}???' />
