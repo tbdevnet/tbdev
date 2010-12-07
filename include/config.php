@@ -118,7 +118,7 @@ $TBDEV['language'] = 'en';
 $TBDEV['char_set'] = 'UTF-8'; //also to be used site wide in meta tags
 if (ini_get('default_charset') != $TBDEV['char_set']) {
 ini_set('default_charset',$TBDEV['char_set']);
-
+}
 $TBDEV['msg_alert'] = 0; // saves a query when off
 
 $TBDEV['autoclean_interval'] = 900;
