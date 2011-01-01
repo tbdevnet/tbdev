@@ -303,6 +303,7 @@ $TABLE[] = "CREATE TABLE users (
   enabled enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   avatars enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
   donor enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  donoruntil int(11) NOT NULL DEFAULT '0',
   warned enum('yes','no') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
   warneduntil int(11) NOT NULL DEFAULT '0',
   torrentsperpage int(3) unsigned NOT NULL DEFAULT '0',
