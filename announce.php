@@ -35,10 +35,7 @@ $agent = $_SERVER["HTTP_USER_AGENT"];
 
 // Deny access made with a browser...
 if (
-    ereg("^Mozilla\\/", $agent) || 
-    ereg("^Opera\\/", $agent) || 
-    ereg("^Links ", $agent) || 
-    ereg("^Lynx\\/", $agent) || 
+    preg_match('%^Mozilla/|^Opera/|^Links |^Lynx/%i', $agent) || 
     isset($_SERVER['HTTP_COOKIE']) || 
     isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) || 
     isset($_SERVER['HTTP_ACCEPT_CHARSET'])
@@ -165,8 +162,7 @@ function portblacklisted($port)
 /////////////////////// FUNCTION DEFS END ///////////////////////////////
 
 $parts = array();
-$pattern = '[0-9a-fA-F]{32}';
-if( !isset($_GET['passkey']) OR !ereg($pattern, $_GET['passkey'], $parts) ) 
+if( !isset($_GET['passkey']) OR !preg_match('/^[0-9a-fA-F]{32}$/i', $_GET['passkey'], $parts) ) 
 		err("Invalid Passkey");
 	else
 		$GLOBALS['passkey'] = $parts[0];
@@ -325,7 +321,7 @@ $peer_ip = pack("C*", $peer_ip[0], $peer_ip[1], $peer_ip[2], $peer_ip[3]);
 
 $peer_port = pack("n*", (int)$row["port"]);
 
-$time = intval((time() % 7680) / 60);
+$time = intval((TIME_NOW % 7680) / 60);
 
 if($_GET['left'] == 0)
 
@@ -405,7 +401,7 @@ if ($valid[0] >= 3 && $seeder == 'yes') err("Connection limit exceeded!");
 	if ($left > 0 && $user['class'] < UC_VIP && $TBDEV['user_ratios'])
 	{
 		$gigs = $user["uploaded"] / (1024*1024*1024);
-		$elapsed = floor((time() - $torrent["ts"]) / 3600);
+		$elapsed = floor((TIME_NOW - $torrent["ts"]) / 3600);
 		$ratio = (($user["downloaded"] > 0) ? ($user["uploaded"] / $user["downloaded"]) : 1);
 		if ($ratio < 0.5 || $gigs < 5) $wait = 48;
 		elseif ($ratio < 0.65 || $gigs < 6.5) $wait = 24;
@@ -451,8 +447,8 @@ else
 
 	if (isset($self))
 	{
-		mysql_query("UPDATE peers SET uploaded = $uploaded, downloaded = $downloaded, to_go = $left, last_action = ".time().", seeder = '$seeder'"
-			. ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . time() : "") . " WHERE $selfwhere");
+		mysql_query("UPDATE peers SET uploaded = $uploaded, downloaded = $downloaded, to_go = $left, last_action = ".TIME_NOW.", seeder = '$seeder'"
+			. ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . TIME_NOW : "") . " WHERE $selfwhere");
 		if (mysql_affected_rows() && $self["seeder"] != $seeder)
 		{
 			if ($seeder == "yes")
@@ -492,7 +488,7 @@ else
       $connectable = 'yes';
 		}
 
-		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, ".time().", ".time().", '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
+		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, ".TIME_NOW.", ".TIME_NOW.", '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
 		
 		if ($ret)
 		{
@@ -508,7 +504,7 @@ if ($seeder == "yes")
 {
 	if ($torrent["banned"] != "yes")
 		$updateset[] = "visible = 'yes'";
-	$updateset[] = "last_action = ".time();
+	$updateset[] = "last_action = ".TIME_NOW;
 }
 
 if (count($updateset))
