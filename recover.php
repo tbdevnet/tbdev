@@ -111,7 +111,7 @@ $body = sprintf($lang['email_request'], $email, $_SERVER["REMOTE_ADDR"], $TBDEV[
     {
 
     if (isset($_SESSION['captcha_time']))
-    (time() - $_SESSION['captcha_time'] < 10) ? exit($lang['captcha_spam']) : NULL;
+    (TIME_NOW - $_SESSION['captcha_time'] < 10) ? exit($lang['captcha_spam']) : NULL;
       
       
     $HTMLOUT = '';
@@ -128,7 +128,7 @@ $body = sprintf($lang['email_request'], $email, $_SERVER["REMOTE_ADDR"], $TBDEV[
         <td>
           <div id='captchaimage'>
           <a href='recover.php' onclick=\"refreshimg(); return false;\" title='{$lang['captcha_refresh']}'>
-          <img class='cimage' src='captcha/GD_Security_image.php?".time()."' alt='{$lang['captcha_imagealt']}' />
+          <img class='cimage' src='captcha/GD_Security_image.php?".TIME_NOW."' alt='{$lang['captcha_imagealt']}' />
           </a>
           </div>
          </td>

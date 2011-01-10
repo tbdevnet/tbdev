@@ -133,9 +133,9 @@ function std_view() {
 
     $forumid = $forums_arr["id"];
 
-    $forumname = htmlspecialchars($forums_arr["name"]);
+    $forumname = htmlsafechars($forums_arr["name"]);
 
-    $forumdescription = htmlspecialchars($forums_arr["description"]);
+    $forumdescription = htmlsafechars($forums_arr["description"]);
 
     $topiccount = number_format($forums_arr["topiccount"]);
 
@@ -165,13 +165,13 @@ function std_view() {
 
       //$user_arr = mysql_fetch_assoc($user_res);
 
-      $lastposter = htmlspecialchars($post_arr['username']);
+      $lastposter = htmlsafechars($post_arr['username']);
 
       //$topic_res = mysql_query("SELECT subject FROM topics WHERE id=$lasttopicid") or sqlerr(__FILE__, __LINE__);
 
       //$topic_arr = mysql_fetch_assoc($topic_res);
 
-      $lasttopic = htmlspecialchars($post_arr['subject']);
+      $lasttopic = htmlsafechars($post_arr['subject']);
 
       $lastpost = "<span style='white-space: nowrap;'>$lastpostdate</span><br />" .
       "by <a href='userdetails.php?id=$lastposterid'><b>$lastposter</b></a><br />" .
@@ -182,7 +182,7 @@ function std_view() {
       $a = mysql_fetch_row($r);
 
 	//..rp..
-	$npostcheck = ($post_arr['added'] > (time() - $TBDEV['readpost_expiry'])) ? (!$a OR $lastpostid > $a[0]) : 0;
+	$npostcheck = ($post_arr['added'] > (TIME_NOW - $TBDEV['readpost_expiry'])) ? (!$a OR $lastpostid > $a[0]) : 0;
 	
 	/* if ($a && $a[0] >= $lastpostid)
 	$img = "unlocked";

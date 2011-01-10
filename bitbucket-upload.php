@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_bad_name']}");
 	$tgtfile = "bitbucket/$filename";
 	if (file_exists($tgtfile))
-		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_no_name']}<b>" . htmlspecialchars($filename) . "</b> {$lang['bitbucket_exists']}");
+		stderr("{$lang['bitbucket_failed']}", "{$lang['bitbucket_no_name']}<b>" . htmlsafechars($filename) . "</b> {$lang['bitbucket_exists']}");
 
 	$it = @exif_imagetype($file["tmp_name"]);
 	if ($it != IMAGETYPE_GIF && $it != IMAGETYPE_JPEG && $it != IMAGETYPE_PNG)
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	else
 		stderr("{$lang['bitbucket_error']}", "{$lang['bitbucket_need_extension']}");
 	move_uploaded_file($file["tmp_name"], $tgtfile) or stderr("{$lang['bitbucket_error']}", "{$lang['bitbucket_internal_error2']}");
-	$url = str_replace(" ", "%20", htmlspecialchars("{$TBDEV['baseurl']}/bitbucket/$filename"));
+	$url = str_replace(" ", "%20", htmlsafechars("{$TBDEV['baseurl']}/bitbucket/$filename"));
 	stderr("{$lang['bitbucket_success']}", "{$lang['bitbucket_url']}<b><a href=\"$url\">$url</a></b><p><a href='bitbucket-upload.php'>{$lang['bitbucket_upload_another']}</a>.");
 }
 

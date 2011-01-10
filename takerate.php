@@ -44,7 +44,7 @@ if (!$row)
 
 //if ($row["owner"] == $CURUSER["id"])
 //	bark("{$lang['rate_not_vote_own_torrent']}");
-$time_now = time();
+$time_now = TIME_NOW;
 $res = mysql_query("INSERT INTO ratings (torrent, user, rating, added) VALUES ($id, " . $CURUSER["id"] . ", $rating, $time_now)");
 if (!$res) {
 	if (mysql_errno() == 1062)

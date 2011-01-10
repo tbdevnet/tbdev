@@ -244,7 +244,7 @@ function _torrenttable($res, $frame_caption)
 
       if ($type == 1)
       {
-        $mainquery = "SELECT id as userid, username, added, uploaded, downloaded, uploaded / (".time()." - added) AS upspeed, downloaded / (".time()." - added) AS downspeed FROM users WHERE enabled = 'yes'";
+        $mainquery = "SELECT id as userid, username, added, uploaded, downloaded, uploaded / (".TIME_NOW." - added) AS upspeed, downloaded / (".TIME_NOW." - added) AS downspeed FROM users WHERE enabled = 'yes'";
 
         if (!$limit || $limit > 250)
           $limit = 10;

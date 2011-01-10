@@ -36,7 +36,7 @@ loggedinorreturn();
     {
       $query = "username LIKE " . sqlesc("%$search%") . " AND status='confirmed'";
       if ($search)
-          $q = "search=" . htmlspecialchars($search);
+          $q = "search=" . htmlsafechars($search);
     }
     else
     {
@@ -159,7 +159,7 @@ loggedinorreturn();
     while($row = mysql_fetch_assoc($res))
     {
       
-      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align='center'><img src='{$TBDEV['pic_base_url']}flag/{$row['flagpic']}' alt='". htmlspecialchars($row['name']) ."' /></td>" : "<td align='center'>---</td>";
+      $country = ($row['name'] != NULL) ? "<td style='padding: 0px' align='center'><img src='{$TBDEV['pic_base_url']}flag/{$row['flagpic']}' alt='". htmlsafechars($row['name']) ."' /></td>" : "<td align='center'>---</td>";
     /*    
       if ($row['added'] == '0000-00-00 00:00:00')
         $row['added'] = '-';

@@ -48,7 +48,7 @@ require_once "include/password_functions.php";
 
     logincookie($row['id'], $row['passhash']);
 
-//$returnto = str_replace('&amp;', '&', htmlspecialchars($_POST['returnto']));
+//$returnto = str_replace('&amp;', '&', htmlsafechars($_POST['returnto']));
 //$returnto = $_POST['returnto'];
     //if (!empty($returnto))
       //header("Location: ".$returnto);

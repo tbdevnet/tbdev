@@ -45,7 +45,7 @@ loggedinorreturn();
         $getcat = (isset($_GET["cat"])?$_GET["cat"]:'');
         if ($cat["id"] == $getcat)
             $catdropdown .= " selected='selected'";
-        $catdropdown .= ">" . htmlspecialchars($cat["name"]) . "</option>\n";
+        $catdropdown .= ">" . htmlsafechars($cat["name"]) . "</option>\n";
     }
 
     $deadchkbox = "<input type='checkbox' name='incldead' value='1'";

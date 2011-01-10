@@ -124,7 +124,7 @@ loggedinorreturn();
 
     // $ircnick = $_POST["ircnick"];
     // $ircpass = $_POST["ircpass"];
-    $info = $_POST["info"];
+    $info = strlen($_POST["info"]) <= 1500 ? $_POST['info'] : stderr('User Error', ':p');
     $stylesheet = $_POST["stylesheet"];
     $country = $_POST["country"];
 

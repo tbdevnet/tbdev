@@ -16,8 +16,9 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once("include/bittorrent.php");
+require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
+require_once "include/html_functions.php";
 
 $action = $_GET["action"];
 
@@ -41,12 +42,12 @@ loggedinorreturn();
         if (!$arr)
           stderr("{$lang['comment_error']}", "{$lang['comment_invalid_torrent']}");
 
-        $text = trim($_POST["text"]);
+        $text = trim($_POST["body"]);
         if (!$text)
           stderr("{$lang['comment_error']}", "{$lang['comment_body']}");
 
         @mysql_query("INSERT INTO comments (user, torrent, added, text, ori_text) VALUES (" .
-            $CURUSER["id"] . ",$torrentid, " . time() . ", " . sqlesc($text) .
+            $CURUSER["id"] . ",$torrentid, " . TIME_NOW . ", " . sqlesc($text) .
              "," . sqlesc($text) . ")");
 
         $newid = mysql_insert_id();
@@ -67,12 +68,13 @@ loggedinorreturn();
         stderr("{$lang['comment_error']}", "{$lang['comment_invalid_torrent']}");
       
       $HTMLOUT = '';
-
-      $HTMLOUT .= "<h1>{$lang['comment_add']}\"" . htmlspecialchars($arr["name"]) . "\"</h1>
-      <p><form method='post' action='comment.php?action=add'>
-      <input type='hidden' name='tid' value='{$torrentid}'/>
-      <textarea name='text' rows='10' cols='60'></textarea></p>
-      <p><input type='submit' class='btn' value='{$lang['comment_doit']}' /></p></form>";
+      $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+      
+      $HTMLOUT .= "<h1>{$lang['comment_add']}\"" . htmlsafechars($arr["name"]) . "\"</h1>
+      <form name='bbcode2text' method='post' action='comment.php?action=add'>
+      <input type='hidden' name='tid' value='{$torrentid}'/>";
+      $HTMLOUT .= bbcode2textarea( $lang['comment_doit'] );
+      $HTMLOUT .= "</form>";
 
       $res = mysql_query("SELECT comments.id, text, comments.added, comments.editedby, comments.editedat, username, users.id as user, users.title, users.avatar, users.av_w, users.av_h, users.class, users.donor, users.warned FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $torrentid ORDER BY comments.id DESC LIMIT 5");
 
@@ -88,7 +90,7 @@ loggedinorreturn();
           $HTMLOUT .= commenttable($allrows);
         }
 
-      print stdhead("{$lang['comment_add']}\"" . $arr["name"] . "\"") . $HTMLOUT . stdfoot();
+      print stdhead("{$lang['comment_add']}\"{$arr["name"]}\"", $js) . $HTMLOUT . stdfoot();
       die;
     }
     elseif ($action == "edit")
@@ -107,15 +109,15 @@ loggedinorreturn();
 
       if ($_SERVER["REQUEST_METHOD"] == "POST")
       {
-        $text = $_POST["text"];
-        $returnto = htmlspecialchars($_POST["returnto"]);
+        $text = $_POST['body'];
+        $returnto = htmlsafechars($_POST["returnto"]);
 
         if ($text == "")
           stderr("{$lang['comment_error']}", "{$lang['comment_body']}");
 
         $text = sqlesc($text);
 
-        $editedat = time();
+        $editedat = TIME_NOW;
 
         mysql_query("UPDATE comments SET text=$text, editedat=$editedat, editedby={$CURUSER['id']} WHERE id=$commentid") or sqlerr(__FILE__, __LINE__);
 
@@ -125,17 +127,18 @@ loggedinorreturn();
           header("Location: {$TBDEV['baseurl']}/");      // change later ----------------------
         die;
       }
-
       
+      $returnto = htmlsafechars($_SERVER["HTTP_REFERER"]);
+      $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
       $HTMLOUT = '';
-      $HTMLOUT .= "<h1>{$lang['comment_edit']}\"" . htmlspecialchars($arr["name"]) . "\"</h1><p>
-      <form method='post' action='comment.php?action=edit&amp;cid=$commentid'>
-      <input type='hidden' name='returnto' value='{$_SERVER["HTTP_REFERER"]}' />
-      <input type='hidden' name='cid' value='$commentid' />
-      <textarea name='text' rows='10' cols='60'>" . htmlspecialchars($arr["text"]) . "</textarea></p>
-      <p><input type='submit' class='btn' value='{$lang['comment_doit']}' /></p></form>";
+      $HTMLOUT .= "<h1>{$lang['comment_edit']}\"" . htmlsafechars($arr["name"]) . "\"</h1>
+      <form name='bbcode2text' method='post' action='comment.php?action=edit&amp;cid=$commentid'>
+      <input type='hidden' name='returnto' value='{$returnto}' />
+      <input type='hidden' name='cid' value='$commentid' />";
+      $HTMLOUT .= bbcode2textarea( $lang['comment_doit'], htmlsafechars($arr["text"]) );
+      $HTMLOUT .= "</form>";
 
-      print stdhead("{$lang['comment_edit']}\"" . $arr["name"] . "\"") . $HTMLOUT . stdfoot();
+      print stdhead("{$lang['comment_edit']}\"{$arr["name"]}\"", $js) . $HTMLOUT . stdfoot();
       die;
     }
     elseif ($action == "delete")
@@ -194,18 +197,18 @@ loggedinorreturn();
 
       
       $HTMLOUT = '';
-      $HTMLOUT .= "<h1>{$lang['comment_original_content']}#$commentid</h1><p>
+      $HTMLOUT .= "<h1>{$lang['comment_original_contents']}#$commentid</h1>
       <table width='500' border='1' cellspacing='0' cellpadding='5'>
       <tr><td class='comment'>
-      ".htmlspecialchars($arr["ori_text"])."
-      </td></tr></table>";
+      ".htmlsafechars($arr["ori_text"])."
+      </td></tr></table><br />";
 
-      $returnto = htmlspecialchars($_SERVER["HTTP_REFERER"]);
+      $returnto = htmlsafechars(filter_var($_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING));
 
     //	$returnto = "details.php?id=$torrentid&amp;viewcomm=$commentid#$commentid";
 
       if ($returnto)
-        print("<p><font size='small'>(<a href='$returnto'>{$lang['comment_back']}</a>)</font></p>\n");
+        $HTMLOUT .= "<span class='btn'><a href='$returnto'>{$lang['comment_back']}</a></span>\n";
 
       print stdhead("{$lang['comment_original']}") . $HTMLOUT . stdfoot();
       die;

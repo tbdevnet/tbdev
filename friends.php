@@ -62,7 +62,7 @@ loggedinorreturn();
 
       $r = mysql_query("SELECT id FROM $table_is WHERE userid=$userid AND $field_is=$targetid") or sqlerr(__FILE__, __LINE__);
       if (mysql_num_rows($r) == 1)
-       stderr($lang['friends_error'], sprintf($lang['friends_already'], htmlentities($table_is)));
+       stderr($lang['friends_error'], sprintf($lang['friends_already'], htmlsafechars($table_is)));
        
 
       mysql_query("INSERT INTO $table_is VALUES (0,$userid, $targetid)") or sqlerr(__FILE__, __LINE__);
@@ -75,7 +75,7 @@ loggedinorreturn();
     if ($action == 'delete')
     {
       $targetid = (int)$_GET['targetid'];
-      $sure = isset($_GET['sure']) ? htmlentities($_GET['sure']) : false;
+      $sure = isset($_GET['sure']) ? htmlsafechars($_GET['sure']) : false;
       $type = isset($_GET['type']) ? ($_GET['type'] == 'friend' ? 'friend' : 'block') : stderr($lang['friends_error'], 'LoL');
 
       if (!is_valid_id($targetid))
@@ -138,14 +138,14 @@ loggedinorreturn();
         if (!$title)
           $title = get_user_class_name($friend["class"]);
         
-        $userlink = "<a href='userdetails.php?id={$friend['id']}'><b>".htmlentities($friend['name'], ENT_QUOTES)."</b></a>";
+        $userlink = "<a href='userdetails.php?id={$friend['id']}'><b>".htmlsafechars($friend['name'])."</b></a>";
         $userlink .= get_user_icons($friend) . " ($title)<br />{$lang['friends_last_seen']} " . get_date( $friend['last_access'],'');
         
         $delete = "<span class='btn'><a href='friends.php?id=$userid&amp;action=delete&amp;type=friend&amp;targetid={$friend['id']}'>{$lang['friends_remove']}</a></span>";
           
         $pm = "&nbsp;<span class='btn'><a href='sendmessage.php?receiver={$friend['id']}'>{$lang['friends_pm']}</a></span>";
           
-        $avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($friend["avatar"]) : "");
+        $avatar = ($CURUSER["avatars"] == "yes" ? htmlsafechars($friend["avatar"]) : "");
         if (!$avatar)
           $avatar = "{$TBDEV['pic_base_url']}default_avatar.gif";
           
@@ -183,7 +183,7 @@ loggedinorreturn();
       {
         $blocks .= "<div style='border: 1px solid black;padding:5px;'>";
         $blocks .= "<span class='btn' style='float:right;'><a href='friends.php?id=$userid&amp;action=delete&amp;type=block&amp;targetid={$block['id']}'>{$lang['friends_delete']}</a></span><br />";
-        $blocks .= "<p><a href='userdetails.php?id={$block['id']}'><b>" . htmlentities($block['name'], ENT_QUOTES) . "</b></a>";
+        $blocks .= "<p><a href='userdetails.php?id={$block['id']}'><b>" . htmlsafechars($block['name']) . "</b></a>";
         $blocks .= get_user_icons($block) . "</p></div><br />";
         
       }
@@ -192,7 +192,7 @@ loggedinorreturn();
 //////////////////// ENEMIES BLOCK END ////////////////////////////  
   
     $HTMLOUT .= "<table class='main' border='0' cellspacing='0' cellpadding='0'>".
-    "<tr><td class='embedded'><h1 style='margin:0px'> {$lang['friends_personal']} ".htmlentities($user['username'], ENT_QUOTES)."</h1>$donor$warned</td></tr></table>";
+    "<tr><td class='embedded'><h1 style='margin:0px'> {$lang['friends_personal']} ".htmlsafechars($user['username'])."</h1>$donor$warned</td></tr></table>";
 
     $HTMLOUT .= "<table class='main' width='750' border='0' cellspacing='0' cellpadding='0'>
     <tr>

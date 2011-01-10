@@ -33,9 +33,10 @@ loggedinorreturn();
         stderr($lang['upload_sorry'], $lang['upload_no_auth']);
     }
 
-
+    $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+    
     $HTMLOUT .= "<div align='center'>
-    <form enctype='multipart/form-data' action='takeupload.php' method='post'>
+    <form name='bbcode2text' enctype='multipart/form-data' action='takeupload.php' method='post'>
     <input type='hidden' name='MAX_FILE_SIZE' value='{$TBDEV['max_torrent_size']}' />
     <p>{$lang['upload_announce_url']} <b>{$TBDEV['announce_urls'][0]}</b></p>";
 
@@ -55,8 +56,9 @@ loggedinorreturn();
     </tr>
     <tr>
       <td class='heading' valign='top' align='right'>{$lang['upload_description']}</td>
-      <td valign='top' align='left'><textarea name='descr' rows='10' cols='80'></textarea>
-      <br />({$lang['upload_html_bbcode']})</td>
+      <td valign='top' align='left'>";
+      $HTMLOUT .= bbcode2textarea( '', '', 0 );
+      $HTMLOUT .= "<br />({$lang['upload_html_bbcode']})</td>
     </tr>";
 
     $s = "<select name='type'>\n<option value='0'>({$lang['upload_choose_one']})</option>\n";
@@ -65,7 +67,7 @@ loggedinorreturn();
     
     foreach ($cats as $row)
     {
-      $s .= "<option value='{$row["id"]}'>" . htmlspecialchars($row["name"]) . "</option>\n";
+      $s .= "<option value='{$row["id"]}'>" . htmlsafechars($row["name"]) . "</option>\n";
     }
     
     $s .= "</select>\n";
@@ -83,6 +85,6 @@ loggedinorreturn();
 
 ////////////////////////// HTML OUTPUT //////////////////////////
 
-    print stdhead($lang['upload_stdhead']) . $HTMLOUT . stdfoot();
+    print stdhead($lang['upload_stdhead'], $js) . $HTMLOUT . stdfoot();
 
 ?>

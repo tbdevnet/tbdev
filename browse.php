@@ -229,7 +229,7 @@ loggedinorreturn();
     {
       $HTMLOUT .= ($i && $i % $catsperrow == 0) ? "</tr><tr>" : "";
       $HTMLOUT .= "<td class='bottom' style='padding-bottom: 2px;padding-left: 7px;align:left;border:1px solid;'>
-      <input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat={$cat['id']}'>" . htmlspecialchars($cat['name']) . "</a></td>\n";
+      <input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat={$cat['id']}'>" . htmlsafechars($cat['name']) . "</a></td>\n";
       $i++;
     }
 
@@ -289,7 +289,7 @@ loggedinorreturn();
 
     if (isset($cleansearchstr))
     {
-      $HTMLOUT .= "<h2>{$lang['browse_search']}\"" . htmlentities($searchstr, ENT_QUOTES) . "\"</h2>\n";
+      $HTMLOUT .= "<h2>{$lang['browse_search']}\"" . htmlsafechars( $searchstr ) . "\"</h2>\n";
     }
     
     if ($count) 

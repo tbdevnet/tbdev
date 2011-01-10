@@ -50,9 +50,9 @@ function maketable($res)
           else
             $ratio = "---";
       $catimage = "{$TBDEV['pic_base_url']}caticons/{$arr['image']}";
-      $catname = htmlspecialchars($arr["catname"]);
-      $catimage = "<img src=\"".htmlspecialchars($catimage) ."\" title=\"$catname\" alt=\"$catname\" width='42' height='42' />";
-      $ttl = (28*24) - floor((time() - $arr["added"]) / 3600);
+      $catname = htmlsafechars($arr["catname"]);
+      $catimage = "<img src=\"".htmlsafechars($catimage) ."\" title=\"$catname\" alt=\"$catname\" width='42' height='42' />";
+      $ttl = (28*24) - floor((TIME_NOW - $arr["added"]) / 3600);
       if ($ttl == 1) $ttl .= "<br />{$lang['userdetails_hour']}"; else $ttl .= "<br />{$lang['userdetails_hours']}";
       $size = str_replace(" ", "<br />", mksize($arr["size"]));
       $uploaded = str_replace(" ", "<br />", mksize($arr["uploaded"]));
@@ -60,7 +60,7 @@ function maketable($res)
       $seeders = number_format($arr["seeders"]);
       $leechers = number_format($arr["leechers"]);
         $htmlout .= "<tr><td style='padding: 0px'>$catimage</td>\n" .
-        "<td><a href='details.php?id=$arr[torrent]&amp;hit=1'><b>" . htmlspecialchars($arr["torrentname"]) .
+        "<td><a href='details.php?id=$arr[torrent]&amp;hit=1'><b>" . htmlsafechars($arr["torrentname"]) .
         "</b></a></td><td align='center'>$ttl</td><td align='center'>$size</td><td align='right'>$seeders</td><td align='right'>$leechers</td><td align='center'>$uploaded</td>\n" .
         "<td align='center'>$downloaded</td><td align='center'>$ratio</td></tr>\n";
       }
@@ -87,8 +87,8 @@ function maketable($res)
       {
         //$r2 = mysql_query("SELECT name, image FROM categories WHERE id=$a[category]") or sqlerr(__FILE__, __LINE__);
         //$a2 = mysql_fetch_assoc($r2);
-        $cat = "<img src=\"". htmlspecialchars("{$TBDEV['pic_base_url']}caticons/{$a['image']}") ."\" title=\"{$a['cname']}\" alt=\"{$a['cname']}\" />";
-          $torrents .= "<tr><td style='padding: 0px'>$cat</td><td><a href='details.php?id=" . $a['id'] . "&amp;hit=1'><b>" . htmlspecialchars($a["name"]) . "</b></a></td>" .
+        $cat = "<img src=\"". htmlsafechars("{$TBDEV['pic_base_url']}caticons/{$a['image']}") ."\" title=\"{$a['cname']}\" alt=\"{$a['cname']}\" />";
+          $torrents .= "<tr><td style='padding: 0px'>$cat</td><td><a href='details.php?id=" . $a['id'] . "&amp;hit=1'><b>" . htmlsafechars($a["name"]) . "</b></a></td>" .
             "<td align='right'>{$a['seeders']}</td><td align='right'>{$a['leechers']}</td></tr>\n";
       }
       $torrents .= "</table>";
@@ -128,7 +128,7 @@ function maketable($res)
     if (mysql_num_rows($res) == 1)
     {
       $arr = mysql_fetch_assoc($res);
-      $country = "<td class='embedded'><img src=\"{$TBDEV['pic_base_url']}flag/{$arr['flagpic']}\" alt=\"". htmlspecialchars($arr['name']) ."\" style='margin-left: 8pt' /></td>";
+      $country = "<td class='embedded'><img src=\"{$TBDEV['pic_base_url']}flag/{$arr['flagpic']}\" alt=\"". htmlsafechars($arr['name']) ."\" style='margin-left: 8pt' /></td>";
     }
 
     //if ($user["donor"] == "yes") $donor = "<td class='embedded'><img src='{$TBDEV['pic_base_url']}starbig.gif' alt='Donor' style='margin-left: 4pt' /></td>";
@@ -212,7 +212,7 @@ function maketable($res)
     //if ($user['donated'] > 0 && ($CURUSER['class'] >= UC_MODERATOR || $CURUSER["id"] == $user["id"]))
     //  print("<tr><td class='rowhead'>Donated</td><td align='left'>$user[donated]</td></tr>\n");
     if ($user["avatar"])
-    $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_avatar']}</td><td align='left'><img src='" . htmlspecialchars($user["avatar"]) . "' width='{$user['av_w']}' height='{$user['av_h']}' alt='' /></td></tr>\n";
+    $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_avatar']}</td><td align='left'><img src='" . htmlsafechars($user["avatar"]) . "' width='{$user['av_w']}' height='{$user['av_h']}' alt='' /></td></tr>\n";
     $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_class']}</td><td align='left'>" . get_user_class_name($user["class"]) . "</td></tr>\n";
     $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_comments']}</td>";
     if ($torrentcomments && (($user["class"] >= UC_POWER_USER && $user["id"] == $CURUSER["id"]) || $CURUSER['class'] >= UC_MODERATOR))
@@ -230,10 +230,10 @@ function maketable($res)
       $HTMLOUT .= "<tr valign='top'><td class='rowhead'>{$lang['userdetails_uploaded_t']}</td><td align='left'>$torrents</td></tr>\n";
       
     if (isset($seeding))
-      $HTMLOUT .= "<tr valign=top><td class=rowhead>{$lang['userdetails_cur_seed']}</td><td align=left>".maketable($seeding)."</td></tr>\n";
+      $HTMLOUT .= "<tr valign='top'><td class='rowhead'>{$lang['userdetails_cur_seed']}</td><td align='left'>".maketable($seeding)."</td></tr>\n";
       
     if (isset($leeching))
-       $HTMLOUT .= "<tr valign=top><td class=rowhead>{$lang['userdetails_cur_leech']}</td><td align=left>".maketable($leeching)."</td></tr>\n";
+       $HTMLOUT .= "<tr valign='top'><td class='rowhead'>{$lang['userdetails_cur_leech']}</td><td align='left'>".maketable($leeching)."</td></tr>\n";
        
     if ($user["info"])
      $HTMLOUT .= "<tr valign='top'><td align='left' colspan='2' class='text' bgcolor='#F4F4F0'>" . format_comment($user["info"]) . "</td></tr>\n";
@@ -270,8 +270,8 @@ function maketable($res)
       $HTMLOUT .= "<input type='hidden' name='userid' value='$id' />\n";
       $HTMLOUT .= "<input type='hidden' name='returnto' value='userdetails.php?id=$id' />\n";
       $HTMLOUT .= "<table class='main' border='1' cellspacing='0' cellpadding='5'>\n";
-      $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_title']}</td><td colspan='2' align='left'><input type='text' size='60' name='title' value='" . htmlspecialchars($user['title']) . "' /></td></tr>\n";
-      $avatar = htmlspecialchars($user["avatar"]);
+      $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_title']}</td><td colspan='2' align='left'><input type='text' size='60' name='title' value='" . htmlsafechars($user['title']) . "' /></td></tr>\n";
+      $avatar = htmlsafechars($user["avatar"]);
       $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_avatar_url']}</td><td colspan='2' align='left'><input type='text' size='60' name='avatar' value='$avatar' /></td></tr>\n";
       // we do not want mods to be able to change user classes or amount donated...
       if ($CURUSER["class"] < UC_ADMINISTRATOR)
@@ -295,7 +295,7 @@ function maketable($res)
         $HTMLOUT .= "</select></td></tr>\n";
       }
 
-      $modcomment = htmlspecialchars($user["modcomment"]);
+      $modcomment = htmlsafechars($user["modcomment"]);
       $HTMLOUT .= "<tr><td class='rowhead'>{$lang['userdetails_comment']}</td><td colspan='2' align='left'><textarea cols='60' rows='6' name='modcomment'>$modcomment</textarea></td></tr>\n";
       $warned = $user["warned"] == "yes";
 
@@ -313,7 +313,7 @@ function maketable($res)
         else
         {
           $HTMLOUT .= "<td align='center'>{$lang['userdetails_until']} ".get_date($warneduntil, 'DATE');
-          $HTMLOUT .= " (" . mkprettytime($warneduntil - time())  . " {$lang['userdetails_togo']})</td></tr>\n";
+          $HTMLOUT .= " (" . mkprettytime($warneduntil - TIME_NOW)  . " {$lang['userdetails_togo']})</td></tr>\n";
         }
       }
       else

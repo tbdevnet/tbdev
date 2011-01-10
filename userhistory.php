@@ -122,7 +122,7 @@ loggedinorreturn();
 
           $forumname = $arr["name"];
 
-        $dt = (time() - $TBDEV['readpost_expiry']);
+        $dt = (TIME_NOW - $TBDEV['readpost_expiry']);
 
         $newposts = 0;
 

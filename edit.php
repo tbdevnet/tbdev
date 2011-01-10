@@ -52,10 +52,10 @@ loggedinorreturn();
     <input type='hidden' name='id' value='$id' />";
     
     if (isset($_GET["returnto"]))
-      $HTMLOUT  .= "<input type='hidden' name='returnto' value='" . htmlspecialchars($_GET["returnto"]) . "' />\n";
+      $HTMLOUT  .= "<input type='hidden' name='returnto' value='" . htmlsafechars($_GET["returnto"]) . "' />\n";
     $HTMLOUT  .=  "<table border='1' cellspacing='0' cellpadding='10'>\n";
     
-    $HTMLOUT  .= tr($lang['edit_torrent_name'], "<input type='text' name='name' value='" . htmlspecialchars($row["name"]) . "' size='80' />", 1);
+    $HTMLOUT  .= tr($lang['edit_torrent_name'], "<input type='text' name='name' value='" . htmlsafehars($row["name"]) . "' size='80' />", 1);
     $HTMLOUT  .= tr($lang['edit_nfo'], "<input type='radio' name='nfoaction' value='keep' checked='checked' />{$lang['edit_keep_current']}<br />".
 	"<input type='radio' name='nfoaction' value='update' />{$lang['edit_update']}<br /><input type='file' name='nfo' size='80' />", 1);
     if ((strpos($row["ori_descr"], "<") === false) || (strpos($row["ori_descr"], "&lt;") !== false))
@@ -67,7 +67,7 @@ loggedinorreturn();
       $c = " checked";
     }
     
-    $HTMLOUT  .= tr($lang['edit_description'], "<textarea name='descr' rows='10' cols='80'>" . htmlspecialchars($row["ori_descr"]) . "</textarea><br />({$lang['edit_tags']})", 1);
+    $HTMLOUT  .= tr($lang['edit_description'], "<textarea name='descr' rows='10' cols='80'>" . htmlsafehars($row["ori_descr"]) . "</textarea><br />({$lang['edit_tags']})", 1);
 
     $s = "<select name='type'>\n";
 
@@ -78,7 +78,7 @@ loggedinorreturn();
       $s .= "<option value='" . $subrow["id"] . "'";
       if ($subrow["id"] == $row["category"])
         $s .= " selected='selected'";
-      $s .= ">" . htmlspecialchars($subrow["name"]) . "</option>\n";
+      $s .= ">" . htmlsafehars($subrow["name"]) . "</option>\n";
     }
 
     $s .= "</select>\n";
@@ -117,7 +117,7 @@ loggedinorreturn();
     
     if (isset($_GET["returnto"]))
     {
-      $HTMLOUT  .= "<input type='hidden' name='returnto' value='" . htmlspecialchars($_GET["returnto"]) . "' />\n";
+      $HTMLOUT  .= "<input type='hidden' name='returnto' value='" . htmlsafehars($_GET["returnto"]) . "' />\n";
 		}
     
     $HTMLOUT  .= "<tr><td colspan='2' align='center'><input type='submit' value='{$lang['edit_delete']}' class='btn' /></td>

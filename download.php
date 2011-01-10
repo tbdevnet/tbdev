@@ -50,7 +50,7 @@ loggedinorreturn();
   if (!isset($CURUSER['passkey']) || strlen($CURUSER['passkey']) != 32) 
   {
 
-    $CURUSER['passkey'] = md5($CURUSER['username'].time().$CURUSER['passhash']);
+    $CURUSER['passkey'] = md5($CURUSER['username'].TIME_NOW.$CURUSER['passhash']);
 
     @mysql_query("UPDATE users SET passkey='{$CURUSER['passkey']}' WHERE id={$CURUSER['id']}");
 

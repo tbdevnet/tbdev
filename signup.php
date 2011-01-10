@@ -34,7 +34,7 @@ dbconn();
     // Begin the session
     session_start();
     if (isset($_SESSION['captcha_time']))
-    (time() - $_SESSION['captcha_time'] < 10) ? exit($lang['captcha_spam']) : NULL;
+    (TIME_NOW - $_SESSION['captcha_time'] < 10) ? exit($lang['captcha_spam']) : NULL;
     
     $HTMLOUT = '';
     
@@ -62,7 +62,7 @@ dbconn();
     
 
 
-    $thistime = time();
+    $thistime = TIME_NOW;
 
     $HTMLOUT .= "<script type='text/javascript' src='captcha/captcha.js'></script>
 

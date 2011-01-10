@@ -58,7 +58,7 @@ function dltable($name, $arr, $torrent)
             "<td class='colhead' align='right'>{$lang['peerslist_idle']}</td>" .
             "<td class='colhead' align='left'>{$lang['peerslist_client']}</td></tr>\n";
          
-    $now = time();
+    $now = TIME_NOW;
     //$moderator = (isset($CURUSER) && get_user_class() >= UC_MODERATOR);
     //$mod = get_user_class() >= UC_MODERATOR;
     foreach ($arr as $e) {
@@ -97,7 +97,7 @@ function dltable($name, $arr, $torrent)
       $htmlout .= "<td align='right'>" . sprintf("%.2f%%", 100 * (1 - ($e["to_go"] / $torrent["size"]))) . "</td>\n";
       $htmlout .= "<td align='right'>" . mkprettytime($now - $e["st"]) . "</td>\n";
       $htmlout .= "<td align='right'>" . mkprettytime($now - $e["la"]) . "</td>\n";
-      $htmlout .= "<td align='left'>" . htmlspecialchars(getagent($e["agent"], $e['peer_id'])) . "</td>\n";
+      $htmlout .= "<td align='left'>" . htmlsafechars(getagent($e["agent"], $e['peer_id'])) . "</td>\n";
       $htmlout .= "</tr>\n";
     }
     $htmlout .= "</table>\n";
@@ -156,7 +156,7 @@ function dltable($name, $arr, $torrent)
 
     
 
-      $HTMLOUT .= "<h1>Peerlist for <a href='{$TBDEV['baseurl']}/details.php?id=$id'>".htmlentities($row['name'])."</a></h1>";
+      $HTMLOUT .= "<h1>Peerlist for <a href='{$TBDEV['baseurl']}/details.php?id=$id'>".htmlsafechars($row['name'])."</a></h1>";
       $HTMLOUT .= dltable("{$lang['peerslist_seeders']}<a name='seeders'></a>", $seeders, $row);
       $HTMLOUT .= '<br />' . dltable("{$lang['peerslist_leechers']}<a name='leechers'></a>", $downloaders, $row);
       

@@ -60,12 +60,12 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Notify user
     $what = ($class > $user['class'] ? "{$lang['modtask_promoted']}" : "{$lang['modtask_demoted']}");
     $msg = sqlesc(sprintf($lang['modtask_have_been'], $what)." '" . get_user_class_name($class) . "' {$lang['modtask_by']} ".$CURUSER['username']);
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES(0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
 
     $updateset[] = "class = ".sqlesc($class);
 
-    $modcomment = get_date( time(), 'DATE', 1 ) . " - $what to '" . get_user_class_name($class) . "' by $CURUSER[username].\n". $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . " - $what to '" . get_user_class_name($class) . "' by $CURUSER[username].\n". $modcomment;
     }
 
     // Clear Warning - Code not called for setting warning
@@ -75,9 +75,9 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     $updateset[] = "warneduntil = 0";
     if ($warned == 'no')
     {
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_warned']}" . $CURUSER['username'] . ".\n". $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_warned']}" . $CURUSER['username'] . ".\n". $modcomment;
     $msg = sqlesc("{$lang['modtask_warned_removed']}" . $CURUSER['username'] . ".");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     }
@@ -90,19 +90,19 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
 
     if ($warnlength == 255)
     {
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_warned_by']}" . $CURUSER['username'] . ".\n{$lang['modtask_reason']} $warnpm\n" . $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_warned_by']}" . $CURUSER['username'] . ".\n{$lang['modtask_reason']} $warnpm\n" . $modcomment;
     $msg = sqlesc("{$lang['modtask_warning_received']}".$CURUSER['username'].($warnpm ? "\n\n{$lang['modtask_reason']} $warnpm" : ""));
     $updateset[] = "warneduntil = 0";
     }
     else
     {
-    $warneduntil = (time() + $warnlength * 604800);
+    $warneduntil = (TIME_NOW + $warnlength * 604800);
     $dur = $warnlength . "{$lang['modtask_week']}" . ($warnlength > 1 ? "s" : "");
     $msg = sqlesc(sprintf($lang['modtask_warning_duration'], $dur).$CURUSER['username'].($warnpm ? "\n\nReason: $warnpm" : ""));
-    $modcomment = get_date( time(), 'DATE', 1 ) . sprintf($lang['modtask_warned_for'], $dur) . $CURUSER['username'] . ".\n{$lang['modtask_reason']} $warnpm\n" . $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . sprintf($lang['modtask_warned_for'], $dur) . $CURUSER['username'] . ".\n{$lang['modtask_reason']} $warnpm\n" . $modcomment;
     $updateset[] = "warneduntil = ".sqlesc($warneduntil);
     }
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     $updateset[] = "warned = 'yes'";
     }
@@ -114,9 +114,9 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     $updateset[] = "donerduntil = 0";
     if ($donor == 'no')
     {
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_donor_removed']}".$CURUSER['username'].".\n". $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_donor_removed']}".$CURUSER['username'].".\n". $modcomment;
     $msg = sqlesc("{$lang['modtask_donor_expired']}");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     }
@@ -126,19 +126,19 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     {
     if ($donorlength == 255)
     {
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_donor_set']}" . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_donor_set']}" . $CURUSER['username'] . ".\n" . $modcomment;
     $msg = sqlesc("{$lang['modtask_received_donor']}".$CURUSER['username']);
     $updateset[] = "donoruntil = 0";
     }
     else
     {
-    $donoruntil = (time() + $donorlength * 604800);
+    $donoruntil = (TIME_NOW + $donorlength * 604800);
     $dur = $donorlength . "{$lang['modtask_week']}" . ($donorlength > 1 ? "s" : "");
     $msg = sqlesc(sprintf($lang['modtask_donor_duration'], $dur) . $CURUSER['username']);
-    $modcomment = get_date( time(), 'DATE', 1 ) . sprintf($lang['modtask_donor_for'], $dur) . $CURUSER['username']."\n".$modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . sprintf($lang['modtask_donor_for'], $dur) . $CURUSER['username']."\n".$modcomment;
     $updateset[] = "donoruntil = ".sqlesc($donoruntil);
     }
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     $updateset[] = "donor = 'yes'";
     }
@@ -147,9 +147,9 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     if ((isset($_POST['enabled'])) && (($enabled = $_POST['enabled']) != $user['enabled']))
     {
     if ($enabled == 'yes')
-    $modcomment = get_date( time(), 'DATE', 1 ) . " {$lang['modtask_enabled']}" . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . " {$lang['modtask_enabled']}" . $CURUSER['username'] . ".\n" . $modcomment;
     else
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_disabled']}" . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_disabled']}" . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "enabled = " . sqlesc($enabled);
     }
@@ -161,14 +161,14 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     {
     $modcomment = gmdate("Y-m-d")." - Posting enabled by ".$CURUSER['username'].".\n" . $modcomment;
     $msg = sqlesc("Your Posting rights have been given back by ".$CURUSER['username'].". You can post to forum again.");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     else
     {
     $modcomment = gmdate("Y-m-d")." - Posting disabled by ".$CURUSER['username'].".\n" . $modcomment;
     $msg = sqlesc("Your Posting rights have been removed by ".$CURUSER['username'].", Please PM ".$CURUSER['username']." for the reason why.");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     $updateset[] = "forumpost = " . sqlesc($forumpost);
@@ -177,7 +177,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Change Custom Title
     if ((isset($_POST['title'])) && (($title = $_POST['title']) != ($curtitle = $user['title'])))
     {
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_custom_title']}'".$title."' from '".$curtitle."'{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_custom_title']}'".$title."' from '".$curtitle."'{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "title = " . sqlesc($title);
     }
@@ -189,8 +189,8 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     // Reset Passkey
     if ((isset($_POST['resetpasskey'])) && ($_POST['resetpasskey']))
     {
-    $newpasskey = md5($user['username'].time().$user['passhash']);
-    $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_passkey']}".sqlesc($user['passkey'])."{$lang['modtask_reset']}".sqlesc($newpasskey)."{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
+    $newpasskey = md5($user['username'].TIME_NOW.$user['passhash']);
+    $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_passkey']}".sqlesc($user['passkey'])."{$lang['modtask_reset']}".sqlesc($newpasskey)."{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
 
     $updateset[] = "passkey=".sqlesc($newpasskey);
     }
@@ -213,14 +213,14 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     {
     $modcomment = gmdate("Y-m-d") . " - Upload enabled by " . $CURUSER['username'] . ".\n" . $modcomment;
     $msg = sqlesc("You have been given upload rights by " . $CURUSER['username'] . ". You can now upload torrents.");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     elseif ($uploadpos == 'no')
     {
     $modcomment = gmdate("Y-m-d") . " - Upload disabled by " . $CURUSER['username'] . ".\n" . $modcomment;
     $msg = sqlesc("Your upload rights have been removed by " . $CURUSER['username'] . ". Please PM ".$CURUSER['username']." for the reason why.");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     else
@@ -238,14 +238,14 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     {
     $modcomment = gmdate("Y-m-d") . " - Download enabled by " . $CURUSER['username'] . ".\n" . $modcomment;
     $msg = sqlesc("Your download rights have been given back by " . $CURUSER['username'] . ". You can download torrents again.");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     elseif ($downloadpos == 'no')
     {
     $modcomment = gmdate("Y-m-d") . " - Download disabled by " . $CURUSER['username'] . ".\n" . $modcomment;
     $msg = sqlesc("Your download rights have been removed by " . $CURUSER['username'] . ", Please PM ".$CURUSER['username']." for the reason why.");
-    $added = time();
+    $added = TIME_NOW;
     mysql_query("INSERT INTO messages (sender, receiver, msg, added) VALUES (0, $userid, $msg, $added)") or sqlerr(__FILE__, __LINE__);
     }
     else
@@ -299,7 +299,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
         $updateset[] = "av_h = " . sqlesc($image['img_height']);
       }
       
-      $modcomment = get_date( time(), 'DATE', 1 ) . "{$lang['modtask_avatar_change']}".htmlspecialchars($curavatar)."{$lang['modtask_to']}".htmlspecialchars($avatar)."{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
+      $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_avatar_change']}".htmlsafechars($curavatar)."{$lang['modtask_to']}".htmlsafechars($avatar)."{$lang['modtask_by']}" . $CURUSER['username'] . ".\n" . $modcomment;
 
       $updateset[] = "avatar = ".sqlesc($avatar);
     }

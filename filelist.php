@@ -44,8 +44,8 @@ loggedinorreturn();
 				
 				if($counter !== 0 && $counter % 10 == 0)
 					$HTMLOUT .= "<tr><td colspan='2' align='right'><a href='#top'><img src='{$TBDEV['pic_base_url']}/top.gif' alt='' /></a></td></tr>";
-				$HTMLOUT .= "<tr><td>" . htmlentities($subrow["filename"]) .
-					"</td><td align='right'>" . htmlentities(mksize($subrow["size"])) . "</td></tr>\n";
+				$HTMLOUT .= "<tr><td>" . htmlsafechars($subrow["filename"]) .
+					"</td><td align='right'>" . htmlsafechars(mksize($subrow["size"])) . "</td></tr>\n";
 				
 				$counter++;
 				}

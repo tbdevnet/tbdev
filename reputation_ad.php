@@ -35,7 +35,7 @@ loggedinorreturn();
 	$time_offset = 0;
 
 		
-		$a = explode(",", gmdate("Y,n,j,G,i,s", time() + $time_offset));
+		$a = explode(",", gmdate("Y,n,j,G,i,s", TIME_NOW + $time_offset));
 		$now_date = array( 'year' => $a[0], 'mon' => $a[1], 'mday' => $a[2],
 								 'hours' => $a[3], 'minutes' => $a[4], 'seconds' => $a[5] );
 
@@ -119,7 +119,7 @@ function show_level()
 		{
 			$html .= "<tr>\n".
 					"	<td>#".$res['reputationlevelid']."</td>\n".
-					"	<td>User <b>".htmlentities( $res['level'] )."</b></td>\n".
+					"	<td>User <b>".htmlsafechars( $res['level'] )."</b></td>\n".
 					"	<td align='center'><input type='text' name='reputation[".$res['reputationlevelid']."]' value='".$res['minimumreputation']."' size='12' /></td>\n".
 					"	<td align='center'><span class='btn'><a href='reputation_ad.php?mode=edit&amp;reputationlevelid=".$res['reputationlevelid']."'>Edit</a></span>&nbsp;<span class='btn'><a href='reputation_ad.php?mode=dodelete&amp;reputationlevelid=".$res['reputationlevelid']."'>Delete</a></span></td>\n".
 					"</tr>\n";
@@ -170,7 +170,7 @@ function show_form($type='edit')
 		
 		$css = "style='font-weight: bold;color: #ffffff;background-color: #0055A4;padding: 5px;'";
 		$replevid = isset($res['reputationlevelid']) ? $res['reputationlevelid'] : '';
-		$replevel = isset($res['level']) ? htmlspecialchars($res['level']) : '';
+		$replevel = isset($res['level']) ? htmlsafechars($res['level']) : '';
 		$minrep = isset($res['minimumreputation']) ? $res['minimumreputation'] : '';
 		$html .= "<form action='reputation_ad.php' name='show_rep_form' method='post'>
 				<input name='reputationlevelid' value='{$replevid}' type='hidden' />
@@ -220,7 +220,7 @@ function do_update($type="")
 			$level = sqlesc( $level );
 			$minrep = sqlesc( intval( $input['minimumreputation'] ) );
 			
-			$redirect = 'Saved Reputation Level <i>'.htmlentities( $input['level'], ENT_QUOTES ).'</i> Successfully.';
+			$redirect = 'Saved Reputation Level <i>'.htmlsafechars( $input['level'] ).'</i> Successfully.';
 		}
 
 		// what we gonna do?
@@ -338,10 +338,10 @@ function show_form_rep()
 		$html .= "<h2>Edit Reputation</h2>";
 		$html .= "<table cellpadding='5px'>";
 
-		$html .= "<tr><td width='37%'>Topic</td><td width='63%'><a href='forums.php?action=viewtopic&amp;topicid={$res['topicid']}&amp;page=p{$res['postid']}#{$res['postid']}' target='_blank'>".htmlspecialchars($res['subject'])."</a></td></tr>";
+		$html .= "<tr><td width='37%'>Topic</td><td width='63%'><a href='forums.php?action=viewtopic&amp;topicid={$res['topicid']}&amp;page=p{$res['postid']}#{$res['postid']}' target='_blank'>".htmlsafechars($res['subject'])."</a></td></tr>";
 		$html .= "<tr><td>Left By</td><td>{$res['leftby_name']}</td></tr>";
 		$html .= "<tr><td>Left For</td><td width='63%'>{$res['leftfor_name']}</td></tr>";
-		$html .= "<tr><td>Comment</td><td width='63%'><input type='text' name='reason' value='".htmlspecialchars($res['reason'])."' size='35' maxlength='250' /></td></tr>";
+		$html .= "<tr><td>Comment</td><td width='63%'><input type='text' name='reason' value='".htmlsafechars($res['reason'])."' size='35' maxlength='250' /></td></tr>";
 		$html .= "<tr><td>Reputation</td><td><input type='text' name='reputation' value='{$res['reputation']}' size='35' maxlength='10' /></td></tr>";
 
 		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Save' accesskey='s' class='btn' /> <input type='reset' tabindex='1' value='Reset' accesskey='r' class='btn' /></td></tr>";
@@ -415,12 +415,12 @@ function view_list()
 
 			if( ! $start )
 			{
-				$start = time() - (3600 * 24 * 30);
+				$start = TIME_NOW - (3600 * 24 * 30);
 			}
 
 			if( ! $end )
 			{
-				$end = time();
+				$end = TIME_NOW;
 			}
 
 			if( $start >= $end )
@@ -434,7 +434,7 @@ function view_list()
 
 				if( ! mysql_num_rows($left_b) )
 				{
-					stderr( 'DB ERROR', 'Could not find user '.htmlentities($input['leftby'], ENT_QUOTES) );
+					stderr( 'DB ERROR', 'Could not find user '.htmlsafechars($input['leftby']) );
 				}
 				$leftby = mysql_fetch_assoc($left_b);
 				$who  = $leftby['id'];
@@ -447,7 +447,7 @@ function view_list()
 
 				if( ! mysql_num_rows($left_f) )
 				{
-					stderr( 'DB ERROR', 'Could not find user '.htmlentities($input['leftfor'], ENT_QUOTES) );
+					stderr( 'DB ERROR', 'Could not find user '.htmlsafechars($input['leftfor']) );
 				}
 				$leftfor = mysql_fetch_assoc($left_f);
 				$user  = $leftfor['id'];
@@ -543,7 +543,7 @@ function view_list()
 				$html .= "<td>{$r['dateadd']}</td>";
 				$html .= "<td align='right'>{$r['reputation']}</td>";
 				$html .= "<td><a href='forums.php?action=viewtopic&amp;topicid={$r['topicid']}&amp;page=p{$r['postid']}#{$r['postid']}' target='_blank'>{$r['reason']}</a></td>";
-				$html .= "<td><a href='reputation_ad.php?mode=editrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Edit</span></a>&nbsp;<a href='reputation_ad.php?mode=dodelrep&amp;reputationid=".htmlspecialchars($r['reputationid'])."'><span class='btn'>Delete</span></a></td></tr>";
+				$html .= "<td><a href='reputation_ad.php?mode=editrep&amp;reputationid={$r['reputationid']}'><span class='btn'>Edit</span></a>&nbsp;<a href='reputation_ad.php?mode=dodelrep&amp;reputationid=".htmlsafechars($r['reputationid'])."'><span class='btn'>Delete</span></a></td></tr>";
 				
 			}
 

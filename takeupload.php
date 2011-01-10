@@ -135,7 +135,12 @@ loggedinorreturn();
         stderr($lang['takeupload_failed'], $lang['takeupload_dict_type']);
       return $v["value"];
     }
+    
+    // laffin
+    unset($dict['value']['announce-list']); // remove multi-tracker capability
+    unset($dict['value']['nodes']); // remove cached peers (Bitcomet & Azareus)
 
+    
     list($ann, $info) = dict_check($dict, "announce(string):info");
 
     $tmaker = (isset($dict['value']['created by']) && !empty($dict['value']['created by']['value'])) ? sqlesc($dict['value']['created by']['value']) : sqlesc($lang['takeupload_unkown']);
@@ -192,7 +197,7 @@ loggedinorreturn();
 
     $ret = mysql_query("INSERT INTO torrents (search_text, filename, owner, visible, info_hash, name, size, numfiles, type, descr, ori_descr, category, save_as, added, last_action, nfo, client_created_by) VALUES (" .
         implode(",", array_map("sqlesc", array(searchfield("$shortfname $dname $torrent"), $fname, $CURUSER["id"], "no", $infohash, $torrent, $totallen, count($filelist), $type, $descr, $descr, 0 + $_POST["type"], $dname))) .
-        ", " . time() . ", " . time() . ", $nfo, $tmaker)");
+        ", " . TIME_NOW . ", " . TIME_NOW . ", $nfo, $tmaker)");
     if (!$ret) {
       if (mysql_errno() == 1062)
         stderr($lang['takeupload_failed'], $lang['takeupload_already']);
@@ -232,12 +237,12 @@ loggedinorreturn();
       while ($a = mysql_fetch_assoc($r))
       {
         $cat = $cats[$a["category"]];
-        $s = "<item>\n<title>" . htmlspecialchars($a["name"] . " ($cat)") . "</title>\n" .
-          "<description>" . htmlspecialchars($a["descr"]) . "</description>\n";
+        $s = "<item>\n<title>" . htmlsafechars($a["name"] . " ($cat)") . "</title>\n" .
+          "<description>" . htmlsafechars($a["descr"]) . "</description>\n";
         @fwrite($fd1, $s);
         @fwrite($fd2, $s);
         @fwrite($fd1, "<link>{$TBDEV['baseurl']}/details.php?id=$a[id]&amp;hit=1</link>\n</item>\n");
-        $filename = htmlspecialchars($a["filename"]);
+        $filename = htmlsafechars($a["filename"]);
         @fwrite($fd2, "<link>{$TBDEV['baseurl']}/download.php/$a[id]/$filename</link>\n</item>\n");
       }
       $s = "</channel>\n</rss>\n";

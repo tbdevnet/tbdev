@@ -58,7 +58,7 @@ loggedinorreturn();
     {
       global $TBDEV, $lang;
       
-      $dt = time() - 180;
+      $dt = TIME_NOW - 180;
       $htmlout = '';
       
       if($staff===false) 

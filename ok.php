@@ -29,7 +29,7 @@ dbconn();
 
     if ( $type == "signup" && isset($_GET['email']) ) 
     {
-      stderr( "{$lang['ok_success']}", sprintf($lang['ok_email'], htmlentities($_GET['email'], ENT_QUOTES)) );
+      stderr( "{$lang['ok_success']}", sprintf($lang['ok_email'], htmlsafechars($_GET['email'])) );
     }
     elseif ($type == "sysop") 
     {

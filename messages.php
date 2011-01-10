@@ -56,7 +56,7 @@ if (!$action)
       stderr("{$lang['messages_error']}","{$lang['messages_invalid_box']}");
 
     $mailbox_name = mysql_fetch_array($res);
-    $mailbox_name = htmlspecialchars($mailbox_name[0]);
+    $mailbox_name = htmlsafechars($mailbox_name[0]);
     }
     else
     {
@@ -202,7 +202,7 @@ if (!$action)
           $username = "System";
         }
         
-        $subject = htmlspecialchars($row['subject']);
+        $subject = htmlsafechars($row['subject']);
 
         if (strlen($subject) <= 0)
         {
@@ -235,7 +235,7 @@ if (!$action)
             $res = mysql_query('select * FROM pmboxes WHERE userid=' . sqlesc($CURUSER['id']) . ' ORDER BY boxnumber') or sqlerr(__FILE__,__LINE__);
             while ($row = mysql_fetch_assoc($res))
             {
-              $HTMLOUT .= "<option value='{$row['boxnumber']}'>" . htmlspecialchars($row['name']) . "</option>\n";
+              $HTMLOUT .= "<option value='{$row['boxnumber']}'>" . htmlsafechars($row['name']) . "</option>\n";
             }
 
 
@@ -308,14 +308,14 @@ if (!$action)
       
       if ($CURUSER['class'] >= UC_MODERATOR && $message['sender'] == $CURUSER['id'])
       {
-        $unread = ($message['unread'] == 'yes' ? "<span style='color: #FF0000;'><b>{$lang['messages_new']}</b></a>" : "");
+        $unread = ($message['unread'] == 'yes' ? "<span style='color: #FF0000;'><strong>{$lang['messages_new']}</strong></span>" : "");
       }
       else
       {
         $unread = "";
       }
       
-      $subject = htmlspecialchars($message['subject']);
+      $subject = htmlsafechars($message['subject']);
       
       if (strlen($subject) <= 0)
       {
@@ -353,7 +353,7 @@ if (!$action)
       $res = mysql_query('select * FROM pmboxes WHERE userid=' . sqlesc($CURUSER['id']) . ' ORDER BY boxnumber') or sqlerr(__FILE__,__LINE__);
       while ($row = mysql_fetch_assoc($res))
       {
-        $HTMLOUT .= "<option value='{$row['boxnumber']}'>" . htmlspecialchars($row['name']) . "</option>\n";
+        $HTMLOUT .= "<option value='{$row['boxnumber']}'>" . htmlsafechars($row['name']) . "</option>\n";
       }
       
       $HTMLOUT .= "</select> <input type='submit' name='move' value='{$lang['messages_move']}' class='btn' />
@@ -483,7 +483,7 @@ if (!$action)
       $message = mysql_fetch_assoc($res);
 
       // Prepare variables
-      $subject = "{$lang['messages_fwd']}" . htmlspecialchars($message['subject']);
+      $subject = "{$lang['messages_fwd']}" . htmlsafechars($message['subject']);
       $from = $message['sender'];
       $orig = $message['receiver'];
 
@@ -627,7 +627,7 @@ if (!$action)
           }
         }
 
-        @mysql_query("INSERT INTO messages (poster, sender, receiver, added, subject, msg, location, saved) VALUES({$CURUSER["id"]}, {$CURUSER["id"]}, $to, " . time() . ", " . sqlesc($subject) . "," .
+        @mysql_query("INSERT INTO messages (poster, sender, receiver, added, subject, msg, location, saved) VALUES({$CURUSER["id"]}, {$CURUSER["id"]}, $to, " . TIME_NOW . ", " . sqlesc($subject) . "," .
         sqlesc($body) . ", " . sqlesc(PM_INBOX) . ", " . sqlesc($save) . ")") or sqlerr(__FILE__, __LINE__);
 
         stderr("{$lang['messages_success']}", "{$lang['messages_pm_forwarded']}");
@@ -682,7 +682,7 @@ if (!$action)
         while ($row = mysql_fetch_assoc($res))
         {
           $id = $row['id'];
-          $name = htmlspecialchars($row['name']);
+          $name = htmlsafechars($row['name']);
           $HTMLOUT .= "<input type='text' name='edit$id' value='$name' size='40' maxlength='14' /><br />\n";
         }
       

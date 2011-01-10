@@ -134,7 +134,7 @@ function isproxy()
     else
     { $time_offset = isset($TBDEV['time_offset']) ? sqlesc($TBDEV['time_offset']) : '0'; }
     // have a stab at getting dst parameter?
-    $dst_in_use = localtime(time() + ($time_offset * 3600), true);
+    $dst_in_use = localtime(TIME_NOW + ($time_offset * 3600), true);
     // TIMEZONE STUFF END
 
     $secret = mksecret();
@@ -143,7 +143,7 @@ function isproxy()
 
     $ret = mysql_query("INSERT INTO users (username, passhash, secret, editsecret, email, status, ". (!$arr[0]?"class, ":"") ."added, time_offset, dst_in_use) VALUES (" .
 		implode(",", array_map("sqlesc", array($wantusername, $wantpasshash, $secret, $editsecret, $email, (!$arr[0]?'confirmed':'pending')))).
-		", ". (!$arr[0]?UC_SYSOP.", ":""). "". time() ." , $time_offset, {$dst_in_use['tm_isdst']})");
+		", ". (!$arr[0]?UC_SYSOP.", ":""). "". TIME_NOW ." , $time_offset, {$dst_in_use['tm_isdst']})");
 
     if (!$ret) 
     {

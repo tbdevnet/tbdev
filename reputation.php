@@ -26,7 +26,7 @@ loggedinorreturn();
 
 $lang = load_language('reputation');
 
-define( 'TIMENOW', time() ) ;
+define( 'TIMENOW', TIME_NOW ) ;
 
 // mod or not?
 $is_mod = ( $CURUSER['class'] >= UC_MODERATOR ) ? TRUE : FALSE;
@@ -400,6 +400,8 @@ require_once "cache/rep_settings_cache.php";
 function fetch_reppower($user=array(),$rep='pos')
 	{
 		global $GVARS, $is_mod;
+		
+		$reppower = 0;
 		// is the user allowed to do negative reps?
 		if( ! $GVARS['g_rep_negative'] )
 		{

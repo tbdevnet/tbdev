@@ -202,7 +202,7 @@ loggedinorreturn();
       while ($a = mysql_fetch_assoc($r))
       {
         $categories .=  ($i && $i % 2 == 0) ? "</tr><tr>" : "";
-        $categories .= "<td class='bottom' style='padding-right: 5px'><label><input name='cat{$a['id']}' type='checkbox' " . (strpos($CURUSER['notifs'], "[cat{$a['id']}]") !== false ? " checked='checked'" : "") . " value='yes' />&nbsp;" . htmlspecialchars($a["name"]) . "</label></td>\n";
+        $categories .= "<td class='bottom' style='padding-right: 5px'><label><input name='cat{$a['id']}' type='checkbox' " . (strpos($CURUSER['notifs'], "[cat{$a['id']}]") !== false ? " checked='checked'" : "") . " value='yes' />&nbsp;" . htmlsafechars($a["name"]) . "</label></td>\n";
         ++$i;
       }
       $categories .= "</tr></table>\n";
@@ -226,17 +226,17 @@ loggedinorreturn();
     <!-- Timezone stuff end -->
 
     <fieldset><legend><strong>{$lang['my_avatar']}</strong></legend>
-    <input name='avatar' size='50' value='". htmlspecialchars($CURUSER["avatar"])."' /><br />\n{$lang['my_avatar_info']}</fieldset>
+    <input name='avatar' size='50' value='". htmlsafechars($CURUSER["avatar"])."' /><br />\n{$lang['my_avatar_info']}</fieldset>
     <fieldset><legend><strong>{$lang['my_tor_perpage']}</strong></legend>
-    <input type='text' size='10' name='torrentsperpage' value='$CURUSER[torrentsperpage]' /> {$lang['my_default']}</fieldset>
+    <input type='text' size='10' name='torrentsperpage' value='{$CURUSER['torrentsperpage']}' /> {$lang['my_default']}</fieldset>
     <fieldset><legend><strong>{$lang['my_top_perpage']}</strong></legend><input type='text' size='10' name='topicsperpage' value='$CURUSER[topicsperpage]' /> {$lang['my_default']}</fieldset>
     <fieldset><legend><strong>{$lang['my_post_perpage']}</strong></legend><input type='text' size='10' name='postsperpage' value='$CURUSER[postsperpage]' /> {$lang['my_default']}</fieldset>
     <fieldset><legend><strong>{$lang['my_view_avatars']}</strong></legend>
     <label><input type='checkbox' name='avatars'" . ($CURUSER["avatars"] == "yes" ? " checked='checked'" : "") . " /> {$lang['my_low_bw']}</label></fieldset>
     <fieldset><legend><strong>{$lang['my_info']}</strong></legend>
-    <textarea name='info' cols='50' rows='4'>" . htmlentities($CURUSER["info"], ENT_QUOTES) . "</textarea><br />{$lang['my_tags']}</fieldset>
+    <textarea name='info' cols='50' rows='4'>" . htmlsafechars($CURUSER["info"]) . "</textarea><br />{$lang['my_tags']}</fieldset>
     <fieldset><legend><strong>{$lang['my_email']}</strong></legend>
-    <input type='text' name='email' size='50' value='" . htmlspecialchars($CURUSER["email"]) . "' /><br />{$lang['my_email_pass']}<br /><input type='password' name='chmailpass' size='50' />
+    <input type='text' name='email' size='50' value='" . htmlsafechars($CURUSER["email"]) . "' /><br />{$lang['my_email_pass']}<br /><input type='password' name='chmailpass' size='50' />
     <br />{$lang['my_note']}</fieldset>
     <fieldset><legend><strong>{$lang['my_chpass']}</strong></legend><input type='password' name='chpassword' size='50' />
     <br />{$lang['my_pass_again']}
@@ -281,6 +281,6 @@ loggedinorreturn();
     //print("<p><a href='users.php'><b>Find User/Browse User List</b></a></p>");
     
     
-    print stdhead(htmlentities($CURUSER["username"], ENT_QUOTES) . "{$lang['my_stdhead']}", false) . $HTMLOUT . stdfoot();
+    print stdhead(htmlsafechars($CURUSER["username"]) . "{$lang['my_stdhead']}", false) . $HTMLOUT . stdfoot();
 
 ?>

@@ -78,7 +78,7 @@ loggedinorreturn();
 
 
     if (isset($_POST["returnto"]))
-      $ret = "<a href='" . htmlspecialchars($_POST["returnto"]) . "'>{$lang['delete_go_back']}</a>";
+      $ret = "<a href='" . htmlsafechars($_POST["returnto"]) . "'>{$lang['delete_go_back']}</a>";
     else
       $ret = "<a href='{$TBDEV['baseurl']}/index.php'>{$lang['delete_back_index']}</a>";
 

@@ -44,16 +44,16 @@ $mm_template[3] = array( $lang['sendmessage_mm_template3_sub'], $lang['sendmessa
       if ($CURUSER['class'] < UC_MODERATOR)
         stderr("{$lang['sendmessage_error']}", "{$lang['sendmessage_denied']}");
 
-      $n_pms = htmlentities($_POST['n_pms']);
-      $pmees = htmlentities($_POST['pmees']);
+      $n_pms = htmlsafechars($_POST['n_pms']);
+      $pmees = htmlsafechars($_POST['pmees']);
       $this_subject = '';
       $this_body = '';
       $auto = isset($_POST['auto']) ? $_POST['auto'] : FALSE;
 
       if ($auto)
       {
-        $this_subject = htmlentities($mm_template[$auto][0], ENT_QUOTES);
-        $this_body = htmlentities($mm_template[$auto][1], ENT_QUOTES);
+        $this_subject = htmlsafechars($mm_template[$auto][0]);
+        $this_body = htmlsafechars($mm_template[$auto][1]);
       }
       
       $mass_msg_pm_to = sprintf( $lang['sendmessage_mass_msg_to'], $n_pms, ($n_pms>1?"s":"") );
@@ -155,7 +155,7 @@ $mm_template[3] = array( $lang['sendmessage_mm_template3_sub'], $lang['sendmessa
         $res = mysql_query("SELECT username FROM users WHERE id={$msga['sender']}") or sqlerr();
         $usra = mysql_fetch_assoc($res);
         $body = sprintf( $lang['sendmessage_user_wrote'], $usra['username'], $msga['msg'] );
-        $subject = "{$lang['sendmessage_re']}" . htmlspecialchars($msga['subject']);
+        $subject = "{$lang['sendmessage_re']}" . htmlsafechars($msga['subject']);
       }
 
 
@@ -172,10 +172,10 @@ $mm_template[3] = array( $lang['sendmessage_mm_template3_sub'], $lang['sendmessa
       $HTMLOUT .= "<table border='1' cellspacing='0' cellpadding='5'>
       <tr>
         <td colspan='2'><b>{$lang['sendmessage_subject']}</b>
-      <input name='subject' type='text' size='76' value='".(isset($subject) ? htmlentities($subject, ENT_QUOTES) : '')."' /></td>
+      <input name='subject' type='text' size='76' value='".(isset($subject) ? htmlsafechars($subject) : '')."' /></td>
       </tr>
       <tr>
-        <td".($replyto ? " colspan=2":'')."><textarea name='msg' cols='80' rows='15'>".(isset($body) ? htmlspecialchars($body) : '')."</textarea></td></tr>
+        <td".($replyto ? " colspan=2":'')."><textarea name='msg' cols='80' rows='15'>".(isset($body) ? htmlsafechars($body) : '')."</textarea></td></tr>
       <tr>";
       
       if ($replyto) 

@@ -57,7 +57,7 @@ loggedinorreturn();
     
     while($row = mysql_fetch_assoc($query)) 
     {
-      $HTMLOUT .= "<tr><td>{$row['id']}</td><td>".htmlspecialchars($row['filename'])."</td><td>{$row['score']}</td></tr>";
+      $HTMLOUT .= "<tr><td>{$row['id']}</td><td>".htmlsafechars($row['filename'])."</td><td>{$row['score']}</td></tr>";
     }
     
     $HTMLOUT .= end_table();

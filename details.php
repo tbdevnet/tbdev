@@ -95,15 +95,15 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 		elseif (isset($_GET["edited"])) {
 			$HTMLOUT .= "<h2>{$lang['details_success_edit']}</h2>\n";
 			if (isset($_GET["returnto"]))
-				$HTMLOUT .= "<p><b>{$lang['details_go_back']}<a href='" . htmlspecialchars($_GET["returnto"]) . "'>{$lang['details_whence']}</a>.</b></p>\n";
+				$HTMLOUT .= "<p><b>{$lang['details_go_back']}<a href='" . htmlsafechars($_GET["returnto"]) . "'>{$lang['details_whence']}</a>.</b></p>\n";
 		}
 		/* elseif (isset($_GET["searched"])) {
-			print("<h2>Your search for \"" . htmlspecialchars($_GET["searched"]) . "\" gave a single result:</h2>\n");
+			print("<h2>Your search for \"" . htmlsafechars($_GET["searched"]) . "\" gave a single result:</h2>\n");
 		} */
 		elseif (isset($_GET["rated"]))
 			$HTMLOUT .= "<h2>{$lang['details_rating_added']}</h2>\n";
 
-    $s = htmlentities( $row["name"], ENT_QUOTES );
+    $s = htmlsafechars( $row["name"] );
 		$HTMLOUT .= "<h1>$s</h1>\n";
     $HTMLOUT .= "<table width='750' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
 
@@ -115,12 +115,12 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 		}
 		$editlink = "a href=\"$url\" class=\"sublink\"";
 
-//		$s = "<b>" . htmlspecialchars($row["name"]) . "</b>";
+//		$s = "<b>" . htmlsafechars($row["name"]) . "</b>";
 //		if ($owned)
 //			$s .= " $spacer<$editlink>[Edit torrent]</a>";
 //		tr("Name", $s, 1);
 
-		$HTMLOUT .= "<tr><td class='rowhead' width='1%'>{$lang['details_download']}</td><td width='99%' align='left'><a class='index' href='download.php?torrent=$id'>" . htmlspecialchars($row["filename"]) . "</a></td></tr>";
+		$HTMLOUT .= "<tr><td class='rowhead' width='1%'>{$lang['details_download']}</td><td width='99%' align='left'><a class='index' href='download.php?torrent=$id'>" . htmlsafechars($row["filename"]) . "</a></td></tr>";
 /*
 		function hex_esc($matches) {
 			return sprintf("%02x", ord($matches[0]));
@@ -212,7 +212,7 @@ if (!empty($xrow))
 		$HTMLOUT .= tr("{$lang['details_snatched']}", $row["times_completed"] . "{$lang['details_times']}");
 
 		//$keepget = "";
-		$uprow = (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlspecialchars($row["username"]) . "</b></a>") : "<i>{$lang['details_unknown']}</i>");
+		$uprow = (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlsafechars($row["username"]) . "</b></a>") : "<i>{$lang['details_unknown']}</i>");
 		if ($owned)
 			$uprow .= " $spacer<$editlink><b>{$lang['details_edit']}</b></a>";
 		$HTMLOUT .= tr("Upped by", $uprow, 1);
@@ -231,7 +231,7 @@ if (!empty($xrow))
 		$HTMLOUT .= "</table>";
 
 		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
-		$HTMLOUT .= "<h1>{$lang['details_comments']}<a href='details.php?id=$id'>" . htmlentities( $row["name"], ENT_QUOTES ) . "</a></h1>\n";
+		$HTMLOUT .= "<h1>{$lang['details_comments']}<a href='details.php?id=$id'>" . htmlsafechars( $row["name"] ) . "</a></h1>\n";
 
 
     $HTMLOUT .= "<p><a name=\"startcomments\"></a></p>\n";
@@ -265,6 +265,6 @@ if (!empty($xrow))
     $HTMLOUT .= $commentbar;
 
 ///////////////////////// HTML OUTPUT ////////////////////////////
-    print stdhead("{$lang['details_details']}\"" . htmlentities($row["name"], ENT_QUOTES) . "\"") . $HTMLOUT . stdfoot();
+    print stdhead("{$lang['details_details']}\"" . htmlsafechars($row["name"]) . "\"") . $HTMLOUT . stdfoot();
 
 ?>

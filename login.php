@@ -25,7 +25,7 @@ require_once "include/bittorrent.php" ;
     // Begin the session
     session_start();
     if (isset($_SESSION['captcha_time']))
-    (time() - $_SESSION['captcha_time'] < 10) ? exit("{$lang['login_spam']}") : NULL;
+    (TIME_NOW - $_SESSION['captcha_time'] < 10) ? exit("{$lang['login_spam']}") : NULL;
 
     $HTMLOUT = '';
 
@@ -79,7 +79,7 @@ require_once "include/bittorrent.php" ;
 
 
     if (isset($returnto))
-      $HTMLOUT .= "<input type='hidden' name='returnto' value='" . htmlentities($returnto) . "' />\n";
+      $HTMLOUT .= "<input type='hidden' name='returnto' value='" . htmlsafechars($returnto) . "' />\n";
 
 
     $HTMLOUT .= "</form>

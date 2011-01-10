@@ -67,7 +67,7 @@ require_once "include/user_functions.php";
     $from_is = "FROM users u WHERE u.id IN (" . join(',', $from_is) .")";
 
     $query = "INSERT INTO messages (sender, receiver, added, msg, subject, location, poster) ".
-             "SELECT $sender_id, u.id, " . time() . ", " . sqlesc($msg) .
+             "SELECT $sender_id, u.id, " . TIME_NOW . ", " . sqlesc($msg) .
              ", ". sqlesc($subject).", 1, $sender_id " . $from_is;
 
     mysql_query($query) or sqlerr(__FILE__, __LINE__);
@@ -151,11 +151,11 @@ require_once "include/user_functions.php";
 
 	  $subject = trim($_POST['subject']);
     
-    mysql_query("INSERT INTO messages (poster, sender, receiver, added, msg, subject, saved, location) VALUES(" . $CURUSER["id"] . ", " . $CURUSER["id"] . ", $receiver, " . time() . ", " . sqlesc($msg) . ", " . sqlesc($subject) . ", " . sqlesc($save) . ", 1)") or sqlerr(__FILE__, __LINE__);
+    mysql_query("INSERT INTO messages (poster, sender, receiver, added, msg, subject, saved, location) VALUES(" . $CURUSER["id"] . ", " . $CURUSER["id"] . ", $receiver, " . TIME_NOW . ", " . sqlesc($msg) . ", " . sqlesc($subject) . ", " . sqlesc($save) . ", 1)") or sqlerr(__FILE__, __LINE__);
 
 	  if (strpos($user['notifs'], '[pm]') !== false)
 	  {
-	    if (time() - $user["la"] >= 300)
+	    if (TIME_NOW - $user["la"] >= 300)
 	    {
 	    $username = $CURUSER["username"];
 $body = <<<EOD
