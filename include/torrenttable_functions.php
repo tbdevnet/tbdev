@@ -102,7 +102,7 @@ function torrenttable($res, $variant = "index") {
         }
         $htmlout .= "</td>\n";
 
-        $dispname = htmlspecialchars($row["name"]);
+        $dispname = htmlsafechars($row["name"]);
         
         $htmlout .= "<td align='left'><a href='details.php?";
         if ($variant == "mytorrents")
@@ -114,7 +114,7 @@ function torrenttable($res, $variant = "index") {
 
 				if ($wait)
 				{
-				  $elapsed = floor((time() - $row["added"]) / 3600);
+				  $elapsed = floor((TIME_NOW - $row["added"]) / 3600);
 	        if ($elapsed < $wait)
 	        {
 	          $color = dechex(floor(127*($wait - $elapsed)/48 + 128)*65536);
@@ -193,7 +193,7 @@ function torrenttable($res, $variant = "index") {
 */
         $htmlout .= "<td align='center'><span style='white-space: nowrap;'>" . str_replace(",", "<br />", get_date( $row['added'],'')) . "</span></td>\n";
         
-		$ttl = (28*24) - floor((time() - $row["added"]) / 3600);
+		$ttl = (28*24) - floor((TIME_NOW - $row["added"]) / 3600);
 		
 		if ($ttl == 1) 
                    $ttl .= "<br />".$lang["torrenttable_hour_singular"].""; 
@@ -242,7 +242,7 @@ function torrenttable($res, $variant = "index") {
             $htmlout .= "<td align='right'>0</td>\n";
 
         if ($variant == "index")
-            $htmlout .= "<td align='center'>" . (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlspecialchars($row["username"]) . "</b></a>") : "<i>(".$lang["torrenttable_unknown_uploader"].")</i>") . "</td>\n";
+            $htmlout .= "<td align='center'>" . (isset($row["username"]) ? ("<a href='userdetails.php?id=" . $row["owner"] . "'><b>" . htmlsafechars($row["username"]) . "</b></a>") : "<i>(".$lang["torrenttable_unknown_uploader"].")</i>") . "</td>\n";
 
        $htmlout .= "</tr>\n";
     }
@@ -274,9 +274,9 @@ function commenttable($rows)
 			if ($title == "")
 				$title = get_user_class_name($row["class"]);
 			else
-				$title = htmlspecialchars($title);
+				$title = htmlsafechars($title);
         $htmlout .= "<a name='comm{$row["id"]}' href='userdetails.php?id={$row["user"]}'><b>" .
-        	htmlspecialchars($row["username"]) . "</b></a>" . ($row["donor"] == "yes" ? "<img src='{$TBDEV['pic_base_url']}star.gif' alt='".$lang["commenttable_donor_alt"]."' />" : "") . ($row["warned"] == "yes" ? "<img src=".
+        	htmlsafechars($row["username"]) . "</b></a>" . ($row["donor"] == "yes" ? "<img src='{$TBDEV['pic_base_url']}star.gif' alt='".$lang["commenttable_donor_alt"]."' />" : "") . ($row["warned"] == "yes" ? "<img src=".
     			"'{$TBDEV['pic_base_url']}warned.gif' alt='".$lang["commenttable_warned_alt"]."' />" : "") . " ($title)\n";
 		}
 		else
@@ -286,7 +286,7 @@ function commenttable($rows)
 		$htmlout .= ($row["user"] == $CURUSER["id"] || get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=edit&amp;cid={$row['id']}'>".$lang["commenttable_edit"]."</a>]" : "") .
 			(get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=delete&amp;cid={$row['id']}'>".$lang["commenttable_delete"]."</a>]" : "") .
 			($row["editedby"] && get_user_class() >= UC_MODERATOR ? "- [<a href='comment.php?action=vieworiginal&amp;cid={$row['id']}'>".$lang["commenttable_view_original"]."</a>]" : "") . "</p>\n";
-		$avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($row["avatar"]) : "");
+		$avatar = ($CURUSER["avatars"] == "yes" ? htmlsafechars($row["avatar"]) : "");
 		
 		if (!$avatar)
 			$avatar = "{$TBDEV['pic_base_url']}default_avatar.gif";

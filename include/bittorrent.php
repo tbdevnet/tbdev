@@ -16,8 +16,8 @@
 |   $URL$
 +------------------------------------------------
 */
-require_once("include/config.php");
-require_once("cleanup.php");
+require_once("config.php");
+//require_once("cleanup.php");
 
 
 /**** validip/getip courtesy of manolete <manolete@myway.com> ****/
@@ -25,30 +25,9 @@ require_once("cleanup.php");
 // IP Validation
 function validip($ip)
 {
-	if (!empty($ip) && $ip == long2ip(ip2long($ip)))
-	{
-		// reserved IANA IPv4 addresses
-		// http://www.iana.org/assignments/ipv4-address-space
-		$reserved_ips = array (
-				array('0.0.0.0','2.255.255.255'),
-				array('10.0.0.0','10.255.255.255'),
-				array('127.0.0.0','127.255.255.255'),
-				array('169.254.0.0','169.254.255.255'),
-				array('172.16.0.0','172.31.255.255'),
-				array('192.0.2.0','192.0.2.255'),
-				array('192.168.0.0','192.168.255.255'),
-				array('255.255.255.0','255.255.255.255')
-		);
-
-		foreach ($reserved_ips as $r)
-		{
-				$min = ip2long($r[0]);
-				$max = ip2long($r[1]);
-				if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max)) return false;
-		}
-		return true;
-	}
-	else return false;
+	return filter_var($ip, FILTER_VALIDATE_IP,
+                  array('flags' => FILTER_FLAG_NO_PRIV_RANGE, FILTER_FLAG_NO_RES_RANGE)
+                  ) ? true : false;
 }
 
 // Patched function to detect REAL IP address if it's valid
@@ -144,26 +123,32 @@ function userlogin() {
 }
 
 function autoclean() {
-    global $TBDEV;
+    //global $TBDEV;
 
-    $now = time();
+    $now = TIME_NOW;
     //$docleanup = 0;
 
-    $res = mysql_query("SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
-    $row = mysql_fetch_array($res);
-    if (!$row) {
-        mysql_query("INSERT INTO avps (arg, value_u) VALUES ('lastcleantime',$now)");
-        return;
-    }
-    $ts = $row[0];
-    if ($ts + $TBDEV['autoclean_interval'] > $now)
-        return;
-    mysql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
-    if (!mysql_affected_rows())
-        return;
-
+    $sql = @mysql_query( "SELECT * FROM cleanup WHERE clean_on = 1 AND clean_time <= {$now} ORDER BY clean_time ASC LIMIT 0,1" );
     
-    docleanup();
+    $row = mysql_fetch_assoc( $sql );
+    
+    if ( $row['clean_id'] )
+		{
+			$next_clean = intval( $now + ($row['clean_increment'] ? $row['clean_increment'] : 15*60) );
+			
+			@mysql_query( "UPDATE cleanup SET clean_time = $next_clean WHERE clean_id = {$row['clean_id']}" );
+			
+			if ( file_exists( ROOT_PATH.'/include/cleanup/'.$row['clean_file'] ) )
+			{
+				require_once( ROOT_PATH.'/include/cleanup/'.$row['clean_file'] );
+			
+        register_shutdown_function( 'docleanup', $row );
+			}
+		
+      
+		}
+    
+        //docleanup();
 }
 
 function unesc($x) {
@@ -183,22 +168,7 @@ function mksize($bytes)
 	else
 		return number_format($bytes / 1099511627776, 2) . " TB";
 }
-/*
-function mksizeint($bytes)
-{
-	$bytes = max(0, $bytes);
-	if ($bytes < 1000)
-		return floor($bytes) . " B";
-	elseif ($bytes < 1000 * 1024)
-		return floor($bytes / 1024) . " kB";
-	elseif ($bytes < 1000 * 1048576)
-		return floor($bytes / 1048576) . " MB";
-	elseif ($bytes < 1000 * 1073741824)
-		return floor($bytes / 1073741824) . " GB";
-	else
-		return floor($bytes / 1099511627776) . " TB";
-}
-*/
+
 
 function mkprettytime($s) {
     if ($s < 0)
@@ -238,6 +208,14 @@ function mkglobal($vars) {
     return 1;
 }
 
+function htmlsafechars($txt='') {
+
+  $txt = preg_replace("/&(?!#[0-9]+;)(?:amp;)?/s", '&amp;', $txt );
+  $txt = str_replace( array("<",">",'"',"'"), array("&lt;", "&gt;", "&quot;", '&#039;'), $txt );
+
+  return $txt;
+}
+
 
 function validfilename($name) {
     return preg_match('/^[^\0-\x1f:\\\\\/?*\xff#<>|]+$/si', $name);
@@ -257,7 +235,7 @@ function sqlwildcardesc($x) {
 
 
 function stdhead( $title = "", $js='', $css='' ) {
-    global $CURUSER, $TBDEV, $lang;
+    global $CURUSER, $TBDEV, $lang, $msgalert;
 
     if (!$TBDEV['site_online'])
       die("Site is down for maintenance, please check back again later... thanks<br />");
@@ -267,7 +245,7 @@ function stdhead( $title = "", $js='', $css='' ) {
     if ($title == "")
         $title = $TBDEV['site_name'] .(isset($_GET['tbv'])?" (".TBVERSION.")":'');
     else
-        $title = $TBDEV['site_name'].(isset($_GET['tbv'])?" (".TBVERSION.")":''). " :: " . htmlspecialchars($title);
+        $title = $TBDEV['site_name'].(isset($_GET['tbv'])?" (".TBVERSION.")":''). " :: " . htmlsafechars($title);
         
     if ($CURUSER)
     {
@@ -364,12 +342,12 @@ function stdhead( $title = "", $js='', $css='' ) {
     <tr><td align='center' class='outer' style='padding-top: 20px; padding-bottom: 20px'>";
 
 
-    if ($TBDEV['msg_alert'] && isset($unread) && !empty($unread))
+    if ( $TBDEV['msg_alert'] && $msgalert )
     {
-      $htmlout .= "<p><table border='0' cellspacing='0' cellpadding='10' bgcolor='red'>
+      $htmlout .= "<table border='0' cellspacing='0' cellpadding='10' bgcolor='red'>
                   <tr><td style='padding: 10px; background: red'>\n
-                  <b><a href='messages.php'><font color='white'>".sprintf($lang['gl_msg_alert'], $unread) . ($unread > 1 ? "s" : "") . "!</font></a></b>
-                  </td></tr></table></p>\n";
+                  <b><a href='messages.php'><font color='white'>".sprintf($lang['gl_msg_alert'], $msgalert) . ($msgalert > 1 ? "s" : "") . "!</font></a></b>
+                  </td></tr></table>\n";
     }
 
     return $htmlout;
@@ -393,9 +371,9 @@ function httperr($code = 404) {
     exit();
 }
 /*
-function gmtime()
+function gmTIME_NOW
 {
-    return strtotime(get_date_time());
+    return strtotime(get_date_TIME_NOW);
 }
 */
 /*
@@ -426,11 +404,11 @@ function set_mycookie( $name, $value="", $expires_in=0, $sticky=1 )
 		
 		if ( $sticky == 1 )
     {
-      $expires = time() + 60*60*24*365;
+      $expires = TIME_NOW + 60*60*24*365;
     }
 		else if ( $expires_in )
 		{
-			$expires = time() + ( $expires_in * 86400 );
+			$expires = TIME_NOW + ( $expires_in * 86400 );
 		}
 		else
 		{
@@ -580,7 +558,7 @@ function sqlerr($file = '', $line = '') {
 	    		   <blockquote>\n<h1>MySQL Error</h1><b>There appears to be an error with the database.</b><br />
 	    		   You can try to refresh the page by clicking <a href=\"javascript:window.location=window.location;\">here</a>.
 	    		   <br /><br /><b>Error Returned</b><br />
-	    		   <form name='mysql'><textarea rows=\"15\" cols=\"60\">".htmlentities($the_error, ENT_QUOTES)."</textarea></form><br>We apologise for any inconvenience</blockquote></body></html>";
+	    		   <form name='mysql'><textarea rows=\"15\" cols=\"60\">".htmlsafechars($the_error)."</textarea></form><br>We apologise for any inconvenience</blockquote></body></html>";
     		   
     
 	       	print $out;
@@ -623,7 +601,7 @@ function sql_timestamp_to_unix_timestamp($s)
 /*
 function get_elapsed_time($ts)
 {
-  $mins = floor((gmtime() - $ts) / 60);
+  $mins = floor((gmTIME_NOW - $ts) / 60);
   $hours = floor($mins / 60);
   $mins -= $hours * 60;
   $days = floor($hours / 24);
@@ -712,8 +690,8 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
 			
           if ( $TBDEV['time_use_relative'] )
           {
-            $today_time     = gmdate('d,m,Y', ( time() + $GLOBALS['offset']) );
-            $yesterday_time = gmdate('d,m,Y', ( (time() - 86400) + $GLOBALS['offset']) );
+            $today_time     = gmdate('d,m,Y', ( TIME_NOW + $GLOBALS['offset']) );
+            $yesterday_time = gmdate('d,m,Y', ( (TIME_NOW - 86400) + $GLOBALS['offset']) );
           }	
         
           $offset_set = 1;
@@ -726,7 +704,7 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
         
         if ( $full_relative and ( $norelative != 1 ) )
         {
-          $diff = time() - $date;
+          $diff = TIME_NOW - $date;
           
           if ( $diff < 3600 )
           {
@@ -774,7 +752,7 @@ function get_date($date, $method, $norelative=0, $full_relative=0)
           
           if ( $TBDEV['time_use_relative'] == 2 )
           {
-            $diff = time() - $date;
+            $diff = TIME_NOW - $date;
           
             if ( $diff < 3600 )
             {
@@ -816,12 +794,12 @@ function hash_pad($hash) {
 
 function StatusBar() {
 
-	global $CURUSER, $TBDEV, $lang;
+	global $CURUSER, $TBDEV, $lang, $msgalert;
 	
 	if (!$CURUSER)
 		return "<tr><td colspan='2'>Yeah Yeah!</td></tr>";
 
-
+ 
 	$upped = mksize($CURUSER['uploaded']);
 	
 	$downed = mksize($CURUSER['downloaded']);
@@ -845,8 +823,8 @@ function StatusBar() {
 	
 	$arr1 = mysql_fetch_row($res1);
 	
-	$unread = $arr1[0];
-	
+	$unread = ($arr1[0] > 0 ? "<span style='background:red;padding:1px;'><strong>{$arr1[0]}</strong></span>" : $arr1[0]);
+	$msgalert = $arr1[0];
 	$inbox = ($unread == 1 ? "$unread&nbsp;{$lang['gl_msg_singular']}" : "$unread&nbsp;{$lang['gl_msg_plural']}");
 
 	

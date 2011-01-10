@@ -32,7 +32,7 @@ function pager($rpp, $count, $href, $opts = array()) {
     }
 
     if (isset($_GET["page"])) {
-        $page = 0 + $_GET["page"];
+        $page = (int)$_GET["page"];
         if ($page < 0)
             $page = $pagedefault;
     }

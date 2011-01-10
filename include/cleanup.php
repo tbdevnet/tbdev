@@ -18,9 +18,9 @@
 */
 require_once("bittorrent.php");
 
-function deadtime() {
+function deadtime {
     global $TBDEV;
-    return time() - floor($TBDEV['announce_interval'] * 1.3);
+    return TIME_NOW - floor($TBDEV['announce_interval'] * 1.3);
 }
 
 function docleanup() {
@@ -99,7 +99,7 @@ function docleanup() {
 	$deadtime -= $TBDEV['max_dead_torrent_time'];
 	@mysql_query("UPDATE torrents SET visible='no' WHERE visible='yes' AND last_action < $deadtime");
 
-	$deadtime = time() - $TBDEV['signup_timeout'];
+	$deadtime = TIME_NOW - $TBDEV['signup_timeout'];
 	@mysql_query("DELETE FROM users WHERE status = 'pending' AND added < $deadtime AND last_login < $deadtime AND last_access < $deadtime");
 
 	$torrents = array();
@@ -139,13 +139,13 @@ function docleanup() {
 
 	//delete inactive user accounts
 	$secs = 42*86400;
-	$dt = (time() - $secs);
+	$dt = (TIME_NOW - $secs);
 	$maxclass = UC_POWER_USER;
 	@mysql_query("DELETE FROM users WHERE status='confirmed' AND class <= $maxclass AND last_access < $dt");
 
 	// lock topics where last post was made more than x days ago
 /*	$secs = 7*86400;
-	$res = mysql_query("SELECT topics.id FROM topics LEFT JOIN posts ON topics.lastpost = posts.id WHERE topics.locked = 'no' AND topics.sticky = 'no' AND " . gmtime() . " - UNIX_TIMESTAMP(posts.added) > $secs") or sqlerr(__FILE__, __LINE__);
+	$res = mysql_query("SELECT topics.id FROM topics LEFT JOIN posts ON topics.lastpost = posts.id WHERE topics.locked = 'no' AND topics.sticky = 'no' AND " . gmTIME_NOW . " - UNIX_TIMESTAMP(posts.added) > $secs") or sqlerr(__FILE__, __LINE__);
   if(mysql_num_rows($res) > 0) {
 	while ($arr = mysql_fetch_assoc($res))
     $pids[] = $arr['id'];
@@ -153,10 +153,10 @@ function docleanup() {
   }
 */  
   //remove expired warnings
-  $res = @mysql_query("SELECT id FROM users WHERE warned='yes' AND warneduntil < ".time()." AND warneduntil <> 0") or sqlerr(__FILE__, __LINE__);
+  $res = @mysql_query("SELECT id FROM users WHERE warned='yes' AND warneduntil < ".TIME_NOW." AND warneduntil <> 0") or sqlerr(__FILE__, __LINE__);
   if (mysql_num_rows($res) > 0)
   {
-    $dt = time();
+    $dt = TIME_NOW;
     $msg = sqlesc("Your warning has been removed. Please keep in your best behaviour from now on.\n");
     while ($arr = mysql_fetch_assoc($res))
     {
@@ -168,11 +168,11 @@ function docleanup() {
 	// promote power users
 	$limit = 25*1024*1024*1024;
 	$minratio = 1.05;
-	$maxdt = (time() - 86400*28);
+	$maxdt = (TIME_NOW - 86400*28);
 	$res = @mysql_query("SELECT id FROM users WHERE class = 0 AND uploaded >= $limit AND uploaded / downloaded >= $minratio AND added < $maxdt") or sqlerr(__FILE__, __LINE__);
 	if (mysql_num_rows($res) > 0)
 	{
-		$dt = time();
+		$dt = TIME_NOW;
 		$msg = sqlesc("Congratulations, you have been auto-promoted to [b]Power User[/b]. :)\nYou can now download dox over 1 meg and view torrent NFOs.\n");
 		while ($arr = mysql_fetch_assoc($res))
 		{
@@ -186,7 +186,7 @@ function docleanup() {
 	$res = mysql_query("SELECT id FROM users WHERE class = 1 AND uploaded / downloaded < $minratio") or sqlerr(__FILE__, __LINE__);
 	if (mysql_num_rows($res) > 0)
 	{
-		$dt = time();
+		$dt = TIME_NOW;
 		$msg = sqlesc("You have been auto-demoted from [b]Power User[/b] to [b]User[/b] because your share ratio has dropped below $minratio.\n");
 		while ($arr = mysql_fetch_assoc($res))
 		{
@@ -226,7 +226,7 @@ function docleanup() {
 
 	// delete old torrents
 	$days = 28;
-	$dt = (time() - ($days * 86400));
+	$dt = (TIME_NOW - ($days * 86400));
 	$res = mysql_query("SELECT id, name FROM torrents WHERE added < $dt");
 	while ($arr = mysql_fetch_assoc($res))
 	{
@@ -239,7 +239,7 @@ function docleanup() {
 	}
 
     // Remove expired readposts...
-    $dt = (time() - $TBDEV['readpost_expiry']);
+    $dt = (TIME_NOW - $TBDEV['readpost_expiry']);
 
     @mysql_query("DELETE readposts FROM readposts ".
         "LEFT JOIN posts ON readposts.lastpostread = posts.id ".

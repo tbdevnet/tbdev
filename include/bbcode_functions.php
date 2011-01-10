@@ -105,7 +105,7 @@ function format_comment($text, $strip_html = true)
 	$s = str_replace(";)", ":wink:", $s);
 
 	if ($strip_html)
-		$s = htmlentities($s, ENT_QUOTES, 'UTF-8');
+		$s = htmlsafechars( $s );
 
   if( preg_match( "#function\s*\((.*?)\|\|#is", $s ) )
   {
@@ -120,20 +120,38 @@ function format_comment($text, $strip_html = true)
   }
   
 	// [*]
-	$s = preg_replace("/\[\*\]/", "<li>", $s);
+	//$s = preg_replace("/\[\*\]/", "<li>", $s);
+	while( preg_match( "#\n?\[list\](.+?)\[/list\]\n?#ies" , $s ) )
+  {
+    $s = preg_replace( "#\n?\[list\](.+?)\[/list\]\n?#ies", "BB_list('\\1')" , $s );
+  }
+  
+  while( preg_match( "#\n?\[list=(a|A|i|I|1)\](.+?)\[/list\]\n?#ies" , $s ) )
+  {
+    $s = preg_replace( "#\n?\[list=(a|A|i|I|1)\](.+?)\[/list\]\n?#ies", "BB_list('\\2','\\1')" , $s );
+  }
+	
 	
 	// [b]Bold[/b]
-	$s = preg_replace("/\[b\]((\s|.)+?)\[\/b\]/", "<b>\\1</b>", $s);
+	$s = preg_replace("#\[b\](.+?)\[/b\]#is", "<b>\\1</b>", $s);
 
 	// [i]Italic[/i]
-	$s = preg_replace("/\[i\]((\s|.)+?)\[\/i\]/", "<i>\\1</i>", $s);
+	$s = preg_replace("#\[i\](.+?)\[/i\]#is", "<i>\\1</i>", $s);
 
 	// [u]Underline[/u]
-	$s = preg_replace("/\[u\]((\s|.)+?)\[\/u\]/", "<u>\\1</u>", $s);
-
-	// [u]Underline[/u]
-	$s = preg_replace("/\[u\]((\s|.)+?)\[\/u\]/i", "<u>\\1</u>", $s);
-
+	$s = preg_replace("#\[u\](.+?)\[/u\]#is", "<u>\\1</u>", $s);
+	
+	$s = preg_replace( "#\[(left|right|center)\](.+?)\[/\\1\]#is"  , "<div align=\"\\1\">\\2</div>", $s );
+	
+	while( preg_match( "#\[indent\](.+?)\[/indent\]#is" , $s ) )
+  {
+    $s = preg_replace( "#\[indent\](.+?)\[/indent\]#is"  , "<blockquote>\\1</blockquote>", $s );
+  }
+	
+	$s = preg_replace( "#\(c\)#i", "&copy;", $s );
+	$s = preg_replace( "#\(tm\)#i", "&#153;", $s );
+	$s = preg_replace( "#\(r\)#i", "&reg;" , $s );
+	
 	// [img]http://www/image.gif[/img]
 	$s = preg_replace("/\[img\](http:\/\/[^\s'\"<>]+(\.(jpg|gif|png)))\[\/img\]/i", "<img border=\"0\" src=\"\\1\" alt='' />", $s);
 
@@ -141,34 +159,33 @@ function format_comment($text, $strip_html = true)
 	$s = preg_replace("/\[img=(http:\/\/[^\s'\"<>]+(\.(gif|jpg|png)))\]/i", "<img border=\"0\" src=\"\\1\" alt='' />", $s);
 
 	// [color=blue]Text[/color]
-	$s = preg_replace(
-		"/\[color=([a-zA-Z]+)\]((\s|.)+?)\[\/color\]/i",
-		"<font color='\\1'>\\2</font>", $s);
+	$s = preg_replace("#\[color=([^\];\d\s]+)\](.+?)\[/color\]#is",
+		"<span style='color:\\1;'>\\2</span>", $s);
 
 	// [color=#ffcc99]Text[/color]
-	$s = preg_replace(
+/*	$s = preg_replace(
 		"/\[color=(#[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9])\]((\s|.)+?)\[\/color\]/i",
 		"<font color='\\1'>\\2</font>", $s);
-
+*/
 	// [url=http://www.example.com]Text[/url]
 	$s = preg_replace(
-		"/\[url=([^()<>\s]+?)\]((\s|.)+?)\[\/url\]/i",
+		"/\[url=([^()<>\s]+?)\](.+?)\[\/url\]/i",
 		"<a href=\"\\1\">\\2</a>", $s);
 
 	// [url]http://www.example.com[/url]
-	$s = preg_replace(
+/*	$s = preg_replace(
 		"/\[url\]([^()<>\s]+?)\[\/url\]/i",
 		"<a href=\"\\1\">\\1</a>", $s);
-
+*/
 	// [size=4]Text[/size]
 	$s = preg_replace(
-		"/\[size=([1-7])\]((\s|.)+?)\[\/size\]/i",
-		"<font size='\\1'>\\2</font>", $s);
+		"#\[size=([1-4])\](.+?)\[/size\]#si",
+		"<span style='font-size:\\1em;line-height:100%'>\\2</span>", $s);
 
 	// [font=Arial]Text[/font]
 	$s = preg_replace(
-		"/\[font=([a-zA-Z ,]+)\]((\s|.)+?)\[\/font\]/i",
-		"<font face=\"\\1\">\\2</font>", $s);
+		"/\[font=([a-zA-Z ,]+)\](.+?)\[\/font\]/i",
+		"<span style='font-family:\\1;'>\\2</span>", $s);
 
 //  //[quote]Text[/quote]
 //  $s = preg_replace(
@@ -201,9 +218,39 @@ function format_comment($text, $strip_html = true)
 	$s = str_replace("  ", " &nbsp;", $s);
 
 	foreach($smilies as $code => $url) {
-		$s = str_replace($code, "<img border='0' src=\"{$TBDEV['pic_base_url']}smilies/{$url}\" alt=\"" . htmlspecialchars($code) . "\" />", $s);
+		$s = str_replace($code, "<img border='0' src=\"{$TBDEV['pic_base_url']}smilies/{$url}\" alt=\"" . htmlsafechars($code) . "\" />", $s);
 }
 	return $s;
 }
 
+
+function BB_list( $txt="", $type="" ) {
+		if ($txt == "")
+		{
+			return;
+		}
+		
+		if ( $type == "" )
+		{
+			// Unordered list.
+			
+			return "<ul>".BB_list_item($txt)."</ul>";
+		}
+		else
+		{
+			// ordered list
+			
+			return "<ol type='$type'>".BB_list_item($txt)."</ol>";
+		}
+}
+
+
+function BB_list_item($txt) {
+
+		$txt = preg_replace( "#\[\*\]#", "</li><li>" , trim($txt) );
+		
+		$txt = preg_replace( "#^</?li>#"  , "", $txt );
+		
+		return str_replace( "\n</li>", "</li>", $txt."</li>" );
+}
 ?>
