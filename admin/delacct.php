@@ -27,16 +27,17 @@ require_once "include/user_functions.php";
 
     $lang = array_merge( $lang, load_language('ad_delacct') );
     
+    if( $CURUSER['class'] < UC_ADMINISTRATOR )
+      stderr($lang['text_error'], $lang['text_unable']);
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
       $username = trim($_POST["username"]);
-      $password = trim($_POST["password"]);
-      if (!$username || !$password)
+      //$password = trim($_POST["password"]);
+      if (!$username)
         stderr("{$lang['text_error']}", "{$lang['text_please']}");
         
-      $res = @mysql_query("SELECT * FROM users WHERE username=" . sqlesc($username) 
-                          . "AND passhash=md5(concat(secret,concat(" . sqlesc($password) . ",secret)))") 
-                          or sqlerr();
+      $res = @mysql_query("SELECT * FROM users WHERE username=" . sqlesc($username) ) or sqlerr();
       if (mysql_num_rows($res) != 1)
         stderr("{$lang['text_error']}", "{$lang['text_bad']}");
       $arr = mysql_fetch_assoc($res);
@@ -57,10 +58,10 @@ require_once "include/user_functions.php";
         <td class='rowhead'>{$lang['table_username']}</td>
         <td><input size='40' name='username' /></td>
       </tr>
-      <tr>
-        <td class='rowhead'>{$lang['table_password']}</td>
+       <!--<tr>
+       <td class='rowhead'>{$lang['table_password']}</td>
         <td><input type='password' size='40' name='password' /></td>
-      </tr>
+      </tr>-->
       <tr>
         <td colspan='2'><input type='submit' class='btn' value='{$lang['btn_delete']}' /></td>
       </tr>

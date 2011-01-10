@@ -98,6 +98,9 @@ require_once "include/user_functions.php";
 			
 			<span class='btn'><a href='admin.php?action=news'>{$lang['index_news']}</a></span>
 			
+			<span class='btn'><a href='admin.php?action=rules'>{$lang['index_rules']}</a></span>
+			
+			<span class='btn'><a href='admin.php?action=cleanup_manager'>Cleanup Manager</a></span>
 			
 		</td></tr></table>";
  

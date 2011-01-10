@@ -57,7 +57,7 @@ require_once "include/html_functions.php";
       
       $news = join(',', $newsIDS);
       
-      @mysql_query("UPDATE news set added = ".time()." WHERE id IN ($news)");
+      @mysql_query("UPDATE news set added = ".TIME_NOW." WHERE id IN ($news)");
       
       if(-1 == mysql_affected_rows())
         stderr("Error", "Update failed");
@@ -75,7 +75,7 @@ require_once "include/html_functions.php";
       if (!is_valid_id($newsid))
         stderr($lang['news_error'],sprintf($lang['news_gen_error'],1));
 
-      $returnto = isset($input['returno']) ? htmlentities($input["returnto"]) : '';
+      $returnto = isset($input['returno']) ? htmlsafechars($input["returnto"]) : '';
 
       $sure = isset($input["sure"]) ? (int)$input['sure'] : 0;
       
@@ -109,7 +109,7 @@ require_once "include/html_functions.php";
       $headline = (isset($input['headline']) AND !empty($input['headline'])) ? sqlesc($input['headline']) : sqlesc('TBDev.net News');
       
       if (!$added)
-        $added = time();
+        $added = TIME_NOW;
 
       @mysql_query("INSERT INTO news (userid, added, body, headline) VALUES ({$CURUSER['id']}, $added, $body, $headline)") or sqlerr(__FILE__, __LINE__);
         
@@ -147,11 +147,11 @@ require_once "include/html_functions.php";
         
         $body = sqlesc($body);
 
-        $editedat = time();
+        $editedat = TIME_NOW;
 
         @mysql_query("UPDATE news SET body=$body, headline=$headline WHERE id=$newsid") or sqlerr(__FILE__, __LINE__);
 
-        $returnto = isset($_POST['returnto']) ? htmlentities($_POST['returnto']) : '';
+        $returnto = isset($_POST['returnto']) ? htmlsafechars($_POST['returnto']) : '';
 
         if ($returnto != "")
           header("Location: {$TBDEV['baseurl']}/index.php");
@@ -160,37 +160,23 @@ require_once "include/html_functions.php";
       }
       else
       {
-        //$returnto = isset($_POST['returnto']) ? htmlentities($_POST['returnto']) : $TBDEV['baseurl'].'/news.php';
+        //$returnto = isset($_POST['returnto']) ? htmlsafechars($_POST['returnto']) : $TBDEV['baseurl'].'/news.php';
+        $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+        
         $HTMLOUT .= "<h1>{$lang['news_edit_title']}</h1>
         
-        <form method='post' action='admin.php?action=news'>
+        <form name='bbcode2text' method='post' action='admin.php?action=news'>
         
         <input type='hidden' name='newsid' value='$newsid' />
         
-        <input type='hidden' name='mode' value='edit' />
+        <input type='hidden' name='mode' value='edit' />";
         
-        <table width='700px'border='1' cellspacing='0' cellpadding='10px'>
-        <tr>
-          <td align='center'>
-            <input style='width:650px;' type='text' name='headline' size='50' value='".htmlentities($arr['headline'], ENT_QUOTES, 'UTF-8')."' />
-          </td>
-        </tr>
-        <tr>
-          <td align='center'>
-            <textarea style='width:650px;' name='body' cols='55' rows='10'>" . htmlentities($arr['body'], ENT_QUOTES) . "</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td align='center'>
-            <input type='submit' value='Okay' class='btn' />
-          </td>
-        </tr>
+        $HTMLOUT .= bbcode2textarea( 'Edit', htmlsafechars($arr['body']), htmlsafechars($arr['headline']) );
+          
         
-        </table>
+        $HTMLOUT .= "</form>\n";
         
-        </form>\n";
-        
-        print  stdhead($lang['news_edit_title']) . $HTMLOUT . stdfoot();
+        print  stdhead($lang['news_edit_title'], $js) . $HTMLOUT . stdfoot();
         exit();
       }
     }
@@ -203,26 +189,13 @@ require_once "include/html_functions.php";
     if (!empty($warning))
       $HTMLOUT .= "<p><font size='-3'>($warning)</font></p>";
     
-    $HTMLOUT .= "<form method='post' action='admin.php?action=news'>
-    <input type='hidden' name='mode' value='add' />
-    <table width='750px' border='1' cellspacing='0' cellpadding='10px'>
-      <tr>
-        <td align='center'>
-          <input  style='width:650px;' type='text' name='headline' size='50' value='' />
-        </td>
-      </tr>
-      <tr>
-        <td align='center'>
-          <textarea style='width:650px;' name='body' cols='55' rows='10'></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td align='center'>
-          <input type='submit' value='Okay' class='btn' />
-        </td>
-      </tr>
-    </table>
-    </form><br /><br />";
+    $HTMLOUT .= "<form name='bbcode2text' method='post' action='admin.php?action=news'>
+    <input type='hidden' name='mode' value='add' />";
+    
+    $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+        
+    $HTMLOUT .= bbcode2textarea( 'Add' );
+    $HTMLOUT .= "</form><br /><br />";
 
     $res = @mysql_query("SELECT * FROM news ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
 
@@ -238,7 +211,7 @@ require_once "include/html_functions.php";
       {
         $newsid = $arr["id"];
         $body = format_comment($arr["body"]);
-        $headline = htmlentities($arr['headline'], ENT_QUOTES, 'UTF-8');
+        $headline = htmlsafechars($arr['headline']);
         $userid = $arr["userid"];
         $added = get_date( $arr['added'],'');
 
@@ -280,6 +253,6 @@ require_once "include/html_functions.php";
     else
       stdmsg($lang['news_sorry'], $lang['news_nonews']);
       
-    print stdhead($lang['news_window_title']) . $HTMLOUT . stdfoot();
+    print stdhead($lang['news_window_title'], $js) . $HTMLOUT . stdfoot();
     die;
 ?>

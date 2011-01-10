@@ -48,7 +48,7 @@ require_once "include/user_functions.php";
       
       if (mysql_num_rows($res) == 0)
       {
-        stderr($lang['testip_result'], sprintf($lang['testip_notice'],htmlentities($ip, ENT_QUOTES)));
+        stderr($lang['testip_result'], sprintf($lang['testip_notice'],htmlsafechars($ip)));
       }
       else
       {
@@ -63,7 +63,7 @@ require_once "include/user_functions.php";
         {
           $first = long2ip($arr["first"]);
           $last = long2ip($arr["last"]);
-          $comment = htmlspecialchars($arr["comment"]);
+          $comment = htmlsafechars($arr["comment"]);
           $HTMLOUT .= "<tr><td>$first</td><td>$last</td><td>$comment</td></tr>\n";
         }
         

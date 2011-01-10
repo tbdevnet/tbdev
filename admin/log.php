@@ -13,7 +13,7 @@ require_once "include/user_functions.php";
     // delete items older than a week
     $secs = 24 * 60 * 60;
     
-    @mysql_query("DELETE FROM sitelog WHERE " . time() . " - added > $secs") or sqlerr(__FILE__, __LINE__);
+    @mysql_query("DELETE FROM sitelog WHERE " . TIME_NOW . " - added > $secs") or sqlerr(__FILE__, __LINE__);
     
     $res = mysql_query("SELECT added, txt FROM sitelog ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
     
@@ -37,7 +37,7 @@ require_once "include/user_functions.php";
         $date = explode( ',', get_date( $arr['added'], 'LONG' ) );
         $HTMLOUT .= "<tr><td>{$date[0]}</td>
         <td>{$date[1]}</td>
-        <td align='left'>".htmlentities($arr['txt'], ENT_QUOTES)."</td>
+        <td align='left'>".htmlsafechars($arr['txt'])."</td>
         </tr>\n";
       }
       

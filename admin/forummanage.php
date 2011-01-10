@@ -82,7 +82,7 @@ function showForums() {
 
       while($row = mysql_fetch_assoc($result)){
 
-      $HTMLOUT .= "<tr><td><a href='forums.php?action=viewforum&amp;forumid={$row["id"]}'><b>".htmlentities($row["name"], ENT_QUOTES)."</b></a><br />".htmlentities($row["description"], ENT_QUOTES)."</td>";
+      $HTMLOUT .= "<tr><td><a href='forums.php?action=viewforum&amp;forumid={$row["id"]}'><b>".htmlsafechars($row["name"])."</b></a><br />".htmlsafechars($row["description"])."</td>";
       $HTMLOUT .= "<td>{$row["topiccount"]}</td><td>{$row["postcount"]}</td><td>{$lang['text_minimal']} " . get_user_class_name($row["minclassread"]) . "</td><td>{$lang['text_minimal']} " . get_user_class_name($row["minclasswrite"]) . "</td><td>{$lang['text_minimal']} " . get_user_class_name($row["minclasscreate"]) . "</td><td align='center' style='white-space: nowrap;'><b><a href='admin.php?action=forummanage&amp;mode=edit&amp;id={$row["id"]}'>{$lang['text_edit']}</a>&nbsp;|&nbsp;<a href='admin.php?action=forummanage&amp;mode=delete&amp;id={$row["id"]}'><font color='red'>{$lang['text_delete']}</font></a></b></td></tr>"; 
           
     } 
@@ -198,15 +198,15 @@ function editForum() {
       $HTMLOUT .= "<form method='post' action='admin.php?action=forummanage&amp;mode=takeedit'>
       <table width='600'  border='0' cellspacing='0' cellpadding='3' align='center'>
       <tr align='center'>
-        <td colspan='2' class='colhead'>{$lang['header_editforum']} ".htmlentities($row["name"], ENT_QUOTES)."</td>
+        <td colspan='2' class='colhead'>{$lang['header_editforum']} ".htmlsafechars($row["name"])."</td>
       </tr>
       <tr>
         <td><b>{$lang['table_forumname']}</b></td>
-        <td><input name='name' type='text' size='30' maxlength='60' value='".htmlentities($row["name"], ENT_QUOTES)."' /></td>
+        <td><input name='name' type='text' size='30' maxlength='60' value='".htmlsafechars($row["name"])."' /></td>
       </tr>
       <tr>
         <td><b>{$lang['table_forumdescr']}</b></td>
-        <td><input name='desc' type='text' size='30' maxlength='200' value='".htmlentities($row["description"], ENT_QUOTES)."' /></td>
+        <td><input name='desc' type='text' size='30' maxlength='200' value='".htmlsafechars($row["description"])."' /></td>
       </tr>
       <tr>
         <td><b>{$lang['table_minreadperm']}</b></td>

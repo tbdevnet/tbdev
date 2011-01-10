@@ -67,7 +67,7 @@ $highlight = " bgcolor='lightgrey'";
 <tr>
 
   <td valign="middle" class='rowhead'><?php echo $lang['usersearch_name'] ?></td>
-  <td <?php echo (isset($_POST['n'])&&!empty($_POST['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_POST['n'])?htmlentities($_POST['n']):""?>" size='25' /></td>
+  <td <?php echo (isset($_POST['n'])&&!empty($_POST['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_POST['n'])?htmlsafechars($_POST['n']):""?>" size='25' /></td>
 
   <td valign="middle" class='rowhead'><?php echo $lang['usersearch_ratio'] ?></td>
   <td <?php echo (isset($_POST['r'])&&!empty($_POST['r']))?$highlight:""?>><select name="rt">
@@ -901,9 +901,9 @@ if (count($_POST) > 0 );//&& isset($_POST['n']))
           <td>
             <div align="center">
               <!--<input name="pmees" type="hidden" value="<?php echo $querypm?>" size=10>-->
-              <input name="pmees" type="hidden" value="<?php echo htmlentities(rtrim($ids, ':'))?>" />
+              <input name="pmees" type="hidden" value="<?php echo htmlsafechars(rtrim($ids, ':'))?>" />
               <input name="PM" type="submit" value="PM" class='btn' />
-              <input name="n_pms" type="hidden" value="<?php echo htmlentities($count)?>" size='10' />
+              <input name="n_pms" type="hidden" value="<?php echo htmlsafechars($count)?>" size='10' />
             </div></td>
         </tr>
       </table>

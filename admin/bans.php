@@ -58,7 +58,7 @@ require_once "include/user_functions.php";
         if ($first == -1 || $first === FALSE || $last == -1 || $last === FALSE)
           stderr("{$lang['stderr_error']}", "{$lang['text_badip.']}");
         $comment = sqlesc($comment);
-        $added = time();
+        $added = TIME_NOW;
 
         mysql_query("INSERT INTO bans (added, addedby, first, last, comment) 
                       VALUES($added, {$CURUSER['id']}, $first, $last, $comment)") or sqlerr(__FILE__, __LINE__);
@@ -111,7 +111,7 @@ require_once "include/user_functions.php";
           <td align='left'>{$arr['first']}</td>
           <td align='left'>{$arr['last']}</td>
           <td align='left'><a href='userdetails.php?id={$arr['addedby']}'>{$arr['username']}</a></td>
-          <td align='left'>".htmlentities($arr['comment'], ENT_QUOTES)."</td>
+          <td align='left'>".htmlsafechars($arr['comment'])."</td>
           <td><a href='admin.php?action=bans&amp;remove={$arr['id']}'>{$lang['text_remove']}</a></td>
          </tr>\n";
       }

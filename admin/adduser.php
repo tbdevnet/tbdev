@@ -47,7 +47,7 @@ require_once "include/password_functions.php";
       $secret = mksecret();
       $passhash = sqlesc( make_passhash( $secret, md5($password) ) );
       $secret = sqlesc($secret);
-      $time_now = time();
+      $time_now = TIME_NOW;
       
       @mysql_query("INSERT INTO users (added, last_access, secret, username, passhash, status, email) VALUES($time_now, $time_now, $secret, $username, $passhash, 'confirmed', $email)") or sqlerr(__FILE__, __LINE__);
       $res = @mysql_query("SELECT id FROM users WHERE username=$username");
