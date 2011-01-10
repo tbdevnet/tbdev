@@ -6,11 +6,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 
-INSERT INTO avps (arg, value_s, value_i, value_u) VALUES
-('lastcleantime', '', 0, 1293321999),
-('seeders', '', 0, 0),
-('leechers', '', 0, 0),
-('loadlimit', '12.5-1246045258', 0, 0);
+INSERT INTO forums (sort, id, name, description, minclassread, minclasswrite, postcount, topiccount, minclasscreate) VALUES
+(0, 1, 'VIP Lounge', 'Your area for discussion of topics, ideas, code & anything else you don''t want made public just yet.', 6, 6, 0, 0, 6);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
