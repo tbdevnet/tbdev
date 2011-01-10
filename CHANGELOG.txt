@@ -1,3 +1,234 @@
+Revision: 306
+Author: tbdevnet
+Date: 01:50:09, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+Added : /trunk/TB/cache/stats.php
+
+Revision: 305
+Author: tbdevnet
+Date: 01:47:22, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+
+
+Revision: 304
+Author: tbdevnet
+Date: 01:43:10, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+
+
+Revision: 303
+Author: tbdevnet
+Date: 01:31:41, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+Modified : /trunk/TB/install/announce_dist.php
+Modified : /trunk/TB/install/index.php
+Added : /trunk/TB/scripts/bbcode2text.js
+
+Revision: 302
+Author: tbdevnet
+Date: 01:27:04, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+Modified : /trunk/TB/lang/en/lang_ad_index.php
+Added : /trunk/TB/lang/en/lang_ad_rules.php
+
+Revision: 301
+Author: tbdevnet
+Date: 01:26:05, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+
+
+Revision: 300
+Author: tbdevnet
+Date: 01:25:02, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+
+
+Revision: 299
+Author: tbdevnet
+Date: 20:09:04, 06 January 2011
+Message:
+06 January 2011 changed ereg to preg_
+----
+Modified : /trunk/TB/announce.php
+
+Revision: 298
+Author: tbdevnet
+Date: 23:38:37, 01 January 2011
+Message:
+1st January 2011 added missing field donoruntil
+----
+Modified : /trunk/TB/install/sql/mysql_tables.php
+
+Revision: 297
+Author: tbdevnet
+Date: 19:48:18, 29 December 2010
+Message:
+29th December 2010 added rezize_image
+----
+Modified : /trunk/TB/modtask.php
+
+Revision: 296
+Author: tbdevnet
+Date: 22:55:45, 19 December 2010
+Message:
+19th December 2010 added installer to svn consider as beta
+----
+
+
+Revision: 295
+Author: tbdevnet
+Date: 22:24:48, 07 December 2010
+Message:
+7th December 2010 small changes various fix's
+----
+Modified : /trunk/TB/chat.php
+
+Revision: 294
+Author: tbdevnet
+Date: 17:40:04, 07 December 2010
+Message:
+7th December 2010 small changes various fix's
+----
+Modified : /trunk/TB/include/config.php
+
+Revision: 293
+Author: tbdevnet
+Date: 17:34:14, 07 December 2010
+Message:
+7th December 2010 small changes various fix's
+----
+Modified : /trunk/TB/download.php
+Modified : /trunk/TB/include/config.php
+Deleted : /trunk/TB/pic
+Modified : /trunk/TB/scrape.php
+Modified : /trunk/TB/takeupload.php
+
+Revision: 292
+Author: tbdevnet
+Date: 16:21:53, 07 December 2010
+Message:
+7th December 2010 small changes various fix's
+----
+
+
+Revision: 287
+Author: tbdevnet
+Date: 15:37:48, 21 April 2010
+Message:
+21st April 2010 update to takeprofedit & confirmemail.php fix
+----
+Modified : /trunk/TB/confirmemail.php
+Modified : /trunk/TB/takeprofedit.php
+
+Revision: 286
+Author: tbdevnet
+Date: 01:11:00, 17 April 2010
+Message:
+16th April 2010 other small changes
+----
+Modified : /trunk/TB/forums/forum_functions.php
+Modified : /trunk/TB/forums/forum_topicview.php
+Modified : /trunk/TB/forums/forum_view.php
+
+Revision: 285
+Author: tbdevnet
+Date: 11:40:25, 15 April 2010
+Message:
+14th April 2010 Removed bark(0 and other small changes
+----
+Modified : /trunk/TB/include/bittorrent.php
+
+Revision: 284
+Author: tbdevnet
+Date: 23:25:33, 14 April 2010
+Message:
+14th April 2010 Removed bark(0 and other small changes
+----
+Modified : /trunk/TB/lang/en/lang_ad_index.php
+Modified : /trunk/TB/lang/en/lang_global.php
+Modified : /trunk/TB/lang/en/lang_my.php
+Modified : /trunk/TB/my.php
+
+Revision: 283
+Author: tbdevnet
+Date: 22:07:16, 14 April 2010
+Message:
+14th April 2010 Removed bark(0 and other small changes
+----
+Modified : /trunk/TB/delete.php
+Modified : /trunk/TB/include/bbcode_functions.php
+Modified : /trunk/TB/include/bittorrent.php
+Modified : /trunk/TB/takeedit.php
+Modified : /trunk/TB/takelogin.php
+Modified : /trunk/TB/takeprofedit.php
+Modified : /trunk/TB/takerate.php
+Modified : /trunk/TB/takesignup.php
+Modified : /trunk/TB/userdetails.php
+
+Revision: 282
+Author: tbdevnet
+Date: 16:43:11, 19 March 2010
+Message:
+19th March 2010 Scrape update added single scrape and min interval flags
+----
+Modified : /trunk/TB/scrape.php
+
+Revision: 281
+Author: tbdevnet
+Date: 16:40:13, 19 March 2010
+Message:
+19th March 2010 Scrape update added single scrape and min interval flags
+----
+Modified : /trunk/TB/scrape.php
+
+Revision: 280
+Author: tbdevnet
+Date: 13:33:45, 27 February 2010
+Message:
+
+----
+Modified : /trunk/TB/include/bittorrent.php
+
+Revision: 279
+Author: tbdevnet
+Date: 13:09:55, 27 February 2010
+Message:
+Imfamous quote from bvlisp - Wolfman - [12-02-10 16:23] wolfman: i can put up a synflood with 200 000 conections and see hove it handles if u like - You're so busted ha ha ha ha!
+----
+Added : /trunk/TB (Copy from path: /trunk/tbdev, Revision, 278)
+Deleted : /trunk/tbdev
+
+Revision: 278
+Author: tbdevnet
+Date: 13:05:46, 27 February 2010
+Message:
+Imfamous quote from bvlisp - Wolfman - [12-02-10 16:23] wolfman: i can put up a synflood with 200 000 conections and see hove it handles if u like - You're so busted ha ha ha ha!
+
+
+
+Revision: 277
+Author: tbdevnet
+Date: 12:49:07, 27 February 2010
+Message:
+Imfamous quote from bvlisp - Wolfman - [12-02-10 16:23] wolfman: i can put up a synflood with 200 000 conections and see hove it handles if u like - You're so busted ha ha ha ha!
+----
+Added : /trunk/tbdev
+
+
+
 2004-05-26 - wyz - Security fix in userdetails.php. Avatar field was not being escaped, html injection was possible (confirmed).
 
 2004-05-26 - rb - userdetails: added seeder/leecher count and did some optimizations.
