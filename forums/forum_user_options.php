@@ -60,7 +60,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
         $body = sqlesc($body);
 
-        $editedat = time();
+        $editedat = TIME_NOW;
 
         @mysql_query("UPDATE posts SET body=$body, editedat=$editedat, editedby=$CURUSER[id] WHERE id=$postid") or sqlerr(__FILE__, __LINE__);
 
@@ -76,27 +76,19 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
       }
 
       $HTMLOUT = '';
-
+      $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+      $returnto = htmlsafechars(filter_var($_SERVER["HTTP_REFERER"], FILTER_SANITIZE_STRING));
+      
       $HTMLOUT .= "<h1>{$lang['forum_user_options_edit_post_header']}</h1>
 
-      <form method='post' action='forums.php?action=editpost&amp;postid=$postid'>
-      <input type='hidden' name='returnto' value='" . htmlspecialchars($_SERVER["HTTP_REFERER"]) . "' />
+      <form name='bbcode2text' method='post' action='forums.php?action=editpost&amp;postid=$postid'>
+      <input type='hidden' name='returnto' value='{$returnto}' />";
+      
+      $HTMLOUT .= bbcode2textarea( $lang['forum_user_options_okay'], htmlsafechars($arr["body"]) );
+      
+      $HTMLOUT .= "</form>\n";
 
-      <table border='1' cellspacing='0' cellpadding='5'>
-        <tr>
-          <td style='padding: 0px'>
-            <textarea name='body' cols='100' rows='20' style='border: 0px'>" . htmlspecialchars($arr["body"]) . "</textarea>
-          </td>
-        </tr>
-        <tr>
-          <td align='center'>
-            <input type='submit' value='{$lang['forum_user_options_okay']}' class='btn' />
-          </td>
-        </tr>
-      </table>
-      </form>\n";
-
-      print stdhead('Editing post') . $HTMLOUT . stdfoot();
+      print stdhead('Editing post', $js) . $HTMLOUT . stdfoot();
 
       die;
     }

@@ -41,7 +41,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $arr = mysql_fetch_assoc($res) or stderr("{$lang['forum_topic_view_forum_error']}", "{$lang['forum_topic_view_notfound']}");
 
     $locked = ($arr["locked"] == 'yes');
-    $subject = htmlspecialchars($arr["subject"], ENT_QUOTES, 'UTF-8');
+    $subject = htmlsafechars($arr["subject"]);
     $sticky = $arr["sticky"] == "yes";
     $forumid = $arr["forumid"];
     $maypost = false;
@@ -195,7 +195,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
         else
         {
   //		if ($arr2["enabled"] == "yes")
-            //$avatar = ($CURUSER["avatars"] == "yes" ? htmlspecialchars($arr2["avatar"]) : "");
+            //$avatar = ($CURUSER["avatars"] == "yes" ? htmlsafechars($arr2["avatar"]) : "");
   //	    else
   //			$avatar = "{$TBDEV['pic_base_url']}disabled_avatar.gif";
 
@@ -211,7 +211,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
 
         if ($CURUSER["avatars"] == "yes")
         {
-          $avatar = $arr['avatar'] ? "<div style='text-align:center;padding:5px;'><img width='{$arr['av_w']}' height='{$arr['av_h']}' src='".htmlentities($arr['avatar'], ENT_QUOTES)."' alt='' /></div>" : "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='' />";
+          $avatar = $arr['avatar'] ? "<div style='text-align:center;padding:5px;'><img width='{$arr['av_w']}' height='{$arr['av_h']}' src='".htmlsafechars($arr['avatar'])."' alt='' /></div>" : "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='' />";
         }
         else
         {
@@ -271,7 +271,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
       
         $postadd = $arr['added'];
       //..rp..
-      if (($postid > $lpr) AND ($postadd > (time() - $TBDEV['readpost_expiry']))) 
+      if (($postid > $lpr) AND ($postadd > (TIME_NOW - $TBDEV['readpost_expiry']))) 
       {
         if ($lpr)
         {
@@ -335,7 +335,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
       if (get_user_class() >= UC_MODERATOR)
       {
         //attach_frame();
-        $req_uri = htmlentities($_SERVER['PHP_SELF']);
+        $req_uri = htmlsafechars($_SERVER['PHP_SELF']);
         
         $res = mysql_query("SELECT id,name,minclasswrite FROM forums ORDER BY name") or sqlerr(__FILE__, __LINE__);
         
@@ -367,7 +367,7 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
               <form method='post' action='forums.php?action=renametopic'>
               <input type='hidden' name='topicid' value='$topicid' />
               <input type='hidden' name='returnto' value='{$req_uri}' />
-              <input type='text' name='subject' size='60' maxlength='$maxsubjectlength' value='" . htmlspecialchars($subject) . "' />
+              <input type='text' name='subject' size='60' maxlength='$maxsubjectlength' value='" . htmlsafechars($subject) . "' />
               <input type='submit' value='{$lang['forum_topic_view_okay']}' />
               </form>
             </td>
@@ -377,7 +377,8 @@ mysql_query("INSERT INTO readposts (userid, topicid) VALUES($userid, $topicid)")
             <td>
               <form method='post' action='forums.php?action=movetopic'>
               <input type='hidden' name='topicid' value='$topicid' />
-              <select name='forumid'>";
+              <select name='forumid'>
+              <option value='0'>-- Move Topic --</option>\n";
 
         while ($arr = mysql_fetch_assoc($res))
           if ($arr["id"] != $forumid && get_user_class() >= $arr["minclasswrite"])

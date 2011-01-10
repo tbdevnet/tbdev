@@ -28,7 +28,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $maxresults = 25;
 
     // ..rp..
-    $dt = (time() - $TBDEV['readpost_expiry']);
+    $dt = (TIME_NOW - $TBDEV['readpost_expiry']);
 
     $res = @mysql_query("SELECT st.id, st.forumid, st.subject, st.lastpost ".
     "FROM topics AS st ".
@@ -90,7 +90,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
             <tr>
               <td class=embedded><img src='{$forum_pic_url}unlockednew.gif' style='margin-right: 5px'>
               </td>
-              <td class='embedded'><a href='forums.php?action=viewtopic&amp;topicid=$topicid&amp;page=last#last'><b>" . htmlspecialchars($arr["subject"]) . "</b></a>
+              <td class='embedded'><a href='forums.php?action=viewtopic&amp;topicid=$topicid&amp;page=last#last'><b>" . htmlsafechars($arr["subject"]) . "</b></a>
               </td>
             </tr>
           </table>

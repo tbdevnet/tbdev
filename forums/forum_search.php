@@ -40,7 +40,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
       
       $HTMLOUT = '';
       
-      $HTMLOUT .= sprintf($lang['forum_search_searched'], htmlspecialchars($keywords) );
+      $HTMLOUT .= sprintf($lang['forum_search_searched'], htmlsafechars($keywords) );
       
       $res = mysql_query("SELECT COUNT(*) FROM posts WHERE MATCH (body) AGAINST ($ekeywords)") or sqlerr(__FILE__, __LINE__);
       
@@ -68,20 +68,20 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
           if ($page == $i)
             $pagemenu1 .= "<font class='gray'><b>$i</b></font>\n";
           else
-            $pagemenu1 .= "<a href='forums.php?action=search&amp;keywords=" . htmlspecialchars($keywords) . "&amp;page=$i'><b>$i</b></a>\n";
+            $pagemenu1 .= "<a href='forums.php?action=search&amp;keywords=" . htmlsafechars($keywords) . "&amp;page=$i'><b>$i</b></a>\n";
         }
         
         if ($page == 1)
           $pagemenu2 = "<font class='gray'>{$lang['forum_search_prev']}</font>\n";
         else
-          $pagemenu2 = "<a href='forums.php?action=search&amp;keywords=" . htmlspecialchars($keywords) . "&amp;page=" . ($page - 1) . "'>{$lang['forum_search_prev']}</a>\n";
+          $pagemenu2 = "<a href='forums.php?action=search&amp;keywords=" . htmlsafechars($keywords) . "&amp;page=" . ($page - 1) . "'>{$lang['forum_search_prev']}</a>\n";
           
         $pagemenu2 .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
         
         if ($page == $pages)
           $pagemenu2 .= "<font class='gray'><b>{$lang['forum_search_next']}</b></font>\n";
         else
-          $pagemenu2 .= "<a href='forums.php?action=search&amp;keywords=" . htmlspecialchars($keywords) . "&amp;page=" . ($page + 1) . "'>{$lang['forum_search_next']}</a>\n";
+          $pagemenu2 .= "<a href='forums.php?action=search&amp;keywords=" . htmlsafechars($keywords) . "&amp;page=" . ($page + 1) . "'>{$lang['forum_search_next']}</a>\n";
           
         $offset = ($page * $perpage) - $perpage; */
         
@@ -92,7 +92,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
                   'count'  => $hits,
                   'perpage'    => $perpage,
                   'start_value'  => $page,
-                  'url'    => "forums.php?action=search&amp;keywords=" . htmlspecialchars($keywords)
+                  'url'    => "forums.php?action=search&amp;keywords=" . htmlsafechars($keywords)
                         )
                   );
         
@@ -148,8 +148,8 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
           } 
             $HTMLOUT .= "<tr>
             <td>{$post['id']}</td>
-            <td align='left'><a href='forums.php?action=viewtopic&amp;topicid={$post['topicid']}&amp;page=p{$post['id']}#{$post['id']}'><b>" . htmlspecialchars($post["subject"]) . "</b></a></td>
-            <td align='left'><a href='forums.php?action=viewforum&amp;forumid={$post['forumid']}'><b>" . htmlspecialchars($post["name"]) . "</b></a></td>
+            <td align='left'><a href='forums.php?action=viewtopic&amp;topicid={$post['topicid']}&amp;page=p{$post['id']}#{$post['id']}'><b>" . htmlsafechars($post["subject"]) . "</b></a></td>
+            <td align='left'><a href='forums.php?action=viewforum&amp;forumid={$post['forumid']}'><b>" . htmlsafechars($post["name"]) . "</b></a></td>
             <td align='left'><a href='userdetails.php?id={$post['userid']}'><b>{$post['username']}</b></a><br />at ".get_date($post['added'], '')."</td>
             </tr>\n";
           
@@ -166,7 +166,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
       <tr>
         <td class='rowhead'>{$lang['forum_search_words']}</td>
         <td align='left'>
-        <input type='text' size='55' name='keywords' value='" . htmlspecialchars($keywords) .
+        <input type='text' size='55' name='keywords' value='" . htmlsafechars($keywords) .
 "' /><br /><font class='small' size='-1'>{$lang['forum_search_3chars']}</font></td>
       </tr>
       <tr>

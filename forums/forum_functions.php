@@ -32,7 +32,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     $userid = $CURUSER["id"];
 
     //..rp..
-    $dt = (time() - $TBDEV['readpost_expiry']);
+    $dt = (TIME_NOW - $TBDEV['readpost_expiry']);
 
     $res = @mysql_query(
                       "SELECT t.id, t.lastpost FROM topics AS t ".
@@ -156,6 +156,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     global $maxsubjectlength, $CURUSER, $lang, $forum_pic_url;
 
     $htmlout = '';
+    $title = '';
     
     if ($newtopic)
     {
@@ -163,7 +164,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $arr = mysql_fetch_assoc($res) or die("{$lang['forum_functions_badid']}");
 
-      $forumname = htmlspecialchars($arr["name"], ENT_QUOTES, 'UTF-8');
+      $forumname = htmlsafechars($arr["name"]);
 
       $htmlout .= "<p style='text-align:center;'>{$lang['forum_functions_newtopic']}<a href='forums.php?action=viewforum&amp;forumid=$id'>$forumname</a>{$lang['forum_functions_forum']}</p>\n";
     }
@@ -173,14 +174,14 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       $arr = mysql_fetch_assoc($res) or stderr("{$lang['forum_functions_error']}", "{$lang['forum_functions_topic']}");
 
-      $subject = htmlspecialchars($arr["subject"], ENT_QUOTES, 'UTF-8');
+      $subject = htmlsafechars($arr["subject"]);
 
       $htmlout .= "<p style='text-align:center;'>{$lang['forum_functions_reply']}<a href='forums.php?action=viewtopic&amp;topicid=$id'>$subject</a></p>";
     }
 
     $htmlout .= begin_frame("Compose", true);
 
-    $htmlout .= "<form method='post' action='forums.php?action=post'>\n";
+    $htmlout .= "<form name='bbcode2text' method='post' action='forums.php?action=post'>\n";
 
     if ($newtopic)
       $htmlout .= "<input type='hidden' name='forumid' value='$id' />\n";
@@ -188,12 +189,10 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     else
       $htmlout .= "<input type='hidden' name='topicid' value='$id' />\n";
 
-    $htmlout .= begin_table();
+    //$htmlout .= begin_table();
 
     if ($newtopic)
-      $htmlout .= "<tr><td class='rowhead'>{$lang['forum_functions_subject']}</td>" .
-        "<td align='left' style='padding: 0px'><input type='text' size='100' maxlength='$maxsubjectlength' name='subject' " .
-        "style='border: 0px; height: 19px' /></td></tr>\n";
+      $title = "Your title here";
 
     if ($quote)
     {
@@ -209,18 +208,21 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 	   $arr = mysql_fetch_assoc($res);
     }
 
-    $htmlout .= "<tr><td class='rowhead'>{$lang['forum_functions_body']}</td><td align='left' style='padding: 0px'>" .
-    "<textarea name='body' cols='100' rows='20' style='border: 0px'>".
-    ($quote?(("[quote=".htmlspecialchars($arr["username"])."]".htmlspecialchars($arr["body"])."[/quote]\n")):"").
-    "</textarea></td></tr>\n";
+/*    $htmlout .= "<tr>
+    <td class='rowhead'>{$lang['forum_functions_body']}</td>
+    <td align='left' style='padding: 0px'>";
+*/    
+    $body = ($quote?(("[quote=".htmlsafechars($arr["username"])."]".htmlsafechars($arr["body"])."[/quote]\n")):"");
+    
+    $htmlout .= bbcode2textarea( $lang['forum_functions_submit'], $body, $title );
 
-    $htmlout .= "<tr><td colspan='2' align='center'><input type='submit' class='btn' value='{$lang['forum_functions_submit']}' /></td></tr>\n";
+    //$htmlout .= "</td></tr>\n";
 
-    $htmlout .= end_table();
+    //$htmlout .= end_table();
 
     $htmlout .= "</form>\n";
 
-		$htmlout .= "<p style='text-align:center;'><a href='tags.php' target='_blank'>{$lang['forum_functions_tags']}</a> | <a href='smilies.php' target='_blank'>{$lang['forum_functions_smilies']}</a></p>\n";
+		//$htmlout .= "<p style='text-align:center;'><a href='tags.php' target='_blank'>{$lang['forum_functions_tags']}</a> | <a href='smilies.php' target='_blank'>{$lang['forum_functions_smilies']}</a></p>\n";
 
     $htmlout .= end_frame();
 
@@ -242,7 +244,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       	if ($CURUSER["avatars"] == "yes")
           {
-            $avatar = $user['avatar'] ? "<img width='{$user['av_w']}' height='{$user['av_h']}' src='".htmlentities($user['avatar'], ENT_QUOTES)."' alt='' />" : "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='default' />";
+            $avatar = $user['avatar'] ? "<img width='{$user['av_w']}' height='{$user['av_h']}' src='".htmlsafechars($user['avatar'])."' alt='' />" : "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='default' />";
           }
           else
             $avatar = "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='' />";

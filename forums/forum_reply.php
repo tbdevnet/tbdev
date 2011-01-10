@@ -45,14 +45,16 @@ if ($action == "reply")
       stderr("{$lang['forum_reply_user_error']}", "{$lang['forum_reply_permission']}");
     
     $HTMLOUT = '';
-
+    
+    $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+    
     $HTMLOUT .= begin_main_frame();
 
     $HTMLOUT .= insert_compose_frame($topicid, false);
 
     $HTMLOUT .= end_main_frame();
 
-    print stdhead("{$lang['forum_reply_reply']}") . $HTMLOUT . stdfoot();
+    print stdhead($lang['forum_reply_reply'], $js) . $HTMLOUT . stdfoot();
 
     die;
 }
@@ -80,14 +82,16 @@ if ($action == "quotepost")
       stderr("{$lang['forum_reply_user_error']}", "{$lang['forum_reply_permission']}");
     
     $HTMLOUT = '';
-
+    
+    $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
+    
     $HTMLOUT .= begin_main_frame();
 
     $HTMLOUT .= insert_compose_frame($topicid, false, true);
 
     $HTMLOUT .= end_main_frame();
 
-    print stdhead("{$lang['forum_reply_reply']}") . $HTMLOUT . stdfoot();
+    print stdhead($lang['forum_reply_reply'], $js) . $HTMLOUT . stdfoot();
 
     die;
 }

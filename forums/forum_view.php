@@ -249,13 +249,13 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
         $new = !$a || $lppostid > $a[0];
 
 		// ..rp..
-		$new = ($lppostadd > (time() - $TBDEV['readpost_expiry'])) ? (!$a || $lppostid > $a[0]) : 0;
+		$new = ($lppostadd > (TIME_NOW - $TBDEV['readpost_expiry'])) ? (!$a || $lppostid > $a[0]) : 0;
 		//..rp..
 
         $topicpic = ($locked ? ($new ? "lockednew" : "locked") : ($new ? "unlockednew" : "unlocked"));
 
         $subject = ($sticky ? "{$lang['forum_view_sticky']}" : "") . "<a href='forums.php?action=viewtopic&amp;topicid=$topicid'><b>" .
-        htmlspecialchars($topicarr["subject"], ENT_QUOTES, 'UTF-8') . "</b></a>$topicpages";
+        htmlsafechars($topicarr["subject"]) . "</b></a>$topicpages";
 
         $HTMLOUT .=  "<tr><td style='align:left;'><table border='0' cellspacing='0' cellpadding='0'><tr>" .
         "<td class='embedded' style='padding-right: 5px'><img src='{$forum_pic_url}{$topicpic}.gif' alt='' title='' />" .

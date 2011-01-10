@@ -36,7 +36,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     if ($newtopic)
     {
-      $subject = trim(strip_tags($_POST["subject"]));
+      $subject = trim(strip_tags($_POST['title']));
 
       if (!$subject)
         stderr("{$lang['forum_post_error']}", "{$lang['forum_post_subject']}");
@@ -89,7 +89,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     //------ Insert post
 
-    $added = time();
+    $added = TIME_NOW;
 
     $body = sqlesc($body);
 
