@@ -69,7 +69,7 @@ else
     <div style='background:lightgrey;height:25px;'><span style='font-weight:bold;font-size:12pt;'>{$lang['news_title']}</span>{$adminbutton}</div><br />";
       
     $res = mysql_query("SELECT * FROM news WHERE added + ( 3600 *24 *45 ) >
-					".time()." ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
+					".TIME_NOW." ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
 					
     if (mysql_num_rows($res) > 0)
     {
@@ -84,7 +84,7 @@ else
           $button = "<div style='float:right;'><a href='admin.php?action=news&amp;mode=edit&amp;newsid={$array['id']}'>{$lang['news_edit']}</a>&nbsp;<a href='admin.php?action=news&amp;mode=delete&amp;newsid={$array['id']}'>{$lang['news_delete']}</a></div>";
         }
         
-        $HTMLOUT .= "<div style='background:lightgrey;height:20px;'><span style='font-weight:bold;font-size:10pt;'>{$array['headline']}</span></div>\n";
+        $HTMLOUT .= "<div style='background:lightgrey;height:20px;'><span style='font-weight:bold;font-size:10pt;'>".htmlsafechars($array['headline'])."</span></div>\n";
         
         $HTMLOUT .= "<span style='color:grey;font-weight:bold;text-decoration:underline;'>".get_date( $array['added'],'DATE') . "</span>{$button}\n";
         
