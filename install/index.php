@@ -661,7 +661,7 @@ function do_step_six() {
 								'email'		=>	"{$this->VARS['email']}",
 								'status'				=>	"confirmed",
 								'class'				=>	6,
-								'added'		=>	time(),
+								'added'		=>	TIME_NOW,
 								'time_offset'		=>	0,
 								'dst_in_use'	=>	1
 							);
