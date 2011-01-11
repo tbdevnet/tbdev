@@ -64,7 +64,7 @@ function make_password()
 		
 		usleep( mt_rand(15000,1000000) );
 		
-		mt_srand( (double)microTIME_NOW*1000000 );
+		mt_srand( (double)microtime()*1000000 );
 		$new_uniqueid = uniqid( mt_rand(), TRUE );
 		
 		$final_rand = md5( $unique_id.$new_uniqueid );
