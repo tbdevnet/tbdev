@@ -17,7 +17,7 @@
 +------------------------------------------------
 */error_reporting(0);
 ////////////////// GLOBAL VARIABLES ////////////////////////////	
-$TBDEV['baseurl'] = 'http://localhost/TB_ALPHA/';
+$TBDEV['baseurl'] = 'http://localhost/tb_new/';
 $TBDEV['announce_interval'] = 60 * 30;
 $TBDEV['user_ratios'] = 0;
 $TBDEV['connectable_check'] = 0;
@@ -26,10 +26,12 @@ define ('UC_VIP', 2);
 $TBDEV['mysql_host'] = "localhost";
 $TBDEV['mysql_user'] = "root";
 $TBDEV['mysql_pass'] = "blank";
-$TBDEV['mysql_db']   = "tb";
+$TBDEV['mysql_db']   = "test";
 ////////////////// GLOBAL VARIABLES ////////////////////////////
 
 // DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING!!
+
+define( 'TIME_NOW', time() );
 
 $agent = $_SERVER["HTTP_USER_AGENT"];
 
