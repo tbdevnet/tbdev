@@ -124,7 +124,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
   {
   	global $lang;
   	
-  	$htmlout = "<div style='text-align:center;'><form method='get' action='forums.php?' name='jump'>\n";
+  	$htmlout = "<div><form method='get' action='forums.php?' name='jump'>\n";
 
     $htmlout .= "<input type='hidden' name='action' value='viewforum' />\n";
 
@@ -142,7 +142,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     $htmlout .= "</select>\n";
 
-    $htmlout .= "<input type='submit' value='Go!' />\n";
+    $htmlout .= "<input class='jbtn' type='submit' value='Go!' />\n";
 
     $htmlout .= "</form>\n</div>";
     
@@ -268,5 +268,39 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
   
     return $htmlout;
 
-  }
+}
+
+//-------- Insert A Fast Reply Frame
+  
+function insert_fastreply($ids, $pkey = '') {
+	
+    global $TBDEV;
+    
+    $htmlout = "<div style='display: none;' id='fastreply'>
+    <div class='tb_table_inner_wrap'>
+    <span style='color:#ffffff;'>Fast Reply</span>
+    </div>
+
+    <form name='bbcode2text' method='post' action='{$TBDEV['baseurl']}/forums.php?action=post'>\n";
+    
+    if ( !empty($pkey) )
+    {
+        $htmlout .= "<input type='hidden' name='postkey' value='$pkey' />\n";
+    }
+    
+    $htmlout .= "<input type='hidden' name='topicid' value='{$ids['topicid']}' />
+    
+    <input type='hidden' name='forumid' value='{$ids['forumid']}' />
+    
+    <textarea name='body' cols='50' rows='10'></textarea>
+
+    <br /><input type='submit' class='btn' value='Submit' />
+    
+    <input onclick=\"showhide('fastreply'); return(false);\" value='Close Fast Reply' type='button' class='btn' />
+
+    </form>
+    </div><br />\n";
+    
+    return $htmlout;
+}
 ?>

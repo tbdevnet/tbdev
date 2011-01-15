@@ -32,7 +32,7 @@ loggedinorreturn();
     if ($CURUSER['class'] < UC_UPLOADER)
       header( "Location: {$TBDEV['baseurl']}/upload.php" );
 
-    foreach(explode(":","descr:type:name") as $v) {
+    foreach(explode(":","body:type:name") as $v) {
       if (!isset($_POST[$v]))
         stderr($lang['takeupload_failed'], $lang['takeupload_no_formdata']);
     }
@@ -67,7 +67,7 @@ loggedinorreturn();
     }
     /////////////////////// NFO FILE END /////////////////////
 
-    $descr = unesc($_POST["descr"]);
+    $descr = unesc($_POST['body']);
     if (!$descr)
       stderr($lang['takeupload_failed'], $lang['takeupload_no_descr']);
 

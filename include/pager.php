@@ -63,7 +63,7 @@ function pager($data)
 		{
 			if ( isset($data['mini']) )
 			{
-        $pager['first_page'] = "<img src='".F_IMAGES."/multipage.gif' alt='' title='' />";
+        $pager['first_page'] = "<img src='pic/multipage.gif' alt='' title='' />";
 			}
 			else
 			{
@@ -99,7 +99,9 @@ function pager($data)
 				}
 			}
 			
-			$pager['return'] = "<div style='float:left;'>{$pager['first_page']}{$pager['start']}{$previous_link}{$pager['page_span']}{$next_link}{$pager['end']}
+			$float = $mini ? '' : ' fleft';
+			
+			$pager['return'] = "<div class='pager{$float}'>{$pager['first_page']}{$pager['start']}{$previous_link}{$pager['page_span']}{$next_link}{$pager['end']}
 			</div>";
 			
 		}

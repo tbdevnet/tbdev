@@ -78,7 +78,7 @@ $TBDEV['torrent_dir'] = ROOT_PATH . '/torrents'; # must be writable for httpd us
 
 # the first one will be displayed on the pages
 $TBDEV['announce_urls'] = array();
-$TBDEV['announce_urls'][] = "http://localhost/TB_ALPHA/announce.php";
+$TBDEV['announce_urls'][] = "http://localhost/tb_new/announce.php";
 //$TBDEV['announce_urls'] = "http://localhost:2710/announce";
 //$TBDEV['announce_urls'] = "http://domain.com:83/announce.php";
 

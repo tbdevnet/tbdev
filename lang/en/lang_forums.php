@@ -173,7 +173,9 @@ $lang = array(
 'forum_view_permitted' => "You are not permitted to start new topics in this forum.",
 'forum_view_unread' => "View unread",
 'forum_view_new_topic' => "New topic",
+'forum_view_no_new_topic' => "You can't create new topics",
 'forum_view_forum_title' => "Forum :: Forum View",
+'forum_view_search' => "Search",
 
 
 #FORUM VIEW UNREAD

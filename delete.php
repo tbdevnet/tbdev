@@ -25,8 +25,10 @@ loggedinorreturn();
 
     $lang = array_merge( load_language('global'), load_language('delete') );
 
-    if( !$CURUSER['group']['g_delete_torrents'] )
-        stderr($lang['gl_user_error'], $lang['gl_perm_denied']);
+    if($CURUSER['class'] < UC_MODERATOR)
+      stderr($lang['gl_user_error'], $lang['gl_perm_denied']);
+    //if( !$CURUSER['group']['g_delete_torrents'] )
+        //stderr($lang['gl_user_error'], $lang['gl_perm_denied']);
     
     if (!mkglobal("id"))
       stderr($lang['delete_failed'], $lang['delete_missing_data']);

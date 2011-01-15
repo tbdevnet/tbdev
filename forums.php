@@ -115,16 +115,31 @@ function std_view() {
   //$lang = array_merge( $lang, load_language('forums') );
   
   $forums_res = mysql_query("SELECT * FROM forums ORDER BY sort, name") or sqlerr(__FILE__, __LINE__);
-
-  $htmlout = "<h1>{$lang['forums_title']}</h1>\n";
   
-  $htmlout .= "<div style='width:80%'><p style='text-align:right;'><span class='btn'><a href='forums.php?action=search'>{$lang['forums_search']}</a></span>&nbsp;<span class='btn'><a href='forums.php?action=viewunread'>{$lang['forums_view_unread']}</a></span>&nbsp;<span class='btn'><a href='forums.php?action=catchup'>{$lang['forums_catchup']}</a></span></p></div>";
+  $htmlout = '';
   
-  $htmlout .="<table border='1' cellspacing='0' cellpadding='5' width='80%'>\n";
+  $fnav = "<div class='fnav'>{$lang['forums_title']}</div>\n";
+  
+  $buttons = "<div style='text-align:right;margin:10px 0px 10px 0px;'>
+  <span class='fbtn'><a href='forums.php?action=search'>{$lang['forums_search']}</a></span>
+  &nbsp;<span class='fbtn'><a href='forums.php?action=viewunread'>{$lang['forums_view_unread']}</a></span>
+  &nbsp;<span class='fbtn'><a href='forums.php?action=catchup'>{$lang['forums_catchup']}</a></span>
+  </div>";
+  
+  $htmlout .="<div class='tb_table_outer_wrap'>{$fnav}$buttons
+  <div class='tb_table_inner_wrap'>
+  <span style='color:#ffffff;'>{$lang['forums_title']}</span>
+  </div>
+  <table class='tb_table'>\n";
 
-  $htmlout .= "<tr><td class='colhead' style='text-align:left;'>{$lang['forums_forum_heading']}</td><td class='colhead' style='text-align:right;'>{$lang['forums_topic_heading']}</td>" .
-  "<td class='colhead' style='text-align:right;'>{$lang['forums_posts_heading']}</td>" .
-  "<td class='colhead' style='text-align:left;'>{$lang['forums_lastpost_heading']}</td></tr>\n";
+  $htmlout .= "
+  <tr class='header'>
+    <th class='col_c_icon'>&nbsp;</th>
+    <th class='col_c_forum left'>{$lang['forums_forum_heading']}</th>
+    <th class='col_c_stats right'>{$lang['forums_topic_heading']}</th>
+    <th class='col_c_stats right'>{$lang['forums_posts_heading']}</th>
+    <th class='col_c_post left'>{$lang['forums_lastpost_heading']}</th>
+    </tr>\n";
 
   while ($forums_arr = mysql_fetch_assoc($forums_res))
   {
@@ -173,9 +188,8 @@ function std_view() {
 
       $lasttopic = htmlsafechars($post_arr['subject']);
 
-      $lastpost = "<span style='white-space: nowrap;'>$lastpostdate</span><br />" .
-      "by <a href='userdetails.php?id=$lastposterid'><b>$lastposter</b></a><br />" .
-      "in <a href='forums.php?action=viewtopic&amp;topicid=$lasttopicid&amp;page=p$lastpostid#$lastpostid'><b>$lasttopic</b></a>";
+      $lastpost = "<span style='white-space: nowrap;'>$lastpostdate</span><br />
+      <strong>by</strong> <a href='userdetails.php?id=$lastposterid'>$lastposter</a><br /><strong>in</strong> <a href='forums.php?action=viewtopic&amp;topicid=$lasttopicid&amp;page=p$lastpostid#$lastpostid'>$lasttopic</a>";
 
       $r = mysql_query("SELECT lastpostread FROM readposts WHERE userid={$CURUSER['id']} AND topicid=$lasttopicid") or sqlerr(__FILE__, __LINE__);
 
@@ -202,18 +216,21 @@ function std_view() {
       $lastpost = "N/A";
       $img = "unlocked";
     }
-    $htmlout .= "<tr><td style='text-align:left;'>".
-    "<img src=\"{$forum_pic_url}$img.gif\" alt='' title='' />".
-    "<a href='forums.php?action=viewforum&amp;forumid=$forumid'><b>$forumname</b></a><br />\n" .
-    "$forumdescription</td>".
-    "<td style='text-align:right;'>$topiccount</td>".
-    "<td style='text-align:right;'>$postcount</td>" .
-    "<td style='text-align:left;'>$lastpost</td></tr>\n";
+    $htmlout .= "
+    <tr class='row1'>
+      <td class='altrow'>
+      <img src=\"{$forum_pic_url}$img.gif\" alt='' title='' /></td>
+      <td class='noborder'>
+      <a href='forums.php?action=viewforum&amp;forumid=$forumid'><strong>$forumname</strong></a><p class='desc'>$forumdescription</p></td>
+      <td class='altrow stats'>$topiccount</td>
+      <td class='altrow stats'>$postcount</td>
+      <td class='last_post noborder'>$lastpost</td>
+    </tr>\n";
   }
 
-  $htmlout .= "</table>\n<br />\n";
+  $htmlout .= "</table>$buttons</div><br />\n";
 
-  $htmlout .= "<div style='width:80%'><p style='text-align:right;'><span class='btn'><a href='forums.php?action=search'>{$lang['forums_search']}</a></span>&nbsp;<span class='btn'><a href='forums.php?action=viewunread'>{$lang['forums_view_unread']}</a></span>&nbsp;<span class='btn'><a href='forums.php?action=catchup'>{$lang['forums_catchup']}</a></span></p></div>";
+  //$buttons = "<div style='width:80%'><p style='text-align:right;'><span class='btn'><a href='forums.php?action=search'>{$lang['forums_search']}</a></span>&nbsp;<span class='btn'><a href='forums.php?action=viewunread'>{$lang['forums_view_unread']}</a></span>&nbsp;<span class='btn'><a href='forums.php?action=catchup'>{$lang['forums_catchup']}</a></span></p></div>";
 
 
   print stdhead("{$lang['forums_title']}") . $htmlout . stdfoot();

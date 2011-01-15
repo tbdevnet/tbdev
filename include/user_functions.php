@@ -111,7 +111,7 @@ function get_reputation($user, $mode = 0, $rep_is_on = TRUE)
 			
 			// now decide if we in a forum or statusbar?
 			if( $mode === 0 )
-			return "Rep: ".$posneg . "<br /><a href='javascript:;' onclick=\"PopUp('{$TBDEV['baseurl']}/reputation.php?pid={$user['id']}','Reputation',400,241,1,1);\"><img src='./pic/plus.gif' border='0' alt='Add reputation:: {$user['username']}' title='Add reputation:: {$user['username']}' /></a>";
+			return "Rep: ".$posneg . "&nbsp;<a href='javascript:;' onclick=\"PopUp('{$TBDEV['baseurl']}/reputation.php?pid={$user['id']}','Reputation',400,241,1,1);\"><img src='./pic/aff_tick.gif' border='0' alt='Add reputation:: {$user['username']}' title='Add reputation:: {$user['username']}' /></a>";
 			else
 			return "Rep: ".$posneg;
 			

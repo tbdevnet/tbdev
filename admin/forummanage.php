@@ -112,11 +112,11 @@ function addForum() {
       </tr>
       <tr>
         <td><b>{$lang['table_forumname']}</b></td>
-        <td><input name='name' type='text' size='20' maxlength='60' /></td>
+        <td><input name='name' type='text' size='30' /></td>
       </tr>
       <tr>
         <td><b>{$lang['table_forumdescr']}</b></td>
-        <td><input name='desc' type='text' size='30' maxlength='200' /></td>
+        <td><textarea name='desc' cols='50' rows='5' size='30'></textarea></td>
       </tr>
       <tr>
         <td><b>{$lang['table_minreadperm']}</b></td>
@@ -206,7 +206,7 @@ function editForum() {
       </tr>
       <tr>
         <td><b>{$lang['table_forumdescr']}</b></td>
-        <td><input name='desc' type='text' size='30' maxlength='200' value='".htmlsafechars($row["description"])."' /></td>
+        <td><textarea name='desc' cols='50' rows='5' size='30'>".htmlsafechars($row["description"])."</textarea></td>
       </tr>
       <tr>
         <td><b>{$lang['table_minreadperm']}</b></td>
@@ -280,8 +280,14 @@ function takeaddForum() {
 	
     global $lang;
     
-    if (!$_POST['name'] && !$_POST['desc']) { header("Location: admin.php?action=forummanage"); die();}
+    if ( !$_POST['name'] && !$_POST['desc'] ) { header("Location: admin.php?action=forummanage"); die();}
 
+    if( strlen($_POST['name']) > 150 OR strlen($_POST['desc']) > 350 )
+    {
+      $back = "&nbsp;<a href='javascript: history.back();'>Go Back</a>";
+      stderr( $lang['stderr_error'], $lang['text_error'] . $back );
+    }
+    
     @mysql_query("INSERT INTO forums 
     (sort, name,  description,  minclassread,  minclasswrite, minclasscreate) VALUES(" . 
     sqlesc($_POST['sort']) . ", " . 
@@ -305,6 +311,12 @@ function takeeditForum() {
     
     if (!$_POST['name'] && !$_POST['desc'] && !$_POST['id']) { header("Location: admin.php?action=forummanage"); die();}
 
+    if( strlen($_POST['name']) > 150 OR strlen($_POST['desc']) > 350 )
+    {
+      $back = "&nbsp;<a href='javascript: history.back();'>Go Back</a>";
+      stderr( $lang['stderr_error'], $lang['text_error'] . $back );
+    }
+    
     @mysql_query("UPDATE forums SET sort = " . 
     sqlesc($_POST['sort']) . ", name = " . 
     sqlesc($_POST['name']). ", description = " . 

@@ -77,12 +77,12 @@ function format_quotes($s)
 	  //[quote]Text[/quote]
 	  $quote = preg_replace(
 	    "/\[quote\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-	    "<p class='sub'><b>Quote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\1</td></tr></table><br />", $quote);
+	    "<div class='quotetop'><strong>Quote:</strong></div><div class='quotemain'>\\1</div><br />", $quote);
 
 	  //[quote=Author]Text[/quote]
 	  $quote = preg_replace(
 	    "/\[quote=(.+?)\]\s*((\s|.)+?)\s*\[\/quote\]\s*/i",
-	    "<p class='sub'><b>\\1 wrote:</b></p><table class='main' border='1' cellspacing='0' cellpadding='10'><tr><td style='border: 1px black dotted'>\\2</td></tr></table><br />", $quote);
+	    "<div class='quotetop'><strong>\\1 wrote:</strong></div><div class='quotemain'>\\2</div><br />", $quote);
 
 	  $s = substr($s,0,$open) . $quote . substr($s,$close + 8);
   }
