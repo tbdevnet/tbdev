@@ -27,16 +27,22 @@ dbconn();
       exit();
     }
     
-    ini_set('session.use_trans_sid', '0');
-
     $lang = array_merge( load_language('global'), load_language('signup') );
     
-    // Begin the session
-    session_start();
-    if (isset($_SESSION['captcha_time']))
-    (TIME_NOW - $_SESSION['captcha_time'] < 10) ? exit($lang['captcha_spam']) : NULL;
-    
     $HTMLOUT = '';
+    $js = '';
+    
+    if( $TBDEV['captcha'] )
+    {
+      ini_set('session.use_trans_sid', '0');
+
+      // Begin the session
+      session_start();
+      if (isset($_SESSION['captcha_time']))
+      (TIME_NOW - $_SESSION['captcha_time'] < 10) ? exit($lang['captcha_spam']) : NULL;
+    
+      $js = "<script type='text/javascript' src='captcha/captcha.js'></script>";
+    }
     
     $res = mysql_query("SELECT COUNT(*) FROM users") or sqlerr(__FILE__, __LINE__);
     $arr = mysql_fetch_row($res);
@@ -64,7 +70,7 @@ dbconn();
 
     $thistime = TIME_NOW;
 
-    $HTMLOUT .= "<script type='text/javascript' src='captcha/captcha.js'></script>
+    $HTMLOUT .= "
 
     <p>{$lang['signup_cookies']}</p>
 
@@ -77,8 +83,12 @@ dbconn();
     <table width='250' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'><font class='small'>{$lang['signup_valemail']}</font></td></tr>
     </table>
     </td></tr>
-    <tr><td align='right' class='heading'>{$lang['signup_timez']}</td><td align='left'>{$time_select}</td></tr>
-      <tr>
+    
+    <tr><td align='right' class='heading'>{$lang['signup_timez']}</td><td align='left'>{$time_select}</td></tr>";
+      
+    if( $TBDEV['captcha'] )
+    {
+      $HTMLOUT .= "<tr>
         <td>&nbsp;</td>
         <td>
           <div id='captchaimage'>
@@ -93,8 +103,10 @@ dbconn();
           <td>
             <input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/>
           </td>
-      </tr>
-    <tr><td align='right' class='heading'></td><td align='left'><input type='checkbox' name='rulesverify' value='yes' /> {$lang['signup_rules']}<br />
+      </tr>";
+    }
+    
+    $HTMLOUT .= "<tr><td align='right' class='heading'></td><td align='left'><input type='checkbox' name='rulesverify' value='yes' /> {$lang['signup_rules']}<br />
     <input type='checkbox' name='faqverify' value='yes' /> {$lang['signup_faq']}<br />
     <input type='checkbox' name='ageverify' value='yes' /> {$lang['signup_age']}</td></tr>
     <tr><td colspan='2' align='center'><input type='submit' value='{$lang['signup_btn']}' style='height: 25px' /></td></tr>
@@ -102,6 +114,6 @@ dbconn();
     </form>";
 
 
-    print stdhead($lang['head_signup']) . $HTMLOUT . stdfoot();
+    print stdhead($lang['head_signup'], $js) . $HTMLOUT . stdfoot();
 
 ?>

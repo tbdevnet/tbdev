@@ -20,23 +20,29 @@ require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
 require_once "include/password_functions.php";
 
+    if( $TBDEV['captcha'] )
+    {
+      ini_set('session.use_trans_sid', '0');
 
-ini_set('session.use_trans_sid', '0');
-
-// Begin the session
-session_start();
-
+      // Begin the session
+      session_start();
+    }
+    
 dbconn();
 
    $lang = array_merge( load_language('global'), load_language('recover') );
    
    if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
-      
-      if(empty($_POST['captcha']) || $_SESSION['captcha_id'] != strtoupper($_POST['captcha'])){
-        header('Location: recover.php');
-        exit();
-    }
+      if( $TBDEV['captcha'] )
+      {
+        if(empty($_POST['captcha']) || $_SESSION['captcha_id'] != strtoupper($_POST['captcha']))
+        {
+          header('Location: recover.php');
+          exit();
+        }
+      }
+    
     $email = trim($_POST["email"]);
     if (!validemail($email))
       stderr("{$lang['stderr_errorhead']}", "{$lang['stderr_invalidemail']}");
@@ -115,15 +121,22 @@ $body = sprintf($lang['email_request'], $email, $_SERVER["REMOTE_ADDR"], $TBDEV[
       
       
     $HTMLOUT = '';
+    $js = '';
     
-    $HTMLOUT .= "<script type='text/javascript' src='captcha/captcha.js'></script>
+    $HTMLOUT .= "
       
       <h1>{$lang['recover_unamepass']}</h1>
       <p>{$lang['recover_form']}</p>
       
       <form method='post' action='recover.php'>
-      <table border='1' cellspacing='0' cellpadding='10'>
-        <tr>
+      <table border='1' cellspacing='0' cellpadding='10'>";
+        
+        
+      if( $TBDEV['captcha'] )
+      {
+        $js = "<script type='text/javascript' src='captcha/captcha.js'></script>";
+        
+        $HTMLOUT .= "<tr>
         <td>&nbsp;</td>
         <td>
           <div id='captchaimage'>
@@ -138,8 +151,10 @@ $body = sprintf($lang['email_request'], $email, $_SERVER["REMOTE_ADDR"], $TBDEV[
           <td>
             <input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/>
           </td>
-      </tr>
-
+      </tr>";
+      }
+      
+      $HTMLOUT .= "
       <tr>
           <td class='rowhead'>{$lang['recover_regdemail']}</td>
           <td><input type='text' size='40' name='email' /></td></tr>
@@ -149,7 +164,7 @@ $body = sprintf($lang['email_request'], $email, $_SERVER["REMOTE_ADDR"], $TBDEV[
       </table>
       </form>";
 
-      print stdhead($lang['head_recover']). $HTMLOUT . stdfoot();
+      print stdhead($lang['head_recover'], $js). $HTMLOUT . stdfoot();
     }
 
 ?>

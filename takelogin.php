@@ -19,15 +19,19 @@
 require_once 'include/bittorrent.php';
 require_once "include/password_functions.php";
 
-    if (!mkglobal('username:password:captcha'))
-      die();
-      
-    session_start();
-      if(empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha)){
-          header('Location: login.php');
-          exit();
-    }
+    if (!mkglobal('username:password'))
+      die('wibble');
 
+    if( $TBDEV['captcha'] )
+    {
+      session_start();
+      if(!isset($_POST['captcha']) || empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha))
+      {
+            header('Location: login.php');
+            exit();
+      }
+    }
+    
     dbconn();
     
     $lang = array_merge( load_language('global'), load_language('takelogin') );

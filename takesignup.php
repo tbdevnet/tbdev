@@ -32,7 +32,7 @@ dbconn();
 
 //if (!mkglobal("wantusername:wantpassword:passagain:email:captcha"))
 //	die();
-    foreach( array('wantusername','wantpassword','passagain','email','captcha') as $x )
+    foreach( array('wantusername','wantpassword','passagain','email') as $x )
     {
       if( !isset($_POST[ $x ]) )
       {
@@ -41,18 +41,20 @@ dbconn();
       
       ${$x} = $_POST[ $x ];
     }
-
-    session_start();
     
-    if(empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha))
+    if( $TBDEV['captcha'] )
     {
-        header('Location: signup.php');
-        exit();
+      session_start();
+      
+      if(!isset($_POST['captcha']) || empty($captcha) || $_SESSION['captcha_id'] != strtoupper($captcha))
+      {
+          header('Location: signup.php');
+          exit();
+      }
     }
 
+function validusername($username){
 
-function validusername($username)
-  {
     global $lang;
     
     if ($username == "")
