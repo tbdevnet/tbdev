@@ -35,6 +35,29 @@ $TABLE[] = "CREATE TABLE categories (
   PRIMARY KEY (id)
 )";
 
+$TABLE[] = "CREATE TABLE cleanup (
+  clean_id int(10) NOT NULL AUTO_INCREMENT,
+  clean_title char(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  clean_file char(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  clean_time int(11) NOT NULL DEFAULT '0',
+  clean_increment int(11) NOT NULL DEFAULT '0',
+  clean_cron_key char(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  clean_log tinyint(1) NOT NULL DEFAULT '0',
+  clean_desc text COLLATE utf8_unicode_ci NOT NULL,
+  clean_on tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (clean_id),
+  KEY clean_time (clean_time)
+)";
+
+$TABLE[] = "CREATE TABLE cleanup_log (
+  clog_id int(10) NOT NULL AUTO_INCREMENT,
+  clog_event char(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  clog_time int(11) NOT NULL DEFAULT '0',
+  clog_ip char(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  clog_desc text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (clog_id)
+)";
+
 $TABLE[] = "CREATE TABLE comments (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` int(10) unsigned NOT NULL DEFAULT '0',
@@ -194,6 +217,24 @@ $TABLE[] = "CREATE TABLE reputationlevel (
   `level` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (reputationlevelid),
   KEY reputationlevel (minimumreputation)
+)";
+
+$TABLE[] = "CREATE TABLE rules (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  cid int(3) unsigned NOT NULL DEFAULT '0',
+  heading varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  body text COLLATE utf8_unicode_ci NOT NULL,
+  ctime int(11) unsigned NOT NULL DEFAULT '0',
+  mtime int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (id),
+  KEY cat_id (cid)
+)";
+
+$TABLE[] = "CREATE TABLE rules_categories (
+  cid int(3) unsigned NOT NULL AUTO_INCREMENT,
+  rcat_name varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  min_class_read int(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (cid)
 )";
 
 $TABLE[] = "CREATE TABLE searchcloud (

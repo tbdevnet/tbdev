@@ -119,6 +119,7 @@ if (ini_get('default_charset') != $TBDEV['char_set']) {
 ini_set('default_charset',$TBDEV['char_set']);
 }
 $TBDEV['msg_alert'] = 0; // saves a query when off
+$TBDEV['captcha'] = 0; // turns captcha on/off
 
 $TBDEV['autoclean_interval'] = 900;
 $TBDEV['sql_error_log'] = ROOT_PATH.'/logs/sql_err_'.date("M_D_Y").'.log';
