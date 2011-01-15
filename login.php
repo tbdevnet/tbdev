@@ -22,13 +22,21 @@ require_once "include/bittorrent.php" ;
 
     $lang = array_merge( load_language('global'), load_language('login') );
     
+    $HTMLOUT = '';
+    $js = '';
+
+    if( $TBDEV['captcha'] )
+    {
     // Begin the session
     session_start();
     if (isset($_SESSION['captcha_time']))
     (TIME_NOW - $_SESSION['captcha_time'] < 10) ? exit("{$lang['login_spam']}") : NULL;
+    
+    $js = "<script type='text/javascript' src='captcha/captcha.js'></script>";
 
-    $HTMLOUT = '';
-
+    }
+    
+    
     unset($returnto);
     if (!empty($_GET["returnto"])) {
       $returnto = $_GET["returnto"];
@@ -40,8 +48,7 @@ require_once "include/bittorrent.php" ;
     }
 
 
-    $HTMLOUT .= "<script type='text/javascript' src='captcha/captcha.js'></script>
-
+    $HTMLOUT .= "
     <form method='post' action='takelogin.php'>
     <p>Note: You need cookies enabled to log in.</p>
     <table border='0' cellpadding='5'>
@@ -53,8 +60,11 @@ require_once "include/bittorrent.php" ;
         <td class='rowhead'>{$lang['login_password']}</td>
         <td align='left'><input type='password' size='40' name='password' /></td>
       </tr>
-    <!--<tr><td class='rowhead'>{$lang['login_duration']}</td><td align='left'><input type='checkbox' name='logout' value='yes' checked='checked' />{$lang['login_15mins']}</td></tr>-->
-      <tr>
+    <!--<tr><td class='rowhead'>{$lang['login_duration']}</td><td align='left'><input type='checkbox' name='logout' value='yes' checked='checked' />{$lang['login_15mins']}</td></tr>-->";
+    
+    if( $TBDEV['captcha'] )
+    {
+      $HTMLOUT .= "<tr>
         <td>&nbsp;</td>
         <td>
           <div id='captchaimage'>
@@ -69,8 +79,10 @@ require_once "include/bittorrent.php" ;
           <td>
             <input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/>
           </td>
-      </tr>
-      <tr>
+      </tr>";
+    }
+    
+    $HTMLOUT .= "<tr>
         <td colspan='2' align='center'>
           <input type='submit' value='{$lang['login_login']}' class='btn' />
         </td>
@@ -86,6 +98,6 @@ require_once "include/bittorrent.php" ;
     {$lang['login_signup']}";
 
 
-    print stdhead("{$lang['login_login_btn']}") . $HTMLOUT . stdfoot();
+    print stdhead($lang['login_login_btn'], $js) . $HTMLOUT . stdfoot();
 
 ?>
