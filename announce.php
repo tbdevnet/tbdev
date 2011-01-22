@@ -44,6 +44,10 @@ if (
     )
     err("torrent not registered with this tracker CODE 1");
 
+if( !$_GET['compact'] )
+  {
+    err('Sorry, this tracker no longer supports non-compact clients!');
+  }
 /////////////////////// FUNCTION DEFS ///////////////////////////////////
 function dbconn()
 {
@@ -202,12 +206,12 @@ $downloaded = 0 + $downloaded;
 $uploaded = 0 + $uploaded;
 $left = 0 + $left;
 
-$rsize = 50;
+$rsize = 30;
 foreach(array("num want", "numwant", "num_want") as $k)
 {
 	if (isset($_GET[$k]))
 	{
-		$rsize = 0 + $_GET[$k];
+		$rsize = (int)$_GET[$k];
 		break;
 	}
 }
@@ -244,117 +248,53 @@ $torrentid = $torrent["id"];
 
 $fields = "seeder, peer_id, ip, port, uploaded, downloaded, userid";
 
-$numpeers = $torrent["numpeers"];
-$limit = "";
-if ($numpeers > $rsize)
-	$limit = "ORDER BY RAND() LIMIT $rsize";
-$res = mysql_query("SELECT $fields FROM peers WHERE torrent = $torrentid AND connectable = 'yes' $limit");
+//$numpeers = $torrent["numpeers"];
+  $limit = "";
 
+  if ($torrent['numpeers'] > $rsize)
+    $limit = "ORDER BY RAND() LIMIT $rsize";
+    
+  $wherep ='';
+  
+  if ($seeder == 'yes')
+    $whereap = "AND seeder = 'no'";
+    
+  $res = mysql_query("SELECT $fields FROM peers WHERE torrent = $torrentid AND connectable = 'yes' {$wherep} {$limit}");
+  
+  unset($wherep);
+  
 //////////////////// START NEW COMPACT MODE/////////////////////////////
 
-if($_GET['compact'] != 1)
+  $resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
 
-{
+  $peer = array();
 
-$resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] . "e" . benc_str("peers") . "l";
+  $peer_num = 0;
+  
+  while ($row = mysql_fetch_assoc($res))
+  {
 
-}
+    $peer_ip = explode('.', $row["ip"]);
 
-else
+    $peer_ip = pack("C*", $peer_ip[0], $peer_ip[1], $peer_ip[2], $peer_ip[3]);
 
-{
+    $peer_port = pack("n*", (int)$row["port"]);
 
-$resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
+    $time = intval((TIME_NOW % 7680) / 60);
 
-}
+    if($_GET['left'] == 0)
+    {
+      $time += 128;
+    }
 
-$peer = array();
+    $time = pack("C", $time);
 
-$peer_num = 0;
-while ($row = mysql_fetch_assoc($res))
+    $peer[] = $time . $peer_ip . $peer_port;
 
-{
-
-    if($_GET['compact'] != 1)
-
-{
-
-
-
-$row["peer_id"] = str_pad($row["peer_id"], 20);
+    $peer_num++;
+  }
 
 
-
-if ($row["peer_id"] === $peer_id)
-
-{
-
- $self = $row;
-
- continue;
-
-}
-
-
-
-$resp .= "d" .
-
- benc_str("ip") . benc_str($row["ip"]);
-
-       if (!$_GET['no_peer_id']) {
-
-  $resp .= benc_str("peer id") . benc_str($row["peer_id"]);
-
- }
-
- $resp .= benc_str("port") . "i" . $row["port"] . "e" .
-
- "e";
-
-      }
-
-      else
-
-      {
-
-         $peer_ip = explode('.', $row["ip"]);
-
-$peer_ip = pack("C*", $peer_ip[0], $peer_ip[1], $peer_ip[2], $peer_ip[3]);
-
-$peer_port = pack("n*", (int)$row["port"]);
-
-$time = intval((TIME_NOW % 7680) / 60);
-
-if($_GET['left'] == 0)
-
-{
-
-$time += 128;
-
-}
-
-$time = pack("C", $time);
-
-
-
-   $peer[] = $time . $peer_ip . $peer_port;
-
-$peer_num++;
-
-
-      }
-
-}
-
-
-
-if ($_GET['compact']!=1)
-
-$resp .= "ee";
-
-else
-
-{
 $o = "";
 for($i=0;$i<$peer_num;$i++)
 
@@ -366,7 +306,7 @@ for($i=0;$i<$peer_num;$i++)
 
 $resp .= strlen($o) . ':' . $o . 'e';
 
-}
+
 
 $selfwhere = "torrent = $torrentid AND " . hash_where("peer_id", $peer_id);
 
