@@ -26,7 +26,7 @@ function docleanup( $data ) {
 
 	$deadtime = TIME_NOW - floor($TBDEV['announce_interval'] * 1.3);
 	$deadtime -= $TBDEV['max_dead_torrent_time'];
-	@mysql_query("UPDATE torrents SET visible='no' WHERE visible='yes' AND last_action < $deadtime");
+	@mysql_query("UPDATE torrents SET visible='no', seeders=0, leechers=0 WHERE visible='yes' AND last_action < $deadtime");
 
 	if( false !== mysql_affected_rows() )
   {

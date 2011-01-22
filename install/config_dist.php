@@ -50,7 +50,8 @@ $TBDEV['cookie_path']    = '<#cookie_path#>'; // ATTENTION: You should never nee
 $TBDEV['cookie_domain']  = '<#cookie_domain#>'; // set to eg: .somedomain.com or is subdomain set to: .sub.somedomain.com
                               
 $TBDEV['site_online'] = 1;
-$TBDEV['tracker_post_key'] = 'changethisorelse';
+$TBDEV['tracker_post_key'] = '<#tracker_post_key#>';
+$TBDEV['tracker_cache_key'] = '<#tracker_cache_key#>';
 $TBDEV['max_torrent_size'] = 1000000;
 $TBDEV['announce_interval'] = 60 * 30;
 $TBDEV['signup_timeout'] = 86400 * 3;

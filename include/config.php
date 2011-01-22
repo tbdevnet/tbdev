@@ -52,6 +52,7 @@ $TBDEV['cookie_domain']  = ''; // set to eg: .somedomain.com or is subdomain set
                               
 $TBDEV['site_online'] = 1;
 $TBDEV['tracker_post_key'] = 'changethisorelse';
+$TBDEV['tracker_cache_key'] = 'something_random';
 $TBDEV['max_torrent_size'] = 1000000;
 $TBDEV['announce_interval'] = 60 * 30;
 $TBDEV['signup_timeout'] = 86400 * 3;
@@ -120,7 +121,7 @@ if (ini_get('default_charset') != $TBDEV['char_set']) {
 ini_set('default_charset',$TBDEV['char_set']);
 }
 $TBDEV['msg_alert'] = 1; // saves a query when off
-$TBDEV['captcha'] = 1; // turns captcha on/off
+$TBDEV['captcha'] = 0; // turns captcha on/off
 
 $TBDEV['autoclean_interval'] = 900;
 $TBDEV['sql_error_log'] = ROOT_PATH.'/logs/sql_err_'.date("M_D_Y").'.log';
