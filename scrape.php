@@ -37,11 +37,13 @@ require_once("include/config.php");
 
     while ($row = mysql_fetch_assoc($res))
     {
-      $benc .= 'd20:'.pack('H*', $row['info_hash'])."d8:completei{$row['seeders']}e10:downloadedi{$row['times_completed']}e10:incompletei{$row['leechers']}eee";
+      $benc .= 'd20:'.pack('H*', $row['info_hash'])."d8:completei{$row['seeders']}e10:downloadedi{$row['times_completed']}e10:incompletei{$row['leechers']}eeee";
+      //$benc .= 'd20:'.pack('H*', $row['info_hash'])."d8:completei{$row['seeders']}e10:downloadedi{$row['times_completed']}e10:incompletei{$row['leechers']}e";
     }
 
-    $benc .= 'ed5:flagsd20:min_request_intervali1800eee';
-
+    //$benc .= 'd5:flagsd20:min_request_intervali1800ee';
+    //$benc .= 'd5:flagsd20:min_request_intervali1800eee';
+    
     header('Content-Type: text/plain; charset=UTF-8');
     header('Pragma: no-cache');
     print($benc);
