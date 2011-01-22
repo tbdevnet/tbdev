@@ -111,7 +111,7 @@ if ((isset($_POST['action'])) && ($_POST['action'] == "edituser"))
     if (isset($_POST['donor']) && (($donor = $_POST['donor']) != $user['donor']))
     {
     $updateset[] = "donor = " . sqlesc($donor);
-    $updateset[] = "donerduntil = 0";
+    $updateset[] = "donorduntil = 0";
     if ($donor == 'no')
     {
     $modcomment = get_date( TIME_NOW, 'DATE', 1 ) . "{$lang['modtask_donor_removed']}".$CURUSER['username'].".\n". $modcomment;
