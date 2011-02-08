@@ -33,7 +33,8 @@ function maketable($res)
       global $TBDEV, $lang;
       
       $htmlout = '';
-      
+
+
       $htmlout .= "<table class='main' border='1' cellspacing='0' cellpadding='5'>" .
         "<tr><td class='colhead' align='center'>{$lang['userdetails_type']}</td><td class='colhead'>{$lang['userdetails_name']}</td><td class='colhead' align='center'>{$lang['userdetails_ttl']}</td><td class='colhead' align='center'>{$lang['userdetails_size']}</td><td class='colhead' align='right'>{$lang['userdetails_se']}</td><td class='colhead' align='right'>{$lang['userdetails_le']}</td><td class='colhead' align='center'>{$lang['userdetails_upl']}</td>\n" .
         "<td class='colhead' align='center'>{$lang['userdetails_downl']}</td><td class='colhead' align='center'>{$lang['userdetails_ratio']}</td></tr>\n";
@@ -146,13 +147,15 @@ function maketable($res)
 
     
     $HTMLOUT = '';
-    
-    $enabled = $user["enabled"] == 'yes';
-    $HTMLOUT .= "<p></p><table class='main' border='0' cellspacing='0' cellpadding='0'>".
-    "<tr><td class='embedded'><h1 style='margin:0px'>{$user['username']}" . get_user_icons($user, true) . "</h1></td>$country</tr></table><p></p>\n";
 
+
+    $enabled = $user["enabled"] == 'yes';
+    $HTMLOUT .= "
+                 <div class='cblock'>
+                     <div class='cblock-header'>{$user['username']}" . get_user_icons($user, true) . "$country</div>";
+    $HTMLOUT .= "        <div class='cblock-lb'>";
     if (!$enabled)
-      $HTMLOUT .= "<p><b>{$lang['userdetails_disabled']}</b></p>\n";
+      $HTMLOUT .= "  {$lang['userdetails_disabled']}";
     elseif ($CURUSER["id"] <> $user["id"])
     {
       $r = mysql_query("SELECT id FROM friends WHERE userid=$CURUSER[id] AND friendid=$id") or sqlerr(__FILE__, __LINE__);
@@ -169,12 +172,17 @@ function maketable($res)
         $HTMLOUT .= "<p>(<a href='friends.php?action=add&amp;type=friend&amp;targetid=$id'>{$lang['userdetails_add_friends']}</a>)";
         $HTMLOUT .= " - (<a href='friends.php?action=add&amp;type=block&amp;targetid=$id'>{$lang['userdetails_add_blocks']}</a>)</p>\n";
       }
+
     }
+
+    $HTMLOUT .= "    </div>";
+
+    $HTMLOUT .= "<div class='cblock-content'>";
 
     $HTMLOUT .= begin_main_frame();
 
     $HTMLOUT .= "<table width='100%' border='1' cellspacing='0' cellpadding='5'>
-    <tr><td class='rowhead' width='1%'>{$lang['userdetails_joined']}</td><td align='left' width='99%'>{$joindate}</td></tr>
+    <tr><td class='rowhead' style='width:1%;'>{$lang['userdetails_joined']}</td><td style='width:595px;text-align:left;'>{$joindate}</td></tr>
     <tr><td class='rowhead'>{$lang['userdetails_seen']}</td><td align='left'>{$lastseen}</td></tr>";
 
     if ($CURUSER['class'] >= UC_MODERATOR)
@@ -338,7 +346,10 @@ function maketable($res)
     }
     $HTMLOUT .= end_main_frame();
     
-    
+    $HTMLOUT .= "
+      </div></div>";
+
+
     print stdhead("{$lang['userdetails_details']} " . $user["username"]) . $HTMLOUT . stdfoot();
 
 ?>

@@ -26,15 +26,21 @@ loggedinorreturn();
     
     $HTMLOUT = '';
     
-    $HTMLOUT .= "<table width='750' class='main' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
 
-    <form method='get' action='browse.php'>
-    <p align='center'>
-    {$lang['search_search']}
-    <input type='text' name='search' size='40' value='' />
-    {$lang['search_in']}
-    <select name='cat'>
-    <option value='0'>{$lang['search_all_types']}</option>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Search</div>
+                         <div class='cblock-content'>
+                             <table class='main' border='0' cellspacing='0' cellpadding='0'>
+                                   <tr>
+                                      <td class='embedded'>
+                                         <form method='get' action='browse.php'>
+                                              <p style='text-align:center;'>
+                                                {$lang['search_search']}
+                                                <input type='text' name='search' size='40' value='' />
+                                                {$lang['search_in']}
+                                                <select name='cat'>
+                                                       <option value='0'>{$lang['search_all_types']}</option>";
 
 
 
@@ -55,23 +61,31 @@ loggedinorreturn();
 
 
     $HTMLOUT .= $catdropdown;
-    
-    $HTMLOUT .= "</select>
-    $deadchkbox
-    <input type='submit' value='{$lang['search_search_btn']}' class='btn' />
-    </p>
-    </form>
-    </td></tr></table>
 
-    <table width='750' class='main' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
-    <form method='post' action='takefilesearch.php'>
-    <p align='center'>
-    Search:
-    <input type='text' name='search' size='40' value='' />
-    <input type='submit' value='{$lang['search_search_btn']}' class='btn' />
-    </p>
-    </form>
-    </td></tr></table>";
+    $HTMLOUT .= "                               </select>
+                                                $deadchkbox
+                                                <input type='submit' value='{$lang['search_search_btn']}' class='btn' />
+                                              </p>
+                                         </form>
+                                      </td>
+                                   </tr>
+                             </table>
+
+                             <table width='750' class='main' border='0' cellspacing='0' cellpadding='0'>
+                                   <tr>
+                                      <td class='embedded'>
+                                         <form method='post' action='takefilesearch.php'>
+                                              <p style='text-align:center;'>
+                                                Search:
+                                                <input type='text' name='search' size='40' value='' />
+                                                <input type='submit' value='{$lang['search_search_btn']}' class='btn' />
+                                              </p>
+                                         </form>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
 
     print stdhead("{$lang['search_search']}") . $HTMLOUT . stdfoot();

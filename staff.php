@@ -24,104 +24,136 @@ require_once "include/user_functions.php";
 dbconn();
 
 loggedinorreturn();
-    
+
     $lang = array_merge( load_language('global'), load_language('staff') );
-    
+
     $HTMLOUT = '';
-    
-    $query = mysql_query("SELECT users.id, username, email, last_access, class, title, country, status, countries.flagpic, countries.name FROM users LEFT  JOIN countries ON countries.id = users.country WHERE class >=4 AND status='confirmed' ORDER BY username") or sqlerr();
+
+    $query = mysql_query("SELECT users.id, username, added, last_access, class, avatar, country, status, countries.flagpic, countries.name FROM users LEFT  JOIN countries ON countries.id = users.country WHERE class >=4 AND status='confirmed' ORDER BY username") or sqlerr();
 
     while($arr2 = mysql_fetch_assoc($query)) {
-      
+
     /*	if($arr2["class"] == UC_VIP)
         $vips[] =  $arr2;
-    */	
+    */
       if($arr2["class"] == UC_MODERATOR)
         $mods[] =  $arr2;
-        
+
       if($arr2["class"] == UC_ADMINISTRATOR)
         $admins[] =  $arr2;
-        
+
       if($arr2["class"] == UC_SYSOP)
         $sysops[] =  $arr2;
       }
-    /*
-    print_r($sysops);
-    print("<br />");
-    print_r($admins);
-    print("<br />");
-    print_r($mods);
-    print("<br />");
-    print(count($mods));
-    */
-    function DoStaff($staff, $staffclass, $cols = 2) 
+
+    function DoStaff($staff, $staffclass, $cols = 2)
     {
       global $TBDEV, $lang;
-      
+
       $dt = TIME_NOW - 180;
       $htmlout = '';
-      
-      if($staff===false) 
+
+      if($staff===false)
       {
-        $htmlout .= "<br /><table width='75%' border='1' cellpadding='3'>";
-        $htmlout .= "<tr><td class='colhead'><h2>{$staffclass}</h2></td></tr>";
+        $htmlout .= "<br /><table width='75%' border='0' cellpadding='3'>";
+        $htmlout .= "<tr><td>{$staffclass}</td></tr>";
         $htmlout .= "<tr><td>{$lang['text_none']}</td></tr></table>";
         return;
       }
       $counter = count($staff);
-        
+
       $rows = ceil($counter/$cols);
       $cols = ($counter < $cols) ? $counter : $cols;
       //echo "<br />" . $cols . "   " . $rows;
       $r = 0;
-      $htmlout .= "<br /><table width='75%' border='1' cellpadding='3'>";
-      $htmlout .= "<tr><td class='colhead' colspan='{$counter}'><h2>{$staffclass}</h2></td></tr>";
-      
+      $htmlout .= "<div>
+                       <table width='100%' border='0' cellpadding='3'>
+                             <tr>
+                                <td class='colhead' colspan='{$counter}'>{$staffclass}</td>
+                             </tr>
+                       </table>
+                   </div>";
+
+      $htmlout .= "<div>&nbsp;</div>";
+
       for($ia = 0; $ia < $rows; $ia++)
       {
-
-            $htmlout .= "<tr>";
             for($i = 0; $i < $cols; $i++)
             {
-              if( isset($staff[$r]) )  
+              if( isset($staff[$r]) )
               {
-                $htmlout .= "<td><a href='userdetails.php?id={$staff[$r]['id']}'>".$staff[$r]["username"]."</a>".
-          "   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}staff".
-          ($staff[$r]['last_access']>$dt?"/online.gif":"/offline.gif" )."' border='0' alt='' />".
-          "<a href='sendmessage.php?receiver={$staff[$r]['id']}'>".
-          "   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}staff/users.png' border='0' title=\"{$lang['alt_pm']}\" alt='' /></a>".
-          "<a href='email-gateway.php?id={$staff[$r]['id']}'>".
-          "   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}staff/mail.png' border='0' alt='{$staff[$r]['username']}' title=\"{$lang['alt_sm']}\" /></a>".
-          "   <img style='vertical-align: middle;' src='{$TBDEV['pic_base_url']}flag/{$staff[$r]['flagpic']}' border='0' alt='{$staff[$r]['name']}' /></td>";
+                $htmlout .= "<div class='staffbox'>";
+                $htmlout .= "<div class='staffhead'>&nbsp;&nbsp;<a href='userdetails.php?id={$staff[$r]['id']}'>".$staff[$r]["username"]."</a>&nbsp;<img src='images/".($staff[$r]['last_access']>$dt?"/user_green.png":"/user_off.png" )."' alt='' /></div>
+                             <table width='300' cellspacing='0' cellpadding='3' border='0'>
+                             <tr>
+                               <td width='50' rowspan='8'>";
+
+              if(!empty($staff[$r]['avatar']) && $staff[$r]['av_w'] > 5 && $staff[$r]['av_h'] > 5)
+              {
+                $avatar = "<a href='userdetails.php?id={$staff[$r]['id']}'><img src='".$staff[$r]["avatar"]."' width='50' height='50' alt='' /></a>";
+              }
+              else
+              {
+                $avatar = "<a href='userdetails.php?id={$staff[$r]['id']}'><img src='images/default_thumb.png' alt='' /></a>";
+              }
+
+                $htmlout .= $avatar;
+                $htmlout .= "  </td>
+                             </tr>
+                             <tr><td width='15'>Joined:</td><td>".get_date($staff[$r]["added"],'' )."</td></tr>
+                             <tr>
+                                <td width='15'>Last Seen:</td>
+                                   <td>";
+
+      $joindate = get_date( $staff[$r]['added'],'');
+      $lastseen = $staff[$r]["last_access"];
+    if ($lastseen == 0)
+    {
+      $lastseen = get_date( $staff[$r]['last_access'],'',0,1);
+    }
+
+
+             $htmlout .= $lastseen;
+             $htmlout .= "
+                                   </td>
+                               </tr>
+                             <tr><td width='15'>Email:</td><td>blalbah</td></tr>
+                             </table>
+                             <table border='0'>
+                             <tr>
+                               <td><a href='sendmessage.php?receiver={$staff[$r]['id']}'><img src='{$TBDEV['pic_base_url']}staff/users.png' border='0' title=\"{$lang['alt_pm']}\" alt='' /></a></td>
+                               <td><a href='email-gateway.php?id={$staff[$r]['id']}'><img src='{$TBDEV['pic_base_url']}staff/mail.png' border='0' alt='".$staff[$r]["username"]."' title=\"{$lang['alt_sm']}\" /></a></td>
+                             </tr>
+                             </table>";
+                $htmlout .= "</div>";
+
           $r++;
               }
               else
               {
-                $htmlout .= "<td>&nbsp;</td>";
+                $htmlout .= "<div>&nbsp;</div>";
               }
             }
-            $htmlout .= "</tr>";
-        
       }
-      $htmlout .= "</table>";
-    /*
-    print("</table>");
-    print("<br /><table border=1><tr>");
-    for ($i = 0; $i <= count($staff)-1; $i++) {
-        print("<td>{$staff[$i]["username"]}</td>");
-        }
-        print("</tr></table>");
-    */
+      $htmlout .= "<div class='clear'>&nbsp;</div>";
+
       return $htmlout;
     }
 
-    $HTMLOUT .= "<h1>{$lang['text_staff']}</h1>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['text_staff']}</div>
+                         <div class='cblock-lb'>You will find all the Sysops, Administrators and Moderators here!</div>
+                         <div class='cblock-content'>";
 
     $HTMLOUT .= DoStaff($sysops, "{$lang['header_sysops']}");
     $HTMLOUT .= isset($admins) ? DoStaff($admins, "{$lang['header_admins']}") : DoStaff($admins=false, "{$lang['header_admins']}");
     $HTMLOUT .= isset($mods) ? DoStaff($mods, "{$lang['header_mods']}") : DoStaff($mods=false, "{$lang['header_mods']}");
     //$HTMLOUT .= isset($vips) ? DoStaff($vips, "{$lang['header_vips']}") : DoStaff($vips=false, "{$lang['header_vips']}");
 
+
+    $HTMLOUT .= "        </div>
+                     </div>";
 
     print stdhead("{$lang['stdhead_staff']}") . $HTMLOUT . stdfoot();
 

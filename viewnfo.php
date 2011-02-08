@@ -33,13 +33,22 @@ loggedinorreturn();
     //$nfo = htmlsafechars($a["nfo"]);
     $HTMLOUT = '';
     
-    
-    $HTMLOUT .= "<h1>{$lang['text_nfofor']}<a href='details.php?id=$id'>".htmlsafechars($a['name'])."</a></h1>\n";
-    $HTMLOUT .= "<table border='1' cellspacing='0' cellpadding='5'><tr><td class='text'>\n";
-    $HTMLOUT .= "<pre>" . format_urls(htmlsafechars($a['nfo'])) . "</pre>\n";
-    $HTMLOUT .= "</td></tr></table>\n";
-    $HTMLOUT .= "<p align='center'>{$lang['text_forbest']}" .
-      "<a href='ftp://{$_SERVER['HTTP_HOST']}/misc/linedraw.ttf'>{$lang['text_linedraw']}</a>{$lang['text_font']}</p>\n";
-    
+
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['text_nfofor']}<a href='details.php?id=$id'>".htmlsafechars($a['name'])."</a></div>
+                         <div class='cblock-lb'>{$lang['text_forbest']}<a href='ftp://{$_SERVER['HTTP_HOST']}/misc/linedraw.ttf'>{$lang['text_linedraw']}</a>{$lang['text_font']}</div>
+                         <div class='cblock-content'>
+                             <table border='1' cellspacing='0' cellpadding='5'>
+                                   <tr>
+                                      <td class='text'>\n";
+    $HTMLOUT .= "                        <pre>" . format_urls(htmlsafechars($a['nfo'])) . "</pre>\n";
+    $HTMLOUT .= "                     </td>
+                                   </tr>
+                             </table>\n";
+    $HTMLOUT .= "       </div>
+                     </div>";
+
+
     print stdhead() . $HTMLOUT . stdfoot();
 ?>

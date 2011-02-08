@@ -80,6 +80,12 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 
     $HTMLOUT = '';
 		
+    $HTMLOUT = "
+                     <div class='cblock'>
+                         <div class='cblock-header'>";
+
+
+
 
 		if ($CURUSER["id"] == $row["owner"] || get_user_class() >= UC_MODERATOR)
 			$owned = 1;
@@ -103,9 +109,17 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 		elseif (isset($_GET["rated"]))
 			$HTMLOUT .= "<h2>{$lang['details_rating_added']}</h2>\n";
 
+
+
+
+
+
     $s = htmlsafechars( $row["name"] );
-		$HTMLOUT .= "<h1>$s</h1>\n";
-    $HTMLOUT .= "<table width='750' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
+	$HTMLOUT .= "$s";
+    $HTMLOUT .= "        </div>";
+    $HTMLOUT .= "        <div class='cblock-content'>";
+
+    $HTMLOUT .= "<table width='100%' border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n";
 
 		$url = "edit.php?id=" . $row["id"];
 		if (isset($_GET["returnto"])) {
@@ -120,7 +134,7 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 //			$s .= " $spacer<$editlink>[Edit torrent]</a>";
 //		tr("Name", $s, 1);
 
-		$HTMLOUT .= "<tr><td class='rowhead' width='1%'>{$lang['details_download']}</td><td width='99%' align='left'><a class='index' href='download.php?torrent=$id'>" . htmlsafechars($row["filename"]) . "</a></td></tr>";
+		$HTMLOUT .= "<tr><td class='rowhead'>{$lang['details_download']}</td><td style='width:99%;' align='left'><a class='index' href='download.php?torrent=$id'>" . htmlsafechars($row["filename"]) . "</a></td></tr>";
 /*
 		function hex_esc($matches) {
 			return sprintf("%02x", ord($matches[0]));
@@ -131,10 +145,10 @@ if (!$row || ($row["banned"] == "yes" && !$moderator))
 
 		if (!empty($row["descr"]))
 			$HTMLOUT .= "<tr><td style='vertical-align:top'>{$lang['details_description']}</td><td><div style='background-color:#d9e2ff;width:100%;height:150px;overflow: auto'>". str_replace(array("\n", "  "), array("<br />\n", "&nbsp; "), format_comment( $row["descr"] ))."</div></td></tr>";
-			
+
     if (get_user_class() >= UC_POWER_USER && $row["nfosz"] > 0)
       $HTMLOUT .= "<tr><td class='rowhead'>{$lang['details_nfo']}</td><td align='left'><a href='viewnfo.php?id=$row[id]'><b>{$lang['details_view_nfo']}</b></a> (" .mksize($row["nfosz"]) . ")</td></tr>\n";
-      
+
 		if ($row["visible"] == "no")
 			$HTMLOUT .= tr("{$lang['details_visible']}", "<b>{$lang['details_no']}</b>{$lang['details_dead']}", 1);
 		if ($moderator)
@@ -223,12 +237,15 @@ if (!empty($xrow))
 			else {
 				$HTMLOUT .= tr("{$lang['details_num-files']}", $row["numfiles"] . "{$lang['details_files']}", 1);
 
-				
+
 			}
 		}
 
 		$HTMLOUT .= tr("{$lang['details_peers']}<br /><a href=\"peerlist.php?id=$id#seeders\" class=\"sublink\">{$lang['details_list']}</a>", $row["seeders"] . " seeder(s), " . $row["leechers"] . " leecher(s) = " . ($row["seeders"] + $row["leechers"]) . "{$lang['details_peer_total']}", 1);
 		$HTMLOUT .= "</table>";
+
+        $HTMLOUT .= "        </div>
+                     </div>";
 
 		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
 		$HTMLOUT .= "<h1>{$lang['details_comments']}<a href='details.php?id=$id'>" . htmlsafechars( $row["name"] ) . "</a></h1>\n";
@@ -236,7 +253,7 @@ if (!empty($xrow))
 
     $HTMLOUT .= "<p><a name=\"startcomments\"></a></p>\n";
 
-    $commentbar = "<p align='center'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></p>\n";
+    $commentbar = "<p style='text-align:center;'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></p>\n";
 
     $count = $row['comments'];
 

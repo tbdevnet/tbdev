@@ -23,6 +23,8 @@ loggedinorreturn();
 
 $lang = array_merge( load_language('global'), load_language('bitbucket') );
 
+$HTMLOUT = '';
+
 $TBDEV['bb_upload_size'] = 256 * 1024;
 
 
@@ -59,21 +61,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 }
 
 
-
-    $HTMLOUT = "<h1>{$lang['bitbucket_bbupload']}</h1>
-    <form method='post' action='{$TBDEV['baseurl']}/bitbucket-upload.php' enctype='multipart/form-data'>
-    <p><b>{$lang['bitbucket_maximum']}".number_format($TBDEV['bb_upload_size'])."{$lang['bitbucket_bytes']}</b></p>
-    <table border='1' cellspacing='0' cellpadding='5'>
-    <tr><td class='rowhead'>{$lang['bitbucket_upload_file']}</td><td><input type='file' name='file' size='60' /></td></tr>
-    <tr><td colspan='2' align='center'><input type='submit' value='{$lang['bitbucket_upload']}' class='btn' /></td></tr>
-    </table>
-    </form>
-    
-    <br />
-    <table class='main' width='410' border='0' cellspacing='0' cellpadding='0'>
-    <tr><td class='embedded'>
-    <font class='small'>{$lang['bitbucket_disclaimer']}</font>
-    </td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['bitbucket_bbupload']}</div>
+                         <div class='cblock-lb'><b>{$lang['bitbucket_maximum']}".number_format($TBDEV['bb_upload_size'])."{$lang['bitbucket_bytes']}</b></div>
+                         <div class='cblock-content'>
+                             <form method='post' action='{$TBDEV['baseurl']}/bitbucket-upload.php' enctype='multipart/form-data'>
+                                  <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr><td class='rowhead'>{$lang['bitbucket_upload_file']}</td><td><input type='file' name='file' size='60' /></td></tr>
+                                        <tr><td colspan='2' align='center'><input type='submit' value='{$lang['bitbucket_upload']}' class='btn' /></td></tr>
+                                  </table>
+                             </form>
+                             <br />
+                             <table class='main' width='410' border='0' cellspacing='0' cellpadding='0'>
+                                   <tr>
+                                      <td class='embedded'><div class='small'>{$lang['bitbucket_disclaimer']}</div></td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
 
     print stdhead("{$lang['bitbucket_bbupload']}") . $HTMLOUT .stdfoot();

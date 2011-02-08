@@ -5,7 +5,7 @@ $lang = array(
 #Login
 'login_spam' => "NO SPAM! Wait 10 seconds and then refresh page",
 'login_not_logged_in' => "Not logged in!",
-'login_error' => "<p><b>Error:</b> The page you tried to view can only be used when you're logged in.</p>\n",
+'login_error' => "The page you tried to view can only be used when you're logged in.\n",
 'login_username' => "Username:",
 'login_password' => "Password:",
 'login_duration' => "Duration:",

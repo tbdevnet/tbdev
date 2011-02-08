@@ -124,45 +124,50 @@ $body = sprintf($lang['email_request'], $email, $_SERVER["REMOTE_ADDR"], $TBDEV[
     $js = '';
     
     $HTMLOUT .= "
-      
-      <h1>{$lang['recover_unamepass']}</h1>
-      <p>{$lang['recover_form']}</p>
-      
-      <form method='post' action='recover.php'>
-      <table border='1' cellspacing='0' cellpadding='10'>";
-        
-        
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['recover_unamepass']}</div>
+                         <div class='cblock-content'>
+
+                             <div class='inner_header'>{$lang['recover_form']}</div>
+
+                             <form method='post' action='recover.php'>
+                                  <table border='1' cellspacing='0' cellpadding='10'>";
+
+
       if( $TBDEV['captcha'] )
       {
         $js = "<script type='text/javascript' src='captcha/captcha.js'></script>";
-        
-        $HTMLOUT .= "<tr>
-        <td>&nbsp;</td>
-        <td>
-          <div id='captchaimage'>
-          <a href='recover.php' onclick=\"refreshimg(); return false;\" title='{$lang['captcha_refresh']}'>
-          <img class='cimage' src='captcha/GD_Security_image.php?".TIME_NOW."' alt='{$lang['captcha_imagealt']}' />
-          </a>
-          </div>
-         </td>
-      </tr>
-      <tr>
-          <td class='rowhead'>{$lang['captcha_pin']}</td>
-          <td>
-            <input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/>
-          </td>
-      </tr>";
+
+        $HTMLOUT .= "                   <tr>
+                                           <td>&nbsp;</td>
+                                           <td>
+                                              <div id='captchaimage'>
+                                                  <a href='recover.php' onclick=\"refreshimg(); return false;\" title='{$lang['captcha_refresh']}'>
+                                                    <img class='cimage' src='captcha/GD_Security_image.php?".TIME_NOW."' alt='{$lang['captcha_imagealt']}' />
+                                                  </a>
+                                              </div>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class='rowhead'>{$lang['captcha_pin']}</td>
+                                           <td><input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/></td>
+                                        </tr>";
       }
-      
+
       $HTMLOUT .= "
-      <tr>
-          <td class='rowhead'>{$lang['recover_regdemail']}</td>
-          <td><input type='text' size='40' name='email' /></td></tr>
-      <tr>
-          <td colspan='2' align='center'><input type='submit' value='{$lang['recover_btn']}' class='btn' /></td>
-      </tr>
-      </table>
-      </form>";
+                                        <tr>
+                                           <td class='rowhead'>{$lang['recover_regdemail']}</td>
+                                           <td><input type='text' size='40' name='email' /></td>
+                                        </tr>
+                                        <tr>
+                                           <td colspan='2' align='center'><input type='submit' value='{$lang['recover_btn']}' class='btn' /></td>
+                                        </tr>
+                                  </table>
+                             </form>";
+
+      $HTMLOUT .= "
+                         </div>
+                     </div>";
 
       print stdhead($lang['head_recover'], $js). $HTMLOUT . stdfoot();
     }

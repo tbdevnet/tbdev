@@ -9,6 +9,7 @@ $lang = array(
 'upload_delete' => "Delete",
 
 #upload options
+'upload_title' => "Upload",
 'upload_torrent' => "Torrent file",
 'upload_name' => "Torrent name",
 'upload_filename' => "Taken from filename if not specified. <b>Please use descriptive names.</b>",

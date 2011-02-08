@@ -19,7 +19,6 @@
 require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
 
-
 dbconn( false );
 
 loggedinorreturn();
@@ -28,7 +27,7 @@ loggedinorreturn();
 	
 	if ( get_user_class() < UC_ADMINISTRATOR )
 		header( "Location: {$TBDEV['baseurl']}/index.php" );
-		
+
 		
 $rep_set_cache = "cache/rep_settings_cache.php";
 
@@ -110,162 +109,126 @@ function get_cache_array()
 	}
 	
 
+    $HTMLOUT = '';
 
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Reputation System Settings</div>
+                         <div class='cblock-lb'>This section allows you to configure the User Reputation system.</div>
+                         <div class='cblock-content'>
+                             <div style='border: 1px solid rgb(131, 148, 178); padding: 5px;'>
+                                 <form action='reputation_settings.php' id='repoptions' method='post'>
+                                      <div>Reputation On/Off</div>
+					                  <div style='padding: 5px; background-color: rgb(238, 242, 247);'>
+							              <div style='border: 1px solid rgb(131, 148, 178);'>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Enable User Reputation system?</b><div style='color: gray;'>Set this option to \'Yes\' if you want to enable the User Reputation system.</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;' ><#rep_is_online#></div></td>
+							                        </tr>
+				                              </table>
+				                          </div>
+                                      </div>
+                                      <div>Default Reputation Level</div>
+				                      <div style='padding: 5px; background-color: rgb(238, 242, 247);'>
+						                  <div>
+							                  <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Default Reputation</b><div style='color: gray;'>What reputation level shall new users receive upon registration? Make sure that you have a reputation level that is at least equal to or less than this value.</div></td>
+							                           <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_default' value='<#rep_default#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Default Reputation Phrase</b><div style='color: gray;'>If you have any user gain a reputation that exceeds your lowest negative level, then this phrase will be used for them. If you do not wish to use this phrase, make sure you set a negative reputation that is larger than the largest score (negative) that a user on your forum has.</div></td>
+							                           <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_undefined' value='<#rep_undefined#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Number of Reputation Ratings to Display</b><div style='color: gray;'>Controls how many ratings to display in the user&#39;s profile (userdeatails).</div></td>
+							                           <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_userrates' value='<#rep_userrates#>' size='30' type='text' /></div></td>
+							                        </tr>
+                                              </table>
+				                          </div>
+                                      </div>
+                                      <div>Reputation Powers</div>
+				                      <div style='padding: 5px; background-color: rgb(238, 242, 247);'>
+							              <div style='border: 1px solid rgb(131, 148, 178);'>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Administrator&#39;s Reputation Power</b><div style='color: gray;'>How many reputation points does an administrator give or take away with each click?<br />Set to 0 to have administrators follow the same rules as everyone else.</div></td>
+							                           <td class='tablerow2' style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_adminpower' value='<#rep_adminpower#>' size='30' type='text' /></div></td>
+                                                    </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Register Date Factor</b><div style='color: gray;'>For every X number of days, users gain 1 point of reputation-altering power.</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_rdpower' value='<#rep_rdpower#>' size='30' type='text' /></div></td>
+							                        </tr>
+                                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Post Count Factor</b><div style='color: gray;'>For every X number of posts, users gain 1 point of reputation-altering power.</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_pcpower' value='<#rep_pcpower#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Reputation Point Factor</b><div style='color: gray;'>For every X points of reputation, users gain 1 point of reputation-altering power.</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_kppower' value='<#rep_kppower#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+				                          </div>
+                                      </div>
+                                      <div>User Reputation Settings</div>
+				                      <div style='padding: 5px; background-color: rgb(238, 242, 247);'>
+						                  <div>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Minimum Post Count</b><div style='color: gray;'>How many posts must a user have before his reputation hits count on others?</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_minpost' value='<#rep_minpost#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Minimum Reputation Count</b><div style='color: gray;'>How much reputation must a user have before his reputation hits count on others?</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_minrep' value='<#rep_minrep#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                        <tr>
+							                           <td style='width:30%;'><b>Daily Reputation Clicks Limit</b><div style='color: gray;'>How many reputation clicks can a user give over each 24 hour period? Administrators are exempt from this limit.</div></td>
+                                                       <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_maxperday' value='<#rep_maxperday#>' size='30' type='text' /></div></td>
+							                        </tr>
+				                              </table>
+                                              <table width='100%' border='0' cellpadding='5' cellspacing='0'>
+							                       <tr>
+							                          <td style='width:30%;'><b>Reputation User Spread</b><div style='color: gray;'>How many different users must you give reputation to before you can hit the same person again? Administrators are exempt from this limit.</div></td>
+                                                      <td style='width:55%;'><div style='width: auto; text-align:left;'><input name='rep_repeat' value='<#rep_repeat#>' size='30' type='text' /></div></td>
+							                       </tr>
+				                             </table>
+				                          </div>
+                                      </div>
 
-
-$HTMLOUT = '<div>
-				<table width="100%" border="0" cellpadding="5" cellspacing="0">
-				   <tr>
-					<td style="font-size: 12px; vertical-align: middle; font-weight: bold; color: rgb(0, 0, 0);" align="center">Reputation System Settings</td></tr>
-
-					<tr><td>This section allows you to configure the User Reputation system.</td>
-								 </tr>
-								 </table>
-</div>
-<br />
-<div style="border: 1px solid rgb(131, 148, 178); padding: 5px;">
-
-	<form action="reputation_settings.php" name="repoptions" method="post">
-
-				<div>Reputation On/Off</div>
-					<div style="padding: 5px; background-color: rgb(238, 242, 247);">
-							<div style="border: 1px solid rgb(131, 148, 178);">
-							
-							<table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Enable User Reputation system?</b><div style="color: gray;">Set this option to \'Yes\' if you want to enable the User Reputation system.</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><#rep_is_online#></div></td>
-							 </tr>
-				  </table>
-				  </div></div>
-				  
-				  <div>Default Reputation Level</div>
-				 <div style="padding: 5px; background-color: rgb(238, 242, 247);">
-						<div>
-							<table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Default Reputation</b><div style="color: gray;">What reputation level shall new users receive upon registration? Make sure that you have a reputation level that is at least equal to or less than this value.</div></td>
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_default" value="<#rep_default#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Default Reputation Phrase</b><div style="color: gray;">If you have any user gain a reputation that exceeds your lowest negative level, then this phrase will be used for them. If you do not wish to use this phrase, make sure you set a negative reputation that is larger than the largest score (negative) that a user on your forum has.</div></td>
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_undefined" value="<#rep_undefined#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-
-					<table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Number of Reputation Ratings to Display</b><div style="color: gray;">Controls how many ratings to display in the user&#39;s profile (userdeatails).</div></td>
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_userrates" value="<#rep_userrates#>" size="30" type="text"></div></td>
-							 </tr>
-
-				  </table>
-				  </div></div>
-				  
-				  <div>Reputation Powers</div>
-				 <div style="padding: 5px; background-color: rgb(238, 242, 247);">
-							<div style="border: 1px solid rgb(131, 148, 178);">
-							
-							<table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Administrator&#39;s Reputation Power</b><div style="color: gray;">How many reputation points does an administrator give or take away with each click?<br />Set to 0 to have administrators follow the same rules as everyone else.</div></td>
-							 <td class="tablerow2" width="55%"><div style="width: auto;" align="left"><input name="rep_adminpower" value="<#rep_adminpower#>" size="30" type="text"></div></td>
-
-							 </tr>
-				  </table>
-				  
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Register Date Factor</b><div style="color: gray;">For every X number of days, users gain 1 point of reputation-altering power.</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_rdpower" value="<#rep_rdpower#>" size="30" type="text">
-
-</div></td>
-							 </tr>
-
-				  </table>
-				  
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Post Count Factor</b><div style="color: gray;">For every X number of posts, users gain 1 point of reputation-altering power.</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_pcpower" value="<#rep_pcpower#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-				  
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Reputation Point Factor</b><div style="color: gray;">For every X points of reputation, users gain 1 point of reputation-altering power.</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_kppower" value="<#rep_kppower#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-				  </div></div>
-				  
-				  <div>User Reputation Settings</div>
-				  <div style="padding: 5px; background-color: rgb(238, 242, 247);">
-						<div>
-						
-							<table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Minimum Post Count</b><div style="color: gray;">How many posts must a user have before his reputation hits count on others?</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_minpost" value="<#rep_minpost#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-				  
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Minimum Reputation Count</b><div style="color: gray;">How much reputation must a user have before his reputation hits count on others?</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_minrep" value="<#rep_minrep#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-				  
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Daily Reputation Clicks Limit</b><div style="color: gray;">How many reputation clicks can a user give over each 24 hour period? Administrators are exempt from this limit.</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_maxperday" value="<#rep_maxperday#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-				  
-				  <table width="100%" border="0" cellpadding="5" cellspacing="0">
-							 <tr>
-							 <td width="30%"><b>Reputation User Spread</b><div style="color: gray;">How many different users must you give reputation to before you can hit the same person again? Administrators are exempt from this limit.</div></td>
-
-							 <td width="55%"><div style="width: auto;" align="left"><input name="rep_repeat" value="<#rep_repeat#>" size="30" type="text"></div></td>
-							 </tr>
-				  </table>
-				  </div></div>
-
-<input type="submit" name="submit" value="Submit" class="btn" tabindex="2" accesskey="s" />
-</form>
-</div>';
+                                      <input type='submit' name='submit' value='Submit' class='btn' tabindex='2' accesskey='s' />
+                                 </form>
+                             </div>
+                         </div>
+                     </div>";
 
 
 $HTMLOUT = preg_replace_callback( "|<#(.*?)#>|", "template_out", $HTMLOUT);
 
-
-
 echo stdhead("Reputation Settings") . $HTMLOUT . stdfoot();
-
-
-
-
-
 
 function template_out($matches)
 	{
 	  global $GVARS;
-	  
+
 	  if ( $matches[1] == 'rep_is_online' )
 	  {
-	  return 'Yes &nbsp; <input name="rep_is_online" value="1" '.($GVARS['rep_is_online'] == 1 ? 'checked="checked"' : "").' type="radio">&nbsp;&nbsp;&nbsp;<input name="rep_is_online" value="0" '.($GVARS['rep_is_online'] == 1 ? "" : 'checked="checked"').' type="radio"> &nbsp; No';
+	  return 'Yes &nbsp; <input name="rep_is_online" value="1" '.($GVARS['rep_is_online'] == 1 ? 'checked="checked"' : "").' type="radio" />&nbsp;&nbsp;&nbsp;<input name="rep_is_online" value="0" '.($GVARS['rep_is_online'] == 1 ? "" : 'checked="checked"').' type="radio" /> &nbsp; No';
 	  }
 	  else
 	  {
@@ -282,16 +245,16 @@ function redirect($url, $text, $time=2)
 		$page_detail = "<em>Redirecting...</em>";
 		
 		$html = "<meta http-equiv='refresh' content=\"{$time}; url={$TBDEV['baseurl']}/{$url}\">
-						    <div>
-							<div>Redirecting</div>
-							<div style='padding:8px'>
-							 <div style='font-size:12px'>$text
-							 <br />
-							 <br />
-							 <center><a href='{$TBDEV['baseurl']}/{$url}'>Click here if not redirected...</a></center>
-							 </div>
-							</div>
-						   </div>";
+					  <div>
+						  <div>Redirecting</div>
+						  <div style='padding:8px'>
+							  <div style='font-size:12px'>$text
+							      <br />
+							      <br />
+							      <div style='width:700px; margin:0 auto;'><a href='{$TBDEV['baseurl']}/{$url}'>Click here if not redirected...</a></div>
+							  </div>
+						  </div>
+					  </div>";
 		
 		print $html;
 		exit;

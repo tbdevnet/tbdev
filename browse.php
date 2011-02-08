@@ -205,35 +205,45 @@ loggedinorreturn();
     else
       $title = '';
 
-
-
-
-    $HTMLOUT .= "<div id='wrapper' style='width:90%;border:1px solid black;background-color:pink;'>";
+    $HTMLOUT .= "<div class='thecloud'>";
 
 
     //print out the tag cloud
     require_once "include/searchcloud_functions.php";
-    $HTMLOUT .= cloud() . "</div><br /><br />";
+    $HTMLOUT .= cloud() . "</div><br />";
 
-    $HTMLOUT .= "<form method='get' action='browse.php'>
-    <table class='bottom'>
-    <tr>
-    <td class='bottom'>
-      <table class='bottom'>
-      <tr>";
-
-
+    $HTMLOUT .= "
+                 <div class='cblock'>
+                     <div class='cblock-header'>Browse</div>
+                     <div class='cblock-lb'>Browse your desired torrents!</div>
+                     <div class='cblock-content'>";
+    $HTMLOUT .= "
+                         <form method='get' action='browse.php'>
+                              <div class='base-layer'>
+                                  <div class='table-row'>";
     $i = 0;
-    $catsperrow = 7;
+    $catsperrow = 4;
     foreach ($cats as $cat)
     {
-      $HTMLOUT .= ($i && $i % $catsperrow == 0) ? "</tr><tr>" : "";
-      $HTMLOUT .= "<td class='bottom' style='padding-bottom: 2px;padding-left: 7px;align:left;border:1px solid;'>
-      <input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat={$cat['id']}'>" . htmlsafechars($cat['name']) . "</a></td>\n";
+      $HTMLOUT .= ($i && $i % $catsperrow == 0) ? "</div><div class='space-line'></div><div class='table-row'>" : "";
+      $HTMLOUT .= "
+                                      <div class='left-layer'>
+                                          <p class='text'>
+                                            <input name='c".$cat['id']."' type=\"checkbox\" " . (in_array($cat['id'],$wherecatina) ? "checked='checked' " : "") . "value='1' /><a class='catlink' href='browse.php?cat={$cat['id']}'>" . htmlsafechars($cat['name']) . "</a>
+                                          </p>
+                                      </div>\n";
       $i++;
     }
 
-    $alllink = "<div align='left'>(<a href='browse.php?all=1'><b>{$lang['browse_show_all']}</b></a>)</div>";
+    $HTMLOUT .= "
+                                  </div>
+                              </div>";
+
+    $alllink = "<div style='float:left;'>(<a href='browse.php?all=1'><b>{$lang['browse_show_all']}</b></a>)</div>";
+
+    $HTMLOUT .= "<div style='float:left; padding:8px;'>";
+    $HTMLOUT .= "    <table>
+                           <tr>";
 
     $ncats = count($cats);
     $nrows = ceil($ncats/$catsperrow);
@@ -250,40 +260,44 @@ loggedinorreturn();
 
     $selected = (isset($_GET["incldead"])) ? (int)$_GET["incldead"] : "";
 
-    $HTMLOUT .= "</tr>
-    </table>
-    </td>
+    $HTMLOUT .= "
+                           </tr>
+                     </table>
+                 </div>
+                 <div style='float:left; padding:5px;'>
+                     <table>
+                           <tr>
+                              <td class='bottom'>
+                                 <select name='incldead'>
+                                        <option value='0'>{$lang['browse_active']}</option>
+                                        <option value='1'".($selected == 1 ? " selected='selected'" : "").">{$lang['browse_inc_dead']}</option>
+                                        <option value='2'".($selected == 2 ? " selected='selected'" : "").">{$lang['browse_dead']}</option>
+                                 </select>
+                              </td>";
 
-    <td class='bottom'>
-    <table class='main'>
-      <tr>
-        <td class='bottom' style='padding: 1px;padding-left: 10px'>
-          <select name='incldead'>
-    <option value='0'>{$lang['browse_active']}</option>
-    <option value='1'".($selected == 1 ? " selected='selected'" : "").">{$lang['browse_inc_dead']}</option>
-    <option value='2'".($selected == 2 ? " selected='selected'" : "").">{$lang['browse_dead']}</option>
-          </select>
-        </td>";
-        
 
     if ($ncats % $catsperrow == 0)
     {
-      $HTMLOUT .= "<td class='bottom' style='padding-left: 15px' rowspan='$nrows' valign='middle' align='right'>$alllink</td>\n";
+      $HTMLOUT .= "           <td class='bottom' style='padding-left: 15px' rowspan='$nrows' valign='middle' align='right'>$alllink</td>\n";
     }
 
-    $HTMLOUT .= "</tr>
-      <tr>
-        <td class='bottom' style='padding: 1px;padding-left: 10px'>
-        <div align='center'>
-          <input type='submit' class='btn' value='{$lang['browse_go']}' />
-        </div>
-        </td>
-      </tr>
-      </table>
-    </td>
-    </tr>
-    </table>
-    </form>";
+    $HTMLOUT .= "          </tr>
+                     </table>
+                 </div>
+                 <div style='float:left;'>
+                     <table>
+                           <tr>
+                              <td class='bottom'>
+                                 <input type='submit' value='{$lang['browse_go']}' />
+                              </td>
+                           </tr>
+                     </table>
+                 </div>
+   </form>";
+
+    $HTMLOUT .= "<div class='clear'>&nbsp;</div>";
+
+    $HTMLOUT .= "<div style='width:100%; height:100%; margin:0 auto;'>";
 
 
 
@@ -291,8 +305,8 @@ loggedinorreturn();
     {
       $HTMLOUT .= "<h2>{$lang['browse_search']}\"" . htmlsafechars( $searchstr ) . "\"</h2>\n";
     }
-    
-    if ($count) 
+
+    if ($count)
     {
       $HTMLOUT .= $pager['pagertop'];
 
@@ -300,19 +314,28 @@ loggedinorreturn();
 
       $HTMLOUT .= $pager['pagerbottom'];
     }
-    else 
+    else
     {
-      if (isset($cleansearchstr)) 
+      if (isset($cleansearchstr))
       {
-        $HTMLOUT .= "<h2>{$lang['browse_not_found']}</h2>\n";
-        $HTMLOUT .= "<p>{$lang['browse_tryagain']}</p>\n";
+        $HTMLOUT .= "<div class='info'>";
+        $HTMLOUT .= "<p><b>{$lang['browse_not_found']}</b>, {$lang['browse_tryagain']}</p>\n";
+        $HTMLOUT .= "</div>";
       }
-      else 
+      else
       {
-        $HTMLOUT .= "<h2>{$lang['browse_nothing']}</h2>\n";
-        $HTMLOUT .= "<p>{$lang['browse_sorry']}(</p>\n";
+        $HTMLOUT .= "<div class='info'>";
+        $HTMLOUT .= "<p><b>{$lang['browse_nothing']}</b>, {$lang['browse_sorry']}(</p>\n";
+        $HTMLOUT .= "</div>";
       }
     }
+
+    $HTMLOUT .= "
+                 </div>";
+
+
+    $HTMLOUT .= "
+      </div></div>";
 
 /////////////////////// HTML OUTPUT //////////////////////////////
 

@@ -25,11 +25,19 @@ dbconn(false);
 loggedinorreturn();
 
     $lang = load_language('global');
-    
-    $HTMLOUT = stdhead();
-    $HTMLOUT .= begin_main_frame();
+
+    $HTMLOUT = '';
+
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Smiles</div>
+                         <div class='cblock-content'>";
+
     $HTMLOUT .= insert_smilies_frame();
-    $HTMLOUT .= end_main_frame();
-    $HTMLOUT .= stdfoot();
-    print $HTMLOUT ;
+
+    $HTMLOUT .= "        </div>
+                     </div>";
+
+    /////////////////////// HTML OUTPUT ///////////////////////
+    print stdhead('FAQ') . $HTMLOUT . stdfoot();
 ?>

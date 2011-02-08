@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2010 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -19,6 +19,7 @@
 ////////////////// GLOBAL VARIABLES ////////////////////////////	
 $TBDEV['baseurl'] = 'http://localhost/tb_new/';
 $TBDEV['announce_interval'] = 60 * 30;
+$TBDEV['min_interval'] = 60 * 15;
 $TBDEV['user_ratios'] = 0;
 $TBDEV['connectable_check'] = 0;
 define ('UC_VIP', 2);
@@ -60,16 +61,14 @@ function dbconn()
     mysql_select_db($TBDEV['mysql_db']) or err('Please call back later');
 }
 
-function err($msg)
+function err($x)
 {
-	benc_resp(array('failure reason' => array('type' => 'string', 'value' => $msg)));
-	
-	exit();
+	exit('d14:failure reason' . strlen($x) . ":{$x}e");
 }
 
-function benc_resp($d)
+function warn($x)
 {
-	benc_resp_raw(benc(array('type' => 'dictionary', 'value' => $d)));
+	exit('d15:warning message' . strlen($x) . ":{$x}e");
 }
 
 function benc_resp_raw($x)
@@ -84,54 +83,6 @@ function benc_resp_raw($x)
     }
     else
         echo $x ;
-}
-
-function benc($obj) {
-	if (!is_array($obj) || !isset($obj["type"]) || !isset($obj["value"]))
-		return;
-	$c = $obj["value"];
-	switch ($obj["type"]) {
-		case "string":
-			return benc_str($c);
-		case "integer":
-			return benc_int($c);
-		case "list":
-			return benc_list($c);
-		case "dictionary":
-			return benc_dict($c);
-		default:
-			return;
-	}
-}
-
-function benc_str($s) {
-	return strlen($s) . ":$s";
-}
-
-function benc_int($i) {
-	return "i" . $i . "e";
-}
-
-function benc_list($a) {
-	$s = "l";
-	foreach ($a as $e) {
-		$s .= benc($e);
-	}
-	$s .= "e";
-	return $s;
-}
-
-function benc_dict($d) {
-	$s = "d";
-	$keys = array_keys($d);
-	sort($keys);
-	foreach ($keys as $k) {
-		$v = $d[$k];
-		$s .= benc_str($k);
-		$s .= benc($v);
-	}
-	$s .= "e";
-	return $s;
 }
 
 function hash_where($name, $hash) {
@@ -246,7 +197,7 @@ if (!$torrent)
 
 $torrentid = $torrent["id"];
 
-$fields = "seeder, peer_id, ip, port, uploaded, downloaded, userid";
+$fields = "seeder, peer_id, compact, ip, port, uploaded, downloaded, userid";
 
 //$numpeers = $torrent["numpeers"];
   $limit = "";
@@ -265,46 +216,23 @@ $fields = "seeder, peer_id, ip, port, uploaded, downloaded, userid";
   
 //////////////////// START NEW COMPACT MODE/////////////////////////////
 
-  $resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
-
-  $peer = array();
+  //$resp = "d" . benc_str("interval") . "i" . $TBDEV['announce_interval'] ."e" . benc_str("min interval") . "i" . 300 ."e5:"."peers" ;
+  $resp = "d8:intervali{$TBDEV['announce_interval']}e12:min intervali{$TBDEV['min_interval']}e5:peers";
+  
+  $peers = '';
 
   $peer_num = 0;
   
   while ($row = mysql_fetch_assoc($res))
   {
-
-    $peer_ip = explode('.', $row["ip"]);
-
-    $peer_ip = pack("C*", $peer_ip[0], $peer_ip[1], $peer_ip[2], $peer_ip[3]);
-
-    $peer_port = pack("n*", (int)$row["port"]);
-
-    $time = intval((TIME_NOW % 7680) / 60);
-
-    if($_GET['left'] == 0)
-    {
-      $time += 128;
-    }
-
-    $time = pack("C", $time);
-
-    $peer[] = $time . $peer_ip . $peer_port;
+    $peers .= $row['compact']; //pack('Nn', ip2long($row['ip']), $row['port']);
 
     $peer_num++;
   }
 
 
-$o = "";
-for($i=0;$i<$peer_num;$i++)
 
- {
-
-  $o .= substr($peer[$i], 1, 6);
-
- }
-
-$resp .= strlen($o) . ':' . $o . 'e';
+$resp .= strlen($peers) . ':' . $peers . 'e';
 
 
 
@@ -389,8 +317,19 @@ else
 
 	if (isset($self))
 	{
-		mysql_query("UPDATE peers SET uploaded = $uploaded, downloaded = $downloaded, to_go = $left, last_action = ".TIME_NOW.", seeder = '$seeder'"
-			. ($seeder == "yes" && $self["seeder"] != $seeder ? ", finishedat = " . TIME_NOW : "") . " WHERE $selfwhere");
+		$compact = '';
+		// only update compact if ip or port has changed
+    if( $self['ip'] != $ip || ($self['port']+0) != $port )
+    {
+      $compact = "compact = ".sqlesc(pack('Nn', ip2long($ip), $port)).',';
+    }
+		
+		mysql_query("UPDATE peers SET uploaded = $uploaded, downloaded = $downloaded, 
+		to_go = $left, last_action = ".TIME_NOW.", $compact
+		seeder = '$seeder'"
+			. ($seeder == "yes" && $self["seeder"] != $seeder ? ", 
+			finishedat = " . TIME_NOW : "") . " WHERE $selfwhere");
+			
 		if (mysql_affected_rows() && $self["seeder"] != $seeder)
 		{
 			if ($seeder == "yes")
@@ -429,8 +368,10 @@ else
 		{
       $connectable = 'yes';
 		}
-
-		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, ".TIME_NOW.", ".TIME_NOW.", '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
+    
+    $compact = sqlesc(pack('Nn', ip2long($ip), $port));
+    
+		$ret = mysql_query("INSERT INTO peers (connectable, torrent, peer_id, compact, ip, port, uploaded, downloaded, to_go, started, last_action, seeder, userid, agent, passkey) VALUES ('$connectable', $torrentid, " . sqlesc($peer_id) . ", $compact, " . sqlesc($ip) . ", $port, $uploaded, $downloaded, $left, ".TIME_NOW.", ".TIME_NOW.", '$seeder', {$user['id']}, " . sqlesc($agent) . "," . sqlesc($passkey) . ")");
 		
 		if ($ret)
 		{
@@ -446,6 +387,7 @@ if ($seeder == "yes")
 {
 	if ($torrent["banned"] != "yes")
 		$updateset[] = "visible = 'yes'";
+	
 	$updateset[] = "last_action = ".TIME_NOW;
 }
 

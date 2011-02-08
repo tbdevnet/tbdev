@@ -58,67 +58,75 @@ $mm_template[3] = array( $lang['sendmessage_mm_template3_sub'], $lang['sendmessa
       
       $mass_msg_pm_to = sprintf( $lang['sendmessage_mass_msg_to'], $n_pms, ($n_pms>1?"s":"") );
       
-      $HTMLOUT .= "<h1>{$mass_msg_pm_to}</h1>
-      <form method='post' action='takemessage.php'>";
-      
-      if ($_SERVER["HTTP_REFERER"]) 
-      { 
-        $HTMLOUT .= "<input type='hidden' name='returnto' value='{$_SERVER["HTTP_REFERER"]}' />";
-      }
-      
-      $HTMLOUT .= "<table border='1' cellspacing='0' cellpadding='5'>
-      <tr>
-        <td align='right'><b>{$lang['sendmessage_subject']}</b></td>
-        <td><input style='width: 650px;' name='subject' type='text' value='$this_subject' size='50' /></td>
-      </tr>
-      <tr>
-        <td align='right'><b>{$lang['sendmessage_subject']}</b></td>
-        <td><textarea style='width: 650px;' name='msg' cols='55' rows='15'>$this_body</textarea></td>
-      </tr>
-      <tr>
-        <td align='right'><b>{$lang['sendmessage_comment']}</b></td>
-        <td><input style='width: 650px;' name='comment' type='text' size='70' /></td>
-      </tr>
-      <tr>
-        <td colspan='2'><div align='center'><b>{$lang['sendmessage_from']}</b>
-      {$CURUSER['username']}
-        <input name='sender' type='radio' value='self' checked='checked' />&nbsp; System
-        <input name='sender' type='radio' value='system' />
-        </div>
-        <div align='center'><b>{$lang['sendmessage_snapshot']}</b>&nbsp;
-        <input name='snap' type='checkbox' value='1' />
-        </div></td>
-      </tr>
-      <tr>
-        <td colspan='2' align='center'><input type='submit' value='{$lang['sendmessage_send_it']}' class='btn' />
-        </td>
-      </tr>
-      </table>
-      <input type='hidden' name='pmees' value='{$pmees}' />
-      <input type='hidden' name='n_pms' value='{$n_pms}' />
-      </form><br /><br />
-      
-      
-      <form method='post' action='sendmessage.php'>
-      <table border='1' cellspacing='0' cellpadding='5'>
-      <tr><td>
-      <b>{$lang['sendmessage_templates']}</b>
-      <select name='auto'>";
-      
 
-      for ($i = 1; $i <= count($mm_template); $i++)	
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$mass_msg_pm_to}</div>
+                         <div class='cblock-content'>
+                             <form method='post' action='takemessage.php'>";
+
+      if ($_SERVER["HTTP_REFERER"])
+      {
+        $HTMLOUT .= "             <input type='hidden' name='returnto' value='{$_SERVER["HTTP_REFERER"]}' />";
+      }
+
+      $HTMLOUT .= "               <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr>
+                                           <td align='right'><b>{$lang['sendmessage_subject']}</b></td>
+                                           <td><input style='width: 650px;' name='subject' type='text' value='$this_subject' size='50' /></td>
+                                        </tr>
+                                        <tr>
+                                           <td align='right'><b>{$lang['sendmessage_subject']}</b></td>
+                                           <td><textarea style='width: 650px;' name='msg' cols='55' rows='15'>$this_body</textarea></td>
+                                        </tr>
+                                        <tr>
+                                           <td align='right'><b>{$lang['sendmessage_comment']}</b></td>
+                                           <td><input style='width: 650px;' name='comment' type='text' size='70' /></td>
+                                        </tr>
+                                        <tr>
+                                           <td colspan='2'>
+                                              <div align='center'><b>{$lang['sendmessage_from']}</b>
+                                                  {$CURUSER['username']}
+                                                  <input name='sender' type='radio' value='self' checked='checked' />&nbsp; System
+                                                  <input name='sender' type='radio' value='system' />
+                                              </div>
+                                              <div align='center'><b>{$lang['sendmessage_snapshot']}</b>&nbsp;<input name='snap' type='checkbox' value='1' /></div>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td colspan='2' align='center'><input type='submit' value='{$lang['sendmessage_send_it']}' class='btn' /></td>
+                                        </tr>
+                                  </table>
+                                  <input type='hidden' name='pmees' value='{$pmees}' />
+                                  <input type='hidden' name='n_pms' value='{$n_pms}' />
+                             </form>
+                             <br /><br />
+      
+      
+                             <form method='post' action='sendmessage.php'>
+                                  <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr>
+                                           <td>
+                                              <b>{$lang['sendmessage_templates']}</b>
+                                              <select name='auto'>";
+
+
+      for ($i = 1; $i <= count($mm_template); $i++)
      {
-        $HTMLOUT .= "<option value='$i' ".($auto == $i?"selected='selected'":"").
-            ">{$mm_template[$i][0]}</option>\n";
+        $HTMLOUT .= "                                <option value='$i' ".($auto == $i?"selected='selected'":""). ">{$mm_template[$i][0]}</option>\n";
      }
 
-      $HTMLOUT .= "</select>
-      <input type='submit' value='{$lang['sendmessage_use']}' class='btn' />
-      <input type='hidden' name='pmees' value='{$pmees}' />
-      <input type='hidden' name='n_pms' value='{$n_pms}' />
-      </td></tr></table></form>";
-
-    } 
+      $HTMLOUT .= "                           </select>
+                                              <input type='submit' value='{$lang['sendmessage_use']}' class='btn' />
+                                              <input type='hidden' name='pmees' value='{$pmees}' />
+                                              <input type='hidden' name='n_pms' value='{$n_pms}' />
+                                           </td>
+                                        </tr>
+                                  </table>
+                             </form>
+                         </div>
+                     </div>";
+    }
     else 
     {                                                        ////////  PM  //
       $receiver = 0+$_GET["receiver"];
@@ -159,71 +167,84 @@ $mm_template[3] = array( $lang['sendmessage_mm_template3_sub'], $lang['sendmessa
       }
 
 
-      $HTMLOUT .= "<table class='main' width='750' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>
-      <div align='center'>
-      <h1>Message to <a href='userdetails.php?id={$receiver}'>{$user["username"]}</a></h1>
-      <form method='post' action='takemessage.php'>";
-      
-      if (isset($_GET["returnto"]) || isset($_SERVER["HTTP_REFERER"])) 
+
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Message to <a href='userdetails.php?id={$receiver}'>{$user["username"]}</a></div>
+                         <div class='cblock-content'>
+                             <table class='main' width='750' border='0' cellspacing='0' cellpadding='0'>
+                                   <tr>
+                                      <td class='embedded'>
+                                         <div style='text-align:center;'>
+                                             <form method='post' action='takemessage.php'>";
+
+      if (isset($_GET["returnto"]) || isset($_SERVER["HTTP_REFERER"]))
       {
-        $HTMLOUT .= "<input type='hidden' name='returnto' value='".(isset($_GET["returnto"]) ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"])."' />";
+        $HTMLOUT .= "                             <input type='hidden' name='returnto' value='".(isset($_GET["returnto"]) ? $_GET["returnto"] : $_SERVER["HTTP_REFERER"])."' />";
       }
       
-      $HTMLOUT .= "<table border='1' cellspacing='0' cellpadding='5'>
-      <tr>
-        <td colspan='2'><b>{$lang['sendmessage_subject']}</b>
-      <input name='subject' type='text' size='76' value='".(isset($subject) ? htmlsafechars($subject) : '')."' /></td>
-      </tr>
-      <tr>
-        <td".($replyto ? " colspan=2":'')."><textarea name='msg' cols='80' rows='15'>".(isset($body) ? htmlsafechars($body) : '')."</textarea></td></tr>
-      <tr>";
-      
-      if ($replyto) 
-      { 
-        $HTMLOUT .= "<td align='center'><input type='checkbox' name='delete' value='yes' ".($CURUSER['deletepms'] == 'yes' ? "checked='checked'":'')." />{$lang['sendmessage_delete']}
-        <input type='hidden' name='origmsg' value='$replyto' /></td>";
+      $HTMLOUT .= "                               <table border='1' cellspacing='0' cellpadding='5'>
+                                                        <tr>
+                                                           <td colspan='2'><b>{$lang['sendmessage_subject']}</b>
+                                                              <input name='subject' type='text' size='76' value='".(isset($subject) ? htmlsafechars($subject) : '')."' />
+                                                           </td>
+                                                        </tr>
+                                                        <tr><td".($replyto ? " colspan=2":'')."><textarea name='msg' cols='80' rows='15'>".(isset($body) ? htmlsafechars($body) : '')."</textarea></td></tr>
+                                                        <tr>";
+
+      if ($replyto)
+      {
+        $HTMLOUT .= "                                      <td align='center'><input type='checkbox' name='delete' value='yes' ".($CURUSER['deletepms'] == 'yes' ? "checked='checked'":'')." />{$lang['sendmessage_delete']}
+                                                              <input type='hidden' name='origmsg' value='$replyto' />
+                                                           </td>";
       }
       
-      $HTMLOUT .= "<td align='center'><input type='checkbox' name='save' value='yes' ".($CURUSER['savepms'] == 'yes' ? "checked='checked'":'')." />{$lang['sendmessage_save_sent']}</td></tr>
-      <tr><td".($replyto ? " colspan='2'":'')." align='center'><input type='submit' value='{$lang['sendmessage_send_it']}' class='btn' /></td></tr>
-      </table>
-      <input type='hidden' name='receiver' value='$receiver' />
-      </form>
-      <!--";
+      $HTMLOUT .= "                                        <td align='center'><input type='checkbox' name='save' value='yes' ".($CURUSER['savepms'] == 'yes' ? "checked='checked'":'')." />{$lang['sendmessage_save_sent']}</td>
+                                                        </tr>
+                                                       <tr><td".($replyto ? " colspan='2'":'')." align='center'><input type='submit' value='{$lang['sendmessage_send_it']}' class='btn' /></td></tr>
+                                                 </table>
+                                                 <input type='hidden' name='receiver' value='$receiver' />
+                                            </form><!--";
 
       if ($CURUSER['class'] >= UC_MODERATOR)
       {
 
-        $HTMLOUT .= "<br /><br />
-        <form method='get' action='sendmessage.php'>
-        <table border='1' cellspacing='0' cellpadding='5'>
-        <tr><td>
-        <b>{$lang['sendmessage_pm_templates']}</b>
-        <select name='std'>";
-        
+        $HTMLOUT .= "                       <br /><br />
+                                            <form method='get' action='sendmessage.php'>
+                                                 <table border='1' cellspacing='0' cellpadding='5'>
+                                                       <tr>
+                                                          <td>
+                                                             <b>{$lang['sendmessage_pm_templates']}</b>
+                                                             <select name='std'>";
+
         for ($i = 1; $i <= count($pm_template); $i++)
         {
-          $HTMLOUT .= "<option value='$i' ".($std == $i?"selected='selected'":"").
-            ">".$pm_template[$i][0]."</option>\n";
+          $HTMLOUT .= "                                             <option value='$i' ".($std == $i?"selected='selected'":"").">".$pm_template[$i][0]."</option>\n";
         }
-        
-        $HTMLOUT .= "</select>";
+
+        $HTMLOUT .= "                                        </select>";
         
         if (isset($_SERVER["HTTP_REFERER"])) 
         { 
-          $HTMLOUT .= "<input type='hidden' name='returnto' value='".(isset($_GET["returnto"]) ? $_GET["returnto"]:$_SERVER["HTTP_REFERER"])."' />";
+          $HTMLOUT .= "                                      <input type='hidden' name='returnto' value='".(isset($_GET["returnto"]) ? $_GET["returnto"]:$_SERVER["HTTP_REFERER"])."' />";
         }
         
-        $HTMLOUT .= "<input type='hidden' name='receiver' value='$receiver' />
-        <input type='hidden' name='replyto' value='$replyto' />
-        <input type='submit' value='{$lang['sendmessage_use']}' class='btn' />
-        </td></tr></table></form>";
-
+        $HTMLOUT .= "                                        <input type='hidden' name='receiver' value='$receiver' />
+                                                             <input type='hidden' name='replyto' value='$replyto' />
+                                                             <input type='submit' value='{$lang['sendmessage_use']}' class='btn' />
+                                                          </td>
+                                                       </tr>
+                                                 </table>
+                                            </form>";
       }
 
       $HTMLOUT .= "-->
-      </div></td></tr></table>";
-
+                                        </div>
+                                     </td>
+                                  </tr>
+                            </table>
+                        </div>
+                    </div>";
     }
 
 

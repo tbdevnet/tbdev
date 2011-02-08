@@ -33,35 +33,45 @@ function insert_tag($name, $description, $syntax, $example, $remarks)
     $result = format_comment($example);
     $htmlout = '';
 
-    $htmlout .= "<div class='sub'><b>$name</b></div>\n";
+
     $htmlout .= "<table class='main' width='100%' border='1' cellspacing='0' cellpadding='5'>\n";
-    $htmlout .= "<tr valign='top'><td width='25%'>{$lang['tags_description']}</td><td>$description</td></tr>\n";
-    $htmlout .= "<tr valign='top'><td>{$lang['tags_systax']}</td><td><tt>$syntax</tt></td></tr>\n";
-    $htmlout .= "<tr valign='top'><td>{$lang['tags_example']}</td><td><tt>$example</tt></td></tr>\n";
-    $htmlout .= "<tr valign='top'><td>{$lang['tags_result']}</td><td>$result</td></tr>\n";
+    $htmlout .= "      <tr valign='top' class='inner_header'><td class='sub'><b>$name</b></td><td class='inner_header'></td></tr>\n";
+    $htmlout .= "      <tr valign='top'><td style='width:25%;'>{$lang['tags_description']}</td><td>$description</td></tr>\n";
+    $htmlout .= "      <tr valign='top'><td>{$lang['tags_systax']}</td><td><tt>$syntax</tt></td></tr>\n";
+    $htmlout .= "      <tr valign='top'><td>{$lang['tags_example']}</td><td><tt>$example</tt></td></tr>\n";
+    $htmlout .= "      <tr valign='top'><td>{$lang['tags_result']}</td><td>$result</td></tr>\n";
     if ($remarks != "")
-      $htmlout .= "<tr><td>{$lang['tags_remarks']}</td><td>$remarks</td></tr>\n";
-    $htmlout .= "</table>\n";
-    
+      $htmlout .= "    <tr><td>{$lang['tags_remarks']}</td><td>$remarks</td></tr>\n";
+    $htmlout .= "</table><br />\n";
+
     return $htmlout;
 }
 
     $HTMLOUT = '';
-    
-    $HTMLOUT .= begin_main_frame();
-    $HTMLOUT .= begin_frame("Tags");
+
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Tags</div>
+                         <div class='cblock-content'>";
+
+    $HTMLOUT .= begin_frame();
     $test = isset($_POST["test"]) ? $_POST["test"] : '';
 
     $HTMLOUT .= "{$lang['tags_title']}
-
-    <form method='post' action='?'>
+             <form method='post' action='?'>
     <textarea name='test' cols='60' rows='3'>".($test ? htmlsafechars($test) : "")."</textarea>
     <input type='submit' value='{$lang['tags_test']}' style='height: 23px; margin-left: 5px' />
     </form>";
 
 
     if ($test != "")
-      $HTMLOUT .= "<p><hr>" . format_comment($test) . "<hr></p>\n";
+      $HTMLOUT .= "<table style='width:100%;' cellspacing='0' cellpadding='0'>\n";
+      $HTMLOUT .= "      <tr class='inner_header'><td style='padding:0px;'><b>Results&nbsp;from&nbsp;BBcode&nbsp;:&nbsp;</b></td><td class='inner_header'></td></tr>\n";
+      $HTMLOUT .= "      <tr style='width:100%;'>
+                            <td style='width:100%;' align='center'>" . format_comment($test) . "</td>
+                         </tr>\n";
+      $HTMLOUT .= "</table><br />\n";
+
 
     $HTMLOUT .= insert_tag(
       $lang['tags_bold1'],
@@ -184,7 +194,9 @@ function insert_tag($name, $description, $syntax, $example, $remarks)
     );
 
     $HTMLOUT .= end_frame();
-    $HTMLOUT .= end_main_frame();
-    
+
+    $HTMLOUT .= "        </div>
+                     </div>";
+
     print stdhead("{$lang['tags_tags']}") . $HTMLOUT . stdfoot();
 ?>

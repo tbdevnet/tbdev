@@ -70,11 +70,19 @@ loggedinorreturn();
       $HTMLOUT = '';
       $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
       
-      $HTMLOUT .= "<h1>{$lang['comment_add']}\"" . htmlsafechars($arr["name"]) . "\"</h1>
-      <form name='bbcode2text' method='post' action='comment.php?action=add'>
-      <input type='hidden' name='tid' value='{$torrentid}'/>";
-      $HTMLOUT .= bbcode2textarea( $lang['comment_doit'] );
-      $HTMLOUT .= "</form>";
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['comment_add']}\"" . htmlsafechars($arr["name"]) . "\"</div>
+                         <div class='cblock-content'>
+                             <form name='bbcode2text' method='post' action='comment.php?action=add'>
+                                  <input type='hidden' name='tid' value='{$torrentid}'/>";
+      $HTMLOUT .=                 bbcode2textarea( $lang['comment_doit'] );
+      $HTMLOUT .= "          </form>
+                         </div>
+                     </div>";
+
+
+
 
       $res = mysql_query("SELECT comments.id, text, comments.added, comments.editedby, comments.editedat, username, users.id as user, users.title, users.avatar, users.av_w, users.av_h, users.class, users.donor, users.warned FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $torrentid ORDER BY comments.id DESC LIMIT 5");
 
@@ -131,12 +139,18 @@ loggedinorreturn();
       $returnto = htmlsafechars($_SERVER["HTTP_REFERER"]);
       $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
       $HTMLOUT = '';
-      $HTMLOUT .= "<h1>{$lang['comment_edit']}\"" . htmlsafechars($arr["name"]) . "\"</h1>
-      <form name='bbcode2text' method='post' action='comment.php?action=edit&amp;cid=$commentid'>
-      <input type='hidden' name='returnto' value='{$returnto}' />
-      <input type='hidden' name='cid' value='$commentid' />";
-      $HTMLOUT .= bbcode2textarea( $lang['comment_doit'], htmlsafechars($arr["text"]) );
-      $HTMLOUT .= "</form>";
+
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['comment_edit']}\"" . htmlsafechars($arr["name"]) . "\"</div>
+                         <div class='cblock-content'>
+                             <form name='bbcode2text' method='post' action='comment.php?action=edit&amp;cid=$commentid'>
+                                  <input type='hidden' name='returnto' value='{$returnto}' />
+                                  <input type='hidden' name='cid' value='$commentid' />";
+      $HTMLOUT .=                 bbcode2textarea( $lang['comment_doit'], htmlsafechars($arr["text"]) );
+      $HTMLOUT .= "          </form>
+                         </div>
+                     </div>";
 
       print stdhead("{$lang['comment_edit']}\"{$arr["name"]}\"", $js) . $HTMLOUT . stdfoot();
       die;
@@ -197,11 +211,18 @@ loggedinorreturn();
 
       
       $HTMLOUT = '';
-      $HTMLOUT .= "<h1>{$lang['comment_original_contents']}#$commentid</h1>
-      <table width='500' border='1' cellspacing='0' cellpadding='5'>
-      <tr><td class='comment'>
-      ".htmlsafechars($arr["ori_text"])."
-      </td></tr></table><br />";
+
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['comment_original_contents']}#$commentid</div>
+                         <div class='cblock-content'>
+                             <table width='500' border='1' cellspacing='0' cellpadding='5'>
+                                   <tr>
+                                      <td class='comment'>".htmlsafechars($arr["ori_text"])."</td>
+                                   </tr>
+                             </table><br />
+                         </div>
+                     </div>";
 
       $returnto = htmlsafechars(filter_var($_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING));
 

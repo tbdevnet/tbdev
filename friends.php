@@ -190,22 +190,27 @@ loggedinorreturn();
       
     }
 //////////////////// ENEMIES BLOCK END ////////////////////////////  
-  
-    $HTMLOUT .= "<table class='main' border='0' cellspacing='0' cellpadding='0'>".
-    "<tr><td class='embedded'><h1 style='margin:0px'> {$lang['friends_personal']} ".htmlsafechars($user['username'])."</h1>$donor$warned</td></tr></table>";
 
-    $HTMLOUT .= "<table class='main' width='750' border='0' cellspacing='0' cellpadding='0'>
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['friends_personal']} ".htmlsafechars($user['username'])."$donor$warned</div>
+                         <div class='cblock-content'>";
+
+    $HTMLOUT .= "<table class='main' width='739' border='0' cellspacing='0' cellpadding='0'>
     <tr>
-      <td class='colhead'><h2 align='left' style='width:50%;'><a name='friends'>{$lang['friends_friends_list']}</a></h2></td>
-      <td class='colhead'><h2 align='left' style='width:50%;vertical-align:top;'><a name='blocks'>{$lang['friends_blocks_list']}</a></h2></td>
+      <td class='colhead'><h2  style='width:50%; text-align:left;'><a name='friends'>{$lang['friends_friends_list']}</a></h2></td>
+      <td class='colhead'><h2  style='width:50%; text-align:left; vertical-align:top;'><a name='blocks'>{$lang['friends_blocks_list']}</a></h2></td>
     </tr>
     <tr>
-      <td style='padding:10px;background-color:#ECE9D8;width:50%;'>$friends</td>
-      <td style='padding:10px;background-color:#ECE9D8' valign='top'>$blocks</td>
+      <td style='padding:10px;background:#ECE9D8;width:50%;'>$friends</td>
+      <td style='padding:10px;background:#ECE9D8 vertical-align:top;'>$blocks</td>
     </tr>
     </table>";
     
     $HTMLOUT .= " <p><a href='users.php'><b>{$lang['friends_user_list']}</b></a></p>";
+
+    $HTMLOUT .= "      </div>
+                     </div>";
     
     print stdhead("{$lang['friends_stdhead']} {$user['username']}") . $HTMLOUT . stdfoot();
 ?>

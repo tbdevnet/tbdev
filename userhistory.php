@@ -148,11 +148,11 @@ loggedinorreturn();
 
           if (is_valid_id($arr['editedby']))
           {
-              $subres = mysql_query("SELECT username FROM users WHERE id=$arr[editedby]");
+              $subres = mysql_query("SELECT username FROM users WHERE id={$arr['editedby']}");
               if (mysql_num_rows($subres) == 1)
               {
                   $subrow = mysql_fetch_assoc($subres);
-                  $body .= "<p><font size='1' class='small'>{$lang['posts_lasteditedby']} <a href='userdetails.php?id=$arr[editedby]'><b>$subrow[username]</b></a> {$lang['posts_at']} $arr[editedat] GMT</font></p>\n";
+                                    $body .= "<p><font size='1' class='small'>{$lang['posts_lasteditedby']} <a href='userdetails.php?id={$arr['editedby']}'><b>{$subrow['username']}</b></a> {$lang['posts_at']} ".get_date( $arr['editedat'],'')." GMT</font></p>\n";
               }
           }
 

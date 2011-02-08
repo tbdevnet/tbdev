@@ -24,7 +24,7 @@ dbconn( false );
 loggedinorreturn();
 
 	$lang = load_language('global');
-	
+
 	if ( get_user_class() < UC_ADMINISTRATOR )
 		header( "Location: {$TBDEV['baseurl']}/index.php" );
 
@@ -89,8 +89,8 @@ loggedinorreturn();
 function show_level()
 	{
 		$title = "User Reputation Manager - Overview";
-		
-		$html = "<p>On this page you can modify the minimum amount required for each reputation level. Make sure you press Update Minimum Levels to save your changes. You cannot set the same minimum amount to more than one level.<br />From here you can also choose to edit or remove any single level. Click the Edit link to modify the Level description (see Editing a Reputation Level) or click Remove to delete a level. If you remove a level or modify the minimum reputation needed to be at a level, all users will be updated to reflect their new level if necessary.</p><br />";
+
+    	$html = "<p>On this page you can modify the minimum amount required for each reputation level. Make sure you press Update Minimum Levels to save your changes. You cannot set the same minimum amount to more than one level.<br />From here you can also choose to edit or remove any single level. Click the Edit link to modify the Level description (see Editing a Reputation Level) or click Remove to delete a level. If you remove a level or modify the minimum reputation needed to be at a level, all users will be updated to reflect their new level if necessary.</p><br />";
 
 		$query = mysql_query( 'SELECT * FROM reputationlevel ORDER BY minimumreputation ASC' );
 		
@@ -100,54 +100,66 @@ function show_level()
 			do_update( 'new' );
 			return;
 		}
-		$css = "style='font-weight: bold;color: #ffffff;background-color: #0055A4;padding: 5px;'";
+        $html .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>User Reputation Manager <span class='btn' style='float:right;'><a href='reputation_ad.php?mode=list'>View comments</a></span></div>
+                         <div class='cblock-content'>";
+		$html .= "           <form action='reputation_ad.php' name='show_rep_form' method='post'>
+				                  <input name='mode' value='doupdate' type='hidden' />";
+		$html .= "                      <table cellpadding='3px'>
+                                              <tr>
+		                                         <td style='font-weight: bold; color: #ffffff; background-color: #0055A4; padding: 5px; width:5%;'>ID</td>
+		                                         <td style='font-weight: bold; color: #ffffff; background-color: #0055A4; padding: 5px; width:60%;'>Reputation Level</td>
+		                                         <td style='font-weight: bold; color: #ffffff; background-color: #0055A4; padding: 5px; width:20%;'>Minimum Reputation Level</td>
+		                                         <td style='font-weight: bold; color: #ffffff; background-color: #0055A4; padding: 5px; width:15%;'>Controls</td>
+                                              </tr>";
 
-		$html .= "<h2>User Reputation Manager</h2>" ;
-		$html .= "<p><span class='btn'><a href='reputation_ad.php?mode=list'>View comments</a></span></p><br />";
-		$html .= "<form action='reputation_ad.php' name='show_rep_form' method='post'>
-				<input name='mode' value='doupdate' type='hidden' />";
 
-		$html .= "<table cellpadding='3px'><tr>
-		<td width='5%' $css>ID</td>
-		<td width='60%'$css>Reputation Level</td>
-		<td width='20%' $css>Minimum Reputation Level</td>
-		<td width='15%' $css>Controls</td></tr>";
-
-		
 
 		while( $res = mysql_fetch_assoc( $query ) )
 		{
-			$html .= "<tr>\n".
-					"	<td>#".$res['reputationlevelid']."</td>\n".
-					"	<td>User <b>".htmlsafechars( $res['level'] )."</b></td>\n".
-					"	<td align='center'><input type='text' name='reputation[".$res['reputationlevelid']."]' value='".$res['minimumreputation']."' size='12' /></td>\n".
-					"	<td align='center'><span class='btn'><a href='reputation_ad.php?mode=edit&amp;reputationlevelid=".$res['reputationlevelid']."'>Edit</a></span>&nbsp;<span class='btn'><a href='reputation_ad.php?mode=dodelete&amp;reputationlevelid=".$res['reputationlevelid']."'>Delete</a></span></td>\n".
-					"</tr>\n";
+			$html .= "                        <tr>
+				                                 <td>#".$res['reputationlevelid']."</td>
+					                             <td>User <b>".htmlsafechars( $res['level'] )."</b></td>
+					                             <td class='center'><input type='text' name='reputation[".$res['reputationlevelid']."]' value='".$res['minimumreputation']."' size='12' /></td>
+					                             <td class='center'><span class='btn'><a href='reputation_ad.php?mode=edit&amp;reputationlevelid=".$res['reputationlevelid']."'>Edit</a></span>&nbsp;<span class='btn'><a href='reputation_ad.php?mode=dodelete&amp;reputationlevelid=".$res['reputationlevelid']."'>Delete</a></span></td>
+				                              </tr>\n";
 		}
 
-		$html .= "<tr><td colspan='3' align='center'>
-					<input type='submit' value='Update' accesskey='s' class='btn' /> 
-					<input type='reset' value='Reset' accesskey='r' class='btn' /></td>
-					<td align='center'><span class='btn'><a href='reputation_ad.php?mode=add'>Add New</a></span>
-					</td></tr>";
-		$html .= "</table>";
+		$html .= "                            <tr>
+                                                 <td colspan='3' class='center'>
+					                                <input type='submit' value='Update' accesskey='s' class='btn' />
+					                                <input type='reset' value='Reset' accesskey='r' class='btn' />
+                                                 </td>
+				                         	     <td class='center'><span class='btn'><a href='reputation_ad.php?mode=add'>Add New</a></span></td>
+                                              </tr>";
+		$html .= "                      </table>";
 
-		$html .= "</form>";
+		$html .= "           </form>
+                         </div>
+                     </div>";
 
 		html_out( $html, $title );
-		
+
 	}
 
 function show_form($type='edit')
 	{
 		global $input;
-		
-		$html = "This allows you to add a new reputation level or edit an existing reputation level.";
+
+		$html = "";
+
+        $html .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>This allows you to add a new reputation level or edit an existing reputation level.</div>
+                         <div class='cblock-lb'>";
+
+
 
 		if( $type == 'edit' )
 		{
 			$query = mysql_query( 'SELECT * FROM reputationlevel WHERE reputationlevelid='.intval($input['reputationlevelid']) ) or sqlerr(__LINE__,__FILE__);
-			
+
 
 			if( ! $res = mysql_fetch_assoc( $query ) )
 			{
@@ -155,9 +167,9 @@ function show_form($type='edit')
 			}
 
 			$title  = "Edit Reputation Level";
-			$html .= "<br /><span style='font-weight:normal;'>{$res['level']} (ID:#{$res['reputationlevelid']})</span><br />";
+			$html .= "       <span style='font-weight:normal;'>{$res['level']} (ID:#{$res['reputationlevelid']})</span>";
 			$button = "Update";
-			$extra  = "<input type='button' class='button' value='Back' accesskey='b' class='btn' onclick='javascript:history.back(1)' />";
+			$extra  = "      <input type='button' class='button' value='Back' accesskey='b' class='btn' onclick='javascript:history.back(1)' />";
 			$mode   = 'doedit';
 		}
 		else
@@ -165,14 +177,17 @@ function show_form($type='edit')
 			$title  = "Add New Reputation Level";
 			$button = "Save";
 			$mode   = 'doadd';
-			$extra  = "<input type='button' value='Back' accesskey='b' class='btn' onclick='javascript:history.back(1)' />";
+			$extra  = "      <input type='button' value='Back' accesskey='b' class='btn' onclick='javascript:history.back(1)' />";
 		}
-		
+
+        $html .= "</div>";
+        $html .= "             <div class='cblock-content'>";
+
 		$css = "style='font-weight: bold;color: #ffffff;background-color: #0055A4;padding: 5px;'";
 		$replevid = isset($res['reputationlevelid']) ? $res['reputationlevelid'] : '';
 		$replevel = isset($res['level']) ? htmlsafechars($res['level']) : '';
 		$minrep = isset($res['minimumreputation']) ? $res['minimumreputation'] : '';
-		$html .= "<form action='reputation_ad.php' name='show_rep_form' method='post'>
+		$html .= "<form action='reputation_ad.php' id='show_rep_form' method='post'>
 				<input name='reputationlevelid' value='{$replevid}' type='hidden' />
 				<input name='mode' value='{$mode}' type='hidden' />";
 
@@ -189,6 +204,8 @@ function show_form($type='edit')
 		$html .= "</table>";
 
 		$html .= "</form>";
+
+        $html .= "</div></div>";
 		
 		html_out( $html, $title );
 		
@@ -360,44 +377,52 @@ function view_list()
 		global $now_date, $time_offset, $input;
 		
 		$title = 'User Reputation Manager';
-		$html =  "<h2>View Reputation Comments</h2>";
-		$html .= "<p>This page allows you to search for reputation comments left by / for specific users over the specified date range.</p>";
 
-		$html .= "<form action='reputation_ad.php' name='list_form' method='post'>
-				<input name='mode' value='list' type='hidden' />
-				<input name='dolist' value='1' type='hidden' />";
-				
-		$html .= "<table width='500px' cellpadding='5px'>";
-		
 
-		$html .= "<tr><td width='20%'>Left For</td><td width='80%'><input type='text' name='leftfor' value='' size='35' maxlength='250' tabindex='1' /></td></tr>";
-		$html .= "<tr><td colspan='2'><div>To limit the comments left for a specific user, enter the username here. Leave this field empty to receive comments left for every user.</div></td></tr>";
+        $html = '';
 
-		$html .= "<tr><td>Left By</td><td><input type='text' name='leftby' value='' size='35' maxlength='250' tabindex='2' /></td></tr>";
-		$html .= "<tr><td colspan='2'><div>To limit the comments left by a specific user, enter the username here. Leave this field empty to receive comments left by every user.</div></td></tr>";
+        $html .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>View Reputation Comments</div>
+                         <div class='cblock-content'>";
 
-		$html .= "<tr><td>Start Date</td><td>
-		<div>
-				<span style='padding-right:5px; float:left;'>Month<br /><select name='start[month]' tabindex='3'>".get_month_dropdown(1)."</select></span>
-				<span style='padding-right:5px; float:left;'>Day<br /><input type='text' name='start[day]' value='".($now_date['mday']+1)."' size='4' maxlength='2' tabindex='3' /></span>
-				<span>Year<br /><input type='text' name='start[year]' value='".$now_date['year']."' size='4' maxlength='4' tabindex='3' /></span>
-			</div></td></tr>";
-		
-		$html .= "<tr><td class='tdrow2' colspan='2'><div class='desctext'>Select a start date for this report. Select a month, day, and year. The selected statistic must be no older than this date for it to be included in the report.</div></td></tr>";
+		$html .= "           <p>This page allows you to search for reputation comments left by / for specific users over the specified date range.</p>";
 
-		$html .= "<tr><td>End Date</td><td>
-			<div>
-				<span style='padding-right:5px; float:left;'>Month<br /><select name='end[month]' class='textinput' tabindex='4'>".get_month_dropdown()."</select></span>
-				<span style='padding-right:5px; float:left;'>Day<br /><input type='text' class='textinput' name='end[day]' value='".$now_date['mday']."' size='4' maxlength='2' tabindex='4' /></span>
-				<span>Year<br /><input type='text' class='textinput' name='end[year]' value='".$now_date['year']."' size='4' maxlength='4' tabindex='4' /></span>
-			</div></td></tr>";
-		
-		$html .= "<tr><td class='tdrow2' colspan='2'><div class='desctext'>Select an end date for this report. Select a month, day, and year. The selected statistic must not be newer than this date for it to be included in the report. You can use this setting in conjunction with the 'Start Date' setting to create a window of time for this report.</div></td></tr>";
-
-		$html .= "<tr><td colspan='2' align='center'><input type='submit' value='Search' accesskey='s' class='btn' tabindex='5' /> <input type='reset' value='Reset' accesskey='r' class='btn' tabindex='6' /></td></tr>";
-		$html .= "</table></form>";
+		$html .= "           <form action='reputation_ad.php' id='list_form' method='post'>
+		                          <input name='mode' value='list' type='hidden' />
+				                  <input name='dolist' value='1' type='hidden' />";
+		$html .= "                <table style='width:500px;' cellpadding='5'>";
+		$html .= "                      <tr><td style='width:20%;'>Left For</td><td style='width:80%;'><input type='text' name='leftfor' value='' size='35' maxlength='250' tabindex='1' /></td></tr>";
+		$html .= "                      <tr><td colspan='2'><div>To limit the comments left for a specific user, enter the username here. Leave this field empty to receive comments left for every user.</div></td></tr>";
+		$html .= "                      <tr><td>Left By</td><td><input type='text' name='leftby' value='' size='35' maxlength='250' tabindex='2' /></td></tr>";
+		$html .= "                      <tr><td colspan='2'><div>To limit the comments left by a specific user, enter the username here. Leave this field empty to receive comments left by every user.</div></td></tr>";
+		$html .= "                      <tr>
+                                           <td>Start Date</td>
+                                           <td>
+		                                      <div>
+				                                  <span style='padding-right:5px; float:left;'>Month<br /><select name='start[month]' tabindex='3'>".get_month_dropdown(1)."</select></span>
+				                                  <span style='padding-right:5px; float:left;'>Day<br /><input type='text' name='start[day]' value='".($now_date['mday']+1)."' size='4' maxlength='2' tabindex='3' /></span>
+				                                  <span>Year<br /><input type='text' name='start[year]' value='".$now_date['year']."' size='4' maxlength='4' tabindex='3' /></span>
+			                                 </div>
+                                           </td>
+                                        </tr>";
+		$html .= "                      <tr><td class='tdrow2' colspan='2'><div class='desctext'>Select a start date for this report. Select a month, day, and year. The selected statistic must be no older than this date for it to be included in the report.</div></td></tr>";
+		$html .= "                      <tr>
+                                           <td>End Date</td>
+                                           <td>
+			                                  <div>
+				                                  <span style='padding-right:5px; float:left;'>Month<br /><select name='end[month]' class='textinput' tabindex='4'>".get_month_dropdown()."</select></span>
+				                                  <span style='padding-right:5px; float:left;'>Day<br /><input type='text' class='textinput' name='end[day]' value='".$now_date['mday']."' size='4' maxlength='2' tabindex='4' /></span>
+				                                  <span>Year<br /><input type='text' class='textinput' name='end[year]' value='".$now_date['year']."' size='4' maxlength='4' tabindex='4' /></span>
+			                                 </div>
+                                           </td>
+                                        </tr>";
+		$html .= "                      <tr><td class='tdrow2' colspan='2'><div class='desctext'>Select an end date for this report. Select a month, day, and year. The selected statistic must not be newer than this date for it to be included in the report. You can use this setting in conjunction with the 'Start Date' setting to create a window of time for this report.</div></td></tr>";
+		$html .= "                      <tr><td colspan='2' style='text-align:center;'><input type='submit' value='Search' accesskey='s' class='btn' tabindex='5' /> <input type='reset' value='Reset' accesskey='r' class='btn' tabindex='6' /></td></tr>";
+		$html .= "                </table>
+                             </form>";
 //print $html; exit;
-		
+
 		// I hate work, but someone has to do it!
 		if( isset($input['dolist']) )
 		{
@@ -408,9 +433,9 @@ function view_list()
 			$user = isset($input['user']) ? $input['user'] : 0;
 			$first = isset($input['page']) ? intval($input['page']) : 0;
 			$cond =  $who ?"r.whoadded=".sqlesc($who) : '';
-			
+
 			$start = isset($input['startstamp']) ? intval($input['startstamp']) : mktime(0, 0, 0, $input['start']['month'], $input['start']['day'], $input['start']['year']) + $time_offset;
-			
+
 			$end   = isset($input['endstamp']) ? intval($input['endstamp']) : mktime(0, 0, 0, $input['end']['month'], $input['end']['day'] + 1, $input['end']['year']) + $time_offset;
 
 			if( ! $start )
@@ -479,17 +504,17 @@ function view_list()
 					$orderby = 'dateadd';
 			}
 
-			
+
 			$css = "style='font-weight: bold;color: #ffffff;background-color: #0055A4;padding: 5px;'";
 			$html = "<h2>Reputation Comments</h2>";
-			$table_header = "<table width='80%' cellpadding='5' border='1'><tr $css>";
-			$table_header .= "<td width='5%'>ID</td>";
-			$table_header .= "<td width='20%'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftbyuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left By</a></td>";
-			$table_header .= "<td width='20%'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftforuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left For</a></td>";
-			$table_header .= "<td width='17%'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=date&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Date</a></td>";
-			$table_header .= "<td width='5%'>Point</td>";
-			$table_header .= "<td width='23%'>Reason</td>";
-			$table_header .= "<td width='10%'>Controls</td></tr>";
+			$table_header = "<table style='width:80%;' cellpadding='5' border='1'><tr $css>";
+			$table_header .= "<td style='width:2%;'>ID</td>";
+			$table_header .= "<td style='width:20%;'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftbyuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left By</a></td>";
+			$table_header .= "<td style='width:20%;'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=leftforuser&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Left For</a></td>";
+			$table_header .= "<td style='width:17%;'><a href='reputation_ad.php?mode=list&amp;dolist=1&amp;who=".intval($who)."&amp;user=".intval($user)."&amp;orderby=date&amp;startstamp=$start&amp;endstamp=$end&amp;page=$first'>Date</a></td>";
+			$table_header .= "<td style='width:5%;'>Point</td>";
+			$table_header .= "<td style='width:23%;'>Reason</td>";
+			$table_header .= "<td style='width:10%;'>Controls</td></tr>";
 
 			$html .= $table_header;
 
@@ -500,7 +525,7 @@ function view_list()
 
 			if( ! $total['cnt'] )
 			{
-				$html .= "<tr><td colspan='7' align='center'>No Matches Found!</td></tr>";
+				$html .= "<tr><td colspan='7' style='text-align:center;'>No Matches Found!</td></tr>";
 			}
 
 			// do the pager thang!
@@ -550,6 +575,9 @@ function view_list()
 			$html .= "</table>";
 			$html .= "<br /><div>$links</div>";
 		}
+
+            $html .= "</div></div>";
+
 
 		html_out( $html, $title);
 	}

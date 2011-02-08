@@ -3,7 +3,9 @@
 $lang = array(
 
 #FAQ
-'faq_welcome' => "<b>Welcome to {$TBDEV['site_name']}!</b><br />
+'faq_title' => "Welcome to {$TBDEV['site_name']}!",
+
+'faq_info' => "
     <br />
     Our goal is not to become another Bytemonsoon or Suprnova (not dizzying either of them though).
     The goal is to provide the absolutely latest stuff. Therefore, only specially authorised users have
@@ -214,48 +216,48 @@ $lang = array(
     <br />
       <table cellspacing='3' cellpadding='0'>
     <tr>
-      <td class='embedded' width='100' bgcolor='#F5F4EA'>&nbsp; <b>User</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; width:100px;'>&nbsp; <b>User</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>The default class of new members.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b>Power User</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA;'>&nbsp;<b>Power User</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Can download DOX over 1MB and view NFO files.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp;  <img src='{$TBDEV['pic_base_url']}star.gif' alt='Star' /></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded'>&nbsp;  <img src='{$TBDEV['pic_base_url']}star.gif' alt='Star' /></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Has donated money to {$TBDEV['site_name']} . </td>
     </tr>
     <tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA'>&nbsp; <b>VIP</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA;' valign='top'>&nbsp; <b>VIP</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded' valign='top'>Same privileges as Power User and is considered an Elite Member of {$TBDEV['site_name']}. Immune to automatic demotion.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b>Other</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA;'>&nbsp; <b>Other</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Customised title.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b><font color='#4040c0'>Uploader</font></b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; color:#4040c0;'>&nbsp;<b>Uploader</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Same as PU except with upload rights and immune to automatic demotion.</td>
     </tr>
     <tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA'>&nbsp; <b><font color='#A83838'>Moderator</font></b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; color:#a83838;' valign='top'>&nbsp; <b>Moderator</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded' valign='top'>Can edit and delete any uploaded torrents. Can also moderate user	comments and disable accounts.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b><font color='#A83838'>Administrator</font></b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; color:#a83838;'>&nbsp; <b>Administrator</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Can do just about anything.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b><font color='#A83838'>SysOp</font></b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; color:#a83838;'>&nbsp; <b>SysOp</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Redbeard (site owner).</td>
     </tr>
     </table>
@@ -264,39 +266,39 @@ $lang = array(
 'faq_promotion_header' => "<b>How does this promotion thing work anyway?</b><a name='usera' id='usera'></a><br />
     <br />",
 'faq_promotion_body' => "<tr>
-      <td class='embedded' bgcolor='#F5F4EA' valign='top' width='100'>&nbsp; <b>Power User</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; width:100px;' valign='top'>&nbsp; <b>Power User</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded' valign='top'>Must have been be a member for at least 4 weeks, have uploaded at least 25GB and
       have a ratio at or above 1.05.<br />
       The promotion is automatic when these conditions are met. Note that you will be automatically demoted from<br />
       this status if your ratio drops below 0.95 at any time.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <img src='{$TBDEV['pic_base_url']}star.gif' alt='Star' /></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA;'>&nbsp; <img src='{$TBDEV['pic_base_url']}star.gif' alt='Star' /></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Just donate, and send <a class='altlink' href='sendmessage.php?receiver=1'>Redbeard</a> - and only
       Redbeard - the details.</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA' valign='top'>&nbsp; <b>VIP</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA;' valign='top'>&nbsp; <b>VIP</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded' valign='top'>Assigned by mods at their discretion to users they feel contribute
       something special to the site.<br />
       (Anyone begging for VIP status will be automatically disqualified.)</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b>Other</b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA;' >&nbsp; <b>Other</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Conferred by mods at their discretion (not available to Users or Power Users).</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b><font color='#4040c0'>Uploader</font></b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; color:#4040c0;'  >&nbsp; <b>Uploader</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>Appointed by Admins/SysOp (see the 'Uploading' section for conditions).</td>
     </tr>
     <tr>
-      <td class='embedded' bgcolor='#F5F4EA'>&nbsp; <b><font color='#A83838'>Moderator</font></b></td>
-      <td class='embedded' width='5'>&nbsp;</td>
+      <td class='embedded' style='background:#F5F4EA; color:#A83838;' >&nbsp; <b>Moderator</b></td>
+      <td class='embedded' style='width:5px;'>&nbsp;</td>
       <td class='embedded'>You don't ask us, we'll ask you!</td>
     </tr>
     </table>
@@ -440,17 +442,14 @@ $lang = array(
     <br />
     Some <a class='altlink' href='anatomy.php'>info</a> about the &quot;Anatomy of a torrent session&quot;.
     <br />
-    </td></tr></table>
-    </td></tr></table>
-    <br />
-    <br />",
+    </td></tr></table>",
 'faq_uploading_body' => "<br />
     <b>Why can't I upload torrents?</b><a name='up1'></a><br />
     <br />
-    Only specially authorized users (<font color='#4040C0'><b>Uploaders</b></font>) have permission to upload torrents.<br />
+    Only specially authorized users (<b style='color:#4040C0;'>Uploaders</b>) have permission to upload torrents.<br />
     <br />
     <br />
-    <b>What criteria must I meet before I can join the <font color='#4040C0'>Uploader</font> team?</b><a name='up2'></a><br />
+    <b>What criteria must I meet before I can join the Uploader team?</b><a name='up2'></a><br />
     <br />
     You must be able to provide releases that:<br />
     * include a proper NFO,<br />
@@ -538,44 +537,44 @@ $lang = array(
     <br />
     <table cellspacing='3' cellpadding='0'>
      <tr>
-      <td class='embedded' width='70'>Ratio below</td>
-      <td class='embedded' width='40' bgcolor='#F5F4EA'><div align='center'><font color='#BB0000'>0.50</font></div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
-      <td class='embedded' width='110'>and/or upload below</td>
-      <td class='embedded' width='40' bgcolor='#F5F4EA'><div align='center'>5.0GB</div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
-      <td class='embedded' width='50'>delay of</td>
-      <td class='embedded' width='40' bgcolor='#F5F4EA'><div align='center'>48h</div></td>
+      <td class='embedded' style='width:70px;'>Ratio below</td>
+      <td class='embedded' style='width:40px; background:#F5F4EA;'><div style='color:#bb0000; text-align:center;'>0.50</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
+      <td class='embedded' style='width:110px;'>and/or upload below</td>
+      <td class='embedded' style='width:40px; background:#f5f4ea;'><div style='text-align:center;'>5.0GB</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
+      <td class='embedded' style='width:50px;'>delay of</td>
+      <td class='embedded' style='width:40px; background:#f5f4ea;'><div style='text-align:center;'>48h</div></td>
      </tr>
      <tr>
       <td class='embedded'>Ratio below</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'><font color='#A10000'>0.65</font></div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='color:#a10000; text-align:center;'>0.65</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded'>and/or upload below</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'>6.5GB</div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='text-align:center;'>6.5GB</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded'>delay of</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'>24h</div></td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='text-align:center;'>24h</div></td>
      </tr>
      <tr>
       <td class='embedded'>Ratio below</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'><font color='#880000'>0.80</font></div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='color:#880000; text-align:center;'>0.80</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded'>and/or upload below</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'>8.0GB</div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='text-align:center;'>8.0GB</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded'>delay of</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'>12h</div></td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='text-align:center;'>12h</div></td>
      </tr>
      <tr>
       <td class='embedded'>Ratio below</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'><font color='#6E0000'>0.95</font></div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='color:#6e0000; text-align:center;'>0.95</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded'>and/or upload below</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'>9.5GB</div></td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='text-align:center;'>9.5GB</div></td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded'>delay of</td>
-      <td class='embedded' bgcolor='#F5F4EA'><div align='center'>06h</div></td>
+      <td class='embedded' style='background:#f5f4ea;'><div style='text-align:center;'>06h</div></td>
      </tr>
     </table>
     <br />
@@ -617,24 +616,24 @@ $lang = array(
     <br />
     <table cellspacing='3' cellpadding='0'>
       <tr>
-      <td class='embedded' width='80'>Direct Connect</td>
-      <td class='embedded' width='80' bgcolor='#F5F4EA'><div align='center'>411 - 413</div></td>
+      <td class='embedded' style='width:80px;'>Direct Connect</td>
+      <td class='embedded' style='width:80px; background:#F5F4EA;'><div style='text-align:center;'>411 - 413</div></td>
       </tr>
       <tr>
-      <td class='embedded' width='80'>Kazaa</td>
-      <td class='embedded' width='80' bgcolor='#F5F4EA'><div align='center'>1214</div></td>
+      <td class='embedded' style='width:80px;'>Kazaa</td>
+      <td class='embedded' style='width:80px; background:#F5F4EA;'><div style='text-align:center;'>1214</div></td>
       </tr>
       <tr>
-      <td class='embedded' width='80'>eDonkey</td>
-      <td class='embedded' width='80' bgcolor='#F5F4EA'><div align='center'>4662</div></td>
+      <td class='embedded' style='width:80px;'>eDonkey</td>
+      <td class='embedded' style='width:80px; background:#F5F4EA;'><div style='text-align:center;'>4662</div></td>
       </tr>
       <tr>
-      <td class='embedded' width='80'>Gnutella</td>
-      <td class='embedded' width='80' bgcolor='#F5F4EA'><div align='center'>6346 - 6347</div></td>
+      <td class='embedded' style='width:80px;'>Gnutella</td>
+      <td class='embedded' style='width:80px; background:#F5F4EA;'><div style='text-align:center;'>6346 - 6347</div></td>
       </tr>
       <tr>
-      <td class='embedded' width='80'>BitTorrent</td>
-      <td class='embedded' width='80' bgcolor='#F5F4EA'><div align='center'>6881 - 6889</div></td>
+      <td class='embedded' style='width:80px;'>BitTorrent</td>
+      <td class='embedded' style='width:80px; background:#F5F4EA;'><div style='text-align:center;'>6881 - 6889</div></td>
      </tr>
     </table>
     <br />
@@ -779,28 +778,28 @@ $lang = array(
     (the terminology is far from standard):<br />
     <br />",
 'faq_proxy_body2' => "<tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA' width='100'>&nbsp;Transparent</td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' valign='top' style='background:#F5F4EA; width:100px;'>&nbsp;Transparent</td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded' valign='top'>A transparent proxy is one that needs no configuration on the clients. It works by automatically redirecting all port 80 traffic to the proxy. (Sometimes used as synonymous for non-anonymous.)</td>
      </tr>
      <tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA'>&nbsp;Explicit/Voluntary</td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' valign='top' style='background:#F5F4EA;'>&nbsp;Explicit/Voluntary</td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded' valign='top'>Clients must configure their browsers to use them.</td>
      </tr>
      <tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA'>&nbsp;Anonymous</td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' valign='top' style='background:#F5F4EA;'>&nbsp;Anonymous</td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded' valign='top'>The proxy sends no client identification to the server. (HTTP_X_FORWARDED_FOR header is not sent; the server does not see your IP.)</td>
      </tr>
      <tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA'>&nbsp;Highly Anonymous</td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' valign='top' style='background:#F5F4EA;'>&nbsp;Highly Anonymous</td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded' valign='top'>The proxy sends no client nor proxy identification to the server. (HTTP_X_FORWARDED_FOR, HTTP_VIA and HTTP_PROXY_CONNECTION headers are not sent; the server doesn't see your IP and doesn't even know you're using a proxy.)</td>
      </tr>
      <tr>
-      <td class='embedded' valign='top' bgcolor='#F5F4EA'>&nbsp;Public</td>
-      <td class='embedded' width='10'>&nbsp;</td>
+      <td class='embedded' valign='top' style='background:#F5F4EA;'>&nbsp;Public</td>
+      <td class='embedded' style='width:10px;'>&nbsp;</td>
       <td class='embedded' valign='top'>(Self explanatory)</td>
      </tr>
     </table>
@@ -914,10 +913,7 @@ $lang = array(
     a bencoded file. If for some reason you must use a plain text editor, change the announce url to
     {$TBDEV['site_name']}:80, not {$TBDEV['site_name']}. (If you're thinking about changing the number before the
     announce url instead, you know too much to be reading this.)
-    </td></tr></table>
-    </td></tr></table>
-    <br />
-    <br />",
+    </td></tr></table>",
 'faq_problem_title' => "What if I can't find the answer to my problem here?",
 'faq_problem_body' => "<br />
     Post in the <a class='altlink' href='forums.php'>Forums</a>, by all means. You'll find they

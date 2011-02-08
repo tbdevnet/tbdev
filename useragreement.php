@@ -25,13 +25,20 @@ dbconn();
     $lang = array_merge( load_language('global'), load_language('useragreement') );
     
     $HTMLOUT = '';
-    
-    $HTMLOUT .= begin_main_frame();
-    $HTMLOUT .= begin_frame($TBDEV['site_name']." {$lang['frame_usragrmnt']}");
 
-    $HTMLOUT .= "<p></p> {$lang['text_usragrmnt']}"; 
+    $HTMLOUT .= "
+                    <div class='cblock'>
+                        <div class='cblock-header'>{$TBDEV['site_name']},&nbsp;{$lang['frame_usragrmnt']}</div>
+                        <div class='cblock-content'>";
+
+    $HTMLOUT .= begin_frame();
+
+    $HTMLOUT .= "{$lang['text_usragrmnt']}";
 
     $HTMLOUT .= end_frame();
-    $HTMLOUT .= end_main_frame();
+
+    $HTMLOUT .= "       </div>
+                    </div>";
+
     print stdhead("{$lang['stdhead_usragrmnt']}") . $HTMLOUT . stdfoot();
 ?>

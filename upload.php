@@ -25,7 +25,7 @@ dbconn(false);
 loggedinorreturn();
 
     $lang = array_merge( load_language('global'), load_language('upload') );
-    
+
     $HTMLOUT = '';
 
     if ($CURUSER['class'] < UC_UPLOADER)
@@ -34,32 +34,38 @@ loggedinorreturn();
     }
 
     $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
-    
-    $HTMLOUT .= "<div align='center'>
-    <form name='bbcode2text' enctype='multipart/form-data' action='takeupload.php' method='post'>
-    <input type='hidden' name='MAX_FILE_SIZE' value='{$TBDEV['max_torrent_size']}' />
-    <p>{$lang['upload_announce_url']} <b>{$TBDEV['announce_urls'][0]}</b></p>";
+
+    $HTMLOUT .= "
+                <form name='bbcode2text' enctype='multipart/form-data' action='takeupload.php' method='post'>
+                <input type='hidden' name='MAX_FILE_SIZE' value='{$TBDEV['max_torrent_size']}' />";
+
+    $HTMLOUT .="
+                 <div class='cblock'>
+                 <div class='cblock-header'>{$lang['upload_title']}</div>
+                 <div class='cblock-lb'>{$lang['upload_announce_url']} {$TBDEV['announce_urls'][0]}</div>
+                 <div class='cblock-content'>";
 
 
-    $HTMLOUT .= "<table border='1' cellspacing='0' cellpadding='10'>
-    <tr>
-      <td class='heading' valign='top' align='right'>{$lang['upload_torrent']}</td>
-      <td valign='top' align='left'><input type='file' name='file' size='80' /></td>
-    </tr>
-    <tr>
-      <td class='heading' valign='top' align='right'>{$lang['upload_name']}</td>
-      <td valign='top' align='left'><input type='text' name='name' size='80' /><br />({$lang['upload_filename']})</td>
-    </tr>
-    <tr>
-      <td class='heading' valign='top' align='right'>{$lang['upload_nfo']}</td>
-      <td valign='top' align='left'><input type='file' name='nfo' size='80' /><br />({$lang['upload_nfo_info']})</td>
-    </tr>
-    <tr>
-      <td class='heading' valign='top' align='right'>{$lang['upload_description']}</td>
-      <td valign='top' align='left'>";
-      $HTMLOUT .= bbcode2textarea( '', '', 0 );
-      $HTMLOUT .= "<br />({$lang['upload_html_bbcode']})</td>
-    </tr>";
+    $HTMLOUT .= "
+                <table  border='0' cellspacing='0' cellpadding='6'>
+                      <tr>
+                         <td class='heading' valign='top' align='right'>{$lang['upload_torrent']}</td>
+                         <td valign='top' align='left'><input type='file' name='file' size='80' /></td>
+                      </tr>
+                      <tr>
+                         <td class='heading' valign='top' align='right'>{$lang['upload_name']}</td>
+                         <td valign='top' align='left'><input type='text' name='name' size='80' /><br />({$lang['upload_filename']})</td>
+                      </tr>
+                      <tr>
+                         <td class='heading' valign='top' align='right'>{$lang['upload_nfo']}</td>
+                         <td valign='top' align='left'><input type='file' name='nfo' size='80' /><br />({$lang['upload_nfo_info']})</td>
+                      </tr>
+                      <tr>
+                         <td class='heading' valign='top' align='right'>{$lang['upload_description']}</td>
+                         <td valign='top' align='left'>";
+    $HTMLOUT .= bbcode2textarea( '', '', 0 );
+    $HTMLOUT .= "<br />({$lang['upload_html_bbcode']})</td>
+                      </tr>";
 
     $s = "<select name='type'>\n<option value='0'>({$lang['upload_choose_one']})</option>\n";
 
@@ -79,9 +85,15 @@ loggedinorreturn();
       <tr>
         <td align='center' colspan='2'><input type='submit' class='btn' value='{$lang['upload_submit']}' /></td>
       </tr>
-    </table>
-    </form>
-    </div>";
+    </table>";
+
+          $HTMLOUT .= "
+      </div></div>";
+
+      $HTMLOUT .= "</form>";
+
+      $HTMLOUT .= "<div class='clear'>&nbsp;</div>";
+
 
 ////////////////////////// HTML OUTPUT //////////////////////////
 

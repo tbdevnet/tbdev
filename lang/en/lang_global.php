@@ -32,7 +32,7 @@ $lang = array (
 'gl_recover'			=>	"Recover Account",
 
 #big red message thang
-'gl_msg_alert'		=>	"You have %s new message",
+'gl_msg_alert'		=>	"%s",
 
 #statusbar
 'gl_msg_singular'		  =>	"New Message",

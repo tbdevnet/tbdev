@@ -33,52 +33,127 @@ function add_link($url, $title, $description = "")
 
     $HTMLOUT = '';
     
-    if ($CURUSER) 
-    { 
-      $HTMLOUT .= "{$lang['links_dead']}";
+    if ($CURUSER)
+    {
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Information</div>
+                         <div class='cblock-content'>
+                             {$lang['links_dead']}
+                         </div>
+                     </div>";
     }
-    
-    $HTMLOUT .= "<table width='750' class='main' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'>";
 
-    $HTMLOUT .= "{$lang['links_other_pages_header']}
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'><ul>
-    {$lang['links_other_pages_body']}
-    </ul></td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_other_pages_header']}</div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         <ul>
+                                            {$lang['links_other_pages_body']}
+                                         </ul>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
-    $HTMLOUT .= "{$lang['links_bt_header']}
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'><ul>
-    {$lang['links_bt_body']}
-    </ul></td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_bt_header']}</div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         <ul>
+                                            {$lang['links_bt_body']}
+                                         </ul>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
-    $HTMLOUT .= "{$lang['links_software_header']}
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'><ul>
-    {$lang['links_software_body']}
-    </ul></td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_software_header']}</div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         <ul>
+                                            {$lang['links_software_body']}
+                                         </ul>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
-    $HTMLOUT .= "{$lang['links_download_header']}
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'><ul>
-    {$lang['links_download_body']}
-    </ul></td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_download_header']}</div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         <ul>
+                                            {$lang['links_download_body']}
+                                         </ul>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
-    $HTMLOUT .= "{$lang['links_forums_header']}
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'><ul>
-   {$lang['links_forums_body']}
-    </ul></td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_forums_header']}</div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         <ul>
+                                            {$lang['links_forums_body']}
+                                         </ul>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
-    $HTMLOUT .= "{$lang['links_other_header']}
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'><ul>
-    {$lang['links_other_body']}
-    </ul></td></tr></table>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_other_header']}</div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         <ul>
+                                            {$lang['links_other_body']}
+                                         </ul>
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
 
-    $HTMLOUT .= "{$lang['links_tbdev_header']}>
-    <table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'>
-    {$lang['links_tbdev_body']}
-    </td></tr></table>";
-
-    $HTMLOUT .= "</td></tr></table>";
-
-
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['links_tbdev_header']}></div>
+                         <div class='cblock-content'>
+                             <table width='100%' border='1' cellspacing='0' cellpadding='10'>
+                                   <tr>
+                                      <td class='text'>
+                                         {$lang['links_tbdev_body']}
+                                      </td>
+                                   </tr>
+                             </table>
+                         </div>
+                     </div>";
 
     print stdhead("Links") . $HTMLOUT . stdfoot();
 

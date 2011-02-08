@@ -27,19 +27,26 @@ loggedinorreturn();
 
     $lang = array_merge( load_language('global'), load_language('my') );
 
-
     $HTMLOUT = '';
-    
-    if (isset($_GET["edited"])) 
+
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Your Profile</div>
+                         <div class='cblock-lb'>";
+    if (isset($_GET["edited"]))
     {
-      $HTMLOUT .= "<h1>{$lang['my_updated']}!</h1>\n";
+      $HTMLOUT .= "          {$lang['my_updated']}!";
       if (isset($_GET["mailsent"]))
-        $HTMLOUT .= "<h2>{$lang['my_mail_sent']}!</h2>\n";
+        $HTMLOUT .= "        {$lang['my_mail_sent']}!";
     }
     elseif (isset($_GET["emailch"]))
     {
-      $HTMLOUT .= "<h1>{$lang['my_emailch']}!</h1>\n";
+      $HTMLOUT .= "          {$lang['my_emailch']}!";
     }
+
+    $HTMLOUT .= "        </div>";
+
+    $HTMLOUT .= "        <div class='cblock-content'>";
     //else
       //print("<h1>Welcome, <a href=userdetails.php?id=$CURUSER[id]>$CURUSER[username]</a>!</h1>\n");
     $user_header = "<span style='font-size: 20px;'><a href='userdetails.php?id={$CURUSER['id']}'>{$CURUSER['username']}</a></span>";
@@ -70,7 +77,7 @@ loggedinorreturn();
     </script>
 
 
-    <table border='1' cellspacing='0' cellpadding='10' align='center'>
+    <table border='1' align='center'>
     <!--<tr>
     <td align='center' width='33%'><a href='logout.php'><b>{$lang['my_logout']}</b></a></td>
     <td align='center' width='33%'><a href='mytorrents.php'><b>{$lang['my_torrents']}</b></a></td>
@@ -260,6 +267,9 @@ loggedinorreturn();
     </td>
     </tr>
     </table>";
+
+
+    $HTMLOUT .= "</div></div>";
 
     /*
     if ($messages){

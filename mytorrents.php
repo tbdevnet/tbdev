@@ -37,13 +37,24 @@ loggedinorreturn();
 
     if (!$count) 
     {
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'></div>
+                         <div class='cblock-content'>";
 
-      $HTMLOUT .= "{$lang['mytorrents_no_torrents']}";
-      $HTMLOUT .= "{$lang['mytorrents_no_uploads']}";
+      $HTMLOUT .= "          {$lang['mytorrents_no_torrents']}";
+      $HTMLOUT .= "          {$lang['mytorrents_no_uploads']}";
 
+      $HTMLOUT .= "      </div>
+                     </div>";
     }
     else 
     {
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'></div>
+                         <div class='cblock-content'>";
+
       $pager = pager(20, $count, "mytorrents.php?");
 
       $res = mysql_query("SELECT torrents.type, torrents.comments, torrents.leechers, torrents.seeders, IF(torrents.numratings < {$TBDEV['minvotes']}, NULL, ROUND(torrents.ratingsum / torrents.numratings, 1)) AS rating, torrents.id, categories.name AS cat_name, categories.image AS cat_pic, torrents.name, save_as, numfiles, added, size, views, visible, hits, times_completed, category FROM torrents LEFT JOIN categories ON torrents.category = categories.id $where ORDER BY id DESC ".$pager['limit']);
@@ -53,6 +64,10 @@ loggedinorreturn();
       $HTMLOUT .= torrenttable($res, "mytorrents");
 
       $HTMLOUT .= $pager['pagerbottom'];
+
+      $HTMLOUT .= "      </div>
+                     </div>";
+
     }
 
     print stdhead($CURUSER["username"] . "'s torrents") . $HTMLOUT . stdfoot();

@@ -41,10 +41,12 @@ function dltable($name, $arr, $torrent)
 
     $htmlout = '';
 
+
+
     if (!count($arr))
       return $htmlout = "<div align='left'><b>{$lang['peerslist_no']} $name {$lang['peerslist_data_available']}</b></div>\n";
     $htmlout = "\n";
-    $htmlout .= "<table width='100%' class='main' border='1' cellspacing='0' cellpadding='5'>\n";
+    $htmlout .= "<table width='615px' class='main' border='1' cellspacing='0' cellpadding='0'>\n";
     $htmlout .= "<tr><td colspan='11' class='colhead'>" . count($arr) . " $name</td></tr>" .
         "<tr><td class='colhead'>{$lang['peerslist_user_ip']}</td>" .
             "<td class='colhead' align='center'>{$lang['peerslist_connectable']}</td>".
@@ -154,11 +156,15 @@ function dltable($name, $arr, $torrent)
           usort($seeders, "seed_sort");
           usort($downloaders, "leech_sort");
 
-    
+    $HTMLOUT .= "
+                 <div class='cblock'>
+                     <div class='cblock-header'>Peerlist for <a href='{$TBDEV['baseurl']}/details.php?id=$id'>".htmlsafechars($row['name'])."</a></div>
+                     <div class='cblock-content'>";
 
-      $HTMLOUT .= "<h1>Peerlist for <a href='{$TBDEV['baseurl']}/details.php?id=$id'>".htmlsafechars($row['name'])."</a></h1>";
       $HTMLOUT .= dltable("{$lang['peerslist_seeders']}<a name='seeders'></a>", $seeders, $row);
       $HTMLOUT .= '<br />' . dltable("{$lang['peerslist_leechers']}<a name='leechers'></a>", $downloaders, $row);
+
+      $HTMLOUT .= "</div></div>";
       
       print stdhead("{$lang['peerslist_stdhead']}") . $HTMLOUT . stdfoot();
 ?>

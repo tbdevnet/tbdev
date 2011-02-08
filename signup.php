@@ -71,48 +71,53 @@ dbconn();
     $thistime = TIME_NOW;
 
     $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Signup</div>
+                         <div class='cblock-lb'>    <p>{$lang['signup_cookies']}</p>  </div>
+                         <div class='cblock-content'>
+                             <form method='post' action='takesignup.php'>
+                                  <table border='1' cellspacing='0' cellpadding='10'>
+                                        <tr><td align='right' class='heading'>{$lang['signup_uname']}</td><td align='left'><input type='text' size='40' name='wantusername' /></td></tr>
+                                        <tr><td align='right' class='heading'>{$lang['signup_pass']}</td><td align='left'><input type='password' size='40' name='wantpassword' /></td></tr>
+                                        <tr><td align='right' class='heading'>{$lang['signup_passa']}</td><td align='left'><input type='password' size='40' name='passagain' /></td></tr>
+                                        <tr valign='top'>
+                                           <td align='right' class='heading'>{$lang['signup_email']}</td><td align='left'><input type='text' size='40' name='email' />
+                                              <table width='250' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'><div class='small'>{$lang['signup_valemail']}</div></td></tr></table>
+                                           </td>
+                                        </tr>
+                                        <tr><td align='right' class='heading'>{$lang['signup_timez']}</td><td align='left'>{$time_select}</td></tr>";
 
-    <p>{$lang['signup_cookies']}</p>
-
-    <form method='post' action='takesignup.php'>
-    <table border='1' cellspacing='0' cellpadding='10'>
-    <tr><td align='right' class='heading'>{$lang['signup_uname']}</td><td align='left'><input type='text' size='40' name='wantusername' /></td></tr>
-    <tr><td align='right' class='heading'>{$lang['signup_pass']}</td><td align='left'><input type='password' size='40' name='wantpassword' /></td></tr>
-    <tr><td align='right' class='heading'>{$lang['signup_passa']}</td><td align='left'><input type='password' size='40' name='passagain' /></td></tr>
-    <tr valign='top'><td align='right' class='heading'>{$lang['signup_email']}</td><td align='left'><input type='text' size='40' name='email' />
-    <table width='250' border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded'><font class='small'>{$lang['signup_valemail']}</font></td></tr>
-    </table>
-    </td></tr>
-    
-    <tr><td align='right' class='heading'>{$lang['signup_timez']}</td><td align='left'>{$time_select}</td></tr>";
-      
     if( $TBDEV['captcha'] )
     {
-      $HTMLOUT .= "<tr>
-        <td>&nbsp;</td>
-        <td>
-          <div id='captchaimage'>
-          <a href='signup.php' onclick=\"refreshimg(); return false;\" title='{$lang['captcha_refresh']}'>
-          <img class='cimage' src='captcha/GD_Security_image.php?$thistime' alt='{$lang['captcha_image_alt']}' />
-          </a>
-          </div>
-         </td>
-      </tr>
-      <tr>
-          <td class='rowhead'>{$lang['captcha_pin']}</td>
-          <td>
-            <input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/>
-          </td>
-      </tr>";
+      $HTMLOUT .= "                     <tr>
+                                           <td>&nbsp;</td>
+                                           <td>
+                                              <div id='captchaimage'>
+                                                  <a href='signup.php' onclick=\"refreshimg(); return false;\" title='{$lang['captcha_refresh']}'>
+                                                    <img class='cimage' src='captcha/GD_Security_image.php?$thistime' alt='{$lang['captcha_image_alt']}' />
+                                                  </a>
+                                              </div>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td class='rowhead'>{$lang['captcha_pin']}</td>
+                                           <td><input type='text' maxlength='6' name='captcha' id='captcha' onblur='check(); return false;'/></td>
+                                        </tr>";
     }
-    
-    $HTMLOUT .= "<tr><td align='right' class='heading'></td><td align='left'><input type='checkbox' name='rulesverify' value='yes' /> {$lang['signup_rules']}<br />
-    <input type='checkbox' name='faqverify' value='yes' /> {$lang['signup_faq']}<br />
-    <input type='checkbox' name='ageverify' value='yes' /> {$lang['signup_age']}</td></tr>
-    <tr><td colspan='2' align='center'><input type='submit' value='{$lang['signup_btn']}' style='height: 25px' /></td></tr>
-    </table>
-    </form>";
 
+    $HTMLOUT .= "                       <tr>
+                                           <td align='right' class='heading'></td>
+                                           <td align='left'><input type='checkbox' name='rulesverify' value='yes' /> {$lang['signup_rules']}<br />
+                                              <input type='checkbox' name='faqverify' value='yes' /> {$lang['signup_faq']}<br />
+                                              <input type='checkbox' name='ageverify' value='yes' /> {$lang['signup_age']}
+                                           </td>
+                                        </tr>
+                                        <tr><td colspan='2' align='center'><input type='submit' value='{$lang['signup_btn']}' style='height: 25px' /></td></tr>
+                                  </table>
+                             </form>";
+
+    $HTMLOUT .= "        </div>
+                     </div>";
 
     print stdhead($lang['head_signup'], $js) . $HTMLOUT . stdfoot();
 

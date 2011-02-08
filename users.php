@@ -59,32 +59,34 @@ loggedinorreturn();
     
     $HTMLOUT = '';
     
-    $HTMLOUT  .= "<h1>Users</h1>\n";
-
-    $HTMLOUT  .= "<form method='get' action='users.php?'>\n";
-    $HTMLOUT  .= "{$lang['form_search']} <input type='text' size='30' name='search' />\n";
-    $HTMLOUT  .= "<select name='class'>\n";
-    $HTMLOUT  .= "<option value='-'>(any class)</option>\n";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Users</div>
+                         <div class='cblock-content' style='text-align:center;'>";
+    $HTMLOUT  .= "           <form method='get' action='users.php?'>\n";
+    $HTMLOUT  .= "                {$lang['form_search']} <input type='text' size='30' name='search' />\n";
+    $HTMLOUT  .= "                <select name='class'>\n";
+    $HTMLOUT  .= "                       <option value='-'>(any class)</option>\n";
     for ($i = 0;;++$i)
     {
       if ($c = get_user_class_name($i))
-        $HTMLOUT  .= "<option value='$i'" . (ctype_digit($class) && $class == $i ? " selected='selected'" : "") . ">$c</option>\n";
+        $HTMLOUT  .= "                   <option value='$i'" . (ctype_digit($class) && $class == $i ? " selected='selected'" : "") . ">$c</option>\n";
       else
         break;
     }
-    $HTMLOUT  .= "</select>\n";
-    $HTMLOUT  .= "<input type='submit' value='{$lang['form_btn']}' class='btn' />\n";
-    $HTMLOUT  .= "</form>\n";
+    $HTMLOUT  .= "                </select>\n";
+    $HTMLOUT  .= "                <input type='submit' value='{$lang['form_btn']}' class='btn' />\n";
+    $HTMLOUT  .= "           </form>\n";
 
-    $HTMLOUT  .= "<br />\n";
+    $HTMLOUT  .= "           <br />\n";
 
 
       $aa = range('0','9');
       $bb = range('a','z');
       $cc = array_merge($aa,$bb);
       unset($aa,$bb);
-      
-      $HTMLOUT  .= "<div align='center'>";
+
+      $HTMLOUT  .= "         <div style='text-align:center;'>";
       $count = 0;
       foreach($cc as $L) 
       {
@@ -175,6 +177,9 @@ loggedinorreturn();
     }
 
     $HTMLOUT  .= ($arr[0] > $perpage) ? "<br /><p>$browsemenu</p>" : '<br /><br />';
+
+    $HTMLOUT .= "                         </div>
+                     </div>\n";
 
     print stdhead($lang['head_users']) . $HTMLOUT . stdfoot();
     die;

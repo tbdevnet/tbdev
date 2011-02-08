@@ -75,25 +75,23 @@ loggedinorreturn();
 
     $HTMLOUT = '';
 
-    $HTMLOUT .= "<table border='0' class='main' cellspacing='0' cellpadding='0'>
-    <tr>
-      <td class='embedded'><img src='pic/email.gif' alt='' /></td>
-      <td class='embedded' style='padding-left: 10px'><font size='3'><b>{$lang['email_send']}{$username}</b></font></td>
-    </tr>
-    </table>
-    <form method='post' action='email-gateway.php?id=$id'>
-    <table border='1' cellspacing='0' cellpadding='5'>
-    <tr><td class='rowhead'>{$lang['email_your_name']}</td><td><input type='text' name='from' size='80' /></td></tr>
-    <tr><td class='rowhead'>{$lang['email_your_email']}</td><td><input type='text' name='from_email' size='80' /></td></tr>
-    <tr><td class='rowhead'>{$lang['email_subject']}</td><td><input type='text' name='subject' size='80' /></td></tr>
-    <tr><td class='rowhead'>{$lang['email_message']}</td><td><textarea name='message' cols='80' rows='20'></textarea></td></tr>
-    <tr><td colspan='2' align='center'><input type='submit' value='{$lang['email_send']}' class='btn' /></td></tr>
-    </table>
-    </form>
-    <p>
-    <font class='small'><b>{$lang['email_note_ip']}</b>{$lang['email_ip']}<br />
-    {$lang['email_valid']}</font>
-    </p>";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['email_send']}&nbsp;to&nbsp;{$username}</div>
+                         <div class='cblock-content'>
+                             <form method='post' action='email-gateway.php?id=$id'>
+                                  <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr><td class='rowhead'>{$lang['email_your_name']}</td><td><input type='text' name='from' size='80' /></td></tr>
+                                        <tr><td class='rowhead'>{$lang['email_your_email']}</td><td><input type='text' name='from_email' size='80' /></td></tr>
+                                        <tr><td class='rowhead'>{$lang['email_subject']}</td><td><input type='text' name='subject' size='80' /></td></tr>
+                                        <tr><td class='rowhead'>{$lang['email_message']}</td><td><textarea name='message' cols='80' rows='20'></textarea></td></tr>
+                                        <tr><td colspan='2' align='center'><input type='submit' value='{$lang['email_send']}' class='btn' /></td></tr>
+                                  </table>
+                             </form>
+                             <div class='small' style='font-weight:bold;'>{$lang['email_note_ip']}{$lang['email_ip']}<br />{$lang['email_valid']}</div>";
+
+    $HTMLOUT .= "                         </div>
+                     </div>";
 
 ///////////////////////// HTML OUTPUT ////////////////////
     print stdhead("{$lang['email_gateway']}") . $HTMLOUT . stdfoot(); 
