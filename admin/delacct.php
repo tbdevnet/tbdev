@@ -49,24 +49,26 @@ require_once "include/user_functions.php";
         
       stderr("{$lang['stderr_success']}", "{$lang['text_success']}");
     }
-    
-    $HTMLOUT = "
-    <h1>{$lang['text_delete']}</h1>
-    <form method='post' action='admin.php?action=delacct'>
-    <table border='1' cellspacing='0' cellpadding='5'>
-      <tr>
-        <td class='rowhead'>{$lang['table_username']}</td>
-        <td><input size='40' name='username' /></td>
-      </tr>
-       <!--<tr>
-       <td class='rowhead'>{$lang['table_password']}</td>
-        <td><input type='password' size='40' name='password' /></td>
-      </tr>-->
-      <tr>
-        <td colspan='2'><input type='submit' class='btn' value='{$lang['btn_delete']}' /></td>
-      </tr>
-    </table>
-    </form>";
+
+    $HTMLOUT = '';
+
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['text_delete']}</div>
+                         <div class='cblock-content'>
+                             <form method='post' action='admin.php?action=delacct'>
+                                  <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr>
+                                           <td class='rowhead'>{$lang['table_username']}</td>
+                                           <td><input size='40' name='username' /></td>
+                                        </tr>
+                                        <tr>
+                                           <td colspan='2'><input type='submit' class='btn' value='{$lang['btn_delete']}' /></td>
+                                        </tr>
+                                  </table>
+                             </form>
+                         </div>
+                     </div>";
 
     print stdhead("{$lang['stdhead_delete']}") . $HTMLOUT . stdfoot();
 ?>

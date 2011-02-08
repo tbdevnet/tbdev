@@ -72,17 +72,19 @@ require_once "include/user_functions.php";
         stderr($lang['testip_result'], "<table border='0' cellspacing='0' cellpadding='0'><tr><td class='embedded' style='padding-right: 5px'><img src='{$TBDEV['pic_base_url']}smilies/excl.gif' alt='' /></td><td class='embedded'>".sprintf($lang['testip_notice2'],$ip)."</td></tr></table><p>$HTMLOUT</p>");
       }
     }
-    
 
     $HTMLOUT .= "
-    <h1>{$lang['testip_title']}</h1>
-    <form method='post' action='admin.php?action=testip'>
-    <table border='1' cellspacing='0' cellpadding='5'>
-    <tr><td class='rowhead'>{$lang['testip_address']}</td><td><input type='text' name='ip' /></td></tr>
-    <tr><td colspan='2' align='center'><input type='submit' class='btn' value='{$lang['testip_ok']}' /></td></tr>
-    </table>
-    </form>";
-
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['testip_title']}</div>
+                         <div class='cblock-content'>
+                             <form method='post' action='admin.php?action=testip'>
+                                  <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr><td class='rowhead'>{$lang['testip_address']}</td><td><input type='text' name='ip' /></td></tr>
+                                        <tr><td colspan='2' align='center'><input type='submit' class='btn' value='{$lang['testip_ok']}' /></td></tr>
+                                  </table>
+                             </form>
+                         </div>
+                     </div>";
 
     print stdhead($lang['testip_windows_title']) . $HTMLOUT . stdfoot();
 ?>

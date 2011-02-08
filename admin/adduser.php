@@ -61,17 +61,22 @@ require_once "include/password_functions.php";
 
     $HTMLOUT = '';
     
-    $HTMLOUT .= "<h1>{$lang['text_adduser']}</h1>
-    <br />
-    <form method='post' action='admin.php?action=adduser'>
-    <table border='1' cellspacing='0' cellpadding='5'>
-    <tr><td class='rowhead'>{$lang['table_username']}</td><td><input type='text' name='username' size='40' /></td></tr>
-    <tr><td class='rowhead'>{$lang['table_password']}</td><td><input type='password' name='password' size='40' /></td></tr>
-    <tr><td class='rowhead'>{$lang['table_repasswd']}</td><td><input type='password' name='password2' size='40' /></td></tr>
-    <tr><td class='rowhead'>{$lang['table_email']}</td><td><input type='text' name='email' size='40' /></td></tr>
-    <tr><td colspan='2' align='center'><input type='submit' value='{$lang['btn_okay']}' class='btn' /></td></tr>
-    </table>
-    </form>";
-    
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['text_adduser']}</div>
+                         <div class='cblock-content'>
+                             <form method='post' action='admin.php?action=adduser'>
+                                  <table border='1' cellspacing='0' cellpadding='5'>
+                                        <tr><td class='rowhead'>{$lang['table_username']}</td><td><input type='text' name='username' size='40' /></td></tr>
+                                        <tr><td class='rowhead'>{$lang['table_password']}</td><td><input type='password' name='password' size='40' /></td></tr>
+                                        <tr><td class='rowhead'>{$lang['table_repasswd']}</td><td><input type='password' name='password2' size='40' /></td></tr>
+                                        <tr><td class='rowhead'>{$lang['table_email']}</td><td><input type='text' name='email' size='40' /></td></tr>
+                                        <tr><td colspan='2' align='center'><input type='submit' value='{$lang['btn_okay']}' class='btn' /></td></tr>
+                                  </table>
+                             </form>
+                         </div>
+                     </div>";
+
+
     print stdhead("{$lang['stdhead_adduser']}") . $HTMLOUT . stdfoot(); 
 ?>

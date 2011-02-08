@@ -77,12 +77,21 @@ function Do_show() {
 
   if ( !mysql_num_rows($sql) )
     stderr("ERROR", "There Are No Categories. <br /><br />
-      <span class='btn'><a href='http://localhost/tb_new/admin.php?action=rules&amp;mode=cat_new'>Add Category</a></span>");
+      <span class='btn'><a href='{$TBDEV['baseurl']}/admin.php?action=rules&amp;mode=cat_new'>Add Category</a></span>");
 
   $htmlout = '';
-  
-  $htmlout .= "<h2>{$lang['rules_cat_title']}</h2>
-  <table style='width: 70%; cellpadding: 5px;'>";
+
+  $htmlout .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>
+                             {$lang['rules_cat_title']}
+                             <div style='float:right;'>
+                                 <span class='btn'><a href='{$TBDEV['baseurl']}/admin.php?action=rules&amp;mode=cat_new'>{$lang['rules_btn_newcat']}</a></span>&nbsp;
+                                 <span class='btn'><a href='{$TBDEV['baseurl']}/admin.php?action=rules&amp;mode=rules_new'>{$lang['rules_btn_newrule']}</a></span>
+                             </div>
+                         </div>
+                         <div class='cblock-content'>
+                             <table style='width: 70%; cellpadding: 5px;'>";
   
   while ($arr = mysql_fetch_assoc($sql)) 
   {
@@ -97,15 +106,15 @@ function Do_show() {
   }
   
 
-  $htmlout .= "</table><br /><br />
-  <div>
-  <span class='btn'><a href='{$TBDEV['baseurl']}/admin.php?action=rules&amp;mode=cat_new'>{$lang['rules_btn_newcat']}</a></span>&nbsp;
-  <span class='btn'><a href='{$TBDEV['baseurl']}/admin.php?action=rules&amp;mode=rules_new'>{$lang['rules_btn_newrule']}</a></span>
-  </div>";
+  $htmlout .= "</table>
+                           </div>
+                     </div>";
 
   //$htmlout .= New_Cat_Form();
 
   //$htmlout .= New_rules_form();
+
+
 
   print stdhead("{$lang['rules_rules']}") . $htmlout . stdfoot();
   exit();
@@ -424,7 +433,7 @@ function New_rules_Form()
 
     if ( !mysql_num_rows($sql) )
       stderr("ERROR", "There Are No Categories. <br /><br />
-        <span class='btn'><a href='http://localhost/tb_new/admin.php?action=rules&amp;mode=cat_add'>Add Category</a></span>");
+        <span class='btn'><a href='{$TBDEV['baseurl']}/admin.php?action=rules&amp;mode=cat_add'>Add Category</a></span>");
 
     $htmlout .= "<h2>Add A New section</h2>
     <form name='inputform' method='post' action='admin.php?action=rules'>

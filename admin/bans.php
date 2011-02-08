@@ -76,23 +76,26 @@ require_once "include/user_functions.php";
 
     $HTMLOUT = '';
     
-
-    $HTMLOUT .= "<h1>{$lang['text_current']}</h1>\n";
+    $HTMLOUT = "
+                 <div class='cblock'>
+                     <div class='cblock-header'>{$lang['text_current']}</div>
+                     <div class='cblock-lb'>This is where you can ban IP ranges!</div>
+                     <div class='cblock-content'>";
 
     if (mysql_num_rows($res) == 0)
     {
-      $HTMLOUT .= "<p align='center'><b>{$lang['text_nothing']}</b></p>\n";
+      $HTMLOUT .= "<p style='text-align:center;'><b>{$lang['text_nothing']}</b></p>\n";
     }
     else
     {
-      $HTMLOUT .= "<table border='1' cellspacing='0' cellpadding='5'>\n";
+      $HTMLOUT .= "<table border='1'>\n";
       $HTMLOUT .= "<tr>
-        <td class='colhead'>{$lang['header_added']}</td><td class='colhead' align='left'>{$lang['header_firstip']}</td>
-        <td class='colhead' align='left'>{$lang['header_lastip']}</td>
-        <td class='colhead' align='left'>{$lang['header_by']}</td>
-        <td class='colhead' align='left'>{$lang['header_comment']}</td>
-        <td class='colhead'>{$lang['header_remove']}</td>
-      </tr>\n";
+                      <td class='heading'>{$lang['header_added']}</td><td class='colhead' align='left'>{$lang['header_firstip']}</td>
+                      <td class='heading' align='left'>{$lang['header_lastip']}</td>
+                      <td class='heading' align='left'>{$lang['header_by']}</td>
+                      <td class='heading' align='left'>{$lang['header_comment']}</td>
+                      <td class='heading'>{$lang['header_remove']}</td>
+                   </tr>\n";
         
 
 
@@ -131,7 +134,8 @@ require_once "include/user_functions.php";
           
     if ($CURUSER['class'] >= UC_ADMINISTRATOR)
     {
-      $HTMLOUT .= "<h2>{$lang['text_addban']}</h2>
+      $HTMLOUT .= "<br />
+      <div class='inner_header'>{$lang['text_addban']}</div>
       <form method='post' action='admin.php?action=bans'>
       <table border='1' cellspacing='0' cellpadding='5'>
         <tr>
@@ -153,8 +157,11 @@ require_once "include/user_functions.php";
         </tr>
       </table>
       </form>";
-      
+
     }
+
+        $HTMLOUT .= "
+      </div></div>";
 
     print stdhead("{$lang['stdhead_adduser']}") . $HTMLOUT . stdfoot();
 

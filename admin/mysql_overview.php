@@ -23,10 +23,7 @@ if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 	exit();
 }
 
-
-
-	
-require_once "include/user_functions.php";
+	require_once "include/user_functions.php";
 
     if (get_user_class() < UC_SYSOP)
       stderr("Error", "Permission denied.");
@@ -36,7 +33,7 @@ require_once "include/user_functions.php";
     { 
       $Do = ($_GET['Do'] === "T") ? sqlesc($_GET['Do']) : ""; //for later use!
       //Make sure the GET only has alpha letters and nothing else
-      if(!ereg('[^A-Za-z_]+', $_GET['table'])) 
+      if(!preg_match('[^A-Za-z_]+', $_GET['table'])) 
       { 
         $Table = '`'.$_GET['table'].'`';//add backquotes to GET or we is doomed!
       }
@@ -94,45 +91,34 @@ require_once "include/user_functions.php";
     
     $HTMLOUT = '';
 
-    $HTMLOUT  .= "<h2>Mysql Server Table Status</h2>
-
-    <!-- Start table -->
-
-    <table class='torrenttable' border='1' cellpadding='4px'>
-
-    <!-- Start table headers -->
-    <tr>
-
-    <td class='colhead'>Name</td>
-                    
-    <td class='colhead'>Size</td>
-                    
-    <td class='colhead'>Rows</td>
-                    
-    <td class='colhead'>Avg row lengtd</td>
-                    
-    <td class='colhead'>Data lengtd</td>
-                    
-    <!-- <td class='colhead'>Max_data_lengtd</td> -->
-                    
-    <td class='colhead'>Index length</td>
-                    
-    <td class='colhead'>Overhead</td>
-                    
-    <!-- <td class='colhead'>Auto_increment</td> -->
-                    
-    <!-- <td class='colhead'>Timings</td> -->
-                    
-    </tr>
-            
-    <!-- End table headers -->";
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Mysql Server Table Status</div>
+                         <div class='cblock-lb'>Optimize Your database</div>
+                         <div class='cblock-content'>
+                             <!-- Start table -->
+                             <table class='torrenttable' border='1' cellpadding='4px'>
+                                   <!-- Start table headers -->
+                                   <tr>
+                                      <td class='colhead'>Name</td>
+                                      <td class='colhead'>Size</td>
+                                      <td class='colhead'>Rows</td>
+                                      <td class='colhead'>Avg row length</td>
+                                      <td class='colhead'>Data length</td>
+                                      <!-- <td class='colhead'>Max_data_lengtd</td> -->
+                                      <td class='colhead'>Index length</td>
+                                      <td class='colhead'>Overhead</td>
+                                      <!-- <td class='colhead'>Auto_increment</td> -->
+                                      <!-- <td class='colhead'>Timings</td> -->
+                                   </tr>
+                                   <!-- End table headers -->";
 
 
     $count = 0;
-    
+
     $res = @mysql_query("SHOW TABLE STATUS FROM {$TBDEV['mysql_db']}") or stderr(__FILE__,__LINE__);
-    
-    while ($row = mysql_fetch_array($res)) 
+
+    while ($row = mysql_fetch_array($res))
     {
         list($formatted_Avg, $formatted_Abytes) = byteformat($row['Avg_row_length']);
         list($formatted_Dlength, $formatted_Dbytes) = byteformat($row['Data_length']);
@@ -140,38 +126,39 @@ require_once "include/user_functions.php";
         list($formatted_Dfree, $formatted_Fbytes) = byteformat($row['Data_free']);
         $tablesize = ($row['Data_length']) + ($row['Index_length']);
         list($formatted_Tsize, $formatted_Tbytes) = byteformat($tablesize, 3, ($tablesize > 0) ? 1 : 0);
-        
+
         $thispage = "&amp;Do=T&amp;table=".urlencode($row['Name']);
-        $overhead = ($formatted_Dfree > 0) ? "<a href='admin.php?action=mysql_overview$thispage'><font color='red'><b>$formatted_Dfree $formatted_Fbytes</b></font></a>" : "$formatted_Dfree $formatted_Fbytes";
-        
-        $HTMLOUT .= "<tr align='right'>
-          <td align='left'><span style='font-weight:bold;'>".strtoupper($row['Name'])."</span></td>
-          <td>{$formatted_Tsize} {$formatted_Tbytes}</td>
-          <td>{$row['Rows']}</td>
-          <td>{$formatted_Avg} {$formatted_Abytes}</td>
-          <td>{$formatted_Dlength} {$formatted_Dbytes}</td>
-          <td>{$formatted_Ilength} {$formatted_Ibytes}</td>
-          <td>{$overhead}</td>
-        </tr>
-        <tr>
-          <td colspan='7' align='right'><i><b>Row Format:</b></i> {$row['Row_format']}
-          <br /><i><b>Create Time:</b></i> {$row['Create_time']}
-          <br /><i><b>Update Time:</b></i> {$row['Update_time']}
-          <br /><i><b>Check Time:</b></i> {$row['Check_time']}</td>
-        </tr>";
+        $overhead = ($formatted_Dfree > 0) ? "<a href='admin.php?action=mysql_overview$thispage'><span style='color:red; font-weight:bold;'>$formatted_Dfree $formatted_Fbytes</span></a>" : "$formatted_Dfree $formatted_Fbytes";
+
+        $HTMLOUT .= "              <tr align='right'>
+                                      <td align='left'><span style='font-weight:bold;'>".strtoupper($row['Name'])."</span></td>
+                                      <td>{$formatted_Tsize} {$formatted_Tbytes}</td>
+                                      <td>{$row['Rows']}</td>
+                                      <td>{$formatted_Avg} {$formatted_Abytes}</td>
+                                      <td>{$formatted_Dlength} {$formatted_Dbytes}</td>
+                                      <td>{$formatted_Ilength} {$formatted_Ibytes}</td>
+                                      <td>{$overhead}</td>
+                                   </tr>
+                                   <tr>
+                                      <td colspan='7' style='text-align:right;'><i><b>Row Format:</b></i> {$row['Row_format']}
+                                      <br /><i><b>Create Time:</b></i> {$row['Create_time']}
+                                      <br /><i><b>Update Time:</b></i> {$row['Update_time']}
+                                      <br /><i><b>Check Time:</b></i> {$row['Check_time']}</td>
+                                   </tr>";
         //do sums
         $count++;
 
       }//end while
-      
-      
-    $HTMLOUT .= "<tr>
-      <td><b>Tables: {$count}</b></td>
-      <td colspan='6' align='right'>If it's <span style='font-weight:bold;color:red;'>RED</span> it probably needs optimising!!</td>
-    </tr>
 
-    <!-- End table -->
-    </table>";
+
+    $HTMLOUT .= "                  <tr>
+                                      <td><b>Tables: {$count}</b></td>
+                                      <td colspan='6' style='text-align:right;'>If it's <span style='font-weight:bold;color:red;'>RED</span> it probably needs optimising!!</td>
+                                   </tr>
+                                   <!-- End table -->
+                             </table>
+                         </div>
+                     </div>";
 
 
     print stdhead("MySQL Overview") . $HTMLOUT . stdfoot();

@@ -163,9 +163,13 @@ require_once "include/html_functions.php";
         //$returnto = isset($_POST['returnto']) ? htmlsafechars($_POST['returnto']) : $TBDEV['baseurl'].'/news.php';
         $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
         
-        $HTMLOUT .= "<h1>{$lang['news_edit_title']}</h1>
-        
-        <form name='bbcode2text' method='post' action='admin.php?action=news'>
+    $HTMLOUT .= "
+                 <div class='cblock'>
+                 <div class='cblock-header'>{$lang['news_edit_title']}</div>
+                 <div class='cblock-lb'></div>
+                 <div class='cblock-content'>
+
+        <form id='bbcode2text' method='post' action='admin.php?action=news'>
         
         <input type='hidden' name='newsid' value='$newsid' />
         
@@ -175,8 +179,11 @@ require_once "include/html_functions.php";
           
         
         $HTMLOUT .= "</form>\n";
-        
-        print  stdhead($lang['news_edit_title'], $js) . $HTMLOUT . stdfoot();
+
+      $HTMLOUT .= "
+      </div></div>";
+
+      print  stdhead($lang['news_edit_title'], $js) . $HTMLOUT . stdfoot();
         exit();
       }
     }
@@ -184,13 +191,19 @@ require_once "include/html_functions.php";
     
     
     //   Other Actions and followup    ////////////////////////////////////////////
-    $HTMLOUT .= "<h1>{$lang['news_submit_title']}</h1>\n";
-    
+    $HTMLOUT .= "
+                 <div class='cblock'>
+                     <div class='cblock-header'>{$lang['news_submit_title']}</div>";
+    $HTMLOUT .= "    <div class='cblock-lb'>";
     if (!empty($warning))
-      $HTMLOUT .= "<p><font size='-3'>($warning)</font></p>";
-    
-    $HTMLOUT .= "<form name='bbcode2text' method='post' action='admin.php?action=news'>
-    <input type='hidden' name='mode' value='add' />";
+    {
+      $HTMLOUT .= "<p style='font-size:-3px;'>($warning)</p>";
+    }
+    $HTMLOUT .= "    </div>
+                     <div class='cblock-content'>";
+
+    $HTMLOUT .= "<form id='bbcode2text' method='post' action='admin.php?action=news'>
+                      <input type='hidden' name='mode' value='add' />";
     
     $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
         
@@ -201,8 +214,6 @@ require_once "include/html_functions.php";
 
     if (mysql_num_rows($res) > 0)
     {
-
-      
       $HTMLOUT .= begin_main_frame();
       $HTMLOUT .= "<form method='post' action='admin.php?action=news'>
       <input type='hidden' name='mode' value='update' />";
@@ -233,7 +244,7 @@ require_once "include/html_functions.php";
           <td class='colhead'>$headline<span style='float:right;'><input type='checkbox' name='news_update[]' value='$newsid' /></span></td>
         </tr>
         <tr>
-          <td>{$added}&nbsp;&nbsp;by&nbsp$by
+          <td>{$added}&nbsp;&nbsp;by&nbsp;$by
             <div style='float:right;'><a href='admin.php?action=news&amp;mode=edit&amp;newsid=$newsid'><span class='btn'>{$lang['news_act_edit']}</span></a>&nbsp;<a href='admin.php?action=news&amp;mode=delete&amp;newsid=$newsid'><span class='btn'>{$lang['news_act_delete']}</span></a>
             </div>
           </td>
@@ -244,15 +255,20 @@ require_once "include/html_functions.php";
         
         $HTMLOUT .= end_table();
         $HTMLOUT .= end_frame();
-        $HTMLOUT .= '<br />';
+        $HTMLOUT .= "<div class='clear'>&nbsp;</div>";
       }
       
-       $HTMLOUT .= "<div align='right'><input name='submit' type='submit' value='Update' class='btn' /></div></form>";
-      $HTMLOUT .= end_main_frame();
+       $HTMLOUT .= "<div style='text-align:right;'><input name='submit' type='submit' value='Update' class='btn' /></div></form>";
+       $HTMLOUT .= end_main_frame();
+
+
     }
     else
       stdmsg($lang['news_sorry'], $lang['news_nonews']);
-      
+
+      $HTMLOUT .= "
+      </div></div>";
+
     print stdhead($lang['news_window_title'], $js) . $HTMLOUT . stdfoot();
     die;
 ?>

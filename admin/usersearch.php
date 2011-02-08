@@ -26,78 +26,93 @@ if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 require_once "include/user_functions.php";
 require_once "include/pager_functions.php";
 
-// 0 - No debug; 1 - Show and run SQL query; 2 - Show SQL query only
-$DEBUG_MODE = 0;
+    // 0 - No debug; 1 - Show and run SQL query; 2 - Show SQL query only
+    $DEBUG_MODE = 0;
 
-$lang = array_merge( $lang, load_language('ad_usersearch') );
+    $lang = array_merge( $lang, load_language('ad_usersearch') );
+    
+    //$params = array_merge($_GET, $_POST);
+    
+    $HTMLOUT = '';
 
+    function is_set_not_empty($param) {
+            if(isset($_POST[$param]) && !empty($_POST[$param]))
+               return TRUE;
+            else
+               return FALSE;
+    }
 
-function is_set_not_empty($param) {
-  if(isset($_POST[$param]) && !empty($_POST[$param]))
-    return TRUE;
-  else
-    return FALSE;
-}
+    print stdhead($lang['usersearch_window_title']);
+    $HTMLOUT .= "<h1>{$lang['usersearch_title']}</h1>\n";
 
-print stdhead($lang['usersearch_window_title']);
-echo "<h1>{$lang['usersearch_title']}</h1>\n";
+    $where_is = '';
+    $join_is = '';
+    $q = '';
+    $comment_is = '';
+    $comments_exc = '';
+    $email_is = '';
 
-$where_is = '';
-$join_is = '';
-$q = '';
-$comment_is = '';
-$comments_exc = '';
-$email_is = '';
-if (isset($_GET['h']))
-{
-	echo $lang['usersearch_instructions'];
-}
-else
-{
-	echo "<p align='center'>(<a href='admin.php?action=usersearch&amp;h=1'>{$lang['usersearch_inlink']}</a>)";
-	echo "&nbsp;-&nbsp;(<a href='admin.php?action=usersearch'>{$lang['usersearch_reset']}</a>)</p>\n";
-}
+    if (isset($_GET['h']))
+    {
+      $HTMLOUT .= " {$lang['usersearch_instructions']}";
+    }
+    else
+    {
+	  $HTMLOUT .= "<p align='center'>(<a href='admin.php?action=usersearch&amp;h=1'>{$lang['usersearch_inlink']}</a>)";
+	  $HTMLOUT .= "&nbsp;-&nbsp;(<a href='admin.php?action=usersearch'>{$lang['usersearch_reset']}</a>)</p>\n";
+    }
 
-$highlight = " bgcolor='lightgrey'";
+    $highlight = " bgcolor='lightgrey'";
 
-?>
+    $HTMLOUT .= "
 
-<form method='post' action='admin.php?action=usersearch'>
-<table border="1" cellspacing="0" cellpadding="5">
-<tr>
+    <form method='post' action='admin.php?action=usersearch'>
+         <table border='1' cellspacing='0' cellpadding='5'>
+               <tr>
+                  <td valign='middle' class='rowhead'>{$lang['usersearch_name']}</td>
+                  <td " .is_set_not_empty($_POST['n'])?$highlight:''. "><input name='n' type='text' value=' " .is_set_not_empty($_POST['n'])?htmlsafechars($_POST['n']):''. "' size='25' /></td>
+                  <td valign='middle' class='rowhead'>{$lang['usersearch_ratio']}</td>
+                  <td " .(isset($_POST['r'])&&!empty($_POST['r']))?$highlight:''. ">
+                     <select name='rt'>";
 
-  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_name'] ?></td>
-  <td <?php echo (isset($_POST['n'])&&!empty($_POST['n']))?$highlight:""?>><input name="n" type="text" value="<?php echo isset($_POST['n'])?htmlsafechars($_POST['n']):""?>" size='25' /></td>
-
-  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_ratio'] ?></td>
-  <td <?php echo (isset($_POST['r'])&&!empty($_POST['r']))?$highlight:""?>><select name="rt">
-    <?php
-	$options = array("equal","above","below","between");
+    $options = array("equal","above","below","between");
 	for ($i = 0; $i < count($options); $i++){
-	    echo "<option value='$i' ".(((isset($_POST['rt'])?$_POST['rt']:"3")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	   $HTMLOUT .= "<option value='$i' ".(((isset($_POST['rt'])?$_POST['rt']:"3")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
-	?>
-    </select>
-    <input name="r" type="text" value="<?php echo isset($_POST['r'])? $_POST['r']:''?>" size="5" maxlength="4" />
-    <input name="r2" type="text" value="<?php echo isset($_POST['r2'])?$_POST['r2']:''?>" size="5" maxlength="4" /></td>
 
-  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_status'] ?></td>
-  <td <?php echo (isset($_POST['st'])&&!empty($_POST['st']))?$highlight:""?>><select name="st">
-    <?
+    $HTMLOUT .= "
+                     </select>
+                     <input name='r' type='text' value='" .isset($_POST['r'])? $_POST['r']:''."' size='5' maxlength='4' />
+                     <input name='r2' type='text' value='" .isset($_POST['r2'])?$_POST['r2']:''."' size='5' maxlength='4' />
+                  </td>
+                  <td valign='middle' class='rowhead'>{$lang['usersearch_status']}</td>
+                  <td ".(isset($_POST['st'])&&!empty($_POST['st']))?$highlight:''.">
+                     <select name='st'>";
+
 	$options = array("(any)","confirmed","pending");
 	for ($i = 0; $i < count($options); $i++){
-	    echo "<option value='$i' ".(((isset($_POST['st'])?$_POST['st']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
+	    $HTMLOUT .= "<option value='$i' ".(((isset($_POST['st'])?$_POST['st']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";
 	}
-    ?>
-    </select></td></tr>
-<tr><td valign="middle" class='rowhead'><?php echo $lang['usersearch_email'] ?></td>
-  <td <?php echo (isset($_POST['em'])&&!empty($_POST['em']))?$highlight:""?>><input name="em" type="text" value="<?php echo isset($_POST['em'])?$_POST['em']:''?>" size="25" /></td>
-  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_ip'] ?></td>
-  <td <?php echo (isset($_POST['ip'])&&!empty($_POST['ip']))?$highlight:""?>><input name="ip" type="text" value="<?php echo isset($_POST['ip'])?$_POST['ip']:''?>" maxlength="17" /></td>
 
-  <td valign="middle" class='rowhead'><?php echo $lang['usersearch_acstatus'] ?></td>
-  <td <?php echo (isset($_POST['as'])&&!empty($_POST['as']))?$highlight:""?>><select name="as">
-    <?php
+    $HTMLOUT .= "
+                     </select>
+                  </td>
+               </tr>
+               <tr>
+                  <td valign='middle' class='rowhead'>{$lang['usersearch_email']}</td>
+                  <td " .(isset($_POST['em'])&&!empty($_POST['em']))?$highlight:''. ">
+                     <input name='em' type='text' value=' " .isset($_POST['em'])?$_POST['em']:''."' size='25' />
+                  </td>
+                  <td valign='middle' class='rowhead'>{$lang['usersearch_ip']}</td>
+                  <td " .(isset($_POST['ip'])&&!empty($_POST['ip']))?$highlight:''. ">
+                     <input name='ip' type='text' value=' " .isset($_POST['ip'])?$_POST['ip']:''. "' maxlength='17' />
+                  </td>
+                  <td valign='middle' class='rowhead'>{$lang['usersearch_acstatus']}</td>
+                  <td " .(isset($_POST['as'])&&!empty($_POST['as']))?$highlight:''. "><select name='as'>";
+
+
+/* - GAVE UP TO HERE COULDNT BE ARSED NAH WHAT I MEAN - */
+
     $options = array("(any)","enabled","disabled");
     for ($i = 0; $i < count($options); $i++){
       echo "<option value='$i' ".(((isset($_POST['as'])?$_POST['as']:"0")=="$i")?"selected='selected'":"").">".$options[$i]."</option>\n";

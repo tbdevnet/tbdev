@@ -30,8 +30,6 @@ require "include/html_functions.php";
     
     $HTMLOUT = '';
 
-    $HTMLOUT .= begin_main_frame();
-
     $res = mysql_query("SELECT COUNT(*) FROM torrents") or sqlerr(__FILE__, __LINE__);
     $n = mysql_fetch_row($res);
     $n_tor = $n[0];
@@ -60,13 +58,22 @@ require "include/html_functions.php";
 
     $res = mysql_query($query) or sqlerr(__FILE__, __LINE__);
 
+      $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Stats</div>
+                         <div class='cblock-content'>";
+
+
     if (mysql_num_rows($res) == 0)
       stdmsg($lang['stats_error'], $lang['stats_error1']);
     else
     {
-      $HTMLOUT .= begin_frame($lang['stats_title1'], True);
+
+
+      $HTMLOUT .= "<div class='inner_header'><b>{$lang['stats_title1']}</b></div>";
+      $HTMLOUT .= begin_frame();
       $HTMLOUT .= begin_table();
-      
+
       $HTMLOUT .= "<tr>
       <td class='colhead'><a href='admin.php?action=stats&amp;uporder=uploader&amp;catorder=$catorder' class='colheadlink'>{$lang['stats_uploader']}</a></td>
       <td class='colhead'><a href='admin.php?action=stats&amp;uporder=lastul&amp;catorder=$catorder' class='colheadlink'>{$lang['stats_last']}</a></td>
@@ -75,7 +82,7 @@ require "include/html_functions.php";
       <td class='colhead'><a href='admin.php?action=stats&amp;uporder=peers&amp;catorder=$catorder' class='colheadlink'>{$lang['stats_peers']}</a></td>
       <td class='colhead'>Perc.</td>
       </tr>\n";
-      
+
       while ($uper = mysql_fetch_assoc($res))
       {
         $HTMLOUT .= "<tr>
@@ -107,7 +114,9 @@ require "include/html_functions.php";
       FROM categories as c LEFT JOIN torrents as t ON t.category = c.id LEFT JOIN peers as p
       ON t.id = p.torrent GROUP BY c.id ORDER BY $orderby") or sqlerr(__FILE__, __LINE__);
 
-      $HTMLOUT .= begin_frame($lang['stats_title2'], True);
+      $HTMLOUT .= "<br />";
+      $HTMLOUT .= "<div class='inner_header'><b>{$lang['stats_title2']}</b></div>";
+      $HTMLOUT .= begin_frame();
       $HTMLOUT .= begin_table();
       $HTMLOUT .= "<tr>
       <td class='colhead'><a href='admin.php?action=stats&amp;uporder=$uporder&amp;catorder=category' class='colheadlink'>{$lang['stats_category']}</a></td>
@@ -117,7 +126,7 @@ require "include/html_functions.php";
       <td class='colhead'><a href='admin.php?action=stats&amp;uporder=$uporder&amp;catorder=peers' class='colheadlink'>{$lang['stats_peers']}</a></td>
       <td class='colhead'>Perc.</td>
       </tr>\n";
-      
+
       while ($cat = mysql_fetch_assoc($res))
       {
         $HTMLOUT .= "<tr>
@@ -132,8 +141,9 @@ require "include/html_functions.php";
       $HTMLOUT .= end_frame();
     }
 
-    $HTMLOUT .= end_main_frame();
-    
+    $HTMLOUT .= "        </div>
+                     </div>";
+
     print stdhead($lang['stats_window_title']) . $HTMLOUT . stdfoot();
     die;
 ?>

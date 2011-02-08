@@ -17,10 +17,10 @@
 |   $URL: admin/category_manager.php $
 +------------------------------------------------
 */
-
 if ( ! defined( 'IN_TBDEV_ADMIN' ) OR ($CURUSER['class'] < UC_SYSOP) )
+
 {
-	print "<h1>Incorrect access</h1>You cannot access this file directly.";
+	print "<div class='error'><b>Incorrect access</b>You cannot access this file directly.</div>";
 	exit();
 }
 
@@ -61,25 +61,28 @@ require_once "include/user_functions.php";
         break;
     }
 
-
-
-
 function cleanup_show_main()
 	{
-		$htmlout = "<h2>Current Cleanup Tasks</h2>
-    <table class='torrenttable' bgcolor='#cecece' border='1' cellpadding='5px' width='80%'>
-    <tr>
-      <td class='colhead'>Cleanup Title &amp; Description</td>
-      <td class='colhead' width='150px'>Next Clean Time</td>
-      <td class='colhead' width='40px'>Edit</td>
-      <td class='colhead' width='40px'>Delete</td>
-      <td class='colhead' width='40px'>Off/On</td>
-    </tr>";
-		
+
+    $htmlout = '';
+
+    $htmlout = "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Current Cleanup Tasks<div style='float:right;'><span class='btn'><a href='./admin.php?action=cleanup_manager&amp;mode=new'>Add New</a></span></div></div>
+                         <div class='cblock-content'>
+                             <table style='background:#cecece; width:80%;' cellpadding='5px'>
+                                   <tr>
+                                      <td class='colhead'>Cleanup Title&nbsp;&amp;&nbsp;Description</td>
+                                      <td class='colhead' style='width:150px;'>Next Clean Time</td>
+                                      <td class='colhead' style='width:40px;'>Edit</td>
+                                      <td class='colhead' style='width:40px;'>Delete</td>
+                                      <td class='colhead' style='width:40px;'>Off/On</td>
+                                   </tr>";
+
 		$sql = mysql_query( "SELECT * FROM cleanup ORDER BY clean_time ASC" ) or sqlerr(__FILE__,__LINE__);
 		if( !mysql_num_rows($sql) )
       stderr('Error', 'Fucking panic now!');
-		
+
 		while ( $row = mysql_fetch_assoc($sql) )
 		{
 			if ( TIME_NOW > $row['clean_time'] )
@@ -90,29 +93,36 @@ function cleanup_show_main()
 			{
 				$row['_image'] = 'task_run.gif';
 			}
-			
+
 			$row['_clean_time'] = gmdate( 'j M Y - G:i', $row['clean_time'] );
-			
+
 			$row['_class']    = $row['clean_on'] != 1 ? " style='color:red'" : '';
 			$row['_title']    = $row['clean_on'] != 1 ? " (Locked)" : '';
 			$row['_clean_time'] = $row['clean_on'] != 1 ? "<span style='color:red'>{$row['_clean_time']}</span>" : $row['_clean_time'];
-			
-			$htmlout .= "<tr>
-          <td{$row['_class']}><strong>{$row['clean_title']}{$row['_title']}</strong><br />{$row['clean_desc']}</td>
-          <td>{$row['_clean_time']}</td>
-          <td align='center'><a href='admin.php?action=cleanup_manager&amp;mode=edit&amp;cid={$row['clean_id']}'>
-            <img src='./pic/aff_tick.gif' alt='Edit Cleanup' title='Edit' border='0' height='12' width='12' /></a></td>
 
-          <td align='center'><a href='admin.php?action=cleanup_manager&amp;mode=delete&amp;cid={$row['clean_id']}'>
-            <img src='./pic/aff_cross.gif' alt='Delete Cleanup' title='Delete' border='0' height='12' width='12' /></a></td>
-          <td align='center'><a href='admin.php?action=cleanup_manager&amp;mode=unlock&amp;cid={$row['clean_id']}&amp;clean_on={$row['clean_on']}'>
-            <img src='./pic/warnedbig.gif' alt='On/Off Cleanup' title='on/off' border='0' height='12' width='12' /></a></td>
-        </tr>";
+			$htmlout .= "          <tr>
+                                      <td{$row['_class']}><strong>{$row['clean_title']}{$row['_title']}</strong><br />{$row['clean_desc']}</td>
+                                      <td>{$row['_clean_time']}</td>
+                                      <td align='center'>
+                                         <a href='admin.php?action=cleanup_manager&amp;mode=edit&amp;cid={$row['clean_id']}'>
+                                         <img src='./pic/aff_tick.gif' alt='Edit Cleanup' title='Edit' height='12' width='12' /></a>
+                                      </td>
+                                      <td align='center'>
+                                         <a href='admin.php?action=cleanup_manager&amp;mode=delete&amp;cid={$row['clean_id']}'>
+                                         <img src='./pic/aff_cross.gif' alt='Delete Cleanup' title='Delete' height='12' width='12' /></a>
+                                      </td>
+                                      <td align='center'>
+                                         <a href='admin.php?action=cleanup_manager&amp;mode=unlock&amp;cid={$row['clean_id']}&amp;clean_on={$row['clean_on']}'>
+                                         <img src='./pic/warnedbig.gif' alt='On/Off Cleanup' title='on/off' height='12' width='12' /></a>
+                                      </td>
+                                   </tr>";
 		}
-		
-		$htmlout .= "</table>
-		<br /><span class='btn'><a href='./admin.php?action=cleanup_manager&amp;mode=new'>Add New</a></span>";
-		
+
+		$htmlout .= "        </table>";
+        $htmlout .= "    </div>
+                     </div>";
+
+
 		print stdhead('Cleanup Manager - View') . $htmlout . stdfoot();
 }
 
@@ -146,46 +156,46 @@ function cleanup_show_edit() {
     $cleanoff = !$row['clean_on'] ? 'checked="checked"' : '';
     $htmlout = '';
     
-    $htmlout = "<h2>Editing cleanup: {$row['clean_title']}</h2>
-    <div style='width: 800px; text-align: left; padding: 10px; margin: 0 auto;border-style: solid; border-color: lightgrey; border-width: 5px 2px;'>
-    <form name='inputform' method='post' action='admin.php?action=cleanup_manager'>
-    <input type='hidden' name='mode' value='takeedit' />
-    <input type='hidden' name='cid' value='{$row['clean_id']}' />
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Title</label>
-    <input type='text' value='{$row['clean_title']}' name='clean_title' style='width:250px;' /></div>
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Description</label>
-    <input type='text' value='{$row['clean_desc']}' name='clean_desc' style='width:380px;' />
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Cleanup File Name</label>
-    <input type='text' value='{$row['clean_file']}' name='clean_file' style='width:380px;' />
-    
-    </div>
-    
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Cleanup Interval</label>
-    <input type='text' value='{$row['clean_increment']}' name='clean_increment' style='width:380px;' />
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Cleanup Log</label>
-    Yes &nbsp; <input name='clean_log' value='1' $logyes type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_log' value='0' $logno type='radio' /> &nbsp; No
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>cleanup On or Off?</label>
-    Yes &nbsp; <input name='clean_on' value='1' $cleanon type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_on' value='0' $cleanoff type='radio' /> &nbsp; No
-    </div>
-    
-    <div style='text-align:center;'><input type='submit' name='submit' value='Edit' class='button' />&nbsp;<input type='button' value='Cancel' onclick='javascript: history.back()' /></div>
-    </form>
-    </div>";
-    
+    $htmlout = '';
+
+    $htmlout = "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Editing cleanup: {$row['clean_title']}</div>
+                         <div class='cblock-content'>
+                             <div style='width: 615px; text-align: left; padding: 10px; margin: 0 auto; border-style: solid; border-color: lightgrey; border-width: 5px 2px;'>
+                                 <form name='inputform' method='post' action='admin.php?action=cleanup_manager'>
+                                      <input type='hidden' name='mode' value='takeedit' />
+                                      <input type='hidden' name='cid' value='{$row['clean_id']}' />
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Title</label>
+                                          <input type='text' value='{$row['clean_title']}' name='clean_title' style='width:250px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Description</label>
+                                          <input type='text' value='{$row['clean_desc']}' name='clean_desc' style='width:380px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Cleanup File Name</label>
+                                          <input type='text' value='{$row['clean_file']}' name='clean_file' style='width:380px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Cleanup Interval</label>
+                                          <input type='text' value='{$row['clean_increment']}' name='clean_increment' style='width:380px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Cleanup Log</label>
+                                          Yes &nbsp; <input name='clean_log' value='1' $logyes type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_log' value='0' $logno type='radio' /> &nbsp; No
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>cleanup On or Off?</label>
+                                          Yes &nbsp; <input name='clean_on' value='1' $cleanon type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_on' value='0' $cleanoff type='radio' /> &nbsp; No
+                                      </div>
+                                      <div style='text-align:center;'><input type='submit' name='submit' value='Edit' class='button' />&nbsp;<input type='button' value='Cancel' onclick='javascript: history.back()' /></div>
+                                 </form>
+                             </div>
+                         </div>
+                     </div>";
+
     print stdhead('Cleanup Manager - Edit') . $htmlout . stdfoot();
 }
 
@@ -251,45 +261,44 @@ function cleanup_take_edit() {
 
 function cleanup_show_new() {
 
-    $htmlout = "<h2>Add a new cleanup task</h2>
-    <div style='width: 800px; text-align: left; padding: 10px; margin: 0 auto;border-style: solid; border-color: lightgrey; border-width: 5px 2px;'>
-    <form name='inputform' method='post' action='admin.php?action=cleanup_manager'>
-    <input type='hidden' name='mode' value='takenew' />
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Title</label>
-    <input type='text' value='' name='clean_title' style='width:350px;' />
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Description</label>
-    <input type='text' value='' name='clean_desc' style='width:350px;' />
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Cleanup File Name</label>
-    <input type='text' value='' name='clean_file' style='width:350px;' />
-    </div>
-    
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Cleanup Interval</label>
-    <input type='text' value='' name='clean_increment' style='width:350px;' />
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>Cleanup Log</label>
-    Yes &nbsp; <input name='clean_log' value='1' type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_log' value='0' checked='checked' type='radio' /> &nbsp; No
-    </div>
-    
-    <div style='margin-bottom:5px;'>
-    <label style='float:left;width:200px;'>cleanup On or Off?</label>
-    Yes &nbsp; <input name='clean_on' value='1' type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_on' value='0' checked='checked' type='radio' /> &nbsp; No
-    </div>
-    
-    <div style='text-align:center;'><input type='submit' name='submit' value='Add' class='button' />&nbsp;<input type='button' value='Cancel' onclick='javascript: history.back()' /></div>
-    </form>
-    </div>";
+    $htmlout = '';
+
+    $htmlout .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Add a new cleanup task</div>
+                         <div class='cblock-content'>
+                             <div style='width: 615px; text-align: left; padding: 10px; margin: 0 auto;border-style: solid; border-color: lightgrey; border-width: 5px 2px;'>
+                                 <form name='inputform' method='post' action='admin.php?action=cleanup_manager'>
+                                      <input type='hidden' name='mode' value='takenew' />
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Title</label>
+                                          <input type='text' value='' name='clean_title' style='width:350px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Description</label>
+                                          <input type='text' value='' name='clean_desc' style='width:350px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Cleanup File Name</label>
+                                          <input type='text' value='' name='clean_file' style='width:350px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Cleanup Interval</label>
+                                          <input type='text' value='' name='clean_increment' style='width:350px;' />
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>Cleanup Log</label>
+                                          Yes &nbsp; <input name='clean_log' value='1' type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_log' value='0' checked='checked' type='radio' /> &nbsp; No
+                                      </div>
+                                      <div style='margin-bottom:5px;'>
+                                          <label style='float:left;width:200px;'>cleanup On or Off?</label>
+                                          Yes &nbsp; <input name='clean_on' value='1' type='radio' />&nbsp;&nbsp;&nbsp;<input name='clean_on' value='0' checked='checked' type='radio' /> &nbsp; No
+                                      </div>
+                                      <div style='text-align:center;'><input type='submit' name='submit' value='Add' class='button' />&nbsp;<input type='button' value='Cancel' onclick='javascript: history.back()' /></div>
+                                 </form>
+                             </div>
+                         </div>
+                     </div>";
     
     print stdhead('Cleanup Manager - Add New') . $htmlout . stdfoot();
 }

@@ -23,10 +23,7 @@ if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 	exit();
 }
 
-
-
-	
-require_once "include/user_functions.php";
+	require_once "include/user_functions.php";
 
     if (get_user_class() < UC_SYSOP)
       stderr("Error", "Permission denied.");
@@ -121,13 +118,15 @@ function localisedDate($timestamp = -1, $format = '') {
 ////////////////////// END FUNCTION LIST /////////////////////////////////////
 
     $HTMLOUT = '';
-    
-    $HTMLOUT .="<h2>Mysql Server Status</h2>";
 
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Mysql Server Status</div>
+                         <div class='cblock-content'>";
 
     $res = @mysql_query('SHOW STATUS') or sqlerr(__FILE__,__LINE__);
-    
-    while ($row = mysql_fetch_row($res)) 
+
+    while ($row = mysql_fetch_row($res))
     {
       $serverStatus[$row[0]] = $row[1];
     }
@@ -139,27 +138,21 @@ function localisedDate($timestamp = -1, $format = '') {
     $res = @mysql_query('SELECT UNIX_TIMESTAMP() - ' . $serverStatus['Uptime']);
     $row = mysql_fetch_row($res);
 
-    $HTMLOUT .= "<table class='torrenttable' border='1'>
-      <tr>
-        <td>This MySQL server has been running for ". timespanFormat($serverStatus['Uptime']) .". It started up on ". localisedDate($row[0]) . "
-
-
-        </td>
-      </tr>
-      </table><br />";
-
+    $HTMLOUT .= "            <table border='1'>
+                                   <tr><td>This MySQL server has been running for ". timespanFormat($serverStatus['Uptime']) .". It started up on ". localisedDate($row[0]) . "</td></tr>
+                             </table><br />";
 
     mysql_free_result($res);
     unset($res);
     unset($row);
-    
+
     //Get query statistics
     $queryStats = array();
     $tmp_array = $serverStatus;
-    
-    foreach($tmp_array AS $name => $value) 
+
+    foreach($tmp_array AS $name => $value)
     {
-        if (substr($name, 0, 4) == 'Com_') 
+        if (substr($name, 0, 4) == 'Com_')
         {
           $queryStats[str_replace('_', ' ', substr($name, 4))] = $value;
           unset($serverStatus[$name]);
@@ -168,105 +161,104 @@ function localisedDate($timestamp = -1, $format = '') {
     unset($tmp_array);
 
     $TRAFFIC_STATS = '';
-    
-    $TRAFFIC_STATS_HEAD = "<!-- Server Traffic -->
-        <b>Server traffic:</b> These tables show the network traffic statistics of this MySQL server since its startup";
+
+    $TRAFFIC_STATS_HEAD = "  <!-- Server Traffic -->
+                             <b>Server traffic:</b> These tables show the network traffic statistics of this MySQL server since its startup";
       
-    $TRAFFIC_STATS .= "<table class='torrenttable' width='100%' border='0'>
-            <tr>
-                <td colspan='3' bgcolor='lightgrey'>&nbsp;Traffic&nbsp;&nbsp;&nbsp;Per Hour&nbsp;</td>
-            </tr>
-            <tr>
-                <td bgcolor='#EFF3FF'>&nbsp;Received&nbsp;</td>
-                <td bgcolor='#EFF3FF' align='right'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_received']))."&nbsp;</td>
-                <td bgcolor='#EFF3FF' align='right'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_received'] * 3600 / $serverStatus['Uptime']))."&nbsp;</td>
-            </tr>
-            <tr>
-                <td bgcolor='#EFF3FF'>&nbsp;Sent&nbsp;</td>
-                <td bgcolor='#EFF3FF' align='right'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_sent']))."&nbsp;</td>
-                <td bgcolor='#EFF3FF' align='right'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_sent'] * 3600 / $serverStatus['Uptime']))."&nbsp;</td>
-            </tr>
-            <tr>
-                <td bgcolor='lightgrey'>&nbsp;Total&nbsp;</td>
-                <td bgcolor='lightgrey' align='right'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_received'] + $serverStatus['Bytes_sent']))."&nbsp;</td>
-                <td bgcolor='lightgrey' align='right'>&nbsp;". join(' ', byteformat(($serverStatus['Bytes_received'] + $serverStatus['Bytes_sent']) * 3600 / $serverStatus['Uptime']))."&nbsp;</td>
-            </tr>
-        </table>";
+    $TRAFFIC_STATS .= "      <table width='100%' border='0'>
+                                   <tr>
+                                      <td colspan='3' style='background:lightgrey;'>&nbsp;Traffic&nbsp;&nbsp;&nbsp;Per Hour&nbsp;</td>
+                                   </tr>
+                                   <tr>
+                                      <td style='background:#EFF3FF;'>&nbsp;Received&nbsp;</td>
+                                      <td style='background:#EFF3FF; text-align:right;'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_received']))."&nbsp;</td>
+                                      <td style='background:#EFF3FF; text-align:right;'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_received'] * 3600 / $serverStatus['Uptime']))."&nbsp;</td>
+                                   </tr>
+                                   <tr>
+                                      <td style='background:#EFF3FF;'>&nbsp;Sent&nbsp;</td>
+                                      <td style='background:#EFF3FF; text-align:right;'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_sent']))."&nbsp;</td>
+                                      <td style='background:#EFF3FF; text-align:right;'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_sent'] * 3600 / $serverStatus['Uptime']))."&nbsp;</td>
+                                   </tr>
+                                   <tr>
+                                     <td style='background:lightgrey;'>&nbsp;Total&nbsp;</td>
+                                     <td style='background:#EFF3FF; text-align:right;'>&nbsp;". join(' ', byteformat($serverStatus['Bytes_received'] + $serverStatus['Bytes_sent']))."&nbsp;</td>
+                                     <td style='background:#EFF3FF; text-align:right;'>&nbsp;". join(' ', byteformat(($serverStatus['Bytes_received'] + $serverStatus['Bytes_sent']) * 3600 / $serverStatus['Uptime']))."&nbsp;</td>
+                                  </tr>
+                            </table>";
             
-    $TRAFFIC_STATS2 = "<table class='torrenttable' width='100%' border='0'>
-        <tr>
-            <td colspan='4' bgcolor='lightgrey'>&nbsp;Connections&nbsp;&nbsp;&oslash;&nbsp;Per Hour&nbsp;</td>
-        </tr>
-        <tr>
-            <td bgcolor='#EFF3FF'>&nbsp;Failed Attempts&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format($serverStatus['Aborted_connects'], 0, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($serverStatus['Aborted_connects'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". (($serverStatus['Connections'] > 0 ) ? number_format(($serverStatus['Aborted_connects'] * 100 / $serverStatus['Connections']), 2, '.', ',') . "&nbsp;%" : "---"."&nbsp;")."</td>
-        </tr>
-        <tr>
-            <td bgcolor='#EFF3FF'>&nbsp;Aborted Clients&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format($serverStatus['Aborted_clients'], 0, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($serverStatus['Aborted_clients'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". (($serverStatus['Connections'] > 0 ) ? number_format(($serverStatus['Aborted_clients'] * 100 / $serverStatus['Connections']), 2 , '.', ',') . '&nbsp;%' : '---')."&nbsp;</td>
-        </tr>
-        <tr>
-            <td bgcolor='lightgrey'>&nbsp;Total&nbsp;</td>
-            <td bgcolor='lightgrey' align='right'>&nbsp;". number_format($serverStatus['Connections'], 0, '.', ',')."&nbsp;</td>
-            <td bgcolor='lightgrey' align='right'>&nbsp;". number_format(($serverStatus['Connections'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-            <td bgcolor='lightgrey' align='right'>&nbsp;". number_format(100, 2, '.', ',')."&nbsp;%&nbsp;</td>
-        </tr>
-    </table>";
-  
-    
+    $TRAFFIC_STATS2 = "     <table width='100%' border='0'>
+                                  <tr>
+                                     <td colspan='4' style='background:lightgrey;'>&nbsp;Connections&nbsp;&nbsp;&oslash;&nbsp;Per Hour&nbsp;</td>
+                                  </tr>
+                                  <tr>
+                                     <td style='background:#EFF3FF;'>&nbsp;Failed Attempts&nbsp;</td>
+                                     <td style='background:lightgrey; text-align:right;'>&nbsp;". number_format($serverStatus['Aborted_connects'], 0, '.', ',')."&nbsp;</td>
+                                     <td style='background:lightgrey; text-align:right;'>&nbsp;". number_format(($serverStatus['Aborted_connects'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                     <td style='background:lightgrey; text-align:right;'>&nbsp;". (($serverStatus['Connections'] > 0 ) ? number_format(($serverStatus['Aborted_connects'] * 100 / $serverStatus['Connections']), 2, '.', ',') . "&nbsp;%" : "---"."&nbsp;")."</td>
+                                  </tr>
+                                  <tr>
+                                     <td style='background:#EFF3FF;'>&nbsp;Aborted Clients&nbsp;</td>
+                                     <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format($serverStatus['Aborted_clients'], 0, '.', ',')."&nbsp;</td>
+                                     <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format(($serverStatus['Aborted_clients'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                     <td style='background:#EFF3FF; text-align:right;'>&nbsp;". (($serverStatus['Connections'] > 0 ) ? number_format(($serverStatus['Aborted_clients'] * 100 / $serverStatus['Connections']), 2 , '.', ',') . '&nbsp;%' : '---')."&nbsp;</td>
+                                  </tr>
+                                  <tr>
+                                     <td style='background:lightgrey;'>&nbsp;Total&nbsp;</td>
+                                     <td style='background:lightgrey; text-align:right;'>&nbsp;". number_format($serverStatus['Connections'], 0, '.', ',')."&nbsp;</td>
+                                     <td style='background:lightgrey; text-align:right;'>&nbsp;". number_format(($serverStatus['Connections'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                     <td style='background:lightgrey; text-align:right;'>&nbsp;". number_format(100, 2, '.', ',')."&nbsp;%&nbsp;</td>
+                                 </tr>
+                           </table>";
+
     $QUERY_STATS = '';
-    
-    $QUERY_STATS .= "<!-- Queries -->
-    <b>Query Statistics:</b> Since it's start up, ". number_format($serverStatus['Questions'], 0, '.', ',')." queries have been sent to the server.<br />
 
-    <table class='torrenttable' width='100%' border='0'>
-        <tr>
-            <td bgcolor='lightgrey'>&nbsp;Total&nbsp;</td>
-            <td bgcolor='lightgrey'>&nbsp;&oslash;&nbsp;Per&nbsp;Hour&nbsp;</td>
-            <td bgcolor='lightgrey'>&nbsp;&oslash;&nbsp;Per&nbsp;Minute&nbsp;</td>
-            <td bgcolor='lightgrey'>&nbsp;&oslash;&nbsp;Per&nbsp;Second&nbsp;</td>
-        </tr>
-        <tr>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format($serverStatus['Questions'], 0, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($serverStatus['Questions'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($serverStatus['Questions'] * 60 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($serverStatus['Questions'] / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-        </tr>
-    </table><br />";
+    $QUERY_STATS .= "      <!-- Queries -->
+                           <b>Query Statistics:</b> Since it's start up, ". number_format($serverStatus['Questions'], 0, '.', ',')." queries have been sent to the server.<br />
+
+                           <table width='100%' border='0'>
+                                 <tr>
+                                    <td style='background:lightgrey;'>&nbsp;Total&nbsp;</td>
+                                    <td style='background:lightgrey;'>&nbsp;&oslash;&nbsp;Per&nbsp;Hour&nbsp;</td>
+                                    <td style='background:lightgrey;'>&nbsp;&oslash;&nbsp;Per&nbsp;Minute&nbsp;</td>
+                                    <td style='background:lightgrey;'>&nbsp;&oslash;&nbsp;Per&nbsp;Second&nbsp;</td>
+                                 </tr>
+                                 <tr>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format($serverStatus['Questions'], 0, '.', ',')."&nbsp;</td>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format(($serverStatus['Questions'] * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format(($serverStatus['Questions'] * 60 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format(($serverStatus['Questions'] / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                 </tr>
+                           </table> <br />";
 
 
-    $QUERY_STATS .= "<table class='torrenttable' width='100%' border='0'>
-        <tr>
-            <td colspan='2' bgcolor='lightgrey'>&nbsp;Query&nbsp;Type&nbsp;</td>
-            <td bgcolor='lightgrey'>&nbsp;&oslash;&nbsp;Per&nbsp;Hour&nbsp;</td>
-            <td bgcolor='lightgrey'>&nbsp;%&nbsp;</td>
-        </tr>";
+    $QUERY_STATS .= "      <table width='100%' border='0'>
+                                 <tr>
+                                    <td colspan='2' style='background:lightgrey;'>&nbsp;Query&nbsp;Type&nbsp;</td>
+                                    <td style='background:lightgrey;'>&nbsp;&oslash;&nbsp;Per&nbsp;Hour&nbsp;</td>
+                                    <td style='background:lightgrey;'>&nbsp;%&nbsp;</td>
+                                 </tr>";
 
 
     $useBgcolorOne = TRUE;
     $countRows = 0;
-    foreach ($queryStats as $name => $value) 
+    foreach ($queryStats as $name => $value)
     {
 
       // For the percentage column, use Questions - Connections, because
       // the number of connections is not an item of the Query types
       // but is included in Questions. Then the total of the percentages is 100.
 
-      $QUERY_STATS .= "<tr>
-          <td bgcolor='#EFF3FF'>&nbsp;". htmlsafechars($name)."&nbsp;</td>
-          <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format($value, 0, '.', ',')."&nbsp;</td>
-          <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($value * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
-          <td bgcolor='#EFF3FF' align='right'>&nbsp;". number_format(($value * 100 / ($serverStatus['Questions'] - $serverStatus['Connections'])), 2, '.', ',')."&nbsp;%&nbsp;</td>
-      </tr>";
+      $QUERY_STATS .= "          <tr>
+                                    <td style='background:#EFF3FF;'>&nbsp;". htmlsafechars($name)."&nbsp;</td>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format($value, 0, '.', ',')."&nbsp;</td>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format(($value * 3600 / $serverStatus['Uptime']), 2, '.', ',')."&nbsp;</td>
+                                    <td style='background:#EFF3FF; text-align:right;'>&nbsp;". number_format(($value * 100 / ($serverStatus['Questions'] - $serverStatus['Connections'])), 2, '.', ',')."&nbsp;%&nbsp;</td>
+                                 </tr>";
 
     }
     unset($countRows);
     unset($useBgcolorOne);
-    $QUERY_STATS .= "</table>";
+    $QUERY_STATS .= "      </table>";
 
     //Unset used variables
     unset($serverStatus['Aborted_clients']);
@@ -279,46 +271,49 @@ function localisedDate($timestamp = -1, $format = '') {
 
 
     $STATUS_TABLE = '';
-    
-    if (!empty($serverStatus)) 
+
+    if (!empty($serverStatus))
     {
 
-      $STATUS_TABLE .= "<!-- Other status variables -->
-          <b>More status variables</b><br />
+      $STATUS_TABLE .= "   <!-- Other status variables -->
+                           <b>More status variables</b><br />
           
-      <table class='torrenttable' border='0' width='100%'>
-          <tr>
-              <td bgcolor='lightgrey'>&nbsp;Variable&nbsp;</td>
-              <td bgcolor='lightgrey'>&nbsp;Value&nbsp;</td>
-          </tr>";
+                           <table  border='0' width='100%'>
+                                 <tr>
+                                    <td style='background:lightgrey;'>&nbsp;Variable&nbsp;</td>
+                                    <td style='background:lightgrey;'>&nbsp;Value&nbsp;</td>
+                                </tr>";
 
       $useBgcolorOne = TRUE;
       $countRows = 0;
-      foreach($serverStatus AS $name => $value) 
+      foreach($serverStatus AS $name => $value)
       {
 
-        $STATUS_TABLE .= "<tr>
-            <td bgcolor='#EFF3FF'>&nbsp;". htmlsafechars(str_replace('_', ' ', $name))."&nbsp;</td>
-            <td bgcolor='#EFF3FF' align='right'>&nbsp;". htmlsafechars($value)."&nbsp;</td>
-        </tr>";
+        $STATUS_TABLE .= "      <tr>
+                                   <td style='background:#EFF3FF;'>&nbsp;". htmlsafechars(str_replace('_', ' ', $name))."&nbsp;</td>
+                                   <td style='background:#EFF3FF; text-align:right;'>&nbsp;". htmlsafechars($value)."&nbsp;</td>
+                                </tr>";
 
       }
       unset($useBgcolorOne);
-      $STATUS_TABLE .= "</table>";
-                   
+      $STATUS_TABLE .= "  </table>";
+
     }
 
-    $HTMLOUT .= "<table class='torrenttable' width='80%' cellpadding='4px'>
-    <tr>
-      <td colspan='2' class='colhead'>$TRAFFIC_STATS_HEAD</td>
-    </tr>
-    <tr>
-      <td valign='top'>$TRAFFIC_STATS</td><td valign='top'>$TRAFFIC_STATS2</td>
-    </tr>
-    <tr>
-      <td width='50%' valign='top'>$QUERY_STATS</td><td  valign='top'>$STATUS_TABLE</td>
-    </tr>
-    </table>";
+    $HTMLOUT .= "         <table width='80%' cellpadding='4px'>
+                                <tr>
+                                   <td colspan='2' class='colhead'>$TRAFFIC_STATS_HEAD</td>
+                                </tr>
+                                <tr>
+                                   <td valign='top'>$TRAFFIC_STATS</td><td valign='top'>$TRAFFIC_STATS2</td>
+                                </tr>
+                                <tr>
+                                   <td style='width:50%;' valign='top'>$QUERY_STATS</td><td  valign='top'>$STATUS_TABLE</td>
+                                </tr>
+                          </table>";
+
+    $HTMLOUT .= "                         </div>
+                     </div>";
 
     print stdhead("Stats Overview") . $HTMLOUT . stdfoot();
 ?>

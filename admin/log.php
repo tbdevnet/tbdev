@@ -17,11 +17,21 @@ require_once "include/user_functions.php";
     
     $res = mysql_query("SELECT added, txt FROM sitelog ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
     
-    $HTMLOUT = "<h1>{$lang['text_sitelog']}</h1>\n";
-    
+    $HTMLOUT = '';
+
+    $HTMLOUT .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>{$lang['text_sitelog']}</div>";
+    $HTMLOUT .= "        <div class='cblock-content'>";
+
     if (mysql_num_rows($res) == 0)
     {
-      $HTMLOUT .= "<b>{$lang['text_logempty']}</b>\n";
+
+      $HTMLOUT .= "          <table border='1' cellspacing='0' cellpadding='5'>
+                                   <tr>
+                                      <td class='colhead' align='left'><b>{$lang['text_logempty']}</b></td>
+                                   </tr>
+                             </table>\n";
     }
     else
     {
@@ -31,7 +41,7 @@ require_once "include/user_functions.php";
         <td class='colhead' align='left'>{$lang['header_time']}</td>
         <td class='colhead' align='left'>{$lang['header_event']}</td>
       </tr>\n";
-      
+
       while ($arr = mysql_fetch_assoc($res))
       {
         $date = explode( ',', get_date( $arr['added'], 'LONG' ) );
@@ -40,11 +50,15 @@ require_once "include/user_functions.php";
         <td align='left'>".htmlsafechars($arr['txt'])."</td>
         </tr>\n";
       }
-      
+
       $HTMLOUT .= "</table>\n";
+
     }
     $HTMLOUT .= "<p>{$lang['text_times']}</p>\n";
-    
+
+    $HTMLOUT .= "        </div>
+                     </div>";
+
     print stdhead("{$lang['stdhead_log']}") . $HTMLOUT . stdfoot();
 
 ?>

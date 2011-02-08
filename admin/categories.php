@@ -26,7 +26,7 @@ if ( ! defined( 'IN_TBDEV_ADMIN' ) )
 require_once "include/user_functions.php";
 
     $params = array_merge( $_GET, $_POST );
-    
+
     $params['mode'] = isset($params['mode']) ? $params['mode'] : '';
     
     switch($params['mode'])
@@ -142,35 +142,44 @@ function move_cat_form() {
     $select .= "</select>\n";
     
     $check .= "<tr>
-      <td align='right' width='50%'><span style='color:limegreen;font-weight:bold;'>Select a new category:</span></td>
+      <td style='text-align:right; width:50%;'><span style='color:limegreen;font-weight:bold;'>Select a new category:</span></td>
       <td>$select</td>
     </tr>";
     
     
     $htmlout = '';
     
-    $htmlout .= "<form action='admin.php?action=categories' method='post'>
-      <input type='hidden' name='mode' value='takemove_cat' />
-      <input type='hidden' name='id' value='{$r['id']}' />
-    
-      <table class='torrenttable' align='center' width='80%' bgcolor='#cecece' cellspacing='2' cellpadding='4px'>
-      <tr>
-        <td colspan='2' class='colhead'>You are about to move category: ".htmlsafechars($r['name'])."</td>
-      </tr>
-      <tr>
-        <td colspan='2'>Note: This tool will move ALL torrents FROM one category to ANOTHER category only! It will NOT delete any categories or torrents.</td>
-      </tr>
-      <tr>
-        <td align='right' width='50%'><span style='color:red;font-weight:bold;'>Old Category Name:</span></td>
-        <td>".htmlsafechars($r['name'])."</td>
-      </tr>
-      {$check}
-      <tr>
-        <td colspan='2' align='center'>
-         <input type='submit' class='btn' value='Move' /><input type='button' class='btn' value='Cancel' onclick=\"history.go(-1)\" /></td>
-      </tr>
-      </table>
-      </form>";
+    $htmlout .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Move category</div>
+                         <div class='cblock-content'>";
+
+    $htmlout .= "            <form action='admin.php?action=categories' method='post'>
+                                  <input type='hidden' name='mode' value='takemove_cat' />
+                                  <input type='hidden' name='id' value='{$r['id']}' />
+
+                                  <table style='text-align:center; width:80%;' cellspacing='2' cellpadding='4px'>
+                                        <tr>
+                                           <td colspan='2' class='colhead'>You are about to move category: ".htmlsafechars($r['name'])."</td>
+                                        </tr>
+                                        <tr>
+                                           <td colspan='2'>Note: This tool will move ALL torrents FROM one category to ANOTHER category only! It will NOT delete any categories or torrents.</td>
+                                        </tr>
+                                        <tr>
+                                           <td style='width:50%; text-align:right;'><span style='color:red;font-weight:bold;'>Old Category Name:</span></td>
+                                           <td>".htmlsafechars($r['name'])."</td>
+                                        </tr>
+                                        {$check}
+                                        <tr>
+                                           <td colspan='2' style='text-align:center;'>
+                                              <input type='submit' class='btn' value='Move' />
+                                              <input type='button' class='btn' value='Cancel' onclick=\"history.go(-1)\" />
+                                           </td>
+                                        </tr>
+                                  </table>
+                             </form>";
+    $htmlout .= "        </div>
+                     </div>";
       
       print stdhead("Move category {$r['name']}") . $htmlout . stdfoot();
 }
@@ -303,40 +312,48 @@ function delete_cat_form() {
       $select .= "</select>\n";
       
       $check .= "<tr>
-        <td align='right' width='50%'>Select a new category:<br /><span style='color:red;font-weight:bold;'>Warning: There are torrents in this category, so you need to select a category to move them to.</span></td>
+        <td style='text-align:right;width:50%;'>Select a new category:<br /><span style='color:red;font-weight:bold;'>Warning: There are torrents in this category, so you need to select a category to move them to.</span></td>
         <td>$select</td>
       </tr>";
     }
     
     $htmlout = '';
     
-    $htmlout .= "<form action='admin.php?action=categories' method='post'>
-      <input type='hidden' name='mode' value='takedel_cat' />
-      <input type='hidden' name='id' value='{$r['id']}' />
-    
-      <table class='torrenttable' align='center' width='80%' bgcolor='#cecece' cellspacing='2' cellpadding='2'>
-      <tr>
-        <td colspan='2' class='colhead'>You are about to delete category: ".htmlsafechars($r['name'])."</td>
-      </tr>
-      <tr>
-        <td align='right' width='50%'>Cat Name:</td>
-        <td>".htmlsafechars($r['name'])."</td>
-      </tr>
-      <tr>
-        <td align='right'>Description:</td>
-        <td>".htmlsafechars($r['cat_desc'])."</td>
-      </tr>
-      <tr>
-        <td align='right'>Image:</td>
-        <td>".htmlsafechars($r['image'])."</td>
-      </tr>
-      {$check}
-      <tr>
-        <td colspan='2' align='center'>
-         <input type='submit' class='btn' value='Delete' /><input type='button' class='btn' value='Cancel' onclick=\"history.go(-1)\" /></td>
-      </tr>
-      </table>
-      </form>";
+    $htmlout .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Delete category</div>
+                         <div class='cblock-content'>";
+
+    $htmlout .= "            <form action='admin.php?action=categories' method='post'>
+                                  <input type='hidden' name='mode' value='takedel_cat' />
+                                  <input type='hidden' name='id' value='{$r['id']}' />
+                                  <table style='text-align:center; width:80%;'cellspacing='2' cellpadding='2'>
+                                        <tr>
+                                           <td colspan='2' class='colhead'>You are about to delete category: ".htmlsafechars($r['name'])."</td>
+                                        </tr>
+                                        <tr>
+                                           <td style='text-align:right; width:50%;'>Cat Name:</td>
+                                           <td>".htmlsafechars($r['name'])."</td>
+                                        </tr>
+                                        <tr>
+                                           <td style='text-align:right;'>Description:</td>
+                                           <td>".htmlsafechars($r['cat_desc'])."</td>
+                                        </tr>
+                                        <tr>
+                                           <td style='text-align:right;'>Image:</td>
+                                           <td>".htmlsafechars($r['image'])."</td>
+                                        </tr>
+                                        {$check}
+                                        <tr>
+                                           <td colspan='2' style='text-align:center;'>
+                                              <input type='submit' class='btn' value='Delete' />
+                                              <input type='button' class='btn' value='Cancel' onclick=\"history.go(-1)\" />
+                                           </td>
+                                        </tr>
+                                  </table>
+                             </form>
+                         </div>
+                     </div>";
       
       print stdhead("Deleting category {$r['name']}") . $htmlout . stdfoot();
 }
@@ -426,44 +443,52 @@ function edit_cat_form() {
       {
         $selected = ($f == $r['image']) ? " selected='selected'" : "";
         $select .= "<option value='" . htmlsafechars($f) . "'$selected>" . htmlsafechars($f) . "</option>\n";
-        
+
       }
       
       $select .= "</select>\n";
       
       $check = "<tr>
-        <td align='right' width='50%'>Select a new image:<br /><span style='color:limegreen;font-weight:bold;'>Info: If you want a new image, you have to upload it to the /caticon/ directory first.</span></td>
+        <td style='text-align:right;width:50%;'>Select a new image:<br /><span style='color:limegreen;font-weight:bold;'>Info: If you want a new image, you have to upload it to the /caticon/ directory first.</span></td>
         <td>$select</td>
       </tr>";
  		}
  		else
  		{
       $check = "<tr>
-        <td align='right' width='50%'>Select a new image:</td>
+        <td style='text-align:right;width:50%;'>Select a new image:</td>
         <td><span style='color:red;font-weight:bold;'>Warning: There are no images in the directory, please upload one.</span></td>
       </tr>";
  		}
  		
-    $htmlout .= "<form action='admin.php?action=categories' method='post'>
-      <input type='hidden' name='mode' value='takeedit_cat' />
-      <input type='hidden' name='id' value='{$r['id']}' />
-    
-      <table class='torrenttable' align='center' width='80%' bgcolor='#cecece' cellspacing='2' cellpadding='2'>
-      <tr>
-        <td align='right'>New Cat Name:</td>
-        <td><input type='text' name='cat_name' class='option' size='50' value='".htmlsafechars($r['name'])."' /></td>
-      </tr>
-      <tr>
-        <td align='right'>Description:</td>
-        <td><textarea cols='50' rows='5' name='cat_desc'>".htmlsafechars($r['cat_desc'])."</textarea></td>
-      </tr>
-      {$check}
-      <tr>
-        <td colspan='2' align='center'>
-         <input type='submit' class='btn' value='Edit' /><input type='button' class='btn' value='Cancel' onclick=\"history.go(-1)\" /></td>
-      </tr>
-      </table>
-      </form>";
+
+    $htmlout .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Edit Categories</div>
+                         <div class='cblock-content'>";
+
+    $htmlout .= "            <form action='admin.php?action=categories' method='post'>
+                                  <input type='hidden' name='mode' value='takeedit_cat' />
+                                  <input type='hidden' name='id' value='{$r['id']}' />
+                                  <table style='text-align:center; width:80%;' cellspacing='2' cellpadding='2'>
+                                        <tr>
+                                           <td style='text-align:right;'>New Cat Name:</td>
+                                           <td><input type='text' name='cat_name' class='option' size='50' value='".htmlsafechars($r['name'])."' /></td>
+                                        </tr>
+                                        <tr>
+                                           <td style='text-align:right;'>Description:</td>
+                                           <td><textarea cols='50' rows='5' name='cat_desc'>".htmlsafechars($r['cat_desc'])."</textarea></td>
+                                        </tr>
+                                        {$check}
+                                        <tr>
+                                           <td colspan='2' style='text-align:center;'>
+                                              <input type='submit' class='btn' value='Edit' /><input type='button' class='btn' value='Cancel' onclick=\"history.go(-1)\" />
+                                           </td>
+                                        </tr>
+                                  </table>
+                             </form>
+                         </div>
+                     </div>";
 
       print stdhead( "Editing category: {$r['name']}") . $htmlout . stdfoot();
 }
@@ -474,9 +499,9 @@ function show_categories() {
     global $TBDEV;
     
     $htmlout = '';
-    
+
     $dh = opendir( $TBDEV['pic_base_url'].'caticons' );
-		
+
 		$files = array();
 		
  		while ( FALSE !== ( $file = readdir( $dh ) ) )
@@ -506,95 +531,114 @@ function show_categories() {
       $select .= "</select>\n";
       
       $check = "<tr>
-        <td align='right' width='50%'>Select a new image:<br /><span style='color:limegreen;font-weight:bold;'>Warning: If you want a new image, you have to upload it to the /caticon/ directory first.</span></td>
+        <td style='text-align:right; width:50%;'>Select a new image:<br /><span style='color:limegreen;font-weight:bold;'>Warning: If you want a new image, you have to upload it to the /caticon/ directory first.</span></td>
         <td>$select</td>
       </tr>";
  		}
  		else
  		{
       $check = "<tr>
-        <td align='right' width='50%'>Select a new image:</td>
+        <td style='text-align:right; width:50%;'>Select a new image:</td>
         <td><span style='color:red;font-weight:bold;'>Warning: There are no images in the directory, please upload one.</span></td>
       </tr>";
  		}
- 		
- 		
-    $htmlout .= "<form action='admin.php?action=categories' method='post'>
-    <input type='hidden' name='mode' value='takeadd_cat' />
-    
-    <table class='torrenttable' border='1' width='80%' bgcolor='#cecece' cellspacing='2' cellpadding='2'>
-    <tr>
-      <td class='colhead' colspan='2' align='center'>
-        <b>Make a new category:</b>
-      </td>
-    </tr>
-    <tr>
-      <td align='right'>New Cat Name:</td>
-      <td align='left'><input type='text' name='new_cat_name' size='50' maxlength='50' /></td>
-    </tr>
-    <tr>
-      <td align='right'>New Cat Description:</td>
-      <td align='left'><textarea cols='50' rows='5' name='new_cat_desc'></textarea></td>
-    </tr>
-    <!--<tr>
-      <td align='right'>New Filename (Eg: films.gif or films.png):</td>
-      <td align='left'><input type='text' name='new_cat_image' class='option' size='50' /></td>
-    </tr>-->
-    {$check}
-    <tr>
-      <td colspan='2' align='center'>
-        <input type='submit' value='Add New' class='btn' />
-        <input type='reset' value='Reset' class='btn' />
-      </td>
-    </tr>
-    </table>
-    </form>
+
+    $htmlout .= "
+                     <div class='cblock'>
+                         <div class='cblock-header'>Admin Categories</div>
+                         <div class='cblock-content'>";
 
 
-    <h2>Current Categories:</h2>
-    <table class='torrenttable' border='1' width='80%' bgcolor='#cecece' cellpadding='5px'>
-    <tr>
-      <td class='colhead' width='60'>Cat ID</td>
-      <td class='colhead' width='120'>Cat Name</td>
-      <td class='colhead' width='200'>Cat Description</td>
-      <td class='colhead' width='45'>Image</td>
-      <td class='colhead' width='40'>Edit</td>
-      <td class='colhead' width='40'>Delete</td>
-      <td class='colhead' width='40'>Move</td>
-    </tr>";
-             
+    $htmlout .= "            <form action='admin.php?action=categories' method='post'>
+                                  <input type='hidden' name='mode' value='takeadd_cat' />
+                                  <table style='width:80%; border:1px solid #000;' cellspacing='2' cellpadding='2'>
+                                        <tr>
+                                           <td class='colhead' colspan='2' style='text-align:center;'>
+                                              <b>Make a new category:</b>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           <td style='text-align:right;'>New Cat Name:</td>
+                                           <td style='text-align:left;'><input type='text' name='new_cat_name' size='50' maxlength='50' /></td>
+                                        </tr>
+                                        <tr>
+                                           <td style='text-align:right;'>New Cat Description:</td>
+                                           <td style='text-align:left;'><textarea cols='50' rows='5' name='new_cat_desc'></textarea></td>
+                                        </tr>
+                                        <!--<tr>
+                                           <td style='text-align:right;'>New Filename (Eg: films.gif or films.png):</td>
+                                           <td style='text-align:left;'><input type='text' name='new_cat_image' class='option' size='50' /></td>
+                                        </tr>-->
+                                        {$check}
+                                        <tr>
+                                           <td colspan='2' style='text-align:center;'>
+                                              <input type='submit' value='Add New' class='btn' />
+                                              <input type='reset' value='Reset' class='btn' />
+                                           </td>
+                                        </tr>
+                                  </table>
+                             </form>
+
+
+                             <div class='inner_header' style='width:80%; margin:20px auto 20px auto;'>Current Categories:</div>
+                                <table style='width:80%; border:1px solid #000;' cellpadding='5px'>
+                                      <tr>
+                                         <td class='colhead' style='width:60px;'>Cat ID</td>
+                                         <td class='colhead' style='width:120px;'>Cat Name</td>
+                                         <td class='colhead' style='width:200px;'>Cat Description</td>
+                                         <td class='colhead' style='width:45px;'>Image</td>
+                                         <td class='colhead' style='width:40px;'>Edit</td>
+                                         <td class='colhead' style='width:40px;'>Delete</td>
+                                         <td class='colhead' style='width:40px;'>Move</td>
+                                      </tr>";
+
 
     $query = @mysql_query( "SELECT * FROM categories" );
-   
-    if( false == mysql_num_rows($query) ) 
+
+    if( false == mysql_num_rows($query) )
     {
-      $htmlout .= "<tr><td colspan='7'><h1>No categories defined.</h1></td></tr>";
-    } 
-    else 
+      $htmlout .= "                   <tr>
+                                         <td colspan='7'><h1>No categories defined.</h1></td>
+                                      </tr>";
+    }
+    else
     {
       while($row = mysql_fetch_assoc($query))
       {
-        $cat_image = file_exists($TBDEV['pic_base_url'].'caticons/'.$row['image']) ? "<img border='0' src='{$TBDEV['pic_base_url']}caticons/{$row['image']}' alt='{$row['id']}' />" : "No Image";
-        
-        $htmlout .= "<tr>
-          <td height='48' width='60'><b>ID({$row['id']})</b></td>
-          <td width='120'>{$row['name']}</td>
-          <td width='250'>{$row['cat_desc']}</td>
-          <td align='center' width='45'>$cat_image</td>
-          <td align='center' width='18'><a href='admin.php?action=categories&amp;mode=edit_cat&amp;id={$row['id']}'>
-            <img src='{$TBDEV['pic_base_url']}aff_tick.gif' alt='Edit Category' title='Edit' width='12' height='12' border='0' /></a></td>
-          <td align='center' width='18'><a href='admin.php?action=categories&amp;mode=del_cat&amp;id={$row['id']}'>
-            <img src='{$TBDEV['pic_base_url']}aff_cross.gif' alt='Delete Category' title='Delete' width='12' height='12' border='0' /></a></td>
-          <td align='center' width='18'><a href='admin.php?action=categories&amp;mode=move_cat&amp;id={$row['id']}'>
-            <img src='{$TBDEV['pic_base_url']}plus.gif' alt='Move Category' title='Move' width='12' height='12' border='0' /></a></td>
-        </tr>";
+        $cat_image = file_exists($TBDEV['pic_base_url'].'caticons/'.$row['image']) ? "<img src='{$TBDEV['pic_base_url']}caticons/{$row['image']}' alt='{$row['id']}' />" : "No Image";
+
+        $htmlout .= "                 <tr>
+                                         <td style='height:48px; width:60px;'><b>ID({$row['id']})</b></td>
+                                         <td style='width:120px;'>{$row['name']}</td>
+                                         <td style='width:250px;'>{$row['cat_desc']}</td>
+                                         <td style='text-align:center; width:45px;'>$cat_image</td>
+                                         <td style='text-align:center; width:18px;'>
+                                            <a href='admin.php?action=categories&amp;mode=edit_cat&amp;id={$row['id']}'>
+                                              <img src='{$TBDEV['pic_base_url']}aff_tick.gif' alt='Edit Category' title='Edit' width='12' height='12' />
+                                            </a>
+                                         </td>
+                                         <td style='text-align:center; width:18px;'>
+                                            <a href='admin.php?action=categories&amp;mode=del_cat&amp;id={$row['id']}'>
+                                              <img src='{$TBDEV['pic_base_url']}aff_cross.gif' alt='Delete Category' title='Delete' width='12' height='12' />
+                                            </a>
+                                         </td>
+                                         <td style='text-align:center; width:18px;'>
+                                            <a href='admin.php?action=categories&amp;mode=move_cat&amp;id={$row['id']}'>
+                                              <img src='{$TBDEV['pic_base_url']}plus.gif' alt='Move Category' title='Move' width='12' height='12' />
+                                            </a>
+                                         </td>
+                                      </tr>";
       }
-          
-      
+
+
     } //endif
-    
+
     $htmlout .= '</table>';
-    
+
+    $htmlout .= "
+                         </div>
+                     </div>";
+
     print stdhead('Admin Categories') . $htmlout . stdfoot();
 }
 
