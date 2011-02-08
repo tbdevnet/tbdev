@@ -59,7 +59,8 @@ function torrenttable($res, $variant = "index") {
 	}
 
 
-    $htmlout .= "<td class='colhead' align='right'>{$lang["torrenttable_files"]}</td>
+    $htmlout .= "
+    <td class='colhead' align='right'>{$lang["torrenttable_files"]}</td>
     <td class='colhead' align='right'>{$lang["torrenttable_comments"]}</td>
     <!--<td class='colhead' align='center'>{$lang["torrenttable_rating"]}</td>-->
     <td class='colhead' align='center'>{$lang["torrenttable_added"]}</td>
@@ -89,7 +90,7 @@ function torrenttable($res, $variant = "index") {
         {
             $htmlout .= "<a href='browse.php?cat={$row['category']}'>";
             if (isset($row["cat_pic"]) && $row["cat_pic"] != "")
-                $htmlout .= "<img border='0' src='{$TBDEV['pic_base_url']}caticons/{$row['cat_pic']}' alt='{$row['cat_name']}' />";
+                $htmlout .= "<img src='{$TBDEV['pic_base_url']}caticons/{$row['cat_pic']}' alt='{$row['cat_name']}' />";
             else
             {
                 $htmlout .= $row["cat_name"];
@@ -118,7 +119,7 @@ function torrenttable($res, $variant = "index") {
 	        if ($elapsed < $wait)
 	        {
 	          $color = dechex(floor(127*($wait - $elapsed)/48 + 128)*65536);
-	          $htmlout .= "<td align='center'><span style='white-space: nowrap;'><a href='faq.php#dl8'><font color='$color'>" . number_format($wait - $elapsed) . " ".$lang["torrenttable_wait_h"]."</font></a></span></td>\n";
+	          $htmlout .= "<td align='center'><span style='white-space: nowrap;'><a href='faq.php#dl8'><div style='color:$color;'>" . number_format($wait - $elapsed) . " ".$lang["torrenttable_wait_h"]."</div></a></span></td>\n";
 	        }
 	        else
 	          $htmlout .= "<td align='center'><span style='white-space: nowrap;'>{$lang["torrenttable_wait_none"]}</span></td>\n";
@@ -217,8 +218,7 @@ function torrenttable($res, $variant = "index") {
             if ($variant == "index")
             {
                if ($row["leechers"]) $ratio = $row["seeders"] / $row["leechers"]; else $ratio = 1;
-                $htmlout .= "<td align='right'><b><a href='peerlist.php?id=$id#seeders'>
-                <font color='" .get_slr_color($ratio) . "'>{$row["seeders"]}</font></a></b></td>\n";
+                $htmlout .= "<td align='right'><div class='bold' style='color:" .get_slr_color($ratio) . ";'><a href='peerlist.php?id=$id#seeders'>{$row["seeders"]}</a></div></td>\n";
             }
             else
             {
@@ -255,7 +255,7 @@ function torrenttable($res, $variant = "index") {
 function commenttable($rows)
 {
 	global $CURUSER, $TBDEV;
-	
+
 	
 	$lang = load_language( 'torrenttable_functions' );
 	
@@ -292,10 +292,10 @@ function commenttable($rows)
 			$avatar = "{$TBDEV['pic_base_url']}default_avatar.gif";
 		$text = format_comment($row["text"]);
     if ($row["editedby"])
-    	$text .= "<p><font size='1' class='small'>".$lang["commenttable_last_edited_by"]." <a href='userdetails.php?id={$row['editedby']}'><b>{$row['username']}</b></a> ".$lang["commenttable_last_edited_at"]." ".get_date($row['editedat'],'DATE')."</font></p>\n";
+    	$text .= "<p style='font-size:1px;' class='small'>".$lang["commenttable_last_edited_by"]." <a href='userdetails.php?id={$row['editedby']}'><b>{$row['username']}</b></a> ".$lang["commenttable_last_edited_at"]." ".get_date($row['editedat'],'DATE')."</p>\n";
 		$htmlout .= begin_table(true);
 		$htmlout .= "<tr valign='top'>\n";
-		$htmlout .= "<td align='center' width='150' style='padding: 0px'><img width='{$row['av_w']}' height='{$row['av_h']}' src='{$avatar}' alt='' /></td>\n";
+		$htmlout .= "<td style='width:150px; text-align:center; padding: 0px'><img width='{$row['av_w']}' height='{$row['av_h']}' src='{$avatar}' alt='' /></td>\n";
 		$htmlout .= "<td class='text'>$text</td>\n";
 		$htmlout .= "</tr>\n";
      $htmlout .= end_table();

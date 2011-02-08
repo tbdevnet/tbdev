@@ -251,7 +251,7 @@ function stdhead( $title = "", $js='', $css='' ) {
     {
       $TBDEV['stylesheet'] = isset($CURUSER['stylesheet']) ? "{$CURUSER['stylesheet']}.css" : $TBDEV['stylesheet'];
     }
-    
+
   /* Deprecate this.
     if ($TBDEV['msg_alert'] && $msgalert && $CURUSER)
     {
@@ -260,6 +260,18 @@ function stdhead( $title = "", $js='', $css='' ) {
       $unread = $arr[0];
     }
   */
+
+    if ($CURUSER)
+    {
+      $res1 = @mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND unread='yes'") or sqlerr(__LINE__,__FILE__);
+      $arr1 = mysql_fetch_row($res1);
+
+      $unread = ($arr1[0] > 0 ? "<span class='msgalert'><small>{$arr1[0]}</small></span>" : $arr1[0]);
+      $msgalert = $arr1[0];
+      $inbox = ($unread == 1 ? "$unread" : "$unread");
+    }
+
+
     $htmlout = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
 		\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
 		
@@ -270,77 +282,126 @@ function stdhead( $title = "", $js='', $css='' ) {
 			<meta http-equiv='Content-Language' content='en-us' />
 			<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 			
-			<title>{$title}</title>
-			<link rel='stylesheet' href='{$TBDEV['stylesheet']}' type='text/css' />
-			{$css}\n
-			{$js}\n
-		</head>
+          <title>{$title}</title>
+          <link rel='stylesheet' type='text/css' href='{$TBDEV['stylesheet']}' />
+          {$js}\n 
+    </head>
     
     <body>
 
-      <table width='100%' cellspacing='0' cellpadding='0' style='background: transparent'>
-      <tr>
+    <!-- Begin Wrapper -->
+    <div id='wrapper'>
 
-      <td class='clear'>
-      <div id='logostrip'>
-      <img src='{$TBDEV['pic_base_url']}logo.jpg' alt='' />
-
-      <a href='donate.php'><img src='{$TBDEV['pic_base_url']}x-click-but04.gif' border='0' alt='{$lang['gl_donate']}' title='{$lang['gl_donate']}' style='margin-top: 5px' /></a>
-      </div>
-      </td>
-
-      </tr></table>
-
-      <table class='mainouter' width='100%' border='1' cellspacing='0' cellpadding='10'>
-<!-- STATUSBAR -->";
-
+        <!-- Begin Header -->
+        <div id='header'>
+            <div class='statusbar'>";
     $htmlout .= StatusBar();
+    $htmlout .= "
+            </div>
+            <div class='subheader'>
+                <div class='logo'>";
 
-    $htmlout .= "<!-- MENU -->
-      <tr><td class='outer'>
-      <div id='submenu'>";
+    if ($CURUSER)
+    {
+      $htmlout .= "
+                    <div class='profile'>
+                        <div class='status_avatar'>";
 
-    if ($CURUSER) 
-    { 
-      $htmlout .= "<div class='tb-top-left-link'>
-      <a href='index.php'>{$lang['gl_home']}</a>
-      <a href='browse.php'>{$lang['gl_browse']}</a>
-      <a href='search.php'>{$lang['gl_search']}</a>
-      <a href='upload.php'>{$lang['gl_upload']}</a>
-      <a href='chat.php'>{$lang['gl_chat']}</a>
-      <a href='forums.php'>{$lang['gl_forums']}</a>
-      <!--<a href='misc/dox.php'>DOX</a>-->
-      <a href='topten.php'>{$lang['gl_top_10']}</a>
-      <a href='rules.php'>{$lang['gl_rules']}</a>
-      <a href='faq.php'>{$lang['gl_faq']}</a>
-      <a href='links.php'>{$lang['gl_links']}</a>
-      <a href='staff.php'>{$lang['gl_staff']}</a>
-      </div>
-      <div class='tb-top-right-link'>";
+    if (!empty($CURUSER['avatar']))
+    {
+      $avatar = "<a href='userdetails.php?id={$CURUSER['id']}'><img src='{$CURUSER['avatar']}' width='50' height='50' alt='' /></a>";
+    }
+    else
+    {
+      $avatar = "<a href='userdetails.php?id={$CURUSER['id']}'><img src='images/default_thumb.png' alt='' /></a>";
+    }
+
+    $htmlout .= $avatar;
+
+    $htmlout .= "
+                        </div>
+                            <div class='username'>
+                                <p><a href='userdetails.php?id={$CURUSER['id']}'>{$CURUSER['username']}</a></p>
+                            </div>
+                            <div class='messagesbox'>
+                                <p><a href='messages.php'>$inbox</a></p>
+                            </div>
+                            <ul>
+                               <li><a class='bold' href='logout.php'>{$lang['gl_logout']}</a></li>
+                            </ul>
+                            <div class='rlink'>
+                                <a class='bold' href='my.php'>{$lang['gl_profile']}</a>&nbsp;&nbsp;&nbsp;
+                                <a class='bold' href='rules.php'>{$lang['gl_rules']}</a>
+                            </div>
+                    </div>";
+    }
+    else
+    {
+      $htmlout .= "
+                    <div class='profile'>
+                        <div class='sign_in'>
+                            <div style='padding:8px 0 0 5px;'>
+                            <img src='images/key.png' alt='{$lang['gl_login']}' />&nbsp;<a style='color:#fff;' href='login.php'>Sign In »</a>
+                            </div>
+                        </div>
+	                   <ul>
+                          <li>New user?&nbsp;</li>
+                          <li><a class='bold' href='signup.php'>Register Now!</a></li>
+                       </ul>
+                    </div>";
+    }
+
+    $htmlout .= "
+                </div>
+                <!-- Begin Navigation -->
+                <div id='navigation'>
+                    <div id='nav'>
+                        <ul>";
+
+    if ($CURUSER)
+    {
+      $htmlout .= "
+                           <li><a href='index.php'><span>{$lang['gl_home']}</span></a></li>
+                           <li><a href='browse.php'><span>{$lang['gl_browse']}</span></a></li>
+                           <li><a href='upload.php'><span>{$lang['gl_upload']}</span></a></li>
+                           <li><a href='chat.php'><span>{$lang['gl_chat']}</span></a></li>
+                           <li><a href='forums.php'><span>{$lang['gl_forums']}</span></a></li>
+                           <li><a href='topten.php'><span>{$lang['gl_top_10']}</span></a></li>
+                           <li><a href='links.php'><span>{$lang['gl_links']}</span></a></li>
+                           <li><a href='faq.php'><span>{$lang['gl_faq']}</span></a></li>
+                           <li><a href='staff.php'><span>{$lang['gl_staff']}</span></a></li>";
 
       if( $CURUSER['class'] >= UC_MODERATOR )
       {
-        $htmlout .= "<a href='admin.php'>{$lang['gl_admin']}</a>";
+        $htmlout .= "
+                           <li><a href='admin.php'><span>{$lang['gl_admin']}</span></a></li>";
       }
 
-    $htmlout .= "<a href='my.php'>{$lang['gl_profile']}</a>
-      <a href='logout.php'>{$lang['gl_logout']}</a>
-      </div>";
-    } 
+    }
     else
     {
-      $htmlout .= "<div class='tb-top-left-link'>
-      <a href='login.php'>{$lang['gl_login']}</a>
-      <a href='signup.php'>{$lang['gl_signup']}</a>
-      <a href='recover.php'>{$lang['gl_recover']}</a>
-      </div>";
+      $htmlout .= "
+                           <li><a href='login.php'><span>{$lang['gl_login']}</span></a></li>
+                           <li><a href='signup.php'><span>{$lang['gl_signup']}</span></a></li>
+                           <li><a href='recover.php'><span>{$lang['gl_recover']}</span></a></li>";
     }
 
-    $htmlout .= "</div>
-    </td>
-    </tr>
-    <tr><td align='center' class='outer' style='padding-top: 20px; padding-bottom: 20px'>";
+    $htmlout .= "
+                        </ul>
+                    </div>
+                </div>
+                <!-- End Navigation -->
+            </div>
+        </div>
+        <!-- End Header -->
 
+        <div class='clear'></div>
+
+        <!-- Start Container -->
+        <div id='container'>
+
+            <!-- Start Maincolumn -->
+            <div id='maincolumn'>";
 
     if ( $TBDEV['msg_alert'] && $msgalert )
     {
@@ -350,17 +411,39 @@ function stdhead( $title = "", $js='', $css='' ) {
                   </td></tr></table>\n";
     }
 
+
     return $htmlout;
-    
+
 } // stdhead
 
 function stdfoot() {
   global $TBDEV;
-  
-    return "<div class='foot_info'><p align='center'>Remember, if you see any specific instance of this software running publicly, it's within your rights under gpl to garner a copy of that derivative from the person responsible for that webserver.<br />
-    <a href='http://www.tbdev.net'><img src='{$TBDEV['pic_base_url']}tbdev_btn_red.png' border='0' alt='Powered By TBDev &copy;2010' title='Powered By TBDev &copy;2010' /></a></p></div>
-    </td></tr></table>\n
-    </body></html>\n";
+
+    $htmlout = '';
+    $htmlout .= "
+            </div>
+            <!-- End Maincolumn -->
+
+            <div class='clear'></div>
+        </div>
+        <!-- End Container -->
+
+        <!-- Begin Footer -->
+        <div id='footer'>
+            <div class='footerbg'>
+                <p>Remember, if you see any specific instance of this software running publicly, it's within your rights under gpl to garner a copy of that derivative from the person responsible for that webserver.<br />
+    <a href='http://www.tbdev.net'><img src='{$TBDEV['pic_base_url']}tbdev_btn_red.png' border='0' alt='Powered By TBDev &copy;2010' title='Powered By TBDev &copy;2010' /></a></p>
+            </div>
+        </div>
+        <!-- End Footer -->
+
+    </div>
+    <!-- End Wrapper -->
+
+</body>
+</html>";
+
+    return $htmlout;
 }
 
 
@@ -490,10 +573,10 @@ function get_row_count($table, $suffix = "")
 function stdmsg($heading, $text)
 {
     $htmlout = "<table class='main' width='750' border='0' cellpadding='0' cellspacing='0'>
-    <tr><td class='embedded'>\n";
-    
+                      <tr>
+                         <td class='embedded'>\n";
     if ($heading)
-      $htmlout .= "<h2>$heading</h2>\n";
+      $htmlout .= "         <h2>$heading</h2>\n";
     
     $htmlout .= "<table width='100%' border='1' cellspacing='0' cellpadding='10'><tr><td class='text'>\n";
     $htmlout .= "{$text}</td></tr></table></td></tr></table>\n";
@@ -795,13 +878,13 @@ function hash_pad($hash) {
 function StatusBar() {
 
 	global $CURUSER, $TBDEV, $lang, $msgalert;
-	
-	if (!$CURUSER)
-		return "<tr><td colspan='2'>Yeah Yeah!</td></tr>";
 
- 
+	if (!$CURUSER)
+		return "&nbsp;";
+
+
 	$upped = mksize($CURUSER['uploaded']);
-	
+
 	$downed = mksize($CURUSER['downloaded']);
 	
 	$ratio = $CURUSER['downloaded'] > 0 ? $CURUSER['uploaded']/$CURUSER['downloaded'] : 0;
@@ -810,24 +893,15 @@ function StatusBar() {
 
 	$IsDonor = '';
 	if ($CURUSER['donor'] == "yes")
-	
+
 	$IsDonor = "<img src='pic/star.gif' alt='donor' title='donor' />";
 
 
 	$warn = '';
 	if ($CURUSER['warned'] == "yes")
-	
-	$warn = "<img src='pic/warned.gif' alt='warned' title='warned' />";
-	
-	$res1 = @mysql_query("SELECT COUNT(*) FROM messages WHERE receiver=" . $CURUSER["id"] . " AND unread='yes'") or sqlerr(__LINE__,__FILE__);
-	
-	$arr1 = mysql_fetch_row($res1);
-	
-	$unread = ($arr1[0] > 0 ? "<span style='background:red;padding:1px;'><strong>{$arr1[0]}</strong></span>" : $arr1[0]);
-	$msgalert = $arr1[0];
-	$inbox = ($unread == 1 ? "$unread&nbsp;{$lang['gl_msg_singular']}" : "$unread&nbsp;{$lang['gl_msg_plural']}");
 
-	
+	$warn = "<img src='pic/warned.gif' alt='warned' title='warned' />";
+
 	$res2 = @mysql_query("SELECT seeder, COUNT(*) AS pCount FROM peers WHERE userid=".$CURUSER['id']." GROUP BY seeder") or sqlerr(__LINE__,__FILE__);
 	
 	$seedleech = array('yes' => '0', 'no' => '0');
@@ -847,27 +921,17 @@ function StatusBar() {
 ////////////// REP SYSTEM END //////////
 
 	$StatusBar = '';
-		$StatusBar = "<tr>".
 
-		"<td colspan='2' style='padding: 2px;'>".
+		$StatusBar .= "
+            <div style='float:left;'>
+                $IsDonor$warn&nbsp;
+                $member_reputation, {$lang['gl_ratio']}:&nbsp;$ratio &nbsp;&nbsp;{$lang['gl_uploaded']}:&nbsp;$upped
+		        &nbsp;&nbsp;{$lang['gl_downloaded']}:&nbsp;$downed
+                &nbsp;&nbsp;{$lang['gl_act_torrents']}:&nbsp;<img alt='{$lang['gl_seed_torrents']}' title='{$lang['gl_seed_torrents']}' src='pic/arrowup.gif' />&nbsp;{$seedleech['yes']}
+                &nbsp;&nbsp;<img alt='{$lang['gl_leech_torrents']}' title='{$lang['gl_leech_torrents']}' src='pic/arrowdown.gif' />&nbsp;{$seedleech['no']}
+            </div>
+                <p style='text-align:right;'>".date(DATE_RFC822)."</p>";
 
-		"<div id='statusbar'>".
-		"<div style='float:left;color:black;'>{$lang['gl_msg_welcome']}, <a href='userdetails.php?id={$CURUSER['id']}'>{$CURUSER['username']}</a>".
-		  
-		"$IsDonor$warn&nbsp; [<a href='logout.php'>{$lang['gl_logout']}</a>]&nbsp;$member_reputation
-		<br />{$lang['gl_ratio']}:$ratio".
-		"&nbsp;&nbsp;{$lang['gl_uploaded']}:$upped".
-		"&nbsp;&nbsp;{$lang['gl_downloaded']}:$downed".
-		
-		"&nbsp;&nbsp;{$lang['gl_act_torrents']}:&nbsp;<img alt='{$lang['gl_seed_torrents']}' title='{$lang['gl_seed_torrents']}' src='pic/arrowup.gif' />&nbsp;{$seedleech['yes']}".
-		
-		"&nbsp;&nbsp;<img alt='{$lang['gl_leech_torrents']}' title='{$lang['gl_leech_torrents']}' src='pic/arrowdown.gif' />&nbsp;{$seedleech['no']}</div>".
-    
-		"<div><p style='text-align:right;'>".date(DATE_RFC822)."<br />".
-
-    "<a href='messages.php'>$inbox</a></p></div>".
-    "</div></td></tr>";
-	
 	return $StatusBar;
 
 }
