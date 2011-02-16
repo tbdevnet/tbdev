@@ -140,6 +140,7 @@ $TABLE[] = "CREATE TABLE peers (
   torrent int(10) unsigned NOT NULL DEFAULT '0',
   passkey varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   peer_id varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `compact` varchar(6) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   ip varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `port` smallint(5) unsigned NOT NULL DEFAULT '0',
   uploaded bigint(20) unsigned NOT NULL DEFAULT '0',
