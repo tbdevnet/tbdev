@@ -91,7 +91,7 @@ loggedinorreturn();
         $allrows[] = $row;
 
       if (count($allrows)) {
-              require_once "include/torrenttable_functions.php";
+              require_once "include/comment_functions.php";
               require_once "include/html_functions.php";
               require_once "include/bbcode_functions.php";
           $HTMLOUT .= "<h2>{$lang['comment_recent']}</h2>\n";

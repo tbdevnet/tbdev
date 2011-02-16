@@ -20,7 +20,7 @@ require_once "include/bittorrent.php";
 require_once "include/html_functions.php";
 require_once "include/user_functions.php";
 require_once "include/pager_functions.php";
-require_once "include/torrenttable_functions.php";
+require_once "include/my_torrenttable_functions.php";
 
 dbconn(false);
 
@@ -61,7 +61,7 @@ loggedinorreturn();
 
       $HTMLOUT .= $pager['pagertop'];
 
-      $HTMLOUT .= torrenttable($res, "mytorrents");
+      $HTMLOUT .= mytorrenttable($res, "mytorrents");
 
       $HTMLOUT .= $pager['pagerbottom'];
 

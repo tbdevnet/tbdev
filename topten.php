@@ -168,9 +168,10 @@ function _torrenttable($res, $frame_caption)
       $htmlout .= "<tr>
       <td class='colhead'>{$lang['common_rank']}</td>
       <td class='colhead' align='left'>{$lang['country']}</td>
-      <td class='colhead' align='right'><?php echo $what?></td>
+      <td class='colhead' align='right'>{$what}</td>
       </tr>";
 
+          $value = '';
           $num = 0;
           while ($a = mysql_fetch_assoc($res))
           {

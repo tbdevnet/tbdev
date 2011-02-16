@@ -114,7 +114,7 @@ loggedinorreturn();
     if (count($wherecatina) > 1)
       $wherecatin = implode(",",$wherecatina);
     elseif (count($wherecatina) == 1)
-      $wherea[] = "category = $wherecatina[0]";
+      $wherea[] = "category = {$wherecatina[0]}";
 
     $wherebase = $wherea;
 

@@ -79,7 +79,7 @@ loggedinorreturn();
     }
 
     /////// do the avatar stuff
-    $avatars = ($_POST["avatars"] != "" ? "yes" : "no");
+    $avatars = (isset($_POST['avatars']) ? "yes" : "no");
     $avatar = trim( urldecode( $_POST["avatar"] ) );
       
       if ( preg_match( "/^http:\/\/$/i", $avatar ) 

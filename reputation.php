@@ -26,7 +26,7 @@ loggedinorreturn();
 
 $lang = load_language('reputation');
 
-define( 'TIMENOW', TIME_NOW ) ;
+//define( time(), TIME_NOW ) ;
 
 // mod or not?
 $is_mod = ( $CURUSER['class'] >= UC_MODERATOR ) ? TRUE : FALSE;

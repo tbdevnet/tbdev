@@ -21,8 +21,6 @@ ob_start("ob_gzhandler");
 require_once("include/bittorrent.php");
 require_once "include/user_functions.php";
 require_once "include/bbcode_functions.php";
-require_once "include/pager_functions.php";
-require_once "include/torrenttable_functions.php";
 require_once "include/html_functions.php";
 
 
@@ -253,7 +251,7 @@ if (!empty($xrow))
 
     $HTMLOUT .= "<p><a name=\"startcomments\"></a></p>\n";
 
-    $commentbar = "<p style='text-align:center;'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></p>\n";
+    $buttons = "<p style='text-align:right;'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></p>\n";
 
     $count = $row['comments'];
 
@@ -263,23 +261,31 @@ if (!empty($xrow))
     }
     else 
     {
-		$pager = pager(20, $count, "details.php?id=$id&amp;", array('lastpagedefault' => 1));
+      $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+      $pp = 10;
+      require_once "include/comment_functions.php";
+      require_once "include/pager.php";
+                    $pager = pager( 
+                    array( 
+                    'count'  => $count,
+                    'perpage'    => $pp,
+                    'start_value'  => $page,
+                    'url'    => "details.php?id=$id")
+                    );
 
-		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, av_w, av_h, warned, username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $id ORDER BY comments.id ".$pager['limit']) or sqlerr(__FILE__, __LINE__);
+		$subres = mysql_query("SELECT comments.id, text, user, comments.added, editedby, editedat, avatar, av_w, av_h, warned, username, title, class, donor FROM comments LEFT JOIN users ON comments.user = users.id WHERE torrent = $id ORDER BY comments.id  LIMIT {$page}, {$pp}") or sqlerr(__FILE__, __LINE__);
 		
 		$allrows = array();
 		while ($subrow = mysql_fetch_assoc($subres))
 			$allrows[] = $subrow;
 
-		$HTMLOUT .= $commentbar;
-		$HTMLOUT .= $pager['pagertop'];
+		$HTMLOUT .= $pager.$buttons;
 
 		$HTMLOUT .= commenttable($allrows);
 
-		$HTMLOUT .= $pager['pagerbottom'];
+		$HTMLOUT .= $pager.$buttons;
 	}
 
-    $HTMLOUT .= $commentbar;
 
 ///////////////////////// HTML OUTPUT ////////////////////////////
     print stdhead("{$lang['details_details']}\"" . htmlsafechars($row["name"]) . "\"") . $HTMLOUT . stdfoot();
