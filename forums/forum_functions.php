@@ -228,7 +228,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
     //------ Get 10 last posts if this is a reply
 
-    if (!$newtopic)
+    if (!$newtopic && $TBDEV['last_10_posts'])
     {
       $postres = mysql_query("SELECT * FROM posts WHERE topicid=$id ORDER BY id DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
 
@@ -244,12 +244,12 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
       	if ($CURUSER["avatars"] == "yes")
           {
-            $avatar = $user['avatar'] ? "<img width='{$user['av_w']}' height='{$user['av_h']}' src='".htmlsafechars($user['avatar'])."' alt='' />" : "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='default' />";
+            $avatar = $user['avatar'] ? "<img width='{$user['av_w']}' height='{$user['av_h']}' src='".htmlsafechars($user['avatar'])."' alt='' />" : "<img width='100' src='{$TBDEV['forum_pic_url']}default_avatar.gif' alt='default' />";
           }
           else
-            $avatar = "<img width='100' src='{$forum_pic_url}default_avatar.gif' alt='' />";
+            $avatar = "<img width='100' src='{$TBDEV['forum_pic_url']}default_avatar.gif' alt='' />";
 
-        $htmlout .= "<p class='sub'>#" . $post["id"] . " by " . $user["username"] . " on " . get_date( $post['added'],''). "</p>";
+        $htmlout .= "<p class='sub'>#{$post["id"]} by {$user["username"]} on " . get_date( $post['added'],''). "</p>";
 
         $htmlout .= begin_table(true);
 

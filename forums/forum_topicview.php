@@ -273,7 +273,7 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 */
         if (is_valid_id($arr['uname_editid']))
         {
-          $body .= "<br /><span class='fedited_by'>{$lang['forum_topic_view_edit_by']}<a href='userdetails.php?id={$arr['uname_editid']}'><strong>{$arr['uname_edit']}</strong></a> on ".get_date( $arr['editedat'],'')."</span>\n";
+          $body .= "<div class='fedited_by'>{$lang['forum_topic_view_edit_by']}<a href='userdetails.php?id={$arr['uname_editid']}'><strong>{$arr['uname_edit']}</strong></a> on ".get_date( $arr['editedat'],'')."</div>\n";
         }
         
         $member_reputation = $arr['username'] != '' ? get_reputation($arr) : '';
