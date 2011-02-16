@@ -123,12 +123,14 @@ function bbcode2textarea( $submit='', $body='', $title='' ) {
   global $TBDEV;
   
   $htmlout = '';
+  $body = htmlsafechars($body);
   $emot_dir = $TBDEV['pic_base_url'].'smilies/';
   $htmlout = "
     <table cellspacing='0' cellpadding='0'>";
 
   if( $title != '' )
   {
+    $title = htmlsafechars($title);
     $htmlout .= "
           <tr>
              <td align='center'>
