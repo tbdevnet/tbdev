@@ -1,3 +1,388 @@
+Revision: 408
+Author: tbdevnet
+Date: 15:51:58, 21 February 2011
+Message:
+21st feb 2011 minor update for bug fixes, typos and added short torrentname function
+----
+Modified : /trunk/TB/announce.php
+Modified : /trunk/TB/confirmemail.php
+Modified : /trunk/TB/emoticonloader.php
+Modified : /trunk/TB/install/announce_dist.php
+
+Revision: 407
+Author: tbdevnet
+Date: 15:49:13, 21 February 2011
+Message:
+21st feb 2011 minor update for bug fixes, typos and added short torrentname function
+----
+Modified : /trunk/TB/include/bittorrent.php
+Modified : /trunk/TB/include/my_torrenttable_functions.php
+Modified : /trunk/TB/include/torrenttable_functions.php
+
+Revision: 397
+Author: tbdevnet
+Date: 17:51:50, 16 February 2011
+Message:
+
+----
+Added : /trunk/TB/essentials.css
+
+Revision: 396
+Author: tbdevnet
+Date: 17:50:47, 16 February 2011
+Message:
+16th feb 2011 various fixes and bugs squashed
+----
+Modified : /trunk/TB/1.css
+Modified : /trunk/TB/browse.php
+Modified : /trunk/TB/comment.php
+Modified : /trunk/TB/details.php
+Modified : /trunk/TB/mytorrents.php
+Modified : /trunk/TB/recover.php
+Modified : /trunk/TB/reputation.php
+Modified : /trunk/TB/takeprofedit.php
+Modified : /trunk/TB/topten.php
+
+Revision: 395
+Author: tbdevnet
+Date: 17:48:28, 16 February 2011
+Message:
+16th feb 2011 installer updates
+----
+Modified : /trunk/TB/install/announce_dist.php
+Modified : /trunk/TB/install/sql/mysql_tables.php
+
+Revision: 394
+Author: tbdevnet
+Date: 17:47:23, 16 February 2011
+Message:
+16th feb 2011 various fixes and bugs squashed
+----
+Added : /trunk/TB/include/comment_functions.php
+Modified : /trunk/TB/include/html_functions.php
+Added : /trunk/TB/include/my_torrenttable_functions.php
+Modified : /trunk/TB/include/torrenttable_functions.php
+
+Revision: 393
+Author: tbdevnet
+Date: 17:45:44, 16 February 2011
+Message:
+13th feb 2011 some forum changes & added images/forum & template changes
+----
+Modified : /trunk/TB/forums/forum_functions.php
+Modified : /trunk/TB/forums/forum_topicview.php
+
+Revision: 345
+Author: tbdevnet
+Date: 15:01:17, 08 February 2011
+Message:
+8th feb 2011 various fixes, reported bug etc etc too many to list
+----
+Modified : /trunk/TB/admin.php
+Modified : /trunk/TB/announce.php
+Modified : /trunk/TB/bitbucket-upload.php
+Modified : /trunk/TB/browse.php
+Modified : /trunk/TB/chat.php
+Modified : /trunk/TB/comment.php
+Modified : /trunk/TB/confirm.php
+Modified : /trunk/TB/confirmemail.php
+Modified : /trunk/TB/delete.php
+Modified : /trunk/TB/deletemessage.php
+Modified : /trunk/TB/details.php
+Modified : /trunk/TB/donate.php
+Modified : /trunk/TB/download.php
+Modified : /trunk/TB/edit.php
+Modified : /trunk/TB/email-gateway.php
+Modified : /trunk/TB/faq.php
+Modified : /trunk/TB/filelist.php
+Modified : /trunk/TB/formats.php
+Modified : /trunk/TB/friends.php
+Modified : /trunk/TB/lang/en/lang_TZ.php
+Modified : /trunk/TB/lang/en/lang_ad_adduser.php
+Modified : /trunk/TB/lang/en/lang_ad_bans.php
+Modified : /trunk/TB/lang/en/lang_ad_delacct.php
+Modified : /trunk/TB/lang/en/lang_ad_docleanup.php
+Modified : /trunk/TB/lang/en/lang_ad_forummanage.php
+Modified : /trunk/TB/lang/en/lang_ad_index.php
+Modified : /trunk/TB/lang/en/lang_ad_log.php
+Modified : /trunk/TB/lang/en/lang_ad_news.php
+Modified : /trunk/TB/lang/en/lang_ad_rules.php
+Modified : /trunk/TB/lang/en/lang_ad_stats.php
+Modified : /trunk/TB/lang/en/lang_ad_testip.php
+Modified : /trunk/TB/lang/en/lang_ad_usersearch.php
+Modified : /trunk/TB/lang/en/lang_admin.php
+Modified : /trunk/TB/lang/en/lang_bitbucket.php
+Modified : /trunk/TB/lang/en/lang_browse.php
+Modified : /trunk/TB/lang/en/lang_chat.php
+Modified : /trunk/TB/lang/en/lang_comment.php
+Modified : /trunk/TB/lang/en/lang_confirm.php
+Modified : /trunk/TB/lang/en/lang_confirmemail.php
+Modified : /trunk/TB/lang/en/lang_deletemessage.php
+Modified : /trunk/TB/lang/en/lang_details.php
+Modified : /trunk/TB/lang/en/lang_donate.php
+Modified : /trunk/TB/lang/en/lang_download.php
+Modified : /trunk/TB/lang/en/lang_edit.php
+Modified : /trunk/TB/lang/en/lang_email-gateway.php
+Modified : /trunk/TB/lang/en/lang_faq.php
+Modified : /trunk/TB/lang/en/lang_filelist.php
+Modified : /trunk/TB/lang/en/lang_formats.php
+Modified : /trunk/TB/lang/en/lang_forums.php
+Modified : /trunk/TB/lang/en/lang_friends.php
+Modified : /trunk/TB/lang/en/lang_global.php
+Modified : /trunk/TB/lang/en/lang_index.php
+Modified : /trunk/TB/lang/en/lang_links.php
+Modified : /trunk/TB/lang/en/lang_login.php
+Modified : /trunk/TB/lang/en/lang_logout.php
+Modified : /trunk/TB/lang/en/lang_messages.php
+Modified : /trunk/TB/lang/en/lang_modtask.php
+Modified : /trunk/TB/lang/en/lang_my.php
+Modified : /trunk/TB/lang/en/lang_mytorrents.php
+Modified : /trunk/TB/lang/en/lang_ok.php
+Modified : /trunk/TB/lang/en/lang_peerlist.php
+Modified : /trunk/TB/lang/en/lang_recover.php
+Modified : /trunk/TB/lang/en/lang_reputation.php
+Modified : /trunk/TB/lang/en/lang_rules.php
+Modified : /trunk/TB/lang/en/lang_search.php
+Modified : /trunk/TB/lang/en/lang_sendmessage.php
+Modified : /trunk/TB/lang/en/lang_signup.php
+Modified : /trunk/TB/lang/en/lang_staff.php
+Modified : /trunk/TB/lang/en/lang_tags.php
+Modified : /trunk/TB/lang/en/lang_takeedit.php
+Modified : /trunk/TB/lang/en/lang_takefilesearch.php
+Modified : /trunk/TB/lang/en/lang_takelogin.php
+Modified : /trunk/TB/lang/en/lang_takemessage.php
+Modified : /trunk/TB/lang/en/lang_takeprofedit.php
+Modified : /trunk/TB/lang/en/lang_takerate.php
+Modified : /trunk/TB/lang/en/lang_takesignup.php
+Modified : /trunk/TB/lang/en/lang_takeupload.php
+Modified : /trunk/TB/lang/en/lang_topten.php
+Modified : /trunk/TB/lang/en/lang_torrenttable_functions.php
+Modified : /trunk/TB/lang/en/lang_upload.php
+Modified : /trunk/TB/lang/en/lang_useragreement.php
+Modified : /trunk/TB/lang/en/lang_userdetails.php
+Modified : /trunk/TB/lang/en/lang_userhistory.php
+Modified : /trunk/TB/lang/en/lang_users.php
+Modified : /trunk/TB/lang/en/lang_videoformats.php
+Modified : /trunk/TB/lang/en/lang_viewnfo.php
+Modified : /trunk/TB/links.php
+Modified : /trunk/TB/login.php
+Modified : /trunk/TB/my.php
+Modified : /trunk/TB/mytorrents.php
+Modified : /trunk/TB/peerlist.php
+Modified : /trunk/TB/recover.php
+Modified : /trunk/TB/reputation_ad.php
+Modified : /trunk/TB/reputation_settings.php
+Modified : /trunk/TB/rules.php
+Modified : /trunk/TB/search.php
+Modified : /trunk/TB/sendmessage.php
+Modified : /trunk/TB/signup.php
+Modified : /trunk/TB/smilies.php
+Modified : /trunk/TB/staff.php
+Modified : /trunk/TB/tags.php
+Modified : /trunk/TB/topten.php
+Modified : /trunk/TB/upload.php
+Modified : /trunk/TB/useragreement.php
+Modified : /trunk/TB/userdetails.php
+Modified : /trunk/TB/userhistory.php
+Modified : /trunk/TB/users.php
+Modified : /trunk/TB/videoformats.php
+Modified : /trunk/TB/viewnfo.php
+
+Revision: 344
+Author: tbdevnet
+Date: 14:56:38, 08 February 2011
+Message:
+8th feb 2011 include dir updated
+----
+Modified : /trunk/TB/include/bittorrent.php
+Modified : /trunk/TB/include/html_functions.php
+Modified : /trunk/TB/include/searchcloud_functions.php
+Modified : /trunk/TB/include/torrenttable_functions.php
+Modified : /trunk/TB/include/user_functions.php
+
+Revision: 343
+Author: tbdevnet
+Date: 14:48:26, 08 February 2011
+Message:
+8th feb 2011 admin dir updated
+----
+Modified : /trunk/TB/admin/adduser.php
+Modified : /trunk/TB/admin/bans.php
+Modified : /trunk/TB/admin/categories.php
+Modified : /trunk/TB/admin/cleanup_manager.php
+Modified : /trunk/TB/admin/delacct.php
+Modified : /trunk/TB/admin/docleanup.php
+Modified : /trunk/TB/admin/forummanage.php
+Modified : /trunk/TB/admin/index.php
+Modified : /trunk/TB/admin/log.php
+Modified : /trunk/TB/admin/mysql_overview.php
+Modified : /trunk/TB/admin/mysql_stats.php
+Modified : /trunk/TB/admin/news.php
+Modified : /trunk/TB/admin/rules.php
+Modified : /trunk/TB/admin/stats.php
+Modified : /trunk/TB/admin/testip.php
+Modified : /trunk/TB/admin/usersearch.php
+
+Revision: 323
+Author: tbdevnet
+Date: 16:06:52, 22 January 2011
+Message:
+22nd January minor fixes
+----
+Modified : /trunk/TB/include/cleanup/invisibilize_torrents.php
+Modified : /trunk/TB/include/config.php
+Modified : /trunk/TB/install/config_dist.php
+Modified : /trunk/TB/lang/en/lang_delete.php
+
+Revision: 322
+Author: tbdevnet
+Date: 16:04:10, 22 January 2011
+Message:
+22nd January removed non-compact support and lowered numwant return
+----
+Modified : /trunk/TB/announce.php
+
+Revision: 321
+Author: tbdevnet
+Date: 16:02:46, 22 January 2011
+Message:
+22nd January minor fixes
+----
+Modified : /trunk/TB/modtask.php
+
+Revision: 320
+Author: tbdevnet
+Date: 16:01:58, 22 January 2011
+Message:
+22nd January minor fixes removed min_request_interval, utorrent doesn't approve
+----
+Modified : /trunk/TB/scrape.php
+
+Revision: 319
+Author: tbdevnet
+Date: 15:59:29, 22 January 2011
+Message:
+22nd January minor typo fixes
+----
+Modified : /trunk/TB/takesignup.php
+
+Revision: 318
+Author: tbdevnet
+Date: 15:58:18, 22 January 2011
+Message:
+22nd January minor typo fixes
+----
+Modified : /trunk/TB/takelogin.php
+
+Revision: 317
+Author: tbdevnet
+Date: 14:34:51, 18 January 2011
+Message:
+18th January repaired delete.php
+----
+Modified : /trunk/TB/delete.php
+
+Revision: 316
+Author: tbdevnet
+Date: 18:22:34, 15 January 2011
+Message:
+15 January 2011 typo/errors fixed and some style changes
+----
+Modified : /trunk/TB/forums/forum_functions.php
+Modified : /trunk/TB/forums/forum_topicview.php
+Modified : /trunk/TB/forums/forum_view.php
+Modified : /trunk/TB/include/bittorrent.php
+Modified : /trunk/TB/delete.php
+Modified : /trunk/TB/include/bbcode_functions.php
+Modified : /trunk/TB/include/config.php
+Modified : /trunk/TB/1.css
+Modified : /trunk/TB/admin/forummanage.php
+Modified : /trunk/TB/edit.php
+Added : /trunk/TB/forums/forum_mod_functions.php
+Modified : /trunk/TB/forums/forum_new_topic.php
+Modified : /trunk/TB/forums.php
+Modified : /trunk/TB/include/pager.php
+Modified : /trunk/TB/include/user_functions.php
+Modified : /trunk/TB/lang/en/lang_forums.php
+Added : /trunk/TB/scripts/show_hide.js
+Modified : /trunk/TB/takeupload.php
+
+Revision: 315
+Author: tbdevnet
+Date: 18:12:57, 15 January 2011
+Message:
+15 January 2011 typo/error in announce.php
+----
+Modified : /trunk/TB/announce.php
+
+Revision: 314
+Author: tbdevnet
+Date: 00:40:27, 15 January 2011
+Message:
+15 January 2011 turned off/an'able CAPTCHA
+----
+Modified : /trunk/TB/login.php
+
+Revision: 313
+Author: tbdevnet
+Date: 00:05:38, 15 January 2011
+Message:
+15 January 2011 turned off/an'able CAPTCHA
+----
+Modified : /trunk/TB/install/config_dist.php
+Modified : /trunk/TB/install/sql/mysql_inserts.php
+Modified : /trunk/TB/install/sql/mysql_tables.php
+
+Revision: 312
+Author: tbdevnet
+Date: 00:04:14, 15 January 2011
+Message:
+15 January 2011 turned off/an'able CAPTCHA
+----
+Modified : /trunk/TB/include/config.php
+
+Revision: 311
+Author: tbdevnet
+Date: 00:02:27, 15 January 2011
+Message:
+15 January 2011 turned off/an'able CAPTCHA
+----
+Modified : /trunk/TB/takelogin.php
+Modified : /trunk/TB/takesignup.php
+Modified : /trunk/TB/recover.php
+Modified : /trunk/TB/signup.php
+
+Revision: 310
+Author: tbdevnet
+Date: 21:09:15, 11 January 2011
+Message:
+11 January 2011 critical fix for password function typo introduced
+----
+Modified : /trunk/TB/include/password_functions.php
+
+Revision: 309
+Author: tbdevnet
+Date: 20:18:06, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+Modified : /trunk/TB/index.php
+
+Revision: 308
+Author: tbdevnet
+Date: 19:16:30, 10 January 2011
+Message:
+10 January 2011 various fixes, addons and changes.
+----
+Modified : /trunk/TB/SQL/avps.sql
+Modified : /trunk/TB/SQL/categories.sql
+Added : /trunk/TB/SQL/cleanup_ins.sql
+Modified : /trunk/TB/SQL/countries.sql
+Added : /trunk/TB/SQL/forum_ins.sql
+Modified : /trunk/TB/SQL/tb.sql
+
+
+
 Revision: 306
 Author: tbdevnet
 Date: 01:50:09, 10 January 2011
