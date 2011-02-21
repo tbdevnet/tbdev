@@ -206,14 +206,14 @@ $fields = "seeder, peer_id, compact, ip, port, uploaded, downloaded, userid";
   if ($torrent['numpeers'] > $rsize)
     $limit = "ORDER BY RAND() LIMIT $rsize";
     
-  $wherep ='';
+  $whereap ='';
   
   if ($seeder == 'yes')
     $whereap = "AND seeder = 'no'";
     
-  $res = mysql_query("SELECT $fields FROM peers WHERE torrent = $torrentid AND connectable = 'yes' {$wherep} {$limit}");
+  $res = mysql_query("SELECT $fields FROM peers WHERE torrent = $torrentid AND connectable = 'yes' {$whereap} {$limit}");
   
-  unset($wherep);
+  unset($whereap);
   
 //////////////////// START NEW COMPACT MODE/////////////////////////////
 
