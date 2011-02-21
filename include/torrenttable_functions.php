@@ -94,9 +94,11 @@ function torrenttable( $res ) {
       }
       $htmlout .= "</td>\n";
 
-      $dispname = htmlsafechars($row["name"]);
+      $dispname = htmlsafechars( itsawrap($row['name']) );
       
-      $htmlout .= "<td align='left'><a href='details.php?id=$id&amp;hit=1'><b>$dispname</b></a>\n";
+      $disptitle = htmlsafechars( $row['name'] );
+      
+      $htmlout .= "<td align='left'><a href='details.php?id=$id&amp;hit=1' title='$disptitle'><strong>$dispname</strong></a>\n";
 
       if ($wait)
       {

@@ -94,9 +94,11 @@ function mytorrenttable( $res ) {
         }
         $htmlout .= "</td>\n";
 
-        $dispname = htmlsafechars($row["name"]);
+        $dispname = htmlsafechars( itsawrap($row['name']) );
+      
+        $disptitle = htmlsafechars( $row['name'] );
         
-        $htmlout .= "<td align='left'><a href='details.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;id=$id'><b>$dispname</b></a>\n";
+        $htmlout .= "<td align='left'><a href='details.php?returnto=" . urlencode($_SERVER["REQUEST_URI"]) . "&amp;id=$id' title'$disptitle'><strong>$dispname</strong></a>\n";
 
 				if ($wait)
 				{
