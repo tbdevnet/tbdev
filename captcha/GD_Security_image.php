@@ -120,7 +120,7 @@
 if(!isset($_SESSION))
 require_once('newsession.php');
 $_SESSION['captcha_id'] = $str;
-$_SESSION['captcha_time'] = TIME_NOW;
+$_SESSION['captcha_time'] = time();
 
 show_gd_img($str);
 ?>
