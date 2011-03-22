@@ -43,7 +43,7 @@ loggedinorreturn();
     if (!$row)
       stderr("{$lang['delete_failed']}", "{$lang['delete_not_exist']}");
 
-    if ( $CURUSER["id"] != $row["owner"] && !$CURUSER['ismod'] )
+    if ( $CURUSER["id"] != $row["owner"] AND $CURUSER['class'] < UC_MODERATOR )
       stderr("{$lang['delete_failed']}", "{$lang['delete_not_owner']}\n");
 
     $rt = 0 + $_POST["reasontype"];

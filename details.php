@@ -245,15 +245,17 @@ if (!empty($xrow))
         $HTMLOUT .= "        </div>
                      </div>";
 
-		//stdhead("Comments for torrent \"" . $row["name"] . "\"");
-		$HTMLOUT .= "<h1>{$lang['details_comments']}<a href='details.php?id=$id'>" . htmlsafechars( $row["name"] ) . "</a></h1>\n";
+    $buttons = "<span style='float:right;'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></span>\n";
+
+		$HTMLOUT .= "$buttons<div class='cblock'>
+		<div class='cblock-header'>{$lang['details_comments']}" . htmlsafechars( $row["name"] ) . "</div>
+		<div class='cblock-content'>";
 
 
     $HTMLOUT .= "<p><a name=\"startcomments\"></a></p>\n";
 
-    $buttons = "<p style='text-align:right;'><a class='index' href='comment.php?action=add&amp;tid=$id'>{$lang['details_add_comment']}</a></p>\n";
-
     $count = $row['comments'];
+    $pager = '';
 
     if (!$count) 
     {
@@ -279,14 +281,11 @@ if (!empty($xrow))
 		while ($subrow = mysql_fetch_assoc($subres))
 			$allrows[] = $subrow;
 
-		$HTMLOUT .= $pager.$buttons;
-
 		$HTMLOUT .= commenttable($allrows);
-
-		$HTMLOUT .= $pager.$buttons;
 	}
 
-
+  $HTMLOUT .= "</div></div>{$pager}$buttons";
+  
 ///////////////////////// HTML OUTPUT ////////////////////////////
     print stdhead("{$lang['details_details']}\"" . htmlsafechars($row["name"]) . "\"") . $HTMLOUT . stdfoot();
 
