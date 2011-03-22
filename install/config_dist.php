@@ -48,6 +48,7 @@ $TBDEV['mysql_db']   = "<#mysql_db#>";
 $TBDEV['cookie_prefix']  = '<#cookie_prefix#>'; // This allows you to have multiple trackers, eg for demos, testing etc.
 $TBDEV['cookie_path']    = '<#cookie_path#>'; // ATTENTION: You should never need this unless the above applies eg: /tbdev
 $TBDEV['cookie_domain']  = '<#cookie_domain#>'; // set to eg: .somedomain.com or is subdomain set to: .sub.somedomain.com
+$TBDEV['IPcookieCheck'] = 1;
                               
 $TBDEV['site_online'] = 1;
 $TBDEV['tracker_post_key'] = '<#tracker_post_key#>';
@@ -144,6 +145,6 @@ define ('UC_SYSOP', 6);
 
 //Do not modify -- versioning system
 //This will help identify code for support issues at tbdev.net
-define ('TBVERSION','TBDev_2009_svn');
-
+define ('TBVERSION','TBDev.Lite.v1.0');
+//$TBDEV['version'] = 'TBDev.Lite.v1.0';
 ?>
