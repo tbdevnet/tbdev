@@ -1,12 +1,28 @@
 <?php
-
+/*
++------------------------------------------------
+|   TBDev.net BitTorrent Tracker PHP
+|   =============================================
+|   by CoLdFuSiOn
+|   (c) 2003 - 2011 TBDev.Net
+|   http://www.tbdev.net
+|   =============================================
+|   svn: http://sourceforge.net/projects/tbdevnet/
+|   Licence Info: GPL
++------------------------------------------------
+|   $Date$
+|   $Revision$
+|   $Author$
+|   $URL$
++------------------------------------------------
+*/
 $TABLE[] = "CREATE TABLE avps (
   arg varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   value_s text COLLATE utf8_unicode_ci NOT NULL,
   value_i int(11) NOT NULL DEFAULT '0',
   value_u int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (arg)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE bans (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -17,7 +33,7 @@ $TABLE[] = "CREATE TABLE bans (
   `last` int(11) DEFAULT NULL,
   PRIMARY KEY (id),
   KEY first_last (`first`,`last`)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE blocks (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -25,7 +41,7 @@ $TABLE[] = "CREATE TABLE blocks (
   blockid int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   UNIQUE KEY userfriend (userid,blockid)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE categories (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -33,7 +49,7 @@ $TABLE[] = "CREATE TABLE categories (
   image varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   cat_desc varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'No Description',
   PRIMARY KEY (id)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE cleanup (
   clean_id int(10) NOT NULL AUTO_INCREMENT,
@@ -47,7 +63,7 @@ $TABLE[] = "CREATE TABLE cleanup (
   clean_on tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (clean_id),
   KEY clean_time (clean_time)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE cleanup_log (
   clog_id int(10) NOT NULL AUTO_INCREMENT,
@@ -56,7 +72,7 @@ $TABLE[] = "CREATE TABLE cleanup_log (
   clog_ip char(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   clog_desc text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (clog_id)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE comments (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -70,14 +86,14 @@ $TABLE[] = "CREATE TABLE comments (
   PRIMARY KEY (id),
   KEY `user` (`user`),
   KEY torrent (torrent)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE countries (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   flagpic varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (id)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE files (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -87,20 +103,20 @@ $TABLE[] = "CREATE TABLE files (
   PRIMARY KEY (id),
   KEY torrent (torrent),
   FULLTEXT KEY filename (filename)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE forums (
   sort tinyint(3) unsigned NOT NULL DEFAULT '0',
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  description varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+  description text COLLATE utf8_unicode_ci,
   minclassread tinyint(3) unsigned NOT NULL DEFAULT '0',
   minclasswrite tinyint(3) unsigned NOT NULL DEFAULT '0',
   postcount int(10) unsigned NOT NULL DEFAULT '0',
   topiccount int(10) unsigned NOT NULL DEFAULT '0',
   minclasscreate tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE friends (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -108,7 +124,7 @@ $TABLE[] = "CREATE TABLE friends (
   friendid int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   UNIQUE KEY userfriend (userid,friendid)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE messages (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -123,7 +139,7 @@ $TABLE[] = "CREATE TABLE messages (
   saved enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
   PRIMARY KEY (id),
   KEY receiver (receiver)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE news (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -133,11 +149,12 @@ $TABLE[] = "CREATE TABLE news (
   headline varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'TBDEV.NET News',
   PRIMARY KEY (id),
   KEY added (added)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE peers (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   torrent int(10) unsigned NOT NULL DEFAULT '0',
+  info_hash varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   passkey varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   peer_id varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `compact` varchar(6) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -164,7 +181,7 @@ $TABLE[] = "CREATE TABLE peers (
   KEY userid (userid),
   KEY passkey (passkey),
   KEY torrent_connect (torrent,connectable)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE pmboxes (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -172,7 +189,7 @@ $TABLE[] = "CREATE TABLE pmboxes (
   boxnumber tinyint(4) NOT NULL DEFAULT '2',
   `name` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (id)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE posts (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -186,7 +203,7 @@ $TABLE[] = "CREATE TABLE posts (
   KEY topicid (topicid),
   KEY userid (userid),
   FULLTEXT KEY body (body)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE readposts (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -195,7 +212,7 @@ $TABLE[] = "CREATE TABLE readposts (
   lastpostread int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   KEY topicid (topicid)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE reputation (
   reputationid int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -210,7 +227,7 @@ $TABLE[] = "CREATE TABLE reputation (
   KEY whoadded (whoadded),
   KEY multi (postid,userid),
   KEY dateadd (dateadd)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE reputationlevel (
   reputationlevelid int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -218,7 +235,7 @@ $TABLE[] = "CREATE TABLE reputationlevel (
   `level` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (reputationlevelid),
   KEY reputationlevel (minimumreputation)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE rules (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -229,14 +246,14 @@ $TABLE[] = "CREATE TABLE rules (
   mtime int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   KEY cat_id (cid)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE rules_categories (
   cid int(3) unsigned NOT NULL AUTO_INCREMENT,
   rcat_name varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   min_class_read int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (cid)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE searchcloud (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -244,7 +261,7 @@ $TABLE[] = "CREATE TABLE searchcloud (
   howmuch int(10) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY searchedfor (searchedfor)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE sitelog (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -252,14 +269,14 @@ $TABLE[] = "CREATE TABLE sitelog (
   txt text COLLATE utf8_unicode_ci,
   PRIMARY KEY (id),
   KEY added (added)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE stylesheets (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   uri varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (id)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE topics (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -276,7 +293,7 @@ $TABLE[] = "CREATE TABLE topics (
   KEY lastpost (lastpost),
   KEY locked_sticky (locked,sticky),
   KEY forumid (forumid)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE torrents (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -312,7 +329,7 @@ $TABLE[] = "CREATE TABLE torrents (
   KEY visible (visible),
   KEY category_visible (category,visible),
   FULLTEXT KEY ft_search (search_text,ori_descr)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 $TABLE[] = "CREATE TABLE users (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -367,7 +384,7 @@ $TABLE[] = "CREATE TABLE users (
   KEY enabled (enabled),
   KEY warned (warned),
   KEY pkey (passkey)
-)";
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 
     
