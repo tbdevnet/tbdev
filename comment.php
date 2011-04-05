@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -70,16 +70,18 @@ loggedinorreturn();
       $HTMLOUT = '';
       $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
       
-      $HTMLOUT .= "
-                     <div class='cblock'>
-                         <div class='cblock-header'>{$lang['comment_add']}\"" . htmlsafechars($arr["name"]) . "\"</div>
-                         <div class='cblock-content'>
-                             <form name='bbcode2text' method='post' action='comment.php?action=add'>
-                                  <input type='hidden' name='tid' value='{$torrentid}'/>";
-      $HTMLOUT .=                 bbcode2textarea( $lang['comment_doit'] );
-      $HTMLOUT .= "          </form>
-                         </div>
-                     </div>";
+      $HTMLOUT .= "<div class='cblock'>
+                    <div class='cblock-header'>{$lang['comment_add']}\"" . htmlsafechars($arr["name"]) . "\"</div>
+                    <div class='cblock-content'>
+                    <form name='bbcode2text' method='post' action='comment.php?action=add'>
+                    <input type='hidden' name='tid' value='{$torrentid}'/>";
+      $HTMLOUT .=   bbcode2textarea(  );
+      $HTMLOUT .= " <div align='center'>
+                    <input type='submit' name='comment' value='{$lang['comment_doit']}' class='' />
+                    </div>
+                    </form>
+                    </div>
+                    </div>";
 
 
 
@@ -92,7 +94,7 @@ loggedinorreturn();
 
       if (count($allrows)) {
               require_once "include/comment_functions.php";
-              require_once "include/html_functions.php";
+              //require_once "include/html_functions.php";
               require_once "include/bbcode_functions.php";
           $HTMLOUT .= "<h2>{$lang['comment_recent']}</h2>\n";
           $HTMLOUT .= commenttable($allrows);
@@ -147,8 +149,11 @@ loggedinorreturn();
                              <form name='bbcode2text' method='post' action='comment.php?action=edit&amp;cid=$commentid'>
                                   <input type='hidden' name='returnto' value='{$returnto}' />
                                   <input type='hidden' name='cid' value='$commentid' />";
-      $HTMLOUT .=                 bbcode2textarea( $lang['comment_doit'], htmlsafechars($arr["text"]) );
-      $HTMLOUT .= "          </form>
+      $HTMLOUT .=                 bbcode2textarea( 'body', htmlsafechars($arr["text"]) );
+      $HTMLOUT .= "       <div align='center'>
+                          <input type='submit' name='comment' value='{$lang['comment_doit']}' class='' />
+                          </div>
+                          </form>
                          </div>
                      </div>";
 

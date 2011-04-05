@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -42,7 +42,7 @@ loggedinorreturn();
 
     //-------- Global variables
 
-    $perpage = 25;
+    $perpage = 15;
     
     $HTMLOUT = '';
 
@@ -77,17 +77,19 @@ loggedinorreturn();
       if (mysql_num_rows($res) == 1)
       {
         $arr = mysql_fetch_assoc($res);
-
-        $subject = "<a href='userdetails.php?id=$userid'><b>$arr[username]</b></a>" . get_user_icons($arr, true);
+        
+        $uname = htmlsafechars( $arr['username'] );
+        
+        $subject = "<a href='userdetails.php?id=$userid'><strong>$uname</strong></a>" . get_user_icons($arr, true);
       }
       else
           $subject = $lang['posts_unknown'].'['.$userid.']';
 
       //------ Get posts
 
-      $from_is = "posts AS p LEFT JOIN topics as t ON p.topicid = t.id LEFT JOIN forums AS f ON t.forumid = f.id LEFT JOIN readposts as r ON p.topicid = r.topicid AND p.userid = r.userid";
+      $from_is = "posts AS p LEFT JOIN topics as t ON p.topicid = t.id LEFT JOIN forums AS f ON t.forumid = f.id LEFT JOIN users u ON p.editedby = u.id LEFT JOIN readposts as r ON p.topicid = r.topicid AND p.userid = r.userid";
 
-      $select_is = "f.id AS f_id, f.name, t.id AS t_id, t.subject, t.lastpost, r.lastpostread, p.*";
+      $select_is = "f.id AS f_id, f.name, t.id AS t_id, t.subject, t.lastpost, r.lastpostread, p.*, u.username AS editname";
 
       $query = "SELECT $select_is FROM $from_is WHERE $where_is ORDER BY $order_is {$pager['limit']}";
 
@@ -110,28 +112,29 @@ loggedinorreturn();
 
       while ($arr = mysql_fetch_assoc($res))
       {
-          $postid = $arr["id"];
+          $postid = $arr['id'];
 
-          $posterid = $arr["userid"];
+          $posterid = $arr['userid'];
 
-          $topicid = $arr["t_id"];
+          $topicid = $arr['t_id'];
 
-          $topicname = $arr["subject"];
+          $topicname = htmlsafechars( $arr['subject'] );
 
-          $forumid = $arr["f_id"];
+          $forumid = $arr['f_id'];
 
-          $forumname = $arr["name"];
+          $forumname = htmlsafechars( $arr['name'] );
 
         $dt = (TIME_NOW - $TBDEV['readpost_expiry']);
 
         $newposts = 0;
 
         if ($arr['added'] > $dt)
-          $newposts = ($arr["lastpostread"] < $arr["lastpost"]) && $CURUSER["id"] == $userid;
+          $newposts = ($arr['lastpostread'] < $arr['lastpost']) && $CURUSER['id'] == $userid;
 
         $added = get_date( $arr['added'],'');
 
-          $HTMLOUT .= "<div class='sub'><table border='0' cellspacing='0' cellpadding='0'>
+          $HTMLOUT .= "<div class='sub'>
+          <table border='0' cellspacing='0' cellpadding='0'>
           <tr><td class='embedded'>
           $added&nbsp;--&nbsp;<b>{$lang['posts_forum']}:&nbsp;</b>
           <a href='forums.php?action=viewforum&amp;forumid=$forumid'>$forumname</a>
@@ -140,20 +143,18 @@ loggedinorreturn();
           &nbsp;--&nbsp;<b>{$lang['posts_post']}:&nbsp;</b>
           #<a href='forums.php?action=viewtopic&amp;topicid=$topicid&amp;page=p$postid#$postid'>$postid</a>" .
           ($newposts ? " &nbsp;<b>(<font color='red'>{$lang['posts_new']}</font>)</b>" : "") .
-          "</td></tr></table></div>\n";
+          "</td></tr>
+          </table>
+          </div>\n";
 
           $HTMLOUT .= begin_table(true);
 
-          $body = format_comment($arr["body"]);
+          $body = format_comment($arr['body']);
 
           if (is_valid_id($arr['editedby']))
           {
-              $subres = mysql_query("SELECT username FROM users WHERE id={$arr['editedby']}");
-              if (mysql_num_rows($subres) == 1)
-              {
-                  $subrow = mysql_fetch_assoc($subres);
-                                    $body .= "<p><font size='1' class='small'>{$lang['posts_lasteditedby']} <a href='userdetails.php?id={$arr['editedby']}'><b>{$subrow['username']}</b></a> {$lang['posts_at']} ".get_date( $arr['editedat'],'')." GMT</font></p>\n";
-              }
+              
+              $body .= "<p><font size='1' class='small'>{$lang['posts_lasteditedby']} <a href='userdetails.php?id={$arr['editedby']}'><b>".htmlsafechars( $arr['editname'] )."</b></a> {$lang['posts_at']} ".get_date( $arr['editedat'],'')." GMT</font></p>\n";
           }
 
           $HTMLOUT .= "<tr valign='top'><td class='comment'>$body</td></tr>\n";

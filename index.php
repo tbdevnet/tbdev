@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -20,6 +20,7 @@ ob_start("ob_gzhandler");
 
 require_once "include/bittorrent.php";
 require_once "include/user_functions.php";
+require_once "include/cache_functions.php";
 
 dbconn(true);
 
@@ -36,31 +37,79 @@ if ($CURUSER)
 else
   $latestuser = $a['username'];
 */
+$TBDEV['memcache_server'] = 'localhost';
+$TBDEV['memcache_port'] = 11211;
+$TBDEV['memcache'] = 1;
+$TBDEVCACHE = array();
 
-    $registered = number_format(get_row_count("users"));
+  if( tbdev_cache_connect() )
+  {
+      print( 'The cache is not working as intended' );
+      exit();
+  }
+  
+  if( !$TBDEVCACHE['stats']= getCache( 'frontpagestats' ) )
+  {
+    $sql = @mysql_query( "SELECT seeder, COUNT(*) as cnt FROM peers GROUP BY seeder" );
+    
+    $TBDEVCACHE['stats'] = array('seeders'=>0, 'leechers'=>0);
+    
+    while( $row = mysql_fetch_assoc($sql) )
+    {
+      if($row['seeder'] == 'yes')
+      {
+        $TBDEVCACHE['stats']['seeders'] = $row['cnt'];
+      }
+      else
+      {
+        $TBDEVCACHE['stats']['leechers'] = $row['cnt'];
+      }
+    }
+    
+    $TBDEVCACHE['stats']['registered'] = number_format(get_row_count("users"));
     //$unverified = number_format(get_row_count("users", "WHERE status='pending'"));
-    $torrents = number_format(get_row_count("torrents"));
+    $TBDEVCACHE['stats']['torrents'] = number_format(get_row_count("torrents"));
     //$dead = number_format(get_row_count("torrents", "WHERE visible='no'"));
 
-    $r = mysql_query("SELECT value_u FROM avps WHERE arg='seeders'") or sqlerr(__FILE__, __LINE__);
-    $a = mysql_fetch_row($r);
-    $seeders = 0 + $a[0];
-    $r = mysql_query("SELECT value_u FROM avps WHERE arg='leechers'") or sqlerr(__FILE__, __LINE__);
-    $a = mysql_fetch_row($r);
-    $leechers = 0 + $a[0];
-    if ($leechers == 0)
-      $ratio = 0;
+    if ($TBDEVCACHE['stats']['leechers'] == 0)
+    {
+      $TBDEVCACHE['stats']['ratio'] = 0;
+    }
     else
-      $ratio = round($seeders / $leechers * 100);
-    $peers = number_format($seeders + $leechers);
-    $seeders = number_format($seeders);
-    $leechers = number_format($leechers);
-
-
-    //stdhead();
-    //$HTMLOUT .= "<div class='roundedCorners'><font class='small''>Welcome to our newest member, <b>$latestuser</b>!</font></div>\n";
-
-    $adminbutton = '';
+    {
+      $TBDEVCACHE['stats']['ratio'] = round($TBDEVCACHE['stats']['seeders'] / $TBDEVCACHE['stats']['leechers'] * 100);
+    }
+    $TBDEVCACHE['stats']['peers'] = number_format($TBDEVCACHE['stats']['seeders'] + $TBDEVCACHE['stats']['leechers']);
+    $TBDEVCACHE['stats']['seeders'] = number_format($TBDEVCACHE['stats']['seeders']);
+    $TBDEVCACHE['stats']['leechers'] = number_format($TBDEVCACHE['stats']['leechers']);
+    
+    
+    setCache( 'frontpagestats', $TBDEVCACHE['stats'], 10 );
+  }
+  //do_put( '12121212', $TBDEVCACHE['stats'], $ttl=60 );
+  //print_r( do_get( '12121212' ) );
+  //print_r( $TBDEVCACHE['stats'] );exit;
+  
+  //do_remove( '12121212' );
+  
+  
+  
+  if( !$TBDEVCACHE['news']= getCache( 'news' ) )
+  {
+    $sql = @mysql_query( "SELECT * FROM news WHERE added + ( 3600 *24 *45 ) >
+					".TIME_NOW." ORDER BY added DESC LIMIT 10" );
+	
+    while( $row = mysql_fetch_assoc($sql) )
+    {
+      $TBDEVCACHE['news'][ $row['id'] ] = $row;
+    }
+    
+    setCache( 'news', $TBDEVCACHE['news'], 30 );
+  }
+  
+  
+  //print_r(memcache_get_stats($memcache));exit;
+  $adminbutton = '';
     
     if (get_user_class() >= UC_ADMINISTRATOR)
           $adminbutton = "&nbsp;<span style='float:right;'><a href='admin.php?action=news'>News page</a></span>\n";
@@ -68,23 +117,21 @@ else
     $HTMLOUT .= "<div style='text-align:left;width:80%;border:1px solid blue;padding:5px;'>
     <div style='background:lightgrey;height:25px;'><span style='font-weight:bold;font-size:12pt;'>{$lang['news_title']}</span>{$adminbutton}</div><br />";
       
-    $res = mysql_query("SELECT * FROM news WHERE added + ( 3600 *24 *45 ) >
-					".TIME_NOW." ORDER BY added DESC LIMIT 10") or sqlerr(__FILE__, __LINE__);
 					
-    if (mysql_num_rows($res) > 0)
+    if( count($TBDEVCACHE['news']) > 0 )
     {
       require_once "include/bbcode_functions.php";
 
       $button = "";
       
-      while($array = mysql_fetch_assoc($res))
+      foreach( $TBDEVCACHE['news'] as $array )
       {
         if (get_user_class() >= UC_ADMINISTRATOR)
         {
           $button = "<div style='float:right;'><a href='admin.php?action=news&amp;mode=edit&amp;newsid={$array['id']}'>{$lang['news_edit']}</a>&nbsp;<a href='admin.php?action=news&amp;mode=delete&amp;newsid={$array['id']}'>{$lang['news_delete']}</a></div>";
         }
         
-        $HTMLOUT .= "<div style='background:lightgrey;height:20px;'><span style='font-weight:bold;font-size:10pt;'>".htmlsafechars($array['headline'])."</span></div>\n";
+        $HTMLOUT .= "<div style='background:lightgrey;height:20px;'><span style='font-weight:bold;font-size:10pt;'>{$array['headline']}</span></div>\n";
         
         $HTMLOUT .= "<span style='color:grey;font-weight:bold;text-decoration:underline;'>".get_date( $array['added'],'DATE') . "</span>{$button}\n";
         
@@ -103,19 +150,19 @@ else
     
       <table align='center' class='main' border='1' cellspacing='0' cellpadding='5'>
       <tr>
-      <td class='rowhead'>{$lang['stats_regusers']}</td><td align='right'>{$registered}</td>
+      <td class='rowhead'>{$lang['stats_regusers']}</td><td align='right'>{$TBDEVCACHE['stats']['registered']}</td>
       </tr>
       <!-- <tr><td class='rowhead'>{$lang['stats_unverified']}</td><td align=right>{unverified}</td></tr> -->
       <tr>
-      <td class='rowhead'>{$lang['stats_torrents']}</td><td align='right'>{$torrents}</td>
+      <td class='rowhead'>{$lang['stats_torrents']}</td><td align='right'>{$TBDEVCACHE['stats']['torrents']}</td>
       </tr>";
       
-    if (isset($peers)) 
+    if (isset($TBDEVCACHE['stats']['peers'])) 
     { 
-      $HTMLOUT .= "<tr><td class='rowhead'>{$lang['stats_peers']}</td><td align='right'>{$peers}</td></tr>
-      <tr><td class='rowhead'>{$lang['stats_seed']}</td><td align='right'>{$seeders}</td></tr>
-      <tr><td class='rowhead'>{$lang['stats_leech']}</td><td align='right'>{$leechers}</td></tr>
-      <tr><td class='rowhead'>{$lang['stats_sl_ratio']}</td><td align='right'>{$ratio}</td></tr>";
+      $HTMLOUT .= "<tr><td class='rowhead'>{$lang['stats_peers']}</td><td align='right'>{$TBDEVCACHE['stats']['peers']}</td></tr>
+      <tr><td class='rowhead'>{$lang['stats_seed']}</td><td align='right'>{$TBDEVCACHE['stats']['seeders']}</td></tr>
+      <tr><td class='rowhead'>{$lang['stats_leech']}</td><td align='right'>{$TBDEVCACHE['stats']['leechers']}</td></tr>
+      <tr><td class='rowhead'>{$lang['stats_sl_ratio']}</td><td align='right'>{$TBDEVCACHE['stats']['ratio']}</td></tr>";
     } 
     
       $HTMLOUT .= "</table>
