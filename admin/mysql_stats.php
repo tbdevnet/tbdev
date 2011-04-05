@@ -4,16 +4,16 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
 |   Licence Info: GPL
 +------------------------------------------------
-|   $Date: 2009-09-23 16:01:47 +0100 (Wed, 23 Sep 2009) $
+|   $Date$
 |   $Revision: 208 $
-|   $Author: tbdevnet $
-|   $URL: admin/mysql_overview.php $
+|   $Author$
+|   $URL$
 +------------------------------------------------
 */
 

@@ -5,7 +5,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/

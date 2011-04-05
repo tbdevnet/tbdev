@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -82,11 +82,16 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
       $HTMLOUT .= "<h1>{$lang['forum_user_options_edit_post_header']}</h1>
 
       <form name='bbcode2text' method='post' action='forums.php?action=editpost&amp;postid=$postid'>
-      <input type='hidden' name='returnto' value='{$returnto}' />";
+      <input type='hidden' name='returnto' value='{$returnto}' />
+      <div align='center'>
+      <input style='width:615px;' type='text' name='subject' size='50' value='{$title}' />
+      </div>";
       
-      $HTMLOUT .= bbcode2textarea( $lang['forum_user_options_okay'], htmlsafechars($arr["body"]) );
+      $HTMLOUT .= bbcode2textarea( 'body', $arr["body"] );
       
-      $HTMLOUT .= "</form>\n";
+      $HTMLOUT .= "<div align='center'>
+                <input type='submit' name='postquickreply' value='{$lang['forum_user_options_okay']}' class='' />
+             </div></form>\n";
 
       print stdhead('Editing post', $js) . $HTMLOUT . stdfoot();
 

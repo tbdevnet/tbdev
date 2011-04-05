@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -104,13 +104,10 @@ require_once "include/html_functions.php";
       
       $body = sqlesc($body);
       
-      $added = isset($input['added']) ? $input['added'] : 0;
+      $added = isset($input['added']) ? $input['added'] : TIME_NOW;
       
-      $headline = (isset($input['headline']) AND !empty($input['headline'])) ? sqlesc($input['headline']) : sqlesc('TBDev.net News');
+      $headline = (isset($input['subject']) AND !empty($input['subject'])) ? sqlesc($input['subject']) : sqlesc('TBDev.net News');
       
-      if (!$added)
-        $added = TIME_NOW;
-
       @mysql_query("INSERT INTO news (userid, added, body, headline) VALUES ({$CURUSER['id']}, $added, $body, $headline)") or sqlerr(__FILE__, __LINE__);
         
       if (mysql_affected_rows() == 1)
@@ -143,7 +140,7 @@ require_once "include/html_functions.php";
         if ($body == "" OR strlen($_POST['body']) < 4)
           stderr($lang['news_error'], $lang['news_add_body']);
 
-        $headline = (isset($input['headline']) AND !empty($input['headline'])) ? sqlesc($input['headline']) : sqlesc('TBDev.net News');
+        $headline = (isset($input['subject']) AND !empty($input['subject'])) ? sqlesc($input['subject']) : sqlesc('TBDev.net News');
         
         $body = sqlesc($body);
 
@@ -162,7 +159,7 @@ require_once "include/html_functions.php";
       {
         //$returnto = isset($_POST['returnto']) ? htmlsafechars($_POST['returnto']) : $TBDEV['baseurl'].'/news.php';
         $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
-        
+        $title = htmlsafechars($arr['headline']);
     $HTMLOUT .= "
                  <div class='cblock'>
                  <div class='cblock-header'>{$lang['news_edit_title']}</div>
@@ -173,14 +170,17 @@ require_once "include/html_functions.php";
         
         <input type='hidden' name='newsid' value='$newsid' />
         
-        <input type='hidden' name='mode' value='edit' />";
+        <input type='hidden' name='mode' value='edit' />
+        <div align='center'>
+           <input style='width:615px;' type='text' name='subject' size='50' value='{$title}' />
+        </div>";
         
-        $HTMLOUT .= bbcode2textarea( 'Edit', htmlsafechars($arr['body']), htmlsafechars($arr['headline']) );
+        $HTMLOUT .= bbcode2textarea( 'body', $arr['body'] );
           
         
-        $HTMLOUT .= "</form>\n";
-
-      $HTMLOUT .= "
+        $HTMLOUT .= "<div align='center'>
+                <input type='submit' name='newsedit' value='Edit' class='' />
+             </div></form>
       </div></div>";
 
       print  stdhead($lang['news_edit_title'], $js) . $HTMLOUT . stdfoot();
@@ -207,8 +207,14 @@ require_once "include/html_functions.php";
     
     $js = "<script type='text/javascript' src='scripts/bbcode2text.js'></script>";
         
-    $HTMLOUT .= bbcode2textarea( 'Add' );
-    $HTMLOUT .= "</form><br /><br />";
+    $HTMLOUT .= "<div align='center'>
+                <input style='width:615px;' type='text' name='subject' size='50' value='' />
+             </div>";
+    $HTMLOUT .= bbcode2textarea( 'body' );
+    $HTMLOUT .= "<div align='center'>
+                <input type='submit' name='postquickreply' value='Add' class='' />
+             </div>
+    </form><br /><br />";
 
     $res = @mysql_query("SELECT * FROM news ORDER BY added DESC") or sqlerr(__FILE__, __LINE__);
 

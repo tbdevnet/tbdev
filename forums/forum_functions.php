@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -153,27 +153,37 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 
   function insert_compose_frame($id, $newtopic = true, $quote = false)
   {
-    global $maxsubjectlength, $CURUSER, $lang, $forum_pic_url;
+    global $TBDEV, $maxsubjectlength, $CURUSER, $lang, $forum_pic_url;
 
     $htmlout = '';
     $title = '';
     
     if ($newtopic)
     {
-      $res = mysql_query("SELECT name FROM forums WHERE id=$id") or sqlerr(__FILE__, __LINE__);
+      $res = mysql_query("SELECT name, minclassread, minclasscreate FROM forums WHERE id=$id") or sqlerr(__FILE__, __LINE__);
 
-      $arr = mysql_fetch_assoc($res) or die("{$lang['forum_functions_badid']}");
-
+      $arr = mysql_fetch_assoc($res) or die($lang['forum_functions_badid']);
+      
+      if( ($CURUSER['class'] < $arr['minclassread']) OR ($CURUSER['class'] < $arr['minclasscreate']) )
+      {
+        stderr( $lang['forum_functions_error'], $lang['forum_functions_badid'] );
+      }
+      
       $forumname = htmlsafechars($arr["name"]);
 
       $htmlout .= "<p style='text-align:center;'>{$lang['forum_functions_newtopic']}<a href='forums.php?action=viewforum&amp;forumid=$id'>$forumname</a>{$lang['forum_functions_forum']}</p>\n";
     }
     else
     {
-      $res = mysql_query("SELECT * FROM topics WHERE id=$id") or sqlerr(__FILE__, __LINE__);
+      $res = mysql_query("SELECT t . * , f.minclassread, f.minclasswrite FROM topics t LEFT JOIN forums f ON t.forumid = f.id WHERE t.id = $id") or sqlerr(__FILE__, __LINE__);
 
-      $arr = mysql_fetch_assoc($res) or stderr("{$lang['forum_functions_error']}", "{$lang['forum_functions_topic']}");
-
+      $arr = mysql_fetch_assoc($res) or stderr($lang['forum_functions_error'], $lang['forum_functions_topic']);
+      
+      if( ($CURUSER['class'] < $arr['minclassread']) OR ($CURUSER['class'] < $arr['minclasswrite']) )
+      {
+        stderr( $lang['forum_functions_error'], $lang['forum_functions_badid'] );
+      }
+      
       $subject = htmlsafechars($arr["subject"]);
 
       $htmlout .= "<p style='text-align:center;'>{$lang['forum_functions_reply']}<a href='forums.php?action=viewtopic&amp;topicid=$id'>$subject</a></p>";
@@ -192,8 +202,12 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
     //$htmlout .= begin_table();
 
     if ($newtopic)
-      $title = "Your title here";
-
+    {
+      $htmlout .= "<div align='center'>
+       <input style='width:615px;' type='text' name='subject' size='50' value='{$title}' />
+       </div>";
+    }
+    
     if ($quote)
     {
        $postid = (int)$_GET["postid"];
@@ -214,13 +228,15 @@ if ( ! defined( 'IN_TBDEV_FORUM' ) )
 */    
     $body = ($quote?(("[quote=".htmlsafechars($arr["username"])."]".htmlsafechars($arr["body"])."[/quote]\n")):"");
     
-    $htmlout .= bbcode2textarea( $lang['forum_functions_submit'], $body, $title );
+    $htmlout .= bbcode2textarea( 'body', $body );
 
     //$htmlout .= "</td></tr>\n";
 
     //$htmlout .= end_table();
 
-    $htmlout .= "</form>\n";
+    $htmlout .= "<div align='center'>
+                <input type='submit' name='postquickreply' value='{$lang['forum_functions_submit']}' class='' />
+             </div></form>\n";
 
 		//$htmlout .= "<p style='text-align:center;'><a href='tags.php' target='_blank'>{$lang['forum_functions_tags']}</a> | <a href='smilies.php' target='_blank'>{$lang['forum_functions_smilies']}</a></p>\n";
 

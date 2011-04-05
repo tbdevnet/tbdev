@@ -128,6 +128,7 @@ $TBDEV['sql_error_log'] = ROOT_PATH.'/logs/sql_err_'.date("M_D_Y").'.log';
 $TBDEV['pic_base_url'] = "./pic/";
 $TBDEV['stylesheet'] = "./1.css";
 $TBDEV['readpost_expiry'] = 14*86400; // 14 days
+$TBDEV['last_10_posts'] = 0;
 //set this to size of user avatars
 $TBDEV['av_img_height'] = 100;
 $TBDEV['av_img_width'] = 100;

@@ -1,5 +1,21 @@
 <?php
-
+/*
++------------------------------------------------
+|   TBDev.net BitTorrent Tracker PHP
+|   =============================================
+|   by CoLdFuSiOn
+|   (c) 2003 - 2011 TBDev.Net
+|   http://www.tbdev.net
+|   =============================================
+|   svn: http://sourceforge.net/projects/tbdevnet/
+|   Licence Info: GPL
++------------------------------------------------
+|   $Date$
+|   $Revision$
+|   $Author$
+|   $URL$
++------------------------------------------------
+*/
 $INSERT[] = "INSERT INTO avps (arg, value_s, value_i, value_u) VALUES
 ('lastcleantime', '', 0, 1247059621),
 ('seeders', '', 0, 1),
