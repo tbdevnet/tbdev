@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -119,8 +119,10 @@ function format_comment($text, $strip_html = true)
 		$s = str_replace( "$"	 , "&#36;", $s );   
   }
   
-	// [*]
-	//$s = preg_replace("/\[\*\]/", "<li>", $s);
+  // [code] tag (do first to make sure we take it out of the equation
+	$s = preg_replace( "#\[code\](.+?)\[/code\]#ies", "code_tag( '\\1' )", $s );
+  
+	// [list]
 	while( preg_match( "#\n?\[list\](.+?)\[/list\]\n?#ies" , $s ) )
   {
     $s = preg_replace( "#\n?\[list\](.+?)\[/list\]\n?#ies", "BB_list('\\1')" , $s );
@@ -252,5 +254,36 @@ function BB_list_item($txt) {
 		$txt = preg_replace( "#^</?li>#"  , "", $txt );
 		
 		return str_replace( "\n</li>", "</li>", $txt."</li>" );
+}
+
+function code_tag($txt="") {
+		
+		if ($txt == "") return "[code]$txt[code]";
+		//$txt = str_replace( array("&lt;", "&gt;", "&quot;", '&#039;'),array("<",">",'"',"'"),  $txt);
+		
+		//$txt = str_replace( '  ', ' ', $txt );
+		//$txt = highlight_string( $txt, true );
+		
+		//$txt = str_replace( "&amp;", "&" , $txt );
+		$txt = preg_replace( "#&lt;#"   , "&#60;", $txt );
+		$txt = preg_replace( "#&gt;#"   , "&#62;", $txt );
+		$txt = preg_replace( "#&quot;#" , "&#34;", $txt );
+		$txt = preg_replace( "#:#"      , "&#58;", $txt );
+		$txt = preg_replace( "#\[#"     , "&#91;", $txt );
+		$txt = preg_replace( "#\]#"     , "&#93;", $txt );
+		$txt = preg_replace( "#\)#"     , "&#41;", $txt );
+		$txt = preg_replace( "#\(#"     , "&#40;", $txt );
+		$txt = preg_replace( "#\r#"     , "<br />", $txt );
+		$txt = preg_replace( "#\n#"     , "<br />", $txt );
+		$txt = preg_replace( "#\s{1};#" , "&#59;", $txt );
+		$txt = str_replace( "{"	 , "&#123;", $txt );
+		$txt = str_replace( "}"	 , "&#125;", $txt );
+		$txt = str_replace( "$"	 , "&#36;", $txt );
+		$txt = preg_replace( "#\s{2}#", " &nbsp;", $txt );
+		
+		$txt = "<div class='codetop'>CODE:</div><div class='codemain'>$txt</div><br />";
+		
+		return $txt; //highlight_string( $txt, true );
+		
 }
 ?>

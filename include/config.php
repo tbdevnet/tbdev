@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -49,6 +49,7 @@ $TBDEV['mysql_db']   = "test";
 $TBDEV['cookie_prefix']  = 'tbalpha_'; // This allows you to have multiple trackers, eg for demos, testing etc.
 $TBDEV['cookie_path']    = ''; // ATTENTION: You should never need this unless the above applies eg: /tbdev
 $TBDEV['cookie_domain']  = ''; // set to eg: .somedomain.com or is subdomain set to: .sub.somedomain.com
+$TBDEV['IPcookieCheck'] = 1;
                               
 $TBDEV['site_online'] = 1;
 $TBDEV['tracker_post_key'] = 'changethisorelse';
@@ -128,6 +129,7 @@ $TBDEV['sql_error_log'] = ROOT_PATH.'/logs/sql_err_'.date("M_D_Y").'.log';
 $TBDEV['pic_base_url'] = "./pic/";
 $TBDEV['stylesheet'] = "./1.css";
 $TBDEV['readpost_expiry'] = 14*86400; // 14 days
+$TBDEV['last_10_posts'] = 0;
 //set this to size of user avatars
 $TBDEV['av_img_height'] = 100;
 $TBDEV['av_img_width'] = 100;
@@ -145,6 +147,6 @@ define ('UC_SYSOP', 6);
 
 //Do not modify -- versioning system
 //This will help identify code for support issues at tbdev.net
-define ('TBVERSION','TBDev_2009_svn');
+define ('TBVERSION','TBDev.Lite.v1.0');
 
 ?>

@@ -4,7 +4,7 @@
 |   TBDev.net BitTorrent Tracker PHP
 |   =============================================
 |   by CoLdFuSiOn
-|   (c) 2003 - 2009 TBDev.Net
+|   (c) 2003 - 2011 TBDev.Net
 |   http://www.tbdev.net
 |   =============================================
 |   svn: http://sourceforge.net/projects/tbdevnet/
@@ -118,35 +118,30 @@ function insert_smilies_frame()
 }
 
 
-function bbcode2textarea( $submit='', $body='', $title='' ) {
+function bbcode2textarea( $name='body', $body='' ) {
 
   global $TBDEV;
   
   $htmlout = '';
   $body = htmlsafechars($body);
   $emot_dir = $TBDEV['pic_base_url'].'smilies/';
-  $htmlout = "
-    <table cellspacing='0' cellpadding='0'>";
-
+/*
   if( $title != '' )
   {
     $title = htmlsafechars($title);
     $htmlout .= "
-          <tr>
-             <td align='center'>
-                <input style='width:615px;' type='text' name='title' size='50' onfocus=\"if(this.value == '{$title}') { this.value = ''; }\" value='{$title}' />
-             </td>
-          </tr>";
+    <tr>
+       <td align='center'>
+       <input style='width:615px;' type='text' name='subject' size='50' value='{$title}' />
+       </td>
+    </tr>";
   }
-
-  $htmlout .= "
-          <tr>
-             <td align='center'>
+*/
+  $htmlout .= "<div align='center'>
                 <textarea style='width:615px' name='body' cols='55' rows='15'>{$body}</textarea>
-             </td>
-          </tr>
-          <tr>
-             <td align='center'>
+              </div>
+              
+              <div align='center'>
                 <input type='button' value='b' style='font-weight:bold;width:25px;' onclick=\"addText('body', '[b]', '[/b]');\" />
                 <input type='button' value='i' style='font-style:italic;width:25px;' onclick=\"addText('body', '[i]', '[/i]');\" />
                 <input type='button' value='u' style='text-decoration:underline;width:25px;' onclick=\"addText('body', '[u]', '[/u]');\" />
@@ -160,8 +155,8 @@ function bbcode2textarea( $submit='', $body='', $title='' ) {
                 <input type='button' value='list' style='width:40px;' onclick=\"tag_list();\" />
                 <input type='button' value='code' style='width:40px;' onclick=\"addText('body', '[code]', '[/code]');\" />
                 <input type='button' value='quote' style='width:45px;' onclick=\"addText('body', '[quote]', '[/quote]');\" />
-                <br />
-
+              </div>
+              <div align='center'>
                 <select name='ffont' style='font-size:1em;height:2em;line-height:100%' onchange=\"alterfont(this.options[this.selectedIndex].value, 'font');\">
                        <option value='0'>Font</option>
                        <option value='Arial' style='font-family: Arial;'>Arial</option>
@@ -190,11 +185,9 @@ function bbcode2textarea( $submit='', $body='', $title='' ) {
                        <option value='gray' style='color: gray;'>Gray</option>
                        <option value='green' style='color: green;'>Green</option>
                 </select>
-             </td>
-          </tr>
-  
-          <tr>
-             <td align='center'>
+             </div>
+>
+             <div align='center'>
                 <img style='vertical-align:bottom;' src='{$emot_dir}smile1.gif' alt='smiley' onclick=\"insertText('body', ' :-)');\" />
                 <img style='vertical-align:bottom;' src='{$emot_dir}wink.gif' alt='smiley' onclick=\"insertText('body', ' :wink:');\" />
                 <img style='vertical-align:bottom;' src='{$emot_dir}noexpression.gif' alt='smiley' onclick=\"insertText('body', ' :-|');\" />
@@ -206,10 +199,8 @@ function bbcode2textarea( $submit='', $body='', $title='' ) {
                 <img style='vertical-align:bottom;' src='{$emot_dir}angry.gif' alt='smiley' onclick=\"insertText('body', ' :angry:');\" />
                 <img style='vertical-align:bottom;' src='{$emot_dir}wub.gif' alt='smiley' onclick=\"insertText('body', ' :wub:');\" />
                 &nbsp;<span class='btn'><a href='javascript:more_emoticons();'>More Smilies</a></span>
-                <br /><br />
-             </td>
-          </tr>";
-
+             </div>";
+/*
     if( $submit != '' )
     {
       $htmlout .= "
@@ -222,7 +213,7 @@ function bbcode2textarea( $submit='', $body='', $title='' ) {
 
     $htmlout .="
     </table>";
-
+*/
     return $htmlout;
 }
 
